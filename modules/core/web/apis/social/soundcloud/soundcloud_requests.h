@@ -108,8 +108,38 @@ namespace Core {
                     }
                 }
 
-//                inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
-//                inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
+                inline QMap<QString, QString> customsList() {
+                    QMap<QString, QString> res;
+                    QMap<QString, QString> opts = siteOptions();
+
+                    QString new_hot_title = setTypeToStr(set_new_hot);
+                    QString top_50_title = setTypeToStr(set_top_50);
+                    QString popular_title = setTypeToStr(set_popular);
+
+                    for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
+                        res.insert(new_hot_title % opt.key(), QString::number(set_new_hot) % '|' % opt.value());
+                        res.insert(top_50_title % opt.key(), QString::number(set_top_50) % '|' % opt.value());
+                        res.insert(popular_title % opt.key(), QString::number(set_popular) % '|' % opt.value());
+                    }
+
+                    res.insert(new_hot_title % QStringLiteral("Custom genre..."), QString::number(set_new_hot) % QStringLiteral("|%"));
+                    res.insert(top_50_title % QStringLiteral("Custom genre..."), QString::number(set_top_50) % QStringLiteral("|%"));
+                    res.insert(popular_title % QStringLiteral("Custom genre..."), QString::number(set_popular) % QStringLiteral("|%"));
+
+                    return res;
+                }
+                inline QJsonObject procCustom(const QString & custom_params) {
+                    QStringList params = custom_params.split('|', QString::SkipEmptyParts);
+                    SetType set_type = (SetType)params.first().toInt();
+                    QString genre = params.last();
+
+                    QJsonArray set = setByType(set_type, genre).toArray();
+
+                    QJsonObject obj;
+                    obj.insert(block_items, set);
+
+                    return obj;
+                }
             };
         }
     }

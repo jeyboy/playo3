@@ -1,8 +1,9 @@
 #include "isource.h"
 
+#include "dockbars.h"
 #include "settings.h"
 #include "dialogs/relations_dialog.h"
-#include "dockbars.h"
+#include "dialogs/packages_dialog.h"
 
 using namespace Core;
 
@@ -90,12 +91,22 @@ void ISource::openRelationTab() {
     RelationsDialog dialog(this, Settings::obj().anchorWidget());
     if (dialog.exec() == QDialog::Accepted)
         Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-            uidStr(dialog.getId())),
+            Presentation::BarCreationNames(
+                QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
+                uidStr(dialog.getId())
+            ),
             Models::Params(siteType(), dialog.getId()), 0, true, true
         );
 }
 
 void ISource::openPackageTab() {
-
+    PackagesDialog dialog(this, Settings::obj().anchorWidget());
+    if (dialog.exec() == QDialog::Accepted)
+        Presentation::Dockbars::obj().createLinkedDocBar(
+            Presentation::BarCreationNames(
+                QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
+                uidStr(dialog.getParams())
+            ),
+            Models::Params(siteType(), dialog.getParams(), rec_set), 0, true, true
+        );
 }

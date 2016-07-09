@@ -46,8 +46,8 @@ namespace Core {
         virtual inline QJsonValue loadSet(const QVariantMap & /*attrs*/) { return QJsonArray(); }
 
         // proc charts / tops and other ...
-        virtual inline QHash<QString, QString> customsList() { return QHash<QString, QString>(); }
-        virtual inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
+        virtual inline QMap<QString, QString> customsList() { return QMap<QString, QString>(); }
+        virtual inline QJsonObject procCustom(const QString & /*custom_params*/) { return QJsonObject(); }
 
         QToolButton * initButton(QWidget * parent = 0);
 

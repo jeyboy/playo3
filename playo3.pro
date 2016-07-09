@@ -43,7 +43,8 @@ FORMS    += playo.ui \
     dialogs/extension_dialog.ui \
     dialogs/relations_dialog.ui \
     dialogs/search_dialog.ui \
-    dialogs/user_action_dialog.ui
+    dialogs/user_action_dialog.ui \
+    dialogs/packages_dialog.ui
 
 RESOURCES += \
     resources.qrc
@@ -301,7 +302,8 @@ HEADERS += \
     modules/core/web/apis/social/soundcloud/soundcloud_user.h \
     modules/core/web/apis/social/soundcloud/soundcloud_keys.h \
     modules/core/web/apis/social/soundcloud/soundcloud_requests.h \
-    modules/core/web/apis/social/soundcloud_queries.h
+    modules/core/web/apis/social/soundcloud_queries.h \
+    dialogs/packages_dialog.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -438,4 +440,5 @@ SOURCES += \
     modules/core/interfaces/iuser_interaction.cpp \
     modules/core/web/apis/social/soundcloud/soundcloud_keys.cpp \
     modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp \
-    modules/core/web/apis/social/soundcloud_queries.cpp
+    modules/core/web/apis/social/soundcloud_queries.cpp \
+    dialogs/packages_dialog.cpp

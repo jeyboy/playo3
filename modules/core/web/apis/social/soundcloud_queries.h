@@ -30,6 +30,10 @@ namespace Core {
                     ThreadUtils::obj().run(this, &Queries::objectInfo, oid, func);
                 }
 
+                inline void procCustomAsync(const QString & cutomParams, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::procCustom, cutomParams, func);
+                }
+
 
                 void groupInfo(const QString & group_id, QJsonObject & object) {
                     object.insert(block_items, tracksByGroup(group_id));

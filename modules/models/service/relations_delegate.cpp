@@ -53,14 +53,17 @@ void RelationsDelegate::paint(QPainter * painter, const QStyleOptionViewItem & o
     QString title = index.data(Qt::DisplayRole).toString();
     QString description = index.data(Qt::UserRole + 1).toString();
 
-    int imageSpace = 54;
-    if (ImageBank::obj().hasImage(url)) {
-        QIcon ic = ImageBank::obj().icon(url);
-        r = option.rect.adjusted(2, 2, -2, -2);
-        ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
-    }
-    else {
-        ImageBank::obj().proceedPacket(index, QStringList() << url);
+    int imageSpace = url.isEmpty() ? 4 : 54;
+
+    if (!url.isEmpty()) {
+        if (ImageBank::obj().hasImage(url)) {
+            QIcon ic = ImageBank::obj().icon(url);
+            r = option.rect.adjusted(2, 2, -2, -2);
+            ic.paint(painter, r, Qt::AlignVCenter | Qt::AlignLeft);
+        }
+        else {
+            ImageBank::obj().proceedPacket(index, QStringList() << url);
+        }
     }
 
     //TITLE

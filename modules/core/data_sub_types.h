@@ -5,7 +5,8 @@ namespace Core {
     enum RecType {
         rec_none = 0,
         rec_user,
-        rec_song
+        rec_song,
+        rec_set
     };
 
     enum DataMediaType : int {

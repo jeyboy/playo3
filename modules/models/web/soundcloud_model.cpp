@@ -6,10 +6,21 @@ using namespace Models;
 void SoundcloudModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
-    Soundcloud::Queries::obj().objectInfoAsync(
-        sttngs.uid,
-        new Func(this, SLOT(proceedJson(QJsonObject &)))
-    );
+
+    switch(sttngs.rec_type) {
+        case rec_set: {
+            Soundcloud::Queries::obj().procCustomAsync(
+                sttngs.uid,
+                new Func(this, SLOT(proceedJson(QJsonObject &)))
+            );
+        break;}
+
+        default:
+            Soundcloud::Queries::obj().objectInfoAsync(
+                sttngs.uid,
+                new Func(this, SLOT(proceedJson(QJsonObject &)))
+            );
+    }
 }
 
 void SoundcloudModel::proceedJson(QJsonObject & hash) {
