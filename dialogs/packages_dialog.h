@@ -14,6 +14,8 @@ class PackagesDialog : public BaseDialog {
 
     Ui::PackagesDialog * ui;
     QString params, name;
+
+    bool takeGenre(QString & genre);
 public:
     explicit PackagesDialog(ISource * currApi, QWidget * parent = 0);
     ~PackagesDialog();

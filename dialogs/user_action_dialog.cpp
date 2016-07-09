@@ -43,6 +43,12 @@ void UserActionDialog::buildToolbarButtonForm(const QString & name, const QStrin
     proceedForm(inputs, QStringLiteral("Toolbar Button form"));
 }
 
+void UserActionDialog::buildGenreForm(const QString & genre) {
+    inputs.clear();
+    inputs << FormInput::createStr(name_key, QStringLiteral("Genre"), genre);
+    proceedForm(inputs, QStringLiteral("Genre form"));
+}
+
 void UserActionDialog::buildToolbarForm(const QString & name) {
     inputs.clear();
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);

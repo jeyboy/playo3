@@ -137,6 +137,7 @@ public:
     void buildLoginForm(const QString & err = QString(), const QString & login_val = QString(), const QString & password_val = QString(), const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
+    void buildGenreForm(const QString & genre = QString());
     void buildToolbarForm(const QString & name = QString());
     void buildPresetForm(const QString & name = QString());
     void buildImportForm(const QString & text = QString());

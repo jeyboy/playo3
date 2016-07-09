@@ -6,18 +6,17 @@
 
 using namespace Core;
 
-//void SetsDialog::prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list) {
-//    for(QList<Web::Linkable>::ConstIterator linkable = linkables.cbegin(); linkable != linkables.cend(); linkable++) {
-//        QListWidgetItem * item = new QListWidgetItem((*linkable).humanName(), list);
-//        item -> setData(Qt::UserRole + 2, (*linkable).imageUrl());
-//        item -> setData(Qt::UserRole + 1, (*linkable).permaTitle());
-//        item -> setData(Qt::UserRole, (*linkable).uid());
-//        list -> addItem(item);
-//    }
+bool PackagesDialog::takeGenre(QString & genre) {
+    UserActionDialog dialog(parentWidget());
+    dialog.buildGenreForm();
 
-//    list -> setItemDelegate(new RelationsDelegate(list));
-//    list -> setEditTriggers(QListView::NoEditTriggers);
-//}
+    if (dialog.exec() == QDialog::Accepted) {
+        genre = dialog.getValue(dialog.name_key);
+        return true;
+    }
+
+    return false;
+}
 
 PackagesDialog::PackagesDialog(ISource * currApi, QWidget * parent)
     : BaseDialog(parent), ui(new Ui::PackagesDialog) {
@@ -44,8 +43,17 @@ PackagesDialog::~PackagesDialog() { delete ui; }
 void PackagesDialog::on_cancelButton_clicked() { reject(); }
 
 void PackagesDialog::on_packagesList_itemActivated(QListWidgetItem * item) {
-    params = item -> data(Qt::UserRole).toString();
     name = item -> text();
+    params = item -> data(Qt::UserRole).toString();
+
+    if (params.endsWith('%')) {
+        QString manual_genre;
+
+        if (!takeGenre(manual_genre) || manual_genre.isEmpty()) return;
+
+        params.replace('%', manual_genre);
+        name.replace(PACKAGE_REPLACE_FRAGMENT, manual_genre);
+    }
 
     accept();
 }

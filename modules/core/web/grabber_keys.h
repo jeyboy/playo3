@@ -3,6 +3,8 @@
 
 #include <qstringbuilder.h>
 
+#define PACKAGE_REPLACE_FRAGMENT QStringLiteral("Custom genre...")
+
 namespace Core {
     namespace Web {
         extern const QString block_items;
