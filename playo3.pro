@@ -310,7 +310,9 @@ HEADERS += \
     modules/core/web/apis/social/vk/vk_video.h \
     modules/core/web/apis/social/vk/vk_playlist.h \
     modules/core/web/apis/social/vk/vk_group.h \
-    modules/core/web/apis/social/vk/vk_user.h
+    modules/core/web/apis/social/vk/vk_user.h \
+    modules/core/web/apis/social/vk/vk_requests.h \
+    modules/core/web/apis/social/vk/vk_feed.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

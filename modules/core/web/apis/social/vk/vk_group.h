@@ -12,7 +12,7 @@ namespace Core {
                     return groupsByIdOrPerma(ids.join(QStringLiteral(",")));
                 }
 
-                QJsonArray groupsByIdOrPerma(const QString & id) {
+                QJsonValue groupsByIdOrPerma(const QString & id) {
                     QUrlQuery query = genDefaultParams();
                     setParam(query, tkn_group_ids, id);
 
@@ -22,7 +22,7 @@ namespace Core {
                     );
                 }
 
-                QJsonArray groupsByName(const QString & name) {
+                QJsonValue groupsByName(const QString & name) {
                     return saRequest(
                         baseUrlStr(
                             qst_api_def, path_groups_search,

@@ -33,6 +33,19 @@ namespace Core {
                         offset
                     );
                 }
+
+                void permaToId(const QString & perma, QString & id, QString & id_type) {
+                    QUrlQuery query;
+                    setParam(query, tkn_screen_name, perma);
+
+                    QJsonObject ret = sRequest(
+                        baseUrlStr(qst_api_def, path_resole_user, query),
+                        call_type_json, 0, proc_json_extract
+                    );
+
+                    id = QString::number(ret.value(tkn_object_id).toInt());
+                    id_type = ret.value(tkn_type).toString();
+                }
             };
         }
     }

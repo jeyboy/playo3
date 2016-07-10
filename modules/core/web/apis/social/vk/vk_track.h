@@ -60,6 +60,30 @@ namespace Core {
                     );
                 }
 
+//                QString audioSearchLimitedUrl(QString & searchStr, int limit) {
+//                    QUrlQuery query = genDefaultParams();
+
+//                    setParam(query, tkn_code, QString(
+//                        "    var items = API.audio.search({"
+//                        "        q: \"" % encodeStr(searchStr) % QStringLiteral("\", count: ") % QString::number(limit) % ", lyrics: 0"
+//                        "    }).items;"
+//                        "return {" % tkn_audio_list % ": search};"
+//                    ));
+
+//                    return baseUrlStr(qst_api_def, tkn_execute, query);
+//                }
+
+//                QJsonObject audioSearchLimited(QString & predicate, int limitation) {
+//                    return sRequest(
+//                        audioSearchLimitedUrl(predicate, limitation),
+//                        call_type_json,
+//                        0,
+//                        proc_json_extract
+//                    );
+
+////                    return sQuery(audioSearchLimitedUrl(predicate, limitation), extract);
+//                }
+
                 QJsonValue tracksSearch(const SearchLimit & limits, QJsonArray * arr = 0, bool autoFix = false) {
                     return saRequest(
                         baseUrlStr(

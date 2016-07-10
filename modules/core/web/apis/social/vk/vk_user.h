@@ -21,6 +21,36 @@ namespace Core {
 
                     return ret.value(tkn_response).toArray().first().toObject();
                 }
+
+                QJsonValue usersByIdsOrPermas(const QStringList & ids) {
+                    return usersByIdOrPerma(ids.join(QStringLiteral(",")));
+                }
+
+                QJsonValue usersByIdOrPerma(const QString & id) {
+                    return saRequest(
+                        baseUrlStr(
+                            qst_api_def, path_user_info,
+                            {
+                                { tkn_user_ids, id },
+                                { tkn_fields, val_user_fields }
+                            }
+                        ),
+                        call_type_json, 0, proc_json_extract
+                    );
+                }
+
+                QJsonValue usersByName(const QString & name) {
+                    return saRequest(
+                        baseUrlStr(
+                            qst_api_def, path_users_search,
+                            {
+                                { tkn_q, name },
+                                { tkn_fields, val_user_fields }
+                            }
+                        ),
+                        call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
+                    );
+                }
             };
         }
     }
