@@ -1,5 +1,5 @@
-#ifndef SOUNDCLOUD_ITRACK
-#define SOUNDCLOUD_ITRACK
+#ifndef SOUNDCLOUD_TRACK
+#define SOUNDCLOUD_TRACK
 
 #include "soundcloud_defines.h"
 
@@ -137,7 +137,7 @@ namespace Core {
 
                     return QJsonArray();
                 }
-                QJsonValue trackRelations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue trackRecommendations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -314,4 +314,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_ITRACK
+#endif // SOUNDCLOUD_TRACK

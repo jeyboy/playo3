@@ -163,7 +163,7 @@ HEADERS += \
     modules/core/web/apis/social/od_api_misc.h \
     modules/core/web/apis/social/od_request_api.h \
     modules/core/web/apis/social/vk_api.h \
-    modules/core/web/apis/social/vk_api_keys.h \
+    modules/core/web/apis/social/vk/vk_keys.h \
     modules/core/web/apis/social/vk_request_api.h \
     modules/core/web/apis/storage/_storages.h \
     modules/core/web/apis/storage/fourshared_api.h \
@@ -304,7 +304,13 @@ HEADERS += \
     modules/core/web/apis/social/soundcloud/soundcloud_requests.h \
     modules/core/web/apis/social/soundcloud_queries.h \
     dialogs/packages_dialog.h \
-    modules/core/web/apis/social/vk/vk_auth.h
+    modules/core/web/apis/social/vk/vk_auth.h \
+    modules/core/web/apis/social/vk/vk_defines.h \
+    modules/core/web/apis/social/vk/vk_track.h \
+    modules/core/web/apis/social/vk/vk_video.h \
+    modules/core/web/apis/social/vk/vk_playlist.h \
+    modules/core/web/apis/social/vk/vk_group.h \
+    modules/core/web/apis/social/vk/vk_user.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -413,7 +419,7 @@ SOURCES += \
     player/bass_player.cpp \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
-    modules/core/web/apis/social/vk_api_keys.cpp \
+    modules/core/web/apis/social/vk/vk_keys.cpp \
     modules/models/service/relations_delegate.cpp \
     settings/stylesheets/dark_stylesheets.cpp \
     settings/stylesheets/light_stylesheets.cpp \

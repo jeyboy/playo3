@@ -1,5 +1,5 @@
-#ifndef SOUNDCLOUD_ISET
-#define SOUNDCLOUD_ISET
+#ifndef SOUNDCLOUD_SET
+#define SOUNDCLOUD_SET
 
 #include "soundcloud_defines.h"
 
@@ -108,4 +108,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_ISET
+#endif // SOUNDCLOUD_SET

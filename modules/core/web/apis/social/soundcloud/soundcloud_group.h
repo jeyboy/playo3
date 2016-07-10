@@ -1,5 +1,5 @@
-#ifndef SOUNDCLOUD_IGROUP
-#define SOUNDCLOUD_IGROUP
+#ifndef SOUNDCLOUD_GROUP
+#define SOUNDCLOUD_GROUP
 
 #include "soundcloud_defines.h"
 #include "modules/core/misc/format.h"
@@ -143,4 +143,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_IGROUP
+#endif // SOUNDCLOUD_GROUP

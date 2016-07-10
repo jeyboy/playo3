@@ -1,5 +1,5 @@
-#ifndef SOUNDCLOUD_IPLAYLIST
-#define SOUNDCLOUD_IPLAYLIST
+#ifndef SOUNDCLOUD_PLAYLIST
+#define SOUNDCLOUD_PLAYLIST
 
 #include "soundcloud_defines.h"
 
@@ -114,4 +114,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_IPLAYLIST
+#endif // SOUNDCLOUD_PLAYLIST

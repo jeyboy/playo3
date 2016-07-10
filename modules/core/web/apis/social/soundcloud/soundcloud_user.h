@@ -1,5 +1,5 @@
-#ifndef SOUNDCLOUD_IUSER
-#define SOUNDCLOUD_IUSER
+#ifndef SOUNDCLOUD_USER
+#define SOUNDCLOUD_USER
 
 #include "soundcloud_defines.h"
 
@@ -160,4 +160,4 @@ namespace Core {
     }
 }
 
-#endif // SOUNDCLOUD_IUSER
+#endif // SOUNDCLOUD_USER

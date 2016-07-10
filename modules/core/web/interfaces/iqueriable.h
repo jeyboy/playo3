@@ -202,7 +202,7 @@ namespace Core {
             }
 
 
-            virtual inline QString boolToStr(const bool val) { return val ? QStringLiteral("true") : QStringLiteral("false"); }
+            virtual inline QString boolToStr(const bool & val) { return val ? QStringLiteral("true") : QStringLiteral("false"); }
             virtual inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_def) { return QUrlQuery(); }
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }

@@ -12,42 +12,14 @@ namespace Core {
         namespace Vk {
             class RequestApi : public IQueriable, public IGenreable {
             protected:
-                enum AudioSearchSort { ass_creation_date = 0, ass_duration = 1, ass_popularity = 2 };
-                enum VideoSearchSort { vss_creation_date = 0, vss_duration = 1, vss_relativity = 2 };
 
-                inline QString boolToStr(bool val) { return val ? val_str_true : val_str_false; }
 
-                QString authUrl() {
-                    QUrl url(url_auth);
 
-                    QUrlQuery query = QUrlQuery();
-                    setParam(query, tkn_version, val_version);
-                    setParam(query, tkn_display, val_page_token);
-                    setParam(query, tkn_client_id, val_client_token);
-                    setParam(query, tkn_response_type, val_response_token);
-                    setParam(query, tkn_scope, val_scope);
-                    setParam(query, tkn_redirect_uri, url_redirect_uri);
 
-                    url.setQuery(query);
-                    return url.toString();
-                }
 
-                PolyQueryRules rules(
-                    int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_limit = DEFAULT_REQUESTS_LIMIT,
-                    int /*per_request*/ = 100,
-                    ApiCallIterType call_type = call_iter_type_item)
-                {
-                    return PolyQueryRules(
-                        call_type,
-                        call_iter_method_offset,
-                        qMin(items_limit, DEFAULT_ITEMS_LIMIT),
-                        qMin(pages_limit, DEFAULT_REQUESTS_LIMIT),
-                        QString(), // limit already inserted to scripts
-                        0, // per_request
-                        QString(), // template already inserted to scripts
-                        offset
-                    );
-                }
+
+
+
 
             public:
                 enum InfoType {
@@ -55,48 +27,6 @@ namespace Core {
                     info_rels = 2,
                     info_all = info_music | info_rels,
                 };
-
-                QString audioAlbumsUrl(QString & uid) {
-                    QUrlQuery query = genDefaultParams();
-                    setParam(query, tkn_code, query_audio_albums.arg(uid));
-                    return baseUrlStr(qst_api_def, tkn_execute, query).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE);
-                }
-                QJsonArray audioAlbums(QString & uid, int offset = 0) {
-                    return pRequest(
-                        audioAlbumsUrl(uid),
-                        call_type_json,
-                        rules(offset),
-                        0,
-                        proc_json_extract,
-                        QStringList() << tkn_albums
-                    );
-
-//                    return lQuery(
-//                        audioAlbumsUrl(uid),
-//                        QueryRules(tkn_albums, 5, DEFAULT_ITEMS_LIMIT, offset),
-//                        extract
-//                    );
-                }
-                void audioAlbums(QString & uid, QJsonArray & arr, int offset = 0) {
-                    pRequest(
-                        audioAlbumsUrl(uid),
-                        call_type_json,
-                        rules(offset),
-                        &arr,
-                        proc_json_extract,
-                        QStringList() << tkn_response << tkn_albums,
-                        call_method_get,
-                        Headers(),
-                        0,
-                        false
-                    );
-
-//                    lQuery(
-//                        audioAlbumsUrl(uid),
-//                        QueryRules(tkn_albums, 5, DEFAULT_ITEMS_LIMIT, offset),
-//                        arr, extract
-//                    );
-                }
 
                 QString userFullInfoUrl(QString & uid) {
                     QUrlQuery query = genDefaultParams();
@@ -148,88 +78,11 @@ namespace Core {
                     return ret;
                 }
 
-                QJsonObject userStatus(QString & uid) { // deactivated: 'deleted', id, first_name, last_name, counters
-                    QUrlQuery query;
-                    setParam(query, tkn_fields, tkn_counters);
-                    setParam(query, tkn_user_ids, uid);
-
-                    QJsonObject ret = sRequest(
-                        baseUrlStr(qst_api_def, path_user_info, query),
-                        call_type_json
-                    );
 
 
-                    return ret/*sQuery(baseUrl(path_user_info, query))*/.value(tkn_response).toArray().first().toObject();
-                }
-
-                QString audioRecomendationsUrl(QString & uid, bool byUser, bool randomize) {
-                    QUrlQuery query = genDefaultParams();
-
-                    setParam(query, tkn_code,
-                       QString(
-                           "var recomendations = API.audio.getRecommendations({"
-                           + QString(byUser ? "user_id: " : "target_audio: ") % "\"" % uid % "\", "
-                           "   count: 1000, "
-                           "   shuffle: " % boolToStr(randomize) % ""
-                           "});"
-                           "return {" % tkn_audio_list % ": recomendations };"
-                       )
-                    );
-
-                    return baseUrlStr(qst_api_def, tkn_execute, query);
-                }
-
-                QJsonObject audioRecomendations(QString & uid, bool byUser, bool randomize) {
-                    return sRequest(
-                        audioRecomendationsUrl(uid, byUser, randomize),
-                        call_type_json,
-                        0,
-                        proc_json_extract
-                    );
-
-//                    return sQuery(audioRecomendationsUrl(uid, byUser, randomize), extract);
-                }
-
-                QString audioSearchUrl(const SearchLimit & limits, bool autoFix = false) {
-                    // count max eq 300 , limit is 1000
-                    QUrlQuery query = genDefaultParams();
-
-                    setParam(query, tkn_code, QString(
-                        "var limit = " % QString::number(qMin(1000, limits.items_limit)) % ";"
-                        "var search = []; var rule = true;"
-                        "do {"
-                        "    var count = limit - search.length;"
-                        "    if (count > 300) count = 300;"
-                        "    var items = API.audio.search({"
-                        "        q: \"" % encodeStr(limits.predicate) % "\", count: count, offset: search.length, lyrics: 0,"
-                        "        auto_complete: " % boolToStr(autoFix) % ","
-                        "        performer_only: " % boolToStr(limits.by_artists()) % ","
-                        "        sort: " % QString::number(limits.by_popularity() ? ass_popularity : ass_creation_date) % ","
-                        "        search_own: " % boolToStr(limits.in_owns()) % ""
-                        "    }).items;"
-                        "    search = search %2b items;"
-                        "    rule = search.length < limit && items.length != 0;"
-                        "} while(rule);"
-                        "return {" % tkn_audio_list % ": search};"
-                    ));
-
-                    return baseUrlStr(qst_api_def, tkn_execute, query);
-                }
 
 
-                QJsonArray audioSearch(const SearchLimit & limits, QJsonArray * arr = 0) {
-                    return saRequest(
-                        audioSearchUrl(limits),
-                        call_type_json,
-                        arr,
-                        proc_json_extract,
-                        QStringList() << tkn_response << tkn_audio_list
-                    ); //.value(tkn_audio_list).toArray();
 
-//                    return sQuery(
-//                        audioSearchUrl(predicate, false, onlyArtist, inOwn, mostPopular ? popularity : creation_date, qMin(1000, limit)), extract
-//                    ).value(tkn_audio_list).toArray();
-                }
 
                 QString audioSearchLimitedUrl(QString & searchStr, int limit) {
                     QUrlQuery query = genDefaultParams();
@@ -253,33 +106,6 @@ namespace Core {
                     );
 
 //                    return sQuery(audioSearchLimitedUrl(predicate, limitation), extract);
-                }
-
-                QString audioPopularUrl(bool onlyEng, int genreId) {
-                    QUrlQuery query = genDefaultParams();
-
-                    setParam(query, tkn_code,
-                       QString(
-                           "var popular = API.audio.getPopular({"
-                                "only_eng: " + boolToStr(onlyEng) + ", "
-                                "count: 1000 " + (genreId != -1 ? (", genre_id: " + QString::number(genreId)) : "") + ""
-                             "});"
-                           "return {" % tkn_audio_list % ": popular};"
-                       )
-                    );
-
-                    return baseUrlStr(qst_api_def, tkn_execute, query);
-                }
-                QJsonArray audioPopular(bool onlyEng, const QString & genre) {
-                    return saRequest(
-                        audioPopularUrl(onlyEng, genres.toInt(genre)),
-                        call_type_json,
-                        0,
-                        proc_json_extract,
-                        QStringList() << tkn_response << tkn_audio_list
-                    ); //.value(QStringLiteral("audio_list")).toArray();
-
-//                    return sQuery(audioPopularUrl(onlyEng, genres.toInt(genre)), extract).value(QStringLiteral("audio_list")).toArray();
                 }
 
                 QString audioRefreshUrl(const QStringList & uids) {
@@ -309,11 +135,7 @@ namespace Core {
                     else return infos[0].toObject();
                 }
 
-                QString audioLyricsUrl(QString & lyrics_id) {
-                    QUrlQuery query = genDefaultParams();
-                    setParam(query, tkn_lyrics_id, lyrics_id);
-                    return baseUrlStr(qst_api_def, path_lyrics, query);
-                }
+
 
 
                 QJsonArray groupsByIdOrPermas(const QStringList & ids) { return groupsByIdOrPerma(ids.join(QStringLiteral(","))); }
