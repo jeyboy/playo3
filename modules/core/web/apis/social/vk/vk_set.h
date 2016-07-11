@@ -11,7 +11,18 @@ namespace Core {
                 enum SetType { popular_tracks = 1, popular_video };
 
                 QJsonValue setByType(const SetType & /*set_type*/) {
+                    Permissions perm = permissions(pr_media_content);
 
+                    switch(perm) {
+                        case perm_site:
+                        case perm_api: {
+
+                        }
+
+                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                    }
+
+                    return QJsonArray();
                 }
             };
         }

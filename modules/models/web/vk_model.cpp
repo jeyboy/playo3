@@ -9,11 +9,11 @@ void VkModel::refresh() {
     if (sttngs.rec_type == Core::rec_none) {
         Vk::Api::obj().userInfoAsync(
             sttngs.uid,
-            sttngs.uid == Vk::Api::obj().userID() ? Vk::Api::info_all : Vk::Api::info_music,
+            sttngs.uid == Vk::Queries::obj().userID() ? Vk::Api::info_all : Vk::Api::info_music,
             new Func(this, SLOT(proceedJson(QJsonObject &)))
         );
     } else {
-        Vk::Api::obj().audioRecomendationsAsync(
+        Vk::Queries::obj().trackRecomendationsAsync(
             sttngs.uid,
             sttngs.rec_type == Core::rec_user,
             true,
