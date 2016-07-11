@@ -12,7 +12,7 @@ namespace Core {
         public:
             virtual ~Sociable() {}
 
-            void setSearchLimitations(const bool & friend_by_id, const bool & friend_by_name,
+            void setSociableLimitations(const bool & friend_by_id, const bool & friend_by_name,
                                       const bool & group_by_id, const bool & group_by_name)
             {
                 setFriendSearchLimitations(friend_by_id, friend_by_name);

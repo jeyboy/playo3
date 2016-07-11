@@ -10,7 +10,9 @@ namespace Core {
             public:
                 enum AudioSearchSort { ass_creation_date = 0, ass_duration = 1, ass_popularity = 2 };
 
-                QString trackLyric(QString & lyrics_id) { //TODO: finish me // not tested
+                QString trackUrl(const QString & track_id) { return trackInfo(track_id).value(tkn_url).toString(); }
+
+                QString trackLyric(const QString & lyrics_id) { //TODO: finish me // not tested
                     return sRequest(
                         baseUrlStr(
                             qst_api_def, path_lyrics,

@@ -162,9 +162,7 @@ HEADERS += \
     modules/core/web/apis/social/od_api_keys.h \
     modules/core/web/apis/social/od_api_misc.h \
     modules/core/web/apis/social/od_request_api.h \
-    modules/core/web/apis/social/vk_api.h \
     modules/core/web/apis/social/vk/vk_keys.h \
-    modules/core/web/apis/social/vk_request_api.h \
     modules/core/web/apis/storage/_storages.h \
     modules/core/web/apis/storage/fourshared_api.h \
     modules/core/web/apis/storage/fourshared_api_keys.h \
@@ -312,7 +310,9 @@ HEADERS += \
     modules/core/web/apis/social/vk/vk_group.h \
     modules/core/web/apis/social/vk/vk_user.h \
     modules/core/web/apis/social/vk/vk_requests.h \
-    modules/core/web/apis/social/vk/vk_feed.h
+    modules/core/web/apis/social/vk/vk_feed.h \
+    modules/core/web/apis/social/vk/vk_set.h \
+    modules/core/web/apis/social/vk_queries.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -367,7 +367,6 @@ SOURCES += \
     modules/core/web/apis/site/shmidt.cpp \
     modules/core/web/apis/site/zaycev.cpp \
     modules/core/web/apis/social/od_api.cpp \
-    modules/core/web/apis/social/vk_api.cpp \
     modules/core/web/apis/storage/fourshared_api.cpp \
     modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/utils/html_parser.cpp \
@@ -450,4 +449,5 @@ SOURCES += \
     modules/core/web/apis/social/soundcloud/soundcloud_keys.cpp \
     modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp \
     modules/core/web/apis/social/soundcloud_queries.cpp \
-    dialogs/packages_dialog.cpp
+    dialogs/packages_dialog.cpp \
+    modules/core/web/apis/social/vk_queries.cpp

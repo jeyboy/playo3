@@ -17,7 +17,7 @@
 #include "modules/core/data_sub_types.h"
 #include "modules/core/core_parts/part_mixes/item_fields.h"
 
-#include "modules/core/web/apis/social/vk_api.h"
+#include "modules/core/web/apis/social/vk_queries.h"
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/file_utils/file_errors.h"
 #include "modules/core/web/response_error.h"

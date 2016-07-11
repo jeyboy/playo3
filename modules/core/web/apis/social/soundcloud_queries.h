@@ -11,7 +11,7 @@ namespace Core {
                 Q_OBJECT
 
                 friend class Singleton<Queries>;
-                inline Queries() { setSearchLimitations(true, true, true, true); }
+                inline Queries() { }
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_sc; }

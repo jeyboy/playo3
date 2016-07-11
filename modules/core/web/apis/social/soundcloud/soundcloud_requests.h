@@ -18,6 +18,7 @@ namespace Core {
                     public Group, public Playlist, public Set, public Track, public User
             {
             protected:
+                Requests() { setSociableLimitations(true, true, true, true); }
                 inline virtual ~Requests() {}
 
                 inline SourceFlags defaultFlags() {
