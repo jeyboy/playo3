@@ -1,4 +1,5 @@
 #include "relations_delegate.h"
+#include "modules/core/web/utils/web_manager.h"
 #include "modules/core/media/image_bank.h"
 
 QSize RelationsDelegate::sizeHint(const QStyleOptionViewItem & option, const QModelIndex & index) const {

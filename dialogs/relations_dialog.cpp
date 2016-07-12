@@ -3,6 +3,7 @@
 
 #include "modules/models/service/relations_delegate.h"
 #include "modules/core/web/web_apis.h"
+#include "modules/core/media/image_bank.h"
 
 using namespace Core;
 using namespace Web;
@@ -55,6 +56,13 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
 
     ui -> groupName -> setVisible(by_group_name);
     ui -> groupByName -> setVisible(by_group_name);
+}
+
+void RelationsDialog::done(int status) {
+    ImageBank::obj().cancelPackets(ui -> friendsList -> model());
+    ImageBank::obj().cancelPackets(ui -> groupsList -> model());
+
+    BaseDialog::done(status);
 }
 
 RelationsDialog::~RelationsDialog() { delete ui; }

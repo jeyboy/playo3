@@ -19,6 +19,7 @@ class RelationsDialog : public BaseDialog {
     QPushButton * default_btn;
 
     void prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list);
+    void done(int);
 public:
     explicit RelationsDialog(ISource * currApi, QWidget * parent = 0);
     ~RelationsDialog();
