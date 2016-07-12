@@ -21,8 +21,17 @@ namespace Core {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
+                        sf_primary_source |
+                        sf_auth_api_has /*| sf_auth_site_has*/ |
+                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
+                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
                         sf_recomendable_by_item | sf_recomendable_by_user |
-                        sf_auth_api_has /*| sf_auth_site_has*/ | sf_auth_mandatory
+                        /*sf_newable |*/ sf_populable |
+
+                        sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
+                        sf_content_photo_has | sf_content_news_has |
+
+                        sf_auth_mandatory
                     );
                 }
 
@@ -147,7 +156,7 @@ namespace Core {
                     );
                 }
 
-                QJsonObject userInfo(const QString & user_id) {
+                QJsonValue userInfo(const QString & user_id) {
                     QJsonObject ret = User::sRequest(
                         User::baseUrlStr(
                             qst_api_def, tkn_execute,
@@ -164,7 +173,7 @@ namespace Core {
                     return ret;
                 }
 
-                QJsonObject userTracksPlaylists(const QString & user_id) {
+                QJsonValue userTracksPlaylists(const QString & user_id) {
                     QJsonObject ret = User::sRequest(
                         User::baseUrlStr(
                             qst_api_def, tkn_execute,

@@ -69,8 +69,8 @@ namespace Core {
         sf_content_lyrics_has               = (quint64(1)) << 27,
         sf_content_audio_has                = (quint64(1)) << 28,
         sf_content_video_has                = (quint64(1)) << 29,
-//        sf_content_photo_has                = (quint64(1)) << 30,
-//        sf_content_news_has                 = (quint64(1)) << 31,
+        sf_content_photo_has                = (quint64(1)) << 30,
+        sf_content_news_has                 = (quint64(1)) << 31,
         sf_content_radio_has                = (quint64(1)) << 32,
 
         ///////////////////////////// control flags ///////////////////////
@@ -108,12 +108,12 @@ namespace Core {
 //        sf_api_feeds_auth_only              = (quint64(1)) << 56,
 
         sf_site_auth_mandatory =
-            sf_site_search_media_auth_only | sf_site_media_content_auth_only |
-            sf_site_object_content_auth_only | /*sf_site_feeds_auth_only |*/
+            sf_site_search_media_auth_only | sf_site_media_content_auth_only | sf_site_search_objects_auth_only |
+            sf_site_object_content_auth_only | sf_site_packs_auth_only | /*sf_site_feeds_auth_only |*/
             /*sf_site_sociable_auth_only |*/ sf_site_recomendations_auth_only,
         sf_api_auth_mandatory =
-            sf_api_search_media_auth_only | sf_api_media_content_auth_only |
-            sf_api_object_content_auth_only | /*sf_api_feeds_auth_only |*/
+            sf_api_search_media_auth_only | sf_api_media_content_auth_only | sf_api_search_objects_auth_only |
+            sf_api_object_content_auth_only | sf_api_packs_auth_only | /*sf_api_feeds_auth_only |*/
             /*sf_api_sociable_auth_only |*/ sf_api_recomendations_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory

@@ -30,6 +30,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
     }
 
     bool is_connected = isConnected();
+    button -> setEnabled(true);
     button -> setIcon(QIcon(QStringLiteral(":/add_%1").arg(name().toLower())));
 
     if (is_connected || offline_respondable) {

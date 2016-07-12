@@ -1,7 +1,7 @@
 #include "user_action_dialog.h"
 #include "ui_user_action_dialog.h"
 
-UserActionDialog::UserActionDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::UserActionDialog), finalized(false) {
+UserActionDialog::UserActionDialog(QWidget * parent) : BaseDialog(parent), ui(new Ui::UserActionDialog), window_title(0), finalized(false) {
     ui -> setupUi(this);
     new QHBoxLayout(this);
     createLayer();
@@ -14,61 +14,82 @@ UserActionDialog::~UserActionDialog() {
 void UserActionDialog::buildLoginWithCaptchaForm(const QPixmap & captcha_img, const QString & err, const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
     inputs.clear();
 
+    buildTitle(QStringLiteral("Auth form"));
+
     if (!err.isEmpty()) buildErrFields(err);
 
     buildCaptchaFields(captcha_img);
     buildLoginFields(login_val, password_val, login_label, password_label);
-    proceedForm(inputs, QStringLiteral("Auth form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildLoginForm(const QString & err, const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
     inputs.clear();
 
+    buildTitle(QStringLiteral("Auth form"));
+
     if (!err.isEmpty()) buildErrFields(err);
 
     buildLoginFields(login_val, password_val, login_label, password_label);
-    proceedForm(inputs, QStringLiteral("Auth form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
     inputs.clear();
+
+    buildTitle(QStringLiteral("Captcha form"));
+
     buildCaptchaFields(captcha_img);
-    proceedForm(inputs, QStringLiteral("Captcha form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildToolbarButtonForm(const QString & name, const QString & path) {
     inputs.clear();
+
+    buildTitle(QStringLiteral("Toolbar Button form"));
+
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
     inputs << FormInput::createUrl(path_key, QStringLiteral("Path"), path);
-    proceedForm(inputs, QStringLiteral("Toolbar Button form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildGenreForm(const QString & genre) {
     inputs.clear();
+
+    buildTitle(QStringLiteral("Genre form"));
+
     inputs << FormInput::createStr(name_key, QStringLiteral("Genre"), genre);
-    proceedForm(inputs, QStringLiteral("Genre form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildToolbarForm(const QString & name) {
     inputs.clear();
+
+    buildTitle(QStringLiteral("Toolbar form"));
+
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
-    proceedForm(inputs, QStringLiteral("Toolbar form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildPresetForm(const QString & name) {
     inputs.clear();
+
+    buildTitle(QStringLiteral("New preset form"));
+
     inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
-    proceedForm(inputs, QStringLiteral("New preset form"));
+    proceedForm(inputs);
 }
 
 void UserActionDialog::buildImportForm(const QString & text) {
     inputs.clear();
+
+    buildTitle(QStringLiteral("Import od IDs"));
+
     inputs << FormInput::createTxt(text_key, QStringLiteral("Ids"), text);
-    proceedForm(inputs, QStringLiteral("Import od IDs"));
+    proceedForm(inputs);
 }
 
-void UserActionDialog::buildForm(const QList<FormInput> & inputs, const QString & title) {
-    setWindowTitle(title);
+void UserActionDialog::buildForm(const QList<FormInput> & inputs) {
     recreateLayer();
     proceedInputs(inputs);
 }
@@ -147,6 +168,12 @@ void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
         l -> setRowMinimumHeight(l -> rowCount(), 35);
 }
 
+void UserActionDialog::createTitle(FormInput input, QGridLayout * l) {
+    window_title = new QLabel(input.label, layer);
+    window_title -> setStyleSheet(QStringLiteral("font-weight: bold;"));
+    insertElem(l, window_title);
+}
+
 void UserActionDialog::createMessage(FormInput input, QGridLayout * l) {
     QLabel * msg = new QLabel(input.label, layer);
     msg -> setStyleSheet(QStringLiteral("color: red; font-weight: bold;"));
@@ -165,6 +192,7 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
 
     for(QList<FormInput>::ConstIterator input = inputs.cbegin(); input != inputs.cend(); input++) {
         switch((*input).ftype) {
+            case title: createTitle(*input, l); break;
             case url: createUrl(*input, l); break;
             case action: createAction(*input, l); break;
             case image: createImage(*input, l); break;

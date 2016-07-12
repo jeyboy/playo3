@@ -9,21 +9,31 @@ void VkModel::refresh() {
     if (sttngs.rec_type == Core::rec_none) {
         Vk::Queries::obj().userInfoAsync(
             sttngs.uid,
-            new Func(this, SLOT(proceedJson(QJsonObject &)))
+            new Func(this, SLOT(proceedJson(QJsonValue &)))
         );
     } else {
         Vk::Queries::obj().trackRecommendationsAsync(
             sttngs.uid,
             sttngs.rec_type == Core::rec_user,
             true,
-            new Func(this, SLOT(proceedJson(QJsonObject &)))
+            new Func(this, SLOT(proceedJson(QJsonValue &)))
         );
     }
 }
 
-void VkModel::proceedJson(QJsonObject & hash) {
-    QJsonArray albums = hash.value(Vk::tkn_albums).toArray();
-    QJsonArray audios = hash.value(Vk::tkn_audio_list).toObject().value(Vk::tkn_items).toArray();
+void VkModel::proceedJson(QJsonValue & hash) {
+    QJsonArray albums, audios, groups, friends;
+
+    if (hash.isArray()) {
+        // reserved
+    } else {
+        QJsonObject hash_obj = hash.toObject();
+        albums = hash_obj.value(Vk::tkn_albums).toArray();
+        audios = hash_obj.value(Vk::tkn_audio_list).toObject().value(Vk::tkn_items).toArray();
+        groups = hash_obj.value(Vk::tkn_groups).toArray();
+        friends = hash_obj.value(Vk::tkn_friends).toArray();
+    }
+
     int itemsAmount = 0, albums_count = albums.size();
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
@@ -62,7 +72,6 @@ void VkModel::proceedJson(QJsonObject & hash) {
     /////////////////////////////////////////////////////////////////////
     {
         QJsonObject group;
-        QJsonArray groups = hash.value(Vk::tkn_groups).toArray();
 
         for(QJsonArray::Iterator it = groups.begin(); it != groups.end(); it++) {
             group = (*it).toObject();
@@ -80,7 +89,6 @@ void VkModel::proceedJson(QJsonObject & hash) {
 /////////////////////////////////////////////////////////////////////
     {
         QJsonObject frend;
-        QJsonArray friends = hash.value(Vk::tkn_friends).toArray();
 
         for(QJsonArray::Iterator it = friends.begin(); it != friends.end(); it++) {
             frend = (*it).toObject();

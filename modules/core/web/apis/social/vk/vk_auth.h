@@ -31,7 +31,6 @@ namespace Core {
 
                     while(true) {
                         Response * resp = Manager::prepare() -> getFollowed(form_url);
-                        QString err;
 
                 //        Logger::dump(resp -> toText().toUtf8());
 
@@ -40,12 +39,15 @@ namespace Core {
                         if (html.has("input[name='pass']")) { // if user not authorized
                             resp -> deleteLater();
                             QHash<QString, QString> vals;
-                            err = html.find(".service_msg_warning").text();
+
+                            if (error.isEmpty())
+                                error = html.find(".service_msg_warning").text();
 
                             Html::Tag * form = html.findFirst("form");
 
                             if (!form) {
-                                Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
+                                error = QStringLiteral("Auth form did not found");
+                                Logger::obj().write(val_auth_title, error, true);
                                 return false;
                             }
 
@@ -56,18 +58,18 @@ namespace Core {
                                 captcha_src = captcha_set.first() -> value("src");
 
                             if (captcha_src.isEmpty()) {
-                                if (!showingLogin(val_auth_title, vals[tkn_email], vals[tkn_password], err))
+                                if (!showingLogin(val_auth_title, vals[tkn_email], vals[tkn_password], error))
                                     return false;
                             } else {
                                 if (!showingLoginWithCaptcha(val_auth_title, captcha_src,
-                                    vals[tkn_email], vals[tkn_password], vals[tkn_captcha], err
+                                    vals[tkn_email], vals[tkn_password], vals[tkn_captcha], error
                                 )) return false;
                             }
 
+                            error = QString();
                             form_url = form -> serializeFormToUrl(vals);
                             qDebug() << form_url;
                             resp = Manager::prepare() -> formFollowed(form_url);
-                            html.output();
                         } else return false; // something went wrong
 
                         form_url = resp -> toUrl();
@@ -83,7 +85,10 @@ namespace Core {
 
                             return true;
                         }
-                        else form_url = authUrl();
+                        else {
+                            form_url = authUrl();
+                            error = QStringLiteral("Some shit happened... :(");
+                        }
                     }
                 }
 

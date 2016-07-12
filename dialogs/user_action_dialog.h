@@ -19,7 +19,7 @@
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { image, string, text, action, url, list, checkbox, message };
+enum FormInputType { title, image, string, text, action, url, list, checkbox, message };
 
 //class IdHighlighter : public QSyntaxHighlighter {
 //    Q_OBJECT
@@ -52,6 +52,10 @@ enum FormInputType { image, string, text, action, url, list, checkbox, message }
 
 struct FormInput {
     inline FormInput() {}
+
+    static inline FormInput createTitle(const QString & label) {
+        return FormInput(title, QString(), label);
+    }
 
     static inline FormInput createMessage(const QString & label) {
         return FormInput(message, QString(), label);
@@ -119,6 +123,10 @@ public:
     ~UserActionDialog();
 
 
+    void buildTitle(const QString & title) {
+        inputs << FormInput::createTitle(title);
+    }
+
     void buildErrFields(const QString & err) {
         inputs << FormInput::createMessage(err);
     }
@@ -141,16 +149,21 @@ public:
     void buildToolbarForm(const QString & name = QString());
     void buildPresetForm(const QString & name = QString());
     void buildImportForm(const QString & text = QString());
-    void proceedForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form")) { // thread safe call
+    void proceedForm(const QList<FormInput> & inputs) { // thread safe call
         if (!Core::ThreadUtils::livesInCurrThread(this))
-            QMetaObject::invokeMethod(this, "buildForm", Qt::BlockingQueuedConnection, Q_ARG(const QList<FormInput> &, inputs), Q_ARG(const QString &, title));
-        else return buildForm(inputs, title);
+            QMetaObject::invokeMethod(this, "buildForm", Qt::BlockingQueuedConnection, Q_ARG(const QList<FormInput> &, inputs));
+        else return buildForm(inputs);
     }
     void extendForm(const QList<FormInput> & inputs);
 
     QString getValue(const QString & name);
 
-public slots:   
+public slots:
+    void setWindowTitle(const QString & new_title) {
+        if (window_title)
+            window_title -> setText(new_title);
+    }
+
     inline int exec() {
          if (!Core::ThreadUtils::livesInCurrThread(this)) {
             QMetaObject::invokeMethod(this, "finalization", Qt::BlockingQueuedConnection);
@@ -164,7 +177,7 @@ public slots:
     }
 
 protected slots:
-    void buildForm(const QList<FormInput> & inputs, const QString & title = QStringLiteral("Some form"));
+    void buildForm(const QList<FormInput> & inputs);
     void finalization() {
         if (!finalized) {
             insertButtons();
@@ -222,6 +235,7 @@ private:
     void createImage(FormInput input, QGridLayout * l);
     void createAction(FormInput input, QGridLayout * l);
     void createMessage(FormInput input, QGridLayout * l);
+    void createTitle(FormInput input, QGridLayout * l);
 
     void proceedInputs(const QList<FormInput> & inputs);
     void insertButtons();
@@ -231,6 +245,7 @@ private:
     QHash<QObject *, FormInput> actions;
     QList<FormInput> inputs;
     QWidget * layer;
+    QLabel * window_title;
     bool finalized;
 };
 

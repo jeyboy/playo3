@@ -67,6 +67,9 @@ Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
 bool ISourceAuthPerm::connectUser() {
     bool res = true;
 
+    button -> setIcon(QIcon(QStringLiteral(":/items/process")));
+    button -> setEnabled(false);
+
     if (!apiConnected() && hasApiConnection()) {
         res &= connectUserApi();
         if (res) attrs[SOURCE_API_AUTH_JSON] = true;
@@ -83,7 +86,7 @@ bool ISourceAuthPerm::connectUser() {
     if (siteConnected()) // take / refresh online attrs
         res &= requireOnlineCredentials() == takeOnlineCredentials();
 
-    if (res) initButton();
+    initButton();
 
     return res;
 }
