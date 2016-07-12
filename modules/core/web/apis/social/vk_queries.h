@@ -17,12 +17,15 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_vk; }
 
-                void userInfoAsync(const QString & uid, const InfoType & info_type, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, uid, info_type, func);
+                void userInfoAsync(const QString & user_id, Func * func) {
+                    if (user_id == userID())
+                        ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
+                    else
+                        ThreadUtils::obj().run((Requests *)this, &Requests::userTracksPlaylists, user_id, func);
                 }
 
                 void trackRecommendationsAsync(const QString & uid, bool byUser, bool randomize, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, uid, byUser, randomize, func);
+                    ThreadUtils::obj().run((Track *)this, &Track::trackRecommendations, uid, byUser, randomize, func);
                 }
 
                 QString refresh(const QString & audio_uid, const DataMediaType & /*itemMediaType*/) { // TODO: update for video refresh
@@ -32,7 +35,7 @@ namespace Core {
                 QList<Linkable> findFriendsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByIdOrPerma(uid);
+                    QJsonArray arr = usersByIdOrPerma(uid).toArray();
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -40,7 +43,7 @@ namespace Core {
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByName(name);
+                    QJsonArray arr = usersByName(name).toArray();
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -49,7 +52,7 @@ namespace Core {
                 QList<Linkable> findGroupsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByIdOrPerma(uid);
+                    QJsonArray arr = groupsByIdOrPerma(uid).toArray();
                     jsonToGroups(linkables, arr);
 
                     return linkables;
@@ -57,7 +60,7 @@ namespace Core {
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name);
+                    QJsonArray arr = groupsByName(name).toArray();
                     jsonToGroups(linkables, arr);
 
                     return linkables;

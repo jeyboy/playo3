@@ -7,13 +7,12 @@ void VkModel::refresh() {
     QApplication::processEvents();
 
     if (sttngs.rec_type == Core::rec_none) {
-        Vk::Api::obj().userInfoAsync(
+        Vk::Queries::obj().userInfoAsync(
             sttngs.uid,
-            sttngs.uid == Vk::Queries::obj().userID() ? Vk::Api::info_all : Vk::Api::info_music,
             new Func(this, SLOT(proceedJson(QJsonObject &)))
         );
     } else {
-        Vk::Queries::obj().trackRecomendationsAsync(
+        Vk::Queries::obj().trackRecommendationsAsync(
             sttngs.uid,
             sttngs.rec_type == Core::rec_user,
             true,
@@ -68,7 +67,7 @@ void VkModel::proceedJson(QJsonObject & hash) {
         for(QJsonArray::Iterator it = groups.begin(); it != groups.end(); it++) {
             group = (*it).toObject();
 
-            Vk::Api::obj().addGroup(
+            Vk::Queries::obj().addGroup(
                 Linkable(
                     QString::number(group.value(Vk::tkn_id).toInt()),
                     group.value(Vk::tkn_title).toString(),
@@ -86,7 +85,7 @@ void VkModel::proceedJson(QJsonObject & hash) {
         for(QJsonArray::Iterator it = friends.begin(); it != friends.end(); it++) {
             frend = (*it).toObject();
 
-            Vk::Api::obj().addFriend(
+            Vk::Queries::obj().addFriend(
                 Linkable(
                     QString::number(frend.value(Vk::tkn_id).toInt()),
                     frend.value(Vk::tkn_title).toString(),

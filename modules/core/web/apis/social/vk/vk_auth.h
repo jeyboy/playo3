@@ -90,6 +90,27 @@ namespace Core {
                 bool connectSite() {
                     return false;
                 }
+
+                bool captchaProcessing(QJsonObject & json, QString & url_str) {
+                    QJsonObject stat_obj = json.value(tkn_error).toObject();
+
+                    QString captchaText;
+                    showingCaptcha(QUrl(stat_obj.value(tkn_captcha_img).toString()), captchaText);
+                    if (captchaText.isEmpty())
+                        return false;
+
+                    QUrl url(url_str);
+                    QUrlQuery query(url.query());
+                    query.removeQueryItem(tkn_captcha_sid);
+                    query.removeQueryItem(tkn_captcha);
+
+                    query.addQueryItem(tkn_captcha_sid, stat_obj.value(tkn_captcha_sid).toString());
+                    query.addQueryItem(tkn_captcha, captchaText);
+
+                    url.setQuery(query);
+
+                    return sRequest(url.toString(), json, call_type_json);
+                }
             };
         }
     }

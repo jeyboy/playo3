@@ -26,6 +26,8 @@ namespace Core {
                     );
                 }
 
+                Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
+
                 bool connectUserApi() {
                     QString token, user_id, expiration;
 
@@ -46,7 +48,7 @@ namespace Core {
                     QJsonObject res;
 
                     if (limits.include_audio())
-                        res.insert(DMT_AUDIO, audioPopular(true, limits.genre));
+                        res.insert(DMT_AUDIO, setByType(popular_tracks, PPACK(Auth::boolToStr(false), limits.genre)));
 
 //                    if (limits.include_video())
 //                        res.insert(DMT_VIDEO, videoPopular(limits));
@@ -130,34 +132,14 @@ namespace Core {
                     } else return code == 0;
                 }
 
-                bool captchaProcessing(QJsonObject & json, QString & url_str) {
-                    QJsonObject stat_obj = json.value(tkn_error).toObject();
-
-                    QString captchaText;
-                    showingCaptcha(QUrl(stat_obj.value(tkn_captcha_img).toString()), captchaText);
-                    if (captchaText.isEmpty())
-                        return false;
-
-                    QUrl url(url_str);
-                    QUrlQuery query(url.query());
-                    query.removeQueryItem(tkn_captcha_sid);
-                    query.removeQueryItem(tkn_captcha);
-
-                    query.addQueryItem(tkn_captcha_sid, stat_obj.value(tkn_captcha_sid).toString());
-                    query.addQueryItem(tkn_captcha, captchaText);
-
-                    url.setQuery(query);
-
-                    return sRequest(url.toString(), json, call_type_json);
-                }
             //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
 
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
 
                 QJsonValue userTracksGroupsFriends(const QString & user_id) {
-                    return sRequest(
-                        baseUrlStr(
+                    return User::sRequest(
+                        User::baseUrlStr(
                             qst_api_def, tkn_execute,
                             {{ tkn_code, query_user_tracks_groups_friends.arg(user_id) }}
                         ),
@@ -166,8 +148,8 @@ namespace Core {
                 }
 
                 QJsonObject userInfo(const QString & user_id) {
-                    QJsonObject ret = sRequest(
-                        baseUrlStr(
+                    QJsonObject ret = User::sRequest(
+                        User::baseUrlStr(
                             qst_api_def, tkn_execute,
                             {{ tkn_code, query_user_tracks_playlists_groups_friends.arg(user_id) }}
                         ),
@@ -176,15 +158,15 @@ namespace Core {
 
                     if (!ret.value(tkn_albums_finished).toBool()) {
                         QJsonArray ar = ret.value(tkn_albums).toArray();
-                        audioAlbums(uid, ar, ret.value(tkn_albums_offset).toInt());
+                        tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
                         ret.insert(tkn_albums, ar);
                     }
                     return ret;
                 }
 
                 QJsonObject userTracksPlaylists(const QString & user_id) {
-                    QJsonObject ret = sRequest(
-                        baseUrlStr(
+                    QJsonObject ret = User::sRequest(
+                        User::baseUrlStr(
                             qst_api_def, tkn_execute,
                             {{ tkn_code, query_user_tracks_playlists.arg(user_id) }}
                         ),
@@ -193,7 +175,7 @@ namespace Core {
 
                     if (!ret.value(tkn_albums_finished).toBool()) {
                         QJsonArray ar = ret.value(tkn_albums).toArray();
-                        audioAlbums(uid, ar, ret.value(tkn_albums_offset).toInt());
+                        tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
                         ret.insert(tkn_albums, ar);
                     }
                     return ret;

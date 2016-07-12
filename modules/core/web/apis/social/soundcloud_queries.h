@@ -35,7 +35,7 @@ namespace Core {
                 }
 
                 inline void trackRelationsAsync(const QString & track_id, Func * func) {
-                    ThreadUtils::obj().run((Track *)this, &Track::trackRelations, track_id, SOUNDCLOUD_ITEMS_LIMIT, 0, func);
+                    ThreadUtils::obj().run((Track *)this, &Track::trackRecommendations, track_id, SOUNDCLOUD_ITEMS_LIMIT, 0, func);
                 }
 
 

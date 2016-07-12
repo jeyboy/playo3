@@ -161,40 +161,6 @@ namespace Core {
 
                     return QJsonArray();
                 }
-
-                QJsonValue trackPopular(const QString & genre, bool & onlyEng) {
-                    int genre_id = -1; //genres.toInt(genre);
-
-                    Permissions perm = permissions(pr_media_content);
-
-                    switch(perm) {
-                        case perm_site:
-                        case perm_api: {
-                            return saRequest(
-                                baseUrlStr(
-                                    qst_api_def, tkn_execute,
-                                    {
-                                        {
-                                            tkn_code, QString(
-                                               "var popular = API.audio.getPopular({"
-                                                    "only_eng: " + boolToStr(onlyEng) + ", "
-                                                    "count: 1000 " + (genre_id != -1 ? (", genre_id: " + QString::number(genre_id)) : "") + ""
-                                                 "});"
-                                               "return {" % tkn_audio_list % ": popular};"
-                                            )
-                                        }
-                                    }
-                                ),
-                                call_type_json, 0, proc_json_extract,
-                                IQUERY_DEF_FIELDS << tkn_audio_list
-                            );
-                        }
-
-                        default: Logger::obj().write("VK", "track Lyric is not accessable", true);
-                    }
-
-                    return QJsonArray();
-                }
             };
         }
     }

@@ -118,22 +118,20 @@ namespace Core {
                     QString popular_title = setTypeToStr(set_popular);
 
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
-                        res.insert(new_hot_title % opt.key(), QString::number(set_new_hot) % '|' % opt.value());
-                        res.insert(top_50_title % opt.key(), QString::number(set_top_50) % '|' % opt.value());
+                        res.insert(new_hot_title % opt.key(), PPACK(QString::number(set_new_hot), opt.value()));
+                        res.insert(top_50_title % opt.key(), PPACK(QString::number(set_top_50), opt.value()));
 
                         QStringList parts = opt.key().split('&', QString::SkipEmptyParts);
 
                         if (parts.size() == 1)
-                            res.insert(popular_title % opt.key(), QString::number(set_popular) % '|' % opt.value());
+                            res.insert(popular_title % opt.key(), PPACK(QString::number(set_popular), opt.value()));
                         else {
-                            res.insert(popular_title % parts.first(), QString::number(set_popular) % '|' % parts.first());
-                            res.insert(popular_title % parts.last(), QString::number(set_popular) % '|' % parts.last());
+                            res.insert(popular_title % parts.first(), PPACK(QString::number(set_popular), parts.first()));
+                            res.insert(popular_title % parts.last(), PPACK(QString::number(set_popular), parts.last()));
                         }
                     }
 
-//                    res.insert(new_hot_title % PACKAGE_REPLACE_FRAGMENT, QString::number(set_new_hot) % QStringLiteral("|%"));
-//                    res.insert(top_50_title % PACKAGE_REPLACE_FRAGMENT, QString::number(set_top_50) % QStringLiteral("|%"));
-                    res.insert(popular_title % PACKAGE_REPLACE_FRAGMENT, QString::number(set_popular) % QStringLiteral("|%"));
+                    res.insert(popular_title % PACKAGE_REPLACE_FRAGMENT, PPACK(QString::number(set_popular), '%'));
 
                     return res;
                 }

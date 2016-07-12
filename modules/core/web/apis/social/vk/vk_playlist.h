@@ -8,7 +8,7 @@ namespace Core {
         namespace Vk {
             class Playlist : public Base {
             public:
-                QJsonValue tracksPlaylistsByUser(QString & user_id, QJsonArray * arr = 0, int offset = 0) {
+                QJsonValue tracksPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -31,7 +31,7 @@ namespace Core {
                     return QJsonArray();
                 }
 
-//                QJsonValue videoPlaylistsByUser(QString & user_id, QJsonArray * arr = 0, int offset = 0) {
+//                QJsonValue videoPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0) {
 //                    Permissions perm = permissions(pr_media_content);
 
 //                    switch(perm) {
