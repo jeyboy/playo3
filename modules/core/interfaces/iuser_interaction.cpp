@@ -11,11 +11,15 @@ bool IUserInteraction::showingCaptcha(const QUrl & pict_url, QString & result) {
     return res;
 }
 
-bool IUserInteraction::showingLogin(const QString & title, QString & login, QString & pass, const QString & err) {
-    actionDialog -> buildLoginForm(err, login, pass);
-    actionDialog -> setWindowTitle(title);
+bool IUserInteraction::showingLogin(const QString & title, QString & login, QString & pass, const QString & err, bool check_prev) {
+    bool res = check_prev;
 
-    bool res = actionDialog -> exec();
+    if (!check_prev || (check_prev && actionDialog -> getValue(actionDialog -> login_key).isEmpty())) {
+        actionDialog -> buildLoginForm(err, login, pass);
+        actionDialog -> setWindowTitle(title);
+
+        res = actionDialog -> exec();
+    }
 
     login = actionDialog -> getValue(actionDialog -> login_key);
     pass = actionDialog -> getValue(actionDialog -> pass_key);

@@ -75,7 +75,7 @@ bool ISourceAuthPerm::connectUser() {
         if (res) attrs[SOURCE_API_AUTH_JSON] = true;
     }
 
-    if (!siteConnected() && hasSiteConnection()) {
+    if (res && !siteConnected() && hasSiteConnection()) {
         res &= requireOfflineCredentials() == takeOfflineCredentials();
 
         res &= connectUserSite();

@@ -22,7 +22,7 @@ namespace Core {
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
                         sf_primary_source |
-                        sf_auth_api_has /*| sf_auth_site_has*/ |
+                        sf_auth_api_has | sf_auth_site_has |
                         sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
                         sf_recomendable_by_item | sf_recomendable_by_user |
@@ -49,7 +49,7 @@ namespace Core {
 
                     return false;
                 }
-                bool connectUserSite() { return false; } // TODO: write me
+                bool connectUserSite() { return connectSite(error); }
 
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
@@ -174,20 +174,49 @@ namespace Core {
                 }
 
                 QJsonValue userTracksPlaylists(const QString & user_id) {
-                    QJsonObject ret = User::sRequest(
-                        User::baseUrlStr(
-                            qst_api_def, tkn_execute,
-                            {{ tkn_code, query_user_tracks_playlists.arg(user_id) }}
-                        ),
-                        call_type_json, 0, proc_json_extract
-                    );
+                    Permissions perm = permissions(pr_media_content);
 
-                    if (!ret.value(tkn_albums_finished).toBool()) {
-                        QJsonArray ar = ret.value(tkn_albums).toArray();
-                        tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
-                        ret.insert(tkn_albums, ar);
+                    switch(perm) {
+                        case perm_site: {
+                            Response * response = Manager::prepare() -> postFollowed(
+                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=0&id=%1&please_dont_ddos=2").arg(user_id),
+                                {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios").arg(user_id) }}
+                            );
+
+                            QString data = response -> toText();
+                            QStringList parts = data.split(QStringLiteral("<!>"));
+
+
+
+                            if (parts.length < 7)
+                                Logger::obj().write("VK", "LOAD AUDIO", true);
+                                return QJsonObject();
+                            } else {
+                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[6]).object();
+
+
+                                QJsonObject info_obj = QJsonDocument::fromJson(parts[7]).object();
+
+                                i = 0;
+                            }
+                        break;}
+                        case perm_api: {
+                            QJsonObject ret = User::sRequest(
+                                User::baseUrlStr(
+                                    qst_api_def, tkn_execute,
+                                    {{ tkn_code, query_user_tracks_playlists.arg(user_id) }}
+                                ),
+                                call_type_json, 0, proc_json_extract
+                            );
+
+                            if (!ret.value(tkn_albums_finished).toBool()) {
+                                QJsonArray ar = ret.value(tkn_albums).toArray();
+                                tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
+                                ret.insert(tkn_albums, ar);
+                            }
+                            return ret;
+                        }
                     }
-                    return ret;
                 }
             };
         }

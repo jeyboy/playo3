@@ -14,7 +14,7 @@ namespace Core {
             UserActionDialog * actionDialog;
 
             bool showingCaptcha(const QUrl & pict_url, QString & result);
-            bool showingLogin(const QString & title, QString & login, QString & pass, const QString & err = QString());
+            bool showingLogin(const QString & title, QString & login, QString & pass, const QString & err = QString(), bool check_prec = false);
             bool showingLoginWithCaptcha(const QString & title, const QUrl & pict_url, QString & login, QString & pass, QString & captcha, const QString & err = QString());
         };
 }

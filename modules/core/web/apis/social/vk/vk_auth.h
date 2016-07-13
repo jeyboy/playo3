@@ -25,7 +25,6 @@ namespace Core {
                     return url.toString();
                 }
 
-
                 bool connectApi(QString & newToken, QString & userID, QString & expiration, QString & error) {
                     QUrl form_url = authUrl();
 
@@ -92,7 +91,60 @@ namespace Core {
                     }
                 }
 
-                bool connectSite() {
+                bool connectSite(QString & error) {
+                    QUrl form_url = QUrl("https://new.vk.com/");
+
+                    while(true) {
+                        Response * resp = Manager::prepare() -> getFollowed(form_url);
+
+                        Html::Document html = resp -> toHtml(false);
+
+                        html.output();
+
+                        if (html.has("#index_login_form")) { // if user not authorized
+                            resp -> deleteLater();
+                            QHash<QString, QString> vals;
+
+                            if (error.isEmpty())
+                                error = html.find(".service_msg_warning").text();
+
+                            Html::Tag * form = html.findFirst("form");
+
+                            if (!form) {
+                                error = QStringLiteral("Auth form did not found");
+                                Logger::obj().write(val_auth_title, error, true);
+                                return false;
+                            }
+
+                            QString captcha_src;
+                            Html::Set captcha_set = form -> find("img#captcha");
+
+                            if (!captcha_set.isEmpty())
+                                captcha_src = captcha_set.first() -> value("src");
+
+                            if (captcha_src.isEmpty()) {
+                                if (!showingLogin(val_auth_title, vals[tkn_email], vals[tkn_password], error, true))
+                                    return false;
+                            } else {
+                                if (!showingLoginWithCaptcha(val_auth_title, captcha_src,
+                                    vals[tkn_email], vals[tkn_password], vals[tkn_captcha], error
+                                )) return false;
+                            }
+
+                            error = QString();
+                            form_url = form -> serializeFormToUrl(vals);
+                            qDebug() << form_url;
+                            resp = Manager::prepare() -> formFollowed(form_url);
+
+                            qDebug() << "YYY " << resp -> toUrl(false);
+
+                            resp -> toHtml().output();
+
+                        } else return true;
+
+                        break; // not finished
+                    }
+
                     return false;
                 }
 
