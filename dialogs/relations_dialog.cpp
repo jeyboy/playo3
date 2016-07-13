@@ -59,6 +59,9 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
 }
 
 void RelationsDialog::done(int status) {
+    ui -> friendsList -> clear();
+    ui -> groupsList -> clear();
+
     ImageBank::obj().cancelPackets(ui -> friendsList -> model());
     ImageBank::obj().cancelPackets(ui -> groupsList -> model());
 

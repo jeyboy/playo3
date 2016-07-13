@@ -22,7 +22,6 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
 
     QString bank_temp_dir;
 
-    mutable bool block_thread;
     int in_proc;
     QList<QString> orders;
 
@@ -32,7 +31,7 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
 
     QHash<QString, QString> locale_pathes;
 
-    ImageBank() : bank_temp_dir(QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/")), block_thread(false), in_proc(0) {
+    ImageBank() : bank_temp_dir(QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/")), in_proc(0) {
         QDir dir(bank_temp_dir);
         if (!dir.exists())
             dir.mkpath(".");
@@ -45,8 +44,6 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
     Core::Web::Response * procImageCall(const QUrl & url) { return Core::Web::Manager::prepare() -> getFollowed(url); }
 
     void procOrder() {
-        if (block_thread) return;
-
         while(!orders.isEmpty()) {
             if (in_proc < BANK_IMG_SLOTS_AMOUNT) {
                 Core::ThreadUtils::obj().run(
@@ -134,8 +131,6 @@ public:
     }
 
     void cancelPackets(QAbstractItemModel * model) {
-        block_thread = true;
-
         QMutableHashIterator<QString, QModelIndex> i(packet_requests);
         while (i.hasNext()) {
             i.next();
@@ -146,9 +141,6 @@ public:
                 i.remove();
             }
         }
-
-        block_thread = false;
-        procOrder();
     }
 public slots:
     void pixmapDownloaded(Response * response) {
@@ -182,7 +174,7 @@ public slots:
 
         QModelIndex ind = packet_requests[url_str];
 
-        if (ind.isValid()) {
+        if (ind.isValid() && packet_limiters.contains(ind)) {
             if (--packet_limiters[ind] <= 0) {
                 packet_limiters.remove(ind);
                 packet_requests.remove(url_str);
