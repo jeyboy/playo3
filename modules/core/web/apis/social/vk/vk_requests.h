@@ -178,9 +178,11 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: /*{
+                        case perm_site: {
+                            bool is_group = user_id[0] == '-';
+
                             Response * response = Manager::prepare() -> postFollowed(
-                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=0&id=%1&please_dont_ddos=2").arg(user_id),
+                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=%1&id=%2&please_dont_ddos=2").arg(is_group ? user_id.mid(1) : '0', is_group ? '0' : user_id),
                                 {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }}
                             );
 
@@ -193,12 +195,18 @@ namespace Core {
                                 Logger::obj().write("VK", "LOAD AUDIO", true);
                                 return QJsonObject();
                             } else {
+
+                                //['20284990','456239018','http://cs5638v4.vk.me/u16643/audios/9841a7f4aace.mp3?extra=6pC5oPHMknb8slrqcCtCAv2cpHb0vn6VPTEKLZ2hTw-nc-lhOXp1HfLbeR6l7ZClwN054NqVnYKQuaX86kVphWWf_iazl7AnFSd7sxG-p-EyfigJkLMaDdi7mlYGYxVYSrgx5amNPfHR','233','3:53','Cervello','The Cure','0','0','0','','0','1']
                                 QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8()).object();
 
+                                QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
+                                for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end; track_arr++) {
+
+                                }
 
                                 QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
                             }
-                        break;}*/
+                        break;}
                         case perm_api: {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
