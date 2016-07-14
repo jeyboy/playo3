@@ -51,7 +51,6 @@ namespace Core {
             extern const QString tkn_password          = QStringLiteral("pass");
             extern const QString tkn_date              = QStringLiteral("date");
             extern const QString tkn_items             = QStringLiteral("items");
-            extern const QString tkn_folder_id         = QStringLiteral("folder_id");
             extern const QString tkn_time_sep          = QStringLiteral(" : ");
             extern const QString tkn_q                 = QStringLiteral("q");
             extern const QString tkn_photo             = QStringLiteral("photo_200");
@@ -97,7 +96,7 @@ namespace Core {
                 "while(folders_result.length > 0) {"
                 "    curr = folders_result.pop();"
                 "    proceed_folders.push({"
-                "        " % tkn_folder_id % ": curr.id,"
+                "        " % tkn_id % ": curr.id,"
                 "        " % tkn_title % ": curr.title,"
                 "        " % tkn_items % ": API.audio.get({"
                 "            owner_id: %1,"
@@ -124,7 +123,7 @@ namespace Core {
                 "while(folders_result.length > 0) {"
                 "    curr = folders_result.pop();"
                 "    proceed_folders.push({"
-                "        " % tkn_folder_id % ": curr.id,"
+                "        " % tkn_id % ": curr.id,"
                 "        " % tkn_title % ": curr.title,"
                 "        " % tkn_items % ": API.video.get({"
                 "            owner_id: %1,"
@@ -230,7 +229,7 @@ namespace Core {
                 "    while(folders_result.items.length > 0) { "
                 "        curr = folders_result.items.pop();"
                 "        proceed_folders.push({"
-                "            " % tkn_folder_id % ": curr.id, "
+                "            " % tkn_id % ": curr.id, "
                 "            " % tkn_title % ": curr.title, "
                 "            " % tkn_items % ": API.audio.get({ "
                 "                album_id: curr.id "
@@ -261,7 +260,7 @@ namespace Core {
                 "    while(folders_result.items.length > 0) { "
                 "        var curr = folders_result.items.pop(); "
                 "        sort_by_folders.push({"
-                "            " % tkn_folder_id % ": curr.id, "
+                "            " % tkn_id % ": curr.id, "
                 "            " % tkn_title % ": curr.title, "
                 "            " % tkn_items % ": API.audio.get({ "
                 "                owner_id: %1, "

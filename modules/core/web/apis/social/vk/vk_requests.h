@@ -142,7 +142,9 @@ namespace Core {
                     } else return code == 0;
                 }
 
-            //    inline QString adapteUid(QString & uid) { return uid == "0" ? userID() : uid; }
+                inline QJsonValue loadSet(const QVariantMap & attrs) {
+                    return tracksByPlaylist(attrs[tkn_grab_refresh].toString());
+                }
 
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
@@ -189,22 +191,45 @@ namespace Core {
                             QString data = response -> toText();
                             QStringList parts = data.split(QStringLiteral("<!>"));
 
-
-
                             if (parts.length() < 7) {
                                 Logger::obj().write("VK", "LOAD AUDIO", true);
                                 return QJsonObject();
                             } else {
-
-                                //['20284990','456239018','http://cs5638v4.vk.me/u16643/audios/9841a7f4aace.mp3?extra=6pC5oPHMknb8slrqcCtCAv2cpHb0vn6VPTEKLZ2hTw-nc-lhOXp1HfLbeR6l7ZClwN054NqVnYKQuaX86kVphWWf_iazl7AnFSd7sxG-p-EyfigJkLMaDdi7mlYGYxVYSrgx5amNPfHR','233','3:53','Cervello','The Cure','0','0','0','','0','1']
                                 QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8()).object();
 
                                 QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
+                                QJsonArray tracks_res;
                                 for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end; track_arr++) {
+                                    QJsonArray track = (*track_arr).toArray();
+                                    QJsonObject track_obj;
 
+                                    track_obj.insert(tkn_id, track[0].toString().toInt());
+                                    track_obj.insert(tkn_owner_id, track[1].toString().toInt());
+                                    track_obj.insert(tkn_url, track[2].toString());
+//                                    track[3].toString().toInt() // bitrate
+//                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
+//                                    track[8].toString().toInt() // ?album_id // '0' if empty
+                                    track_obj.insert(tkn_artist, track[5].toString());
+                                    track_obj.insert(tkn_title, track[6].toString());
+                                    track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()));
+//                                    track_obj.insert(tkn_genre_id, ); // not presented
+
+                                    tracks_res << track_obj;
                                 }
 
                                 QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
+                                QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
+                                QJsonArray playlists_res;
+
+                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end; playlist++)
+                                    playlists_res << playlist.value();
+
+                                QJsonObject res;
+
+                                res.insert(tkn_audio_list, tracks_res);
+                                res.insert(tkn_albums, playlists_res);
+
+                                return res;
                             }
                         break;}
                         case perm_api: {

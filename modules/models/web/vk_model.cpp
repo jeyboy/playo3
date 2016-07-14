@@ -46,18 +46,30 @@ void VkModel::proceedJson(QJsonValue & hash) {
             for(QJsonArray::Iterator album_obj = albums.begin(); album_obj != albums.end(); album_obj++, pos++) {
                 album = (*album_obj).toObject();
 
-                QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
-                if (albumItems.size() > 0) {
-                    folder = rootItem -> createPlaylist(
-                        dt_playlist_vk,
-                        album.value(Vk::tkn_folder_id).toString(),
-                        album.value(Vk::tkn_title).toString(),
-                        pos
-                    );
+                if (album.contains(Vk::tkn_items)) {
+                    QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
+                    if (albumItems.size() > 0) {
+                        folder = rootItem -> createPlaylist(
+                            dt_playlist_vk,
+                            album.value(Vk::tkn_id).toString(),
+                            album.value(Vk::tkn_title).toString(),
+                            pos
+                        );
 
-                    int folderItemsAmount = proceedVkList(albumItems, folder);
-                    folder -> updateItemsCountInBranch(folderItemsAmount);
-                    itemsAmount += folderItemsAmount;
+                        int folderItemsAmount = proceedVkList(albumItems, folder);
+                        folder -> updateItemsCountInBranch(folderItemsAmount);
+                        itemsAmount += folderItemsAmount;
+                    }
+                }
+                else {
+                    rootItem -> createLoadablePlaylist(
+                        {
+                            {JSON_TYPE_ITEM_TYPE, dt_playlist_vk},
+                            {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
+                        },
+                        itm.value(Vk::tkn_title).toString(),
+                        itm.value(Vk::tkn_id).toString()
+                    );
                 }
             }
         }

@@ -7,7 +7,7 @@ namespace Core {
     namespace Web {
         namespace Vk {
             class Playlist : public Base {
-            public:
+            public:               
                 QJsonValue tracksPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
 

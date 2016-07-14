@@ -161,6 +161,30 @@ namespace Core {
 
                     return QJsonArray();
                 }
+
+                QJsonValue tracksByPlaylist(const QString & playlist_id) { // not finished
+                    Permissions perm = permissions(pr_media_content);
+
+                    switch(perm) {
+                        case perm_site:
+                        case perm_api: {
+                            return saRequest(
+                                baseUrlStr(
+                                    qst_api_def, QStringLiteral("audio.get"),
+                                    {
+                                        { QStringLiteral("album_id"), playlist_id },
+                                        { QStringLiteral("count"), 6000} // max
+                                    }
+                                ),
+                                call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
+                            );
+                        }
+
+                        default: Logger::obj().write("VK", "tracksByPlaylist is not accessable", true);
+                    }
+
+                    return QJsonArray();
+                }
             };
         }
     }

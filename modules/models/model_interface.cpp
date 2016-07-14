@@ -401,24 +401,23 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
             dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
 
         if (itm.contains(tkn_grab_is_set)) {
-            QVariantMap hash = {{JSON_TYPE_ITEM_TYPE, wType}, {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()}, {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}};
-
-            Playlist * playlist = parent -> createLoadablePlaylist(
-                hash,
-                itm.value(tkn_grab_title).toString(),
-                itm.value(tkn_grab_id).toString()
-            );
-
             if (itm.contains(tkn_grab_set_items)) {
+                Playlist * playlist = parent -> createPlaylist(wType, itm.value(tkn_grab_id).toString(), itm.value(tkn_grab_title).toString());
                 int taked_amount = proceedGrabberList(itm.value(tkn_grab_set_items).toArray(), playlist, dm_type, wType);
                 itemsAmount += taked_amount;
                 playlist -> updateItemsCountInBranch(taked_amount);
             } else {
-                playlist -> setStates(IItem::flag_not_expanded);
-                IItem * dummy = new IItem(dt_dummy, playlist, DEFAULT_ITEM_STATE | IItem::flag_proceeded);
-                dummy -> setTitle(QStringLiteral("Loading..."));
+                parent -> createLoadablePlaylist(
+                    {
+                        {JSON_TYPE_ITEM_TYPE, wType},
+                        {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()},
+                        {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}
+                    },
+                    itm.value(tkn_grab_title).toString(),
+                    itm.value(tkn_grab_id).toString()
+                );
+
                 itemsAmount++;
-                playlist -> updateItemsCountInBranch(1);
             }
         } else {
             QString id = QString::number(itm.value(tkn_grab_id).toInt());

@@ -68,6 +68,11 @@ namespace Core {
                 curr = new Playlist(LOADABLE_CONTAINER_ATTRS(name, attrs), this, pos);
                 if (!uid.isEmpty())
                     curr -> setId(uid);
+
+                setStates(IItem::flag_not_expanded);
+                IItem * dummy = new IItem(dt_dummy, curr, DEFAULT_ITEM_STATE | IItem::flag_proceeded);
+                dummy -> setTitle(QStringLiteral("Loading..."));
+                curr -> updateItemsCountInBranch(1);
             }
 
             return curr;
