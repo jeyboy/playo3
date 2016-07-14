@@ -91,7 +91,7 @@ namespace Core {
                     }
                 }
 
-                bool connectSite(QString & error) {
+                bool connectSite(QString & error) { // not tested // not finished // not used
                     QUrl form_url = QUrl("https://new.vk.com/");
 
                     while(true) {
@@ -140,7 +140,33 @@ namespace Core {
 
                             resp -> toHtml().output();
 
-                        } else return true;
+                        } else {
+                            Response * response = Manager::prepare() -> postFollowed(
+                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=0&id=20284990&please_dont_ddos=2"),
+                                {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios20284990") }}
+                            );
+
+                            QString data = response -> toText();
+                            QStringList parts = data.split(QStringLiteral("<!>"));
+
+
+
+                            if (parts.length() < 7) {
+                                Logger::obj().write("VK", "LOAD AUDIO", true);
+                                return false;
+                            } else {
+                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8()).object();
+
+
+                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
+
+                                int i = 0;
+                            }
+
+
+
+                            return true;
+                        }
 
                         break; // not finished
                     }

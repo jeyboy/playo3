@@ -49,7 +49,7 @@ namespace Core {
 
                     return false;
                 }
-                bool connectUserSite() { return connectSite(error); }
+                bool connectUserSite() { return true; /*return connectSite(error);*/ }
 
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
@@ -97,6 +97,7 @@ namespace Core {
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
+                    Manager::removeCookies(url_base);
                 }
 
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
@@ -177,10 +178,10 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
-                        case perm_site: {
+                        case perm_site: /*{
                             Response * response = Manager::prepare() -> postFollowed(
                                 QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=0&id=%1&please_dont_ddos=2").arg(user_id),
-                                {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios").arg(user_id) }}
+                                {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }}
                             );
 
                             QString data = response -> toText();
@@ -188,18 +189,16 @@ namespace Core {
 
 
 
-                            if (parts.length < 7)
+                            if (parts.length() < 7) {
                                 Logger::obj().write("VK", "LOAD AUDIO", true);
                                 return QJsonObject();
                             } else {
-                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[6]).object();
+                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8()).object();
 
 
-                                QJsonObject info_obj = QJsonDocument::fromJson(parts[7]).object();
-
-                                i = 0;
+                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
                             }
-                        break;}
+                        break;}*/
                         case perm_api: {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
