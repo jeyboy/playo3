@@ -222,6 +222,19 @@ namespace Core {
                                 Logger::obj().write("VK", "LOAD AUDIO", true);
                                 return QJsonObject();
                             } else {
+                                QHash<QString, QJsonArray> albums;
+
+                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
+                                QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
+                                QJsonArray playlists_res;
+
+                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end(); playlist++) {
+                                    playlists_res << playlist.value();
+                                    albums.insert(playlist.key(), QJsonArray());
+                                }
+
+                                ///////////////////////////////////
+
                                 QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8()).object();
 
                                 QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
@@ -235,26 +248,33 @@ namespace Core {
                                     track_obj.insert(tkn_url, track[2].toString());
 //                                    track[3].toString().toInt() // bitrate
 //                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
-//                                    track[8].toString().toInt() // ?album_id // '0' if empty
                                     track_obj.insert(tkn_artist, track[5].toString());
                                     track_obj.insert(tkn_title, track[6].toString());
                                     track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()));
 //                                    track_obj.insert(tkn_genre_id, ); // not presented
 
+                                    if (track[8].toString().toInt() > 0) // album_id // '0' if empty
+                                        albums[track[8].toString()] << track_obj;
+
                                     tracks_res << track_obj;
                                 }
 
-                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
-                                QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
-                                QJsonArray playlists_res;
+                                /////////////////////////////////////
 
-                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end(); playlist++)
-                                    playlists_res << playlist.value();
+                                QJsonArray uplaylists_res;
+                                for(QJsonArray::Iterator playlist_it = playlists_res.begin(); playlist_it != playlists_res.end(); playlist_it++) {
+                                    QJsonObject playlist_obj = (*playlist_it).toObject();
+
+                                    playlist_obj.insert(tkn_items, albums[playlist_obj.value(tkn_id).toString()]);
+                                    uplaylists_res << playlist_obj;
+                                }
+
+                                /////////////////////////////////////
 
                                 QJsonObject res;
 
                                 res.insert(tkn_audio_list, tracks_res);
-                                res.insert(tkn_albums, playlists_res);
+                                res.insert(tkn_albums, uplaylists_res);
 
                                 return res;
                             }
