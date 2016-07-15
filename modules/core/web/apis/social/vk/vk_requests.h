@@ -31,7 +31,7 @@ namespace Core {
                         sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
                         sf_content_photo_has | sf_content_news_has |
 
-                        sf_auth_mandatory
+                        sf_auth_mandatory | sf_prefer_site_object_content
                     );
                 }
 
@@ -49,7 +49,10 @@ namespace Core {
 
                     return false;
                 }
-                bool connectUserSite() { return true; /*return connectSite(error);*/ }
+                bool connectUserSite() {
+                    setSiteUserID(apiUserID()); // use api user id
+                    return true; /*return connectSite(error);*/
+                }
 
                 QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
@@ -160,7 +163,7 @@ namespace Core {
                 }
 
                 QJsonValue userInfo(const QString & user_id) {
-                    Permissions perm = permissions(pr_media_content);
+                    Permissions perm = permissions(pr_object_content);
 
                     switch(perm) {
                         case perm_site: {
@@ -204,7 +207,7 @@ namespace Core {
                 }
 
                 QJsonValue userTracksPlaylists(const QString & user_id) {
-                    Permissions perm = permissions(pr_media_content);
+                    Permissions perm = permissions(pr_object_content);
 
                     switch(perm) {
                         case perm_site: {
@@ -235,7 +238,8 @@ namespace Core {
 
                                 ///////////////////////////////////
 
-                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8()).object();
+                                QJsonParseError jerr;
+                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8(), &jerr).object();
 
                                 QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
                                 QJsonArray tracks_res;

@@ -25,7 +25,7 @@ namespace Core {
                     return url.toString();
                 }
 
-                bool connectApi(QString & newToken, QString & userID, QString & expiration, QString & error) {
+                bool connectApi(QString & new_token, QString & user_id, QString & expiration, QString & error) {
                     QUrl form_url = authUrl();
 
                     while(true) {
@@ -78,8 +78,8 @@ namespace Core {
                             error = query.queryItemValue(tkn_error_description);
                             return false;
                         } else if (query.hasQueryItem(tkn_access_token)) {
-                            newToken = query.queryItemValue(tkn_access_token);
-                            userID = query.queryItemValue(tkn_user_id);
+                            new_token = query.queryItemValue(tkn_access_token);
+                            user_id = query.queryItemValue(tkn_user_id);
                             expiration = query.queryItemValue(tkn_expires_in);
 
                             return true;
