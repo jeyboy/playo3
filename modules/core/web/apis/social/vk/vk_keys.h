@@ -61,6 +61,7 @@ namespace Core {
             extern const QString tkn_photo;
             extern const QString tkn_group_ids;
             extern const QString tkn_domain;
+            extern const QString tkn_video_art;
 
 
             extern const QString url_redirect_uri;
@@ -93,6 +94,7 @@ namespace Core {
             extern const QString query_track_playlists;
             extern const QString query_video_playlists;
 
+            extern const QString query_user_groups_friends;
             extern const QString query_user_tracks_groups_friends;
             extern const QString query_user_tracks_playlists_groups_friends;
             extern const QString query_user_tracks_playlists;

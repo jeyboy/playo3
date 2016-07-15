@@ -56,6 +56,8 @@ namespace Core {
             extern const QString tkn_photo             = QStringLiteral("photo_200");
             extern const QString tkn_group_ids         = QStringLiteral("group_ids");
             extern const QString tkn_domain            = QStringLiteral("domain");
+            extern const QString tkn_video_art         = QStringLiteral("photo_320");
+
 
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
@@ -116,7 +118,8 @@ namespace Core {
                 "var folders_result = API.video.getAlbums({"
                 "                count: count, "
                 "                offset: " % VK_DEFAULT_OFFSET_TEMPLATE % ", "
-                "                owner_id: %1"
+                "                owner_id: %1, "
+                "                extended: 1"
                 "    });"
                 "var folders_result = folders_result.items;"
                 "var proceed_folders = {};"
@@ -125,6 +128,7 @@ namespace Core {
                 "    proceed_folders.push({"
                 "        " % tkn_id % ": curr.id,"
                 "        " % tkn_title % ": curr.title,"
+                "        " % tkn_video_art % ": curr." % tkn_video_art % ","
                 "        " % tkn_items % ": API.video.get({"
                 "            owner_id: %1,"
                 "            album_id: curr.id"
@@ -137,6 +141,48 @@ namespace Core {
                 "    " % tkn_offset % ": " % VK_DEFAULT_OFFSET_TEMPLATE % " %2b count"
                 "};"
             );
+
+
+            extern const QString query_user_groups_friends = QString(
+                        "var curr; var proceed_groups = [];"
+                        "var groups = API.groups.get({"
+                        "            owner_id: %1, "
+                        "            count: 1000, "
+                        "            extended: 1"
+                        "    }).items;"
+                        "while(groups.length > 0) {"
+                        "    curr = groups.pop();"
+                        "    proceed_groups.push({"
+                        "        " % tkn_id % ": curr.id, "
+                        "        " % tkn_title % ": curr.name,"
+                        "        " % tkn_screen_name % ": curr.screen_name,"
+                        "        " % tkn_photo % ": curr." % tkn_photo % ""
+                        "    });"
+                        "};"
+
+                        "var friends = API.friends.get({"
+                        "            user_id: %1, "
+                        "            order: \"name\", "
+                        "            fields: \"" % tkn_domain % ", " % val_user_fields % "\""
+                        "    });"
+                        "var proceed_friends = [];"
+                        "if (friends.count > 0) { "
+                        "    while(friends.items.length > 0) { "
+                        "        curr = friends.items.pop();"
+                        "        proceed_friends.push({ "
+                        "            " % tkn_id % ": curr.id, "
+                        "            " % tkn_title % ": curr.first_name %2b \" \" %2b curr.last_name, "
+                        "            " % tkn_screen_name % ": curr." % tkn_domain % ", "
+                        "            " % tkn_photo % ": curr." % tkn_photo % ""
+                        "        }); "
+                        "    }; "
+                        "};"
+
+                        "return {"
+                        "    " % tkn_friends % ": proceed_friends, "
+                        "    " % tkn_groups % ": proceed_groups, "
+                        "};"
+                    );
 
 
             extern const QString query_user_tracks_groups_friends = QString(

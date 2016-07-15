@@ -67,8 +67,8 @@ void VkModel::proceedJson(QJsonValue & hash) {
                             {JSON_TYPE_ITEM_TYPE, dt_playlist_vk},
                             {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
                         },
-                        itm.value(Vk::tkn_title).toString(),
-                        itm.value(Vk::tkn_id).toString()
+                        album.value(Vk::tkn_title).toString(),
+                        album.value(Vk::tkn_id).toString()
                     );
                 }
             }

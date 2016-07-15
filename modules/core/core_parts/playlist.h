@@ -69,7 +69,7 @@ namespace Core {
                 if (!uid.isEmpty())
                     curr -> setId(uid);
 
-                setStates(IItem::flag_not_expanded);
+                curr -> setStates(IItem::flag_not_expanded);
                 IItem * dummy = new IItem(dt_dummy, curr, DEFAULT_ITEM_STATE | IItem::flag_proceeded);
                 dummy -> setTitle(QStringLiteral("Loading..."));
                 curr -> updateItemsCountInBranch(1);

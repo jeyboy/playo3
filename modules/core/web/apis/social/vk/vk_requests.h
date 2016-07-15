@@ -160,20 +160,47 @@ namespace Core {
                 }
 
                 QJsonValue userInfo(const QString & user_id) {
-                    QJsonObject ret = User::sRequest(
-                        User::baseUrlStr(
-                            qst_api_def, tkn_execute,
-                            {{ tkn_code, query_user_tracks_playlists_groups_friends.arg(user_id) }}
-                        ),
-                        call_type_json, 0, proc_json_extract
-                    );
+                    Permissions perm = permissions(pr_media_content);
 
-                    if (!ret.value(tkn_albums_finished).toBool()) {
-                        QJsonArray ar = ret.value(tkn_albums).toArray();
-                        tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
-                        ret.insert(tkn_albums, ar);
+                    switch(perm) {
+                        case perm_site: {
+                            QJsonObject ret = User::sRequest(
+                                User::baseUrlStr(
+                                    qst_api_def, tkn_execute,
+                                    {{ tkn_code, query_user_groups_friends.arg(user_id) }}
+                                ),
+                                call_type_json, 0, proc_json_extract
+                            );
+
+                            QJsonObject audio_ret = userTracksPlaylists(user_id).toObject();
+
+                            ret.insert(tkn_audio_list, audio_ret.value(tkn_audio_list).toArray());
+                            ret.insert(tkn_albums, audio_ret.value(tkn_albums).toArray());
+
+                            return ret;
+                        }
+
+                        case perm_api: {
+                            QJsonObject ret = User::sRequest(
+                                User::baseUrlStr(
+                                    qst_api_def, tkn_execute,
+                                    {{ tkn_code, query_user_tracks_playlists_groups_friends.arg(user_id) }}
+                                ),
+                                call_type_json, 0, proc_json_extract
+                            );
+
+                            if (!ret.value(tkn_albums_finished).toBool()) {
+                                QJsonArray ar = ret.value(tkn_albums).toArray();
+                                tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
+                                ret.insert(tkn_albums, ar);
+                            }
+                            return ret;
+                        }
+
+                        default: ;
                     }
-                    return ret;
+
+                    return QJsonObject();
                 }
 
                 QJsonValue userTracksPlaylists(const QString & user_id) {
@@ -184,7 +211,7 @@ namespace Core {
                             bool is_group = user_id[0] == '-';
 
                             Response * response = Manager::prepare() -> postFollowed(
-                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=%1&id=%2&please_dont_ddos=2").arg(is_group ? user_id.mid(1) : '0', is_group ? '0' : user_id),
+                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=%1&id=%2&please_dont_ddos=2").arg(is_group ? user_id.mid(1) : QStringLiteral("0"), is_group ? QStringLiteral("0") : user_id),
                                 {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }}
                             );
 
@@ -199,7 +226,7 @@ namespace Core {
 
                                 QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
                                 QJsonArray tracks_res;
-                                for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end; track_arr++) {
+                                for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end(); track_arr++) {
                                     QJsonArray track = (*track_arr).toArray();
                                     QJsonObject track_obj;
 
@@ -221,7 +248,7 @@ namespace Core {
                                 QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
                                 QJsonArray playlists_res;
 
-                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end; playlist++)
+                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end(); playlist++)
                                     playlists_res << playlist.value();
 
                                 QJsonObject res;
@@ -248,7 +275,11 @@ namespace Core {
                             }
                             return ret;
                         }
+
+                        default:;
                     }
+
+                    return QJsonObject();
                 }
             };
         }
