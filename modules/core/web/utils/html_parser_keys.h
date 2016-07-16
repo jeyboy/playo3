@@ -23,11 +23,7 @@ namespace Core {
             extern const QString tkn_text_block;
             extern const QString tkn_comment_block;
             extern const QString tkn_service_block;
-            extern const QString tkn_nbsp;
-            extern const QString tkn_amp;
-            extern const QString tkn_lt;
-            extern const QString tkn_gt;
-            extern const QString tkn_quot;
+
             extern const QString tkn_charset;
             extern const QString tkn_encoding;
             extern const QString tkn_charset_attr;

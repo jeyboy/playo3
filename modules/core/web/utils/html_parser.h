@@ -346,7 +346,6 @@ namespace Core {
                 bool charset_finded, using_default_charset;
 
                 static QHash<QString, bool> solo;
-                static QHash<QString, QChar> html_entities;
             };
         }
     }

@@ -109,11 +109,17 @@ namespace Core {
                     track_obj.insert(tkn_grab_duration, Duration::fromSeconds((*track) -> value(QStringLiteral("data-duration")).toInt()));
                     track_obj.insert(tkn_skip_info, true);
 
+                    Html::Tag * artist_tag = (*track) -> findFirst(&artist_selector);
+                    Html::Tag * title_tag = (*track) -> findFirst(&title_selector);
 
-                    QString artist = (*track) -> findFirst(&artist_selector) -> text();
-                    QString title = (*track) -> findFirst(&title_selector) -> text();
-                    title = artist % QStringLiteral(" - ") % title;
-                    track_obj.insert(tkn_grab_title, title);
+                    if (artist_tag && title_tag) {
+                        QString artist = artist_tag -> text();
+                        QString title = title_tag -> text();
+                        title = artist % QStringLiteral(" - ") % title;
+                        track_obj.insert(tkn_grab_title, title);
+                    } else {
+                        qDebug() << (*(*track));
+                    }
 
                     arg -> append(track_obj, track + 1 == tracks.end());
                 }
@@ -132,7 +138,7 @@ namespace Core {
                         result = parseTracks(arg, parser, Html::Selector("< .artist-item__info .artist-item-info__top a"));
                     break;}
                     case proc_tracks1: {
-                        result = parseTracks(arg, parser, Html::Selector(".musicset-track__artist a"));
+                        result = parseTracks(arg, parser, Html::Selector(".musicset-track__artist *")); // a or span
                     break;}
 
                     case proc_set1: {
@@ -210,7 +216,8 @@ namespace Core {
 
             // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
             inline QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
-                return reply -> toJson().value(QStringLiteral("url")).toString();
+                QJsonObject obj = reply -> toJson();
+                return obj.value(QStringLiteral("url")).toString();
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {

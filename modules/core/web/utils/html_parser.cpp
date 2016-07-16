@@ -274,9 +274,6 @@ namespace Core {
                 QHash<QString, bool> Document::solo = {
                     {tag_br, true}, {tag_meta, true}, {tag_link, true}, {tag_img, true}, {tag_doctype, true}, {tag_xml, true}, {tag_input, true}
                 };
-                QHash<QString, QChar> Document::html_entities = {
-                    {tkn_nbsp, ' '}, {tkn_amp, '&'}, {tkn_lt, '<'}, {tkn_gt, '>'}, {tkn_quot, '"'}
-                };
 
                 void Document::parse(QIODevice * device) {
                     PState state = content;

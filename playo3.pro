@@ -450,4 +450,5 @@ SOURCES += \
     modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp \
     modules/core/web/apis/social/soundcloud_queries.cpp \
     dialogs/packages_dialog.cpp \
-    modules/core/web/apis/social/vk_queries.cpp
+    modules/core/web/apis/social/vk_queries.cpp \
+    modules/core/web/utils/unicode_decoding.cpp

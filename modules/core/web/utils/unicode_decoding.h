@@ -1,6 +1,7 @@
 #ifndef UNICODE_DECODING
 #define UNICODE_DECODING
 
+#include <qregularexpression.h>
 #include <qiodevice.h>
 #include <qdebug.h>
 
@@ -23,6 +24,8 @@ namespace Core {
               0x0401, 0x00A9, 0x0404, 0x00AB, 0x00AC, 0x00AD, 0x00AE, 0x0407,
               0x00B0, 0x00B1, 0x0406, 0x0456, 0x0491, 0x00B5, 0x00B6, 0x00B7,
               0x0451, 0x2116, 0x0454, 0x00BB, 0x0458, 0x0405, 0x0455, 0x0457};
+
+            static QHash<QString, QChar> html_entities;
 
             inline bool isUnicodeNonCharacter(uint ucs4) {
                 // Unicode has a couple of "non-characters" that one can use internally,
@@ -139,6 +142,10 @@ namespace Core {
                         return charset_cp1251;
 
                     return charset_unknown;
+                }
+
+                static inline void decodeHtmlEntites(QString & /*string*/) {
+
                 }
         };
     }
