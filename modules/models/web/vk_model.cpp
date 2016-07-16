@@ -29,7 +29,14 @@ void VkModel::proceedJson(QJsonValue & hash) {
     } else {
         QJsonObject hash_obj = hash.toObject();
         albums = hash_obj.value(Vk::tkn_albums).toArray();
-        audios = hash_obj.value(Vk::tkn_audio_list).toObject().value(Vk::tkn_items).toArray();
+
+        QJsonValue au = hash_obj.value(Vk::tkn_audio_list);
+
+        if (au.isObject())
+            audios = au.toObject().value(Vk::tkn_items).toArray();
+        else
+            audios = au.toArray();
+
         groups = hash_obj.value(Vk::tkn_groups).toArray();
         friends = hash_obj.value(Vk::tkn_friends).toArray();
     }

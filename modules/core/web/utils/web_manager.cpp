@@ -28,14 +28,26 @@ namespace Core {
             return QUrlQuery(QUrl::fromPercentEncoding(ar));
         }
 
+        QByteArray Response::toBytes(bool destroy) {
+            QByteArray ar = readAll();
+            printHeaders();
+            if (destroy) deleteLater();
+            return ar;
+        }
+
         QString Response::toText(bool destroy) {
             QByteArray ar = readAll();
+            QByteArray enc = encoding();
+            qDebug() << "ENC" << enc;
+            QTextCodec * codec = QTextCodec::codecForName(enc);
+
             if (destroy) deleteLater();
-            return QString(ar);
+
+            return codec -> toUnicode(ar);
         }
-        QJsonObject Response::toJson(const QString & wrap, bool destroy) {
+        QJsonObject Response::toJson(const QString & wrap, bool destroy) { //TODO: enc not used yet
             if (error()) qDebug() << "IOERROR" << error() << url();
-            QByteArray ar = readAll();
+            QByteArray ar = readAll(); // ' wraps responds to errors on parsing // need to replace ' with "
             if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
             if (destroy) deleteLater();
             return QJsonDocument::fromJson(ar).object();
@@ -57,7 +69,10 @@ namespace Core {
 
         Html::Document Response::toHtml(bool destroy) {
             if (error()) qDebug() << "IOERROR" << error() << url();
-            Html::Document doc(this);
+            QByteArray enc = encoding();
+            qDebug() << "ENC" << enc;
+
+            Html::Document doc(this, UnicodeDecoding::toCharsetType(enc));
             if (destroy) deleteLater();
             return doc;
         }

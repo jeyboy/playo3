@@ -35,16 +35,7 @@ namespace Core {
                 return (ucs4 & 0xfffe) == 0xfffe || (ucs4 - 0xfdd0U) < 16;
             }
 
-            inline CharsetType toCharsetType(const QString & ch_name) {
-                if (ch_name == QStringLiteral("utf-8"))
-                    return charset_utf8;
-                else if (ch_name == QStringLiteral("windows-1251"))
-                    return charset_cp1251;
-
-                return charset_unknown;
-            }
-
-            inline void toUtf8(CharsetType charset, QIODevice * io, QString & result, char & in) {
+            inline void toUtf8(const CharsetType & charset, QIODevice * io, QString & result, char & in) {
                 switch(charset) {
                     case charset_utf8: { scanUtf8Char(io, result, in); break;}
                     case charset_cp1251: { scanRuChar(io, result, in); break;}
@@ -137,6 +128,18 @@ namespace Core {
                 if (QChar::requiresSurrogates(uc)) { result.append(QChar::highSurrogate(uc)); result.append(QChar::lowSurrogate(uc)); }
                 else result.append(QChar(uc));
             }
+
+            public:
+                static inline CharsetType toCharsetType(const QString & ch_name) {
+                    QString l_name = ch_name.toLower();
+
+                    if (l_name == QStringLiteral("utf-8"))
+                        return charset_utf8;
+                    else if (l_name == QStringLiteral("windows-1251"))
+                        return charset_cp1251;
+
+                    return charset_unknown;
+                }
         };
     }
 }

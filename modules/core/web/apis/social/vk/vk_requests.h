@@ -95,8 +95,14 @@ namespace Core {
                     return query;
                 }
 
-                void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
-                void loadAdditionals(QJsonObject & obj) { Sociable::fromJson(obj); }
+                void saveAdditionals(QJsonObject & obj) {
+                    Sociable::toJson(obj);
+                    Manager::saveCookies(obj, QUrl(url_base));
+                }
+                void loadAdditionals(QJsonObject & obj) {
+                    Sociable::fromJson(obj);
+                    Manager::loadCookies(obj);
+                }
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
@@ -218,7 +224,11 @@ namespace Core {
                                 {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }}
                             );
 
+//                            QByteArray arr = response -> toBytes();
+//                            QTextCodec * codec = QTextCodec::codecForName("Windows-1251");
+//                            QString data = codec -> toUnicode(arr);
                             QString data = response -> toText();
+
                             QStringList parts = data.split(QStringLiteral("<!>"));
 
                             if (parts.length() < 7) {
@@ -239,7 +249,7 @@ namespace Core {
                                 ///////////////////////////////////
 
                                 QJsonParseError jerr;
-                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].toUtf8(), &jerr).object();
+                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].replace('\'', '"').toUtf8(), &jerr).object();
 
                                 QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
                                 QJsonArray tracks_res;
@@ -252,9 +262,10 @@ namespace Core {
                                     track_obj.insert(tkn_url, track[2].toString());
 //                                    track[3].toString().toInt() // bitrate
 //                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
+
                                     track_obj.insert(tkn_artist, track[5].toString());
                                     track_obj.insert(tkn_title, track[6].toString());
-                                    track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()));
+                                    track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()) / 1000);
 //                                    track_obj.insert(tkn_genre_id, ); // not presented
 
                                     if (track[8].toString().toInt() > 0) // album_id // '0' if empty

@@ -31,6 +31,8 @@ int main(int argc, char * argv[]) {
 
         qputenv("QT_LOGGING_RULES", "qt.network.ssl.warning=false");
 
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
+
     //    QCoreApplication::setOrganizationName("BigBug");
     //    QCoreApplication::setOrganizationDomain("bigbug.sos");
     //    QCoreApplication::setApplicationName("Playo3");

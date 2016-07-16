@@ -35,6 +35,26 @@ namespace Core { // requests and response has memory leaks
         public:
             static Response * fromReply(QNetworkReply * reply);
 
+            inline void printHeaders() {
+                QList<RawHeaderPair> headers = rawHeaderPairs();
+
+                qDebug() << "------------ HEADERS LIST ----------------";
+
+                for(QList<RawHeaderPair>::ConstIterator it = headers.cbegin(); it != headers.cend(); it++)
+                    qDebug() << (*it).first << (*it).second;
+
+                qDebug() << "------------ END OF LIST ----------------";
+            }
+
+            inline QByteArray encoding() {
+                QString content_type = header(QNetworkRequest::ContentTypeHeader).toString();
+                QStringList parts = content_type.split(QStringLiteral("charset="));
+
+                if (parts.length() == 1)
+                    return QStringLiteral("utf-8").toUtf8();
+                else
+                    return parts.last().toUtf8();
+            }
             inline bool hasErrors() { return error() != NoError; }
             inline int status() { return attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(); }
             inline QUrl redirectUrl() {
@@ -57,6 +77,7 @@ namespace Core { // requests and response has memory leaks
 
             Response * followByRedirect(QHash<QUrl, bool> prev_urls = QHash<QUrl, bool>());
             QUrlQuery toQuery(bool destroy = true);
+            QByteArray toBytes(bool destroy = true);
             QString toText(bool destroy = true);
             QJsonObject toJson(const QString & wrap = QString(), bool destroy = true);
             Html::Document toHtml(bool destroy = true);

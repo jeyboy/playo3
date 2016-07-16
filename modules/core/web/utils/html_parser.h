@@ -311,10 +311,8 @@ namespace Core {
                 inline void checkCharset(Tag * tag) {
                     if (tag -> is_meta() || tag -> is_xml_head())
                         proceedCharset(tag);
-                    else if (tag -> is_head()) {
+                    else if (tag -> is_head())
                         using_default_charset = true;
-                        charset = charset_utf8;
-                    }
                 }
 
                 inline void proceedCharset(Tag * tag) {
@@ -322,7 +320,7 @@ namespace Core {
                         QString xml_encoding = tag -> value(tkn_encoding);
                         qDebug() << xml_encoding;
                         if (!xml_encoding.isEmpty()) {
-                            charset = toCharsetType(xml_encoding.toLower());
+                            charset = toCharsetType(xml_encoding);
                             charset_finded = true;
                         }
                     } else {
@@ -336,7 +334,7 @@ namespace Core {
 
                         if (!meta.isEmpty()) {
                             qDebug() << meta;
-                            charset = toCharsetType(meta.toLower());
+                            charset = toCharsetType(meta);
                             charset_finded = true;
                         }
                     }
