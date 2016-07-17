@@ -15,7 +15,7 @@ namespace Core {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
-                inline Api() {
+                inline Api() { // ALERT
                     // need to add checking presents of cookies
                     Manager::prepare() -> getFollowed(QUrl(url_root));
                 }

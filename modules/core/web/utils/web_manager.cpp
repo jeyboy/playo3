@@ -1,5 +1,7 @@
 #include "web_manager.h"
 
+#include "web_connection.h"
+
 namespace Core {
     namespace Web {
         Response * Response::fromReply(QNetworkReply * reply) {
@@ -197,6 +199,8 @@ namespace Core {
             //       m_http -> abort();
             //    }
 
+            if (m_http -> error() == Response::HostNotFoundError)
+                WebConnection::obj().check();
 
             return Response::fromReply(m_http);
         }

@@ -312,7 +312,8 @@ HEADERS += \
     modules/core/web/apis/social/vk/vk_requests.h \
     modules/core/web/apis/social/vk/vk_feed.h \
     modules/core/web/apis/social/vk/vk_set.h \
-    modules/core/web/apis/social/vk_queries.h
+    modules/core/web/apis/social/vk_queries.h \
+    modules/core/web/utils/web_connection.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -451,4 +452,5 @@ SOURCES += \
     modules/core/web/apis/social/soundcloud_queries.cpp \
     dialogs/packages_dialog.cpp \
     modules/core/web/apis/social/vk_queries.cpp \
-    modules/core/web/utils/unicode_decoding.cpp
+    modules/core/web/utils/unicode_decoding.cpp \
+    modules/core/web/utils/web_connection.cpp
