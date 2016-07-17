@@ -263,8 +263,8 @@ namespace Core {
 //                                    track[3].toString().toInt() // bitrate
 //                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
 
-                                    track_obj.insert(tkn_artist, track[5].toString());
-                                    track_obj.insert(tkn_title, track[6].toString());
+                                    track_obj.insert(tkn_artist, UnicodeDecoding::decodeHtmlEntites(track[5].toString()));
+                                    track_obj.insert(tkn_title, UnicodeDecoding::decodeHtmlEntites(track[6].toString()));
                                     track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()) / 1000);
 //                                    track_obj.insert(tkn_genre_id, ); // not presented
 

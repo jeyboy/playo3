@@ -144,8 +144,35 @@ namespace Core {
                     return charset_unknown;
                 }
 
-                static inline void decodeHtmlEntites(QString & /*string*/) {
+                static inline QString decodeHtmlEntites(QString string) {
+                    QRegularExpression reg("&([#\\w]+);");
+                    QRegularExpressionMatch match;
+                    int index = 0;
 
+                    while(true) {
+                        index = string.indexOf(reg, index, &match);
+                        if (index == -1) break;
+
+                        int sel_start = match.capturedStart(1);
+                        int sel_length = match.capturedLength(1);
+
+                        QString entity = string.mid(sel_start, sel_length);
+                        QChar res;
+
+                        if (entity.startsWith('#'))
+                            res = QChar(entity.mid(1).toInt());
+                        else {
+                            if (!html_entities.contains(entity)) {
+                                res = ' ';
+                                qDebug() << "HTML ENTITY NOT EXISTS" << entity;
+                            } else
+                                res = html_entities[entity];
+                        }
+
+                        string.replace(match.capturedStart(0), match.capturedLength(0), res);
+                    }
+
+                    return string;
                 }
         };
     }
