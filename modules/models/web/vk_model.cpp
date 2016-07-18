@@ -61,7 +61,7 @@ void VkModel::proceedJson(QJsonValue & hash) {
                             pos
                         );
 
-                        int folderItemsAmount = proceedVkList(albumItems, folder);
+                        int folderItemsAmount = proceedVkList(albumItems, folder, dmt_audio);
                         folder -> updateItemsCountInBranch(folderItemsAmount);
                         itemsAmount += folderItemsAmount;
                     }
@@ -69,6 +69,7 @@ void VkModel::proceedJson(QJsonValue & hash) {
                 else {
                     rootItem -> createLoadablePlaylist(
                         {
+                            {JSON_TYPE_MEDIA_TYPE, dmt_audio},
                             {JSON_TYPE_ITEM_TYPE, dt_playlist_vk},
                             {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
                         },
@@ -81,9 +82,51 @@ void VkModel::proceedJson(QJsonValue & hash) {
 
     /////////////////////////////////////////////////////////////////////
 
+        if (video_albums.count() > 0) {
+            Playlist * folder;
+            QJsonObject album;
+
+            int pos = 0;
+            for(QJsonArray::Iterator album_obj = video_albums.begin(); album_obj != video_albums.end(); album_obj++, pos++) {
+                album = (*album_obj).toObject();
+
+                if (album.contains(Vk::tkn_items)) {
+                    QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
+                    if (albumItems.size() > 0) {
+                        folder = rootItem -> createPlaylist(
+                            dt_playlist_vk,
+                            album.value(Vk::tkn_id).toString(),
+                            album.value(Vk::tkn_title).toString(),
+                            pos
+                        );
+
+                        int folderItemsAmount = proceedVkList(albumItems, folder, dmt_video);
+                        folder -> updateItemsCountInBranch(folderItemsAmount);
+                        itemsAmount += folderItemsAmount;
+                    }
+                }
+                else {
+                    folder = rootItem -> createLoadablePlaylist(
+                        {
+                            {JSON_TYPE_MEDIA_TYPE, dmt_video},
+                            {JSON_TYPE_ITEM_TYPE, dt_playlist_vk},
+                            {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
+                        },
+                        album.value(Vk::tkn_title).toString(),
+                        album.value(Vk::tkn_id).toString()
+                    );
+                }
+
+                folder -> setArtPath(album.value(Vk::tkn_video_art).toString());
+            }
+        }
+
+    /////////////////////////////////////////////////////////////////////
+
         if (audios.count() > 0)
-            itemsAmount += proceedVkList(audios, rootItem);
+            itemsAmount += proceedVkList(audios, rootItem, dmt_audio);
     }
+
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
     /////////////////////////////////////////////////////////////////////

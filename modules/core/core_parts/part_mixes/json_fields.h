@@ -6,6 +6,7 @@
 namespace Core {
     const QString JSON_TYPE_CONTAINER_LOADABLE = QStringLiteral("0");
     const QString JSON_TYPE_MEDIA_TYPE = QStringLiteral("1");
+    const QString JSON_TYPE_MEDIA_ART = QStringLiteral("2");
 
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");
@@ -24,7 +25,7 @@ namespace Core {
     const QString JSON_TYPE_OWNER_ID = QStringLiteral("o");
     const QString JSON_TYPE_TITLE = QStringLiteral("t");
     const QString JSON_TYPE_ID = QStringLiteral("u");
-    const QString JSON_TYPE_VIDEO_PATH = QStringLiteral("v");
+//    const QString JSON_TYPE_VIDEO_PATH = QStringLiteral("v");
     const QString JSON_TYPE_CUE_MAP = QStringLiteral("w");
     const QString JSON_TYPE_START_POS = QStringLiteral("x");
     const QString JSON_TYPE_PARTIAL = QStringLiteral("y");

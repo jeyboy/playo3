@@ -58,6 +58,7 @@ namespace Core {
             extern const QString tkn_group_ids         = QStringLiteral("group_ids");
             extern const QString tkn_domain            = QStringLiteral("domain");
             extern const QString tkn_video_art         = QStringLiteral("photo_320");
+            extern const QString tkn_files             = QStringLiteral("files");
 
 
 

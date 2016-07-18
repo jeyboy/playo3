@@ -54,7 +54,7 @@ namespace Core {
 
                 QJsonValue videoByUser(const QString & user_id) {
                     return sRequest(
-                        User::baseUrlStr(
+                        baseUrlStr(
                             qst_api_def, tkn_execute,
                             {{ tkn_code, query_user_videos.arg(user_id) }}
                         ),

@@ -271,20 +271,29 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, cons
         QString uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
-        QString uri = itm.value(Vk::tkn_url).toString();
-        uri = uri.section('?', 0, 0); // remove extra info from url
+        QVariant uri;
+
+        if (dm_type == dmt_video) {
+            uri = itm.value(Vk::tkn_files).toObject().toVariantMap();
+        } else {
+            uri = itm.value(Vk::tkn_url).toString();
+            uri = uri.section('?', 0, 0); // remove extra info from url
+        }
 
         QList<IItem *> items = store.values(uid);
 
         if (items.isEmpty()) {
             itemsAmount++;
-            /*IItem * newItem =*/ new IItem(parent, VK_ITEM_ATTRS(
+            IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
                 QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
                 owner, uid,
                 Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)),
                 dm_type
             ), pos);
+
+            if (dm_type == dmt_video)
+                newItem -> setArtPath(itm.value(Vk::tkn_video_art).toString());
 
 //                if (itm.contains(Vk::genre_id_key))
 //                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
@@ -409,6 +418,7 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
             } else {
                 parent -> createLoadablePlaylist(
                     {
+                        {JSON_TYPE_MEDIA_TYPE, dm_type},
                         {JSON_TYPE_ITEM_TYPE, wType},
                         {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()},
                         {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}

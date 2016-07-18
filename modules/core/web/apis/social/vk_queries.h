@@ -21,7 +21,7 @@ namespace Core {
                     if (user_id == userID())
                         ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
                     else
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userTracksPlaylists, user_id, func);
+                        ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, user_id, func);
                 }
 
                 void trackRecommendationsAsync(const QString & uid, bool byUser, bool randomize, Func * func) {

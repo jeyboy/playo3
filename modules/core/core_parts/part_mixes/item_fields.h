@@ -55,15 +55,17 @@ namespace Core {
         inline QVariant genreID() const                         { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
         inline QVariant bpm() const                             { return attrs.value(JSON_TYPE_BPM, 0); }
 
+        inline QVariant artPath() const                         { return attrs.value(JSON_TYPE_MEDIA_ART); }
+
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
         inline DataMediaType mediaType() const                  { return (DataMediaType)attrs.value(JSON_TYPE_MEDIA_TYPE, dmt_unknow).toInt(); }
-        inline void setDataMediaType(const DataMediaType & mediaType)
-                                                                { attrs[JSON_TYPE_MEDIA_TYPE] = mediaType; }
+        inline void setDataMediaType(const DataMediaType & media_type)
+                                                                { attrs[JSON_TYPE_MEDIA_TYPE] = media_type; }
 
         inline DataSubType dataType() const                     { return (DataSubType)attrs.value(JSON_TYPE_ITEM_TYPE, dt_none).toInt(); }
-        inline void setDatatype(const DataSubType & dataType)   { attrs[JSON_TYPE_ITEM_TYPE] = dataType; }
+        inline void setDatatype(const DataSubType & data_type)  { attrs[JSON_TYPE_ITEM_TYPE] = data_type; }
 
         inline void setCueMap(const QVariant & map)             { attrs[JSON_TYPE_CUE_MAP] = map; }
         inline void setLoadableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_LOADABLE] = data; }
@@ -71,22 +73,24 @@ namespace Core {
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
         inline void addArtistId(const QString & id)             { attrs[JSON_TYPE_ARTIST_IDS] = attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }
         inline void setArtistIds(const QStringList & ids)       { attrs[JSON_TYPE_ARTIST_IDS] = ids; }
-        inline void setSongId(const QVariant & newSongId)       { attrs[JSON_TYPE_SONG_ID] = newSongId; }
+        inline void setSongId(const QVariant & new_song_id)     { attrs[JSON_TYPE_SONG_ID] = new_song_id; }
 
-        inline void setOwner(const QVariant & newOwner)         { attrs[JSON_TYPE_OWNER_ID] = newOwner; }
-        inline void setBpm(const QVariant & newBeat)            { attrs[JSON_TYPE_BPM] = newBeat; }
-        inline void setStartPos(const QVariant & newStartPos)   { attrs[JSON_TYPE_START_POS] = newStartPos; }
-        inline void setDuration(const QVariant & newDuration)   { attrs[JSON_TYPE_DURATION] = newDuration; }
-        inline void setGenre(const QVariant & newGenreID)       { attrs[JSON_TYPE_GENRE_ID] = newGenreID; }
-        inline void setSize(const QVariant & newSize)           { attrs[JSON_TYPE_BYTES_SIZE] = newSize; }
-        inline void setPath(const QVariant & newPath)           { attrs[JSON_TYPE_PATH] = newPath; }
-        inline void setRefreshPath(const QVariant & newPath)    { attrs[JSON_TYPE_REFRESH_PATH] = newPath; }
+        inline void setOwner(const QVariant & new_owner)        { attrs[JSON_TYPE_OWNER_ID] = new_owner; }
+        inline void setBpm(const QVariant & new_beat)           { attrs[JSON_TYPE_BPM] = new_beat; }
+        inline void setArtPath(const QVariant & new_path)       { attrs[JSON_TYPE_MEDIA_ART] = new_path; }
 
-        inline void setTitle(const QVariant & newTitle)         { attrs[JSON_TYPE_TITLE] = newTitle; }
-        inline void setExtension(const QVariant & newExtension) { attrs[JSON_TYPE_EXTENSION] = newExtension; }
-        inline void setInfo(const QVariant & newInfo)           { attrs[JSON_TYPE_INFO] = newInfo; }
-        inline void setTitlesCache(const QVariant & newTitles)  { attrs[JSON_TYPE_TITLE_CACHES] = newTitles; }
-        inline void setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
+        inline void setStartPos(const QVariant & new_start_pos) { attrs[JSON_TYPE_START_POS] = new_start_pos; }
+        inline void setDuration(const QVariant & new_duration)  { attrs[JSON_TYPE_DURATION] = new_duration; }
+        inline void setGenre(const QVariant & new_genre_id)     { attrs[JSON_TYPE_GENRE_ID] = new_genre_id; }
+        inline void setSize(const QVariant & new_size)          { attrs[JSON_TYPE_BYTES_SIZE] = new_size; }
+        inline void setPath(const QVariant & new_path)          { attrs[JSON_TYPE_PATH] = new_path; }
+        inline void setRefreshPath(const QVariant & new_path)   { attrs[JSON_TYPE_REFRESH_PATH] = new_path; }
+
+        inline void setTitle(const QVariant & new_title)        { attrs[JSON_TYPE_TITLE] = new_title; }
+        inline void setExtension(const QVariant & new_extension){ attrs[JSON_TYPE_EXTENSION] = new_extension; }
+        inline void setInfo(const QVariant & new_info)          { attrs[JSON_TYPE_INFO] = new_info; }
+        inline void setTitlesCache(const QVariant & new_titles) { attrs[JSON_TYPE_TITLE_CACHES] = new_titles; }
+//        inline void setVideoPath(const QVariant & videoPath)    { attrs[JSON_TYPE_VIDEO_PATH] = videoPath; }
         inline void setError(const QVariant & error)            {
             if (error.toInt() == err_none)
                 attrs.remove(JSON_TYPE_ERROR);
