@@ -279,7 +279,7 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, cons
             if (!player_url.startsWith(QStringLiteral("http://vk.com")))
                 uri = player_url;
             else
-                uri = QString(); // store only embeded videos
+                uri = QString(); // store only embeded videos // not playable at this time
         } else {
             uri = Vk::Queries::cleanUrl(itm.value(Vk::tkn_url).toString()); // remove extra info from url
         }
