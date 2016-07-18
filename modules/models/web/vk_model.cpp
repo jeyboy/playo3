@@ -50,13 +50,14 @@ void VkModel::proceedJson(QJsonValue & hash) {
             int pos = 0;
             for(QJsonArray::Iterator album_obj = albums.begin(); album_obj != albums.end(); album_obj++, pos++) {
                 album = (*album_obj).toObject();
+                QString album_id = album.value(Vk::tkn_id).toString();
 
                 if (album.contains(Vk::tkn_items)) {
                     QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
                     if (albumItems.size() > 0) {
                         folder = rootItem -> createPlaylist(
                             dt_playlist_vk,
-                            album.value(Vk::tkn_id).toString(),
+                            album_id,
                             album.value(Vk::tkn_title).toString(),
                             pos
                         );
@@ -71,10 +72,10 @@ void VkModel::proceedJson(QJsonValue & hash) {
                         {
                             {tkn_media_type, dmt_audio},
                             {JSON_TYPE_ITEM_TYPE, dt_site_vk},
-                            {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
+                            {tkn_grab_refresh, album_id}
                         },
                         album.value(Vk::tkn_title).toString(),
-                        album.value(Vk::tkn_id).toString()
+                        album_id
                     );
                 }
             }
@@ -89,13 +90,14 @@ void VkModel::proceedJson(QJsonValue & hash) {
             int pos = 0;
             for(QJsonArray::Iterator album_obj = video_albums.begin(); album_obj != video_albums.end(); album_obj++, pos++) {
                 album = (*album_obj).toObject();
+                QString album_id = QString::number(album.value(Vk::tkn_id).toInt());
 
                 if (album.contains(Vk::tkn_items)) {
                     QJsonArray albumItems = album.value(Vk::tkn_items).toArray();
                     if (albumItems.size() > 0) {
                         folder = rootItem -> createPlaylist(
                             dt_playlist_vk,
-                            album.value(Vk::tkn_id).toString(),
+                            album_id,
                             album.value(Vk::tkn_title).toString(),
                             pos
                         );
@@ -110,10 +112,10 @@ void VkModel::proceedJson(QJsonValue & hash) {
                         {
                             {tkn_media_type, dmt_video},
                             {JSON_TYPE_ITEM_TYPE, dt_site_vk},
-                            {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
+                            {tkn_grab_refresh, album_id}
                         },
                         album.value(Vk::tkn_title).toString(),
-                        album.value(Vk::tkn_id).toString()
+                        album_id
                     );
                 }
 

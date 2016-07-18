@@ -86,14 +86,14 @@ namespace Core {
                                         {
                                             tkn_code, QString(
                                                 "var search = []; var rule = true;"
-                                                "do {"
+                                                "while(rule){"
                                                 "    var items = API.video.get({"
                                                 "        album_id: \"" % playlist_id % "\","
                                                 "        count: 200"
                                                 "    }).items;"
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < 4000 && items.length != 0;"
-                                                "} while(rule);"
+                                                "}"
                                                 "return {" % tkn_video_list % ": search};"
                                             )
                                         }
