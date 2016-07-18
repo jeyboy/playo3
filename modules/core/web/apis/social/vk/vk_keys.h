@@ -31,6 +31,7 @@ namespace Core {
             extern const QString tkn_execute;
             extern const QString tkn_code;
             extern const QString tkn_albums;
+            extern const QString tkn_video_albums;
             extern const QString tkn_audios;
             extern const QString tkn_audio_list;
             extern const QString tkn_video_list;
@@ -93,6 +94,8 @@ namespace Core {
 
             extern const QString query_track_playlists;
             extern const QString query_video_playlists;
+
+            extern const QString query_user_videos;
 
             extern const QString query_user_groups_friends;
             extern const QString query_user_tracks_groups_friends;

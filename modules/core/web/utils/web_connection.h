@@ -26,6 +26,7 @@ namespace Core {
 
             void check() {
                 if (!connection_checker) {
+                    qDebug() << "~~~ CONNESTION LOST";
                     emit connectionStatus(false);
                     connection_checker = new QFutureWatcher<void>();
                     connection_checker -> setFuture(QtConcurrent::run(this, &WebConnection::checkConnection, connection_checker));

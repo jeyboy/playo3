@@ -11,6 +11,7 @@ void WebConnection::checkConnection(QFutureWatcher<void> * checker) {
         QNetworkReply * reply = manager -> head(QNetworkRequest(QStringLiteral("http://google.com")));
 
         if (reply -> error() == QNetworkReply::NoError) {
+            qDebug() << "~~~ CONNESTION RESTORED";
             emit connectionStatus(true);
             break;
         }

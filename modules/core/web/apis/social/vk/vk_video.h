@@ -52,6 +52,16 @@ namespace Core {
                     return QJsonArray();
                 }
 
+                QJsonValue videoByUser(const QString & user_id) {
+                    return sRequest(
+                        User::baseUrlStr(
+                            qst_api_def, tkn_execute,
+                            {{ tkn_code, query_user_videos.arg(user_id) }}
+                        ),
+                        call_type_json, 0, proc_json_extract
+                    );
+                }
+
                 QJsonValue videoByPlaylist(const QString & playlist_id) { // not finished
                     Permissions perm = permissions(pr_media_content);
 

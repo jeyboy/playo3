@@ -26,6 +26,7 @@ namespace Core {
             extern const QString tkn_execute           = QStringLiteral("execute");
             extern const QString tkn_code              = QStringLiteral("code");
             extern const QString tkn_albums            = QStringLiteral("albums");
+            extern const QString tkn_video_albums      = QStringLiteral("video_albums");
             extern const QString tkn_audios            = QStringLiteral("audios");
             extern const QString tkn_audio_list        = QStringLiteral("audio_list");
             extern const QString tkn_video_list        = QStringLiteral("video_list");
@@ -185,6 +186,42 @@ namespace Core {
                     );
 
 
+            extern const QString query_user_videos = QString(
+                "var albums = []; var videos = []; var counter = 0;"
+                "var videos_resp; var rule = true;"
+
+                "while(rule){"
+                "   videos_resp = API.video.get ({"
+                "       owner_id: %1,"
+                "       count: 200,"
+                "       offset: videos.length, "
+                "       extended: 1"
+                "   });"
+                "   videos = videos %2b videos_resp.items;"
+                "   rule = (counter = counter %2b 1) < 22 && (videos_resp.count != 0);"
+                "}"
+
+                "var albums_resp;"
+                "rule = true;"
+
+                "while(rule){"
+                "   albums_resp = API.video.getAlbums ({"
+                "       owner_id: %1,"
+                "       count: 100,"
+                "       offset: albums.length, "
+                "       extended: 1"
+                "   });"
+
+                "   albums = albums %2b albums_resp.items;"
+                "   rule = (counter = counter %2b 1) < 25 && (albums_resp.count != 0);"
+                "}"
+
+                "return {"
+                "    " % tkn_video_list % ": videos,"
+                "    " % tkn_video_albums % ": albums"
+                "};"
+            );
+
             extern const QString query_user_tracks_groups_friends = QString(
                 "var curr; var proceed_groups = [];"
                 "var groups = API.groups.get({"
@@ -223,7 +260,7 @@ namespace Core {
                 "return {"
                 "    " % tkn_audio_list % ": API.audio.get({ "
                 "        count: 6000, owner_id: %1"
-                "    }),"
+                "    }).items,"
                 "    " % tkn_friends % ": proceed_friends, "
                 "    " % tkn_groups % ": proceed_groups, "
                 "};"
@@ -286,7 +323,7 @@ namespace Core {
                 "return {"
                 "    " % tkn_audio_list % ": API.audio.get({ "
                 "        count: 6000, owner_id: %1"
-                "    }),"
+                "    }).items,"
                 "    " % tkn_albums % ": proceed_folders, "
                 "    " % tkn_groups % ": proceed_groups, "
                 "    " % tkn_friends % ": proceed_friends, "
@@ -319,7 +356,7 @@ namespace Core {
                 "    " % tkn_audio_list % ": API.audio.get({ "
                 "        count: 6000, "
                 "        owner_id: %1"
-                "    }), "
+                "    }).items, "
                 "    " % tkn_albums % ": sort_by_folders, "
                 "    " % tkn_albums_offset % ": " % val_api_call_limit % ", "
                 "    " % tkn_albums_finished % ": (folders_count < " % val_api_call_limit % ")"

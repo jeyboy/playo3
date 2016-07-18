@@ -158,15 +158,15 @@ namespace Core {
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
 
-                QJsonValue userTracksGroupsFriends(const QString & user_id) {
-                    return User::sRequest(
-                        User::baseUrlStr(
-                            qst_api_def, tkn_execute,
-                            {{ tkn_code, query_user_tracks_groups_friends.arg(user_id) }}
-                        ),
-                        call_type_json, 0, proc_json_extract
-                    );
-                }
+//                QJsonValue userTracksGroupsFriends(const QString & user_id) {
+//                    return User::sRequest(
+//                        User::baseUrlStr(
+//                            qst_api_def, tkn_execute,
+//                            {{ tkn_code, query_user_tracks_groups_friends.arg(user_id) }}
+//                        ),
+//                        call_type_json, 0, proc_json_extract
+//                    );
+//                }
 
                 QJsonValue userInfo(const QString & user_id) {
                     Permissions perm = permissions(pr_object_content);
@@ -181,10 +181,13 @@ namespace Core {
                                 call_type_json, 0, proc_json_extract
                             );
 
-                            QJsonObject audio_ret = userTracksPlaylists(user_id).toObject();
+                            QJsonObject media_ret = userMedia(user_id).toObject();
 
-                            ret.insert(tkn_audio_list, audio_ret.value(tkn_audio_list).toArray());
-                            ret.insert(tkn_albums, audio_ret.value(tkn_albums).toArray());
+                            ret.insert(tkn_audio_list, media_ret.value(tkn_audio_list).toArray());
+                            ret.insert(tkn_albums, media_ret.value(tkn_albums).toArray());
+
+                            ret.insert(tkn_video_list, media_ret.value(tkn_video_list).toArray());
+                            ret.insert(tkn_video_albums, media_ret.value(tkn_video_albums).toArray());
 
                             return ret;
                         }
@@ -212,7 +215,7 @@ namespace Core {
                     return QJsonObject();
                 }
 
-                QJsonValue userTracksPlaylists(const QString & user_id) {
+                QJsonValue userMedia(const QString & user_id) {
                     Permissions perm = permissions(pr_object_content);
 
                     switch(perm) {
@@ -284,9 +287,8 @@ namespace Core {
                                     uplaylists_res << playlist_obj;
                                 }
 
-                                /////////////////////////////////////
-
-                                QJsonObject res;
+                                /////////////////////////////////////                               
+                                QJsonObject res = videoByUser(user_id).toObject();
 
                                 res.insert(tkn_audio_list, tracks_res);
                                 res.insert(tkn_albums, uplaylists_res);
@@ -302,6 +304,11 @@ namespace Core {
                                 ),
                                 call_type_json, 0, proc_json_extract
                             );
+
+                            QJsonObject video_res = videoByUser(user_id).toObject();
+
+                            ret.insert(tkn_video_list, video_res.value(tkn_video_list).toArray());
+                            ret.insert(tkn_video_albums, video_res.value(tkn_video_albums).toArray());
 
                             if (!ret.value(tkn_albums_finished).toBool()) {
                                 QJsonArray ar = ret.value(tkn_albums).toArray();

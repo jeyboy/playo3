@@ -22,7 +22,7 @@ void VkModel::refresh() {
 }
 
 void VkModel::proceedJson(QJsonValue & hash) {
-    QJsonArray albums, audios, groups, friends;
+    QJsonArray albums, audios, groups, friends, videos, video_albums;
 
     if (hash.isArray()) {
         // reserved
@@ -30,20 +30,18 @@ void VkModel::proceedJson(QJsonValue & hash) {
         QJsonObject hash_obj = hash.toObject();
         albums = hash_obj.value(Vk::tkn_albums).toArray();
 
-        QJsonValue au = hash_obj.value(Vk::tkn_audio_list);
-
-        if (au.isObject())
-            audios = au.toObject().value(Vk::tkn_items).toArray();
-        else
-            audios = au.toArray();
+        audios =  hash_obj.value(Vk::tkn_audio_list).toArray();
 
         groups = hash_obj.value(Vk::tkn_groups).toArray();
         friends = hash_obj.value(Vk::tkn_friends).toArray();
+
+        videos = hash_obj.value(Vk::tkn_video_list).toArray();
+        video_albums = hash_obj.value(Vk::tkn_video_albums).toArray();
     }
 
     int itemsAmount = 0, albums_count = albums.size();
 
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count());
+    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios.count() + videos.count() + video_albums.count());
     {
         if (albums_count > 0) {
             Playlist * folder;
