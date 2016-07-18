@@ -69,8 +69,8 @@ void VkModel::proceedJson(QJsonValue & hash) {
                 else {
                     rootItem -> createLoadablePlaylist(
                         {
-                            {JSON_TYPE_MEDIA_TYPE, dmt_audio},
-                            {JSON_TYPE_ITEM_TYPE, dt_playlist_vk},
+                            {tkn_media_type, dmt_audio},
+                            {JSON_TYPE_ITEM_TYPE, dt_site_vk},
                             {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
                         },
                         album.value(Vk::tkn_title).toString(),
@@ -108,8 +108,8 @@ void VkModel::proceedJson(QJsonValue & hash) {
                 else {
                     folder = rootItem -> createLoadablePlaylist(
                         {
-                            {JSON_TYPE_MEDIA_TYPE, dmt_video},
-                            {JSON_TYPE_ITEM_TYPE, dt_playlist_vk},
+                            {tkn_media_type, dmt_video},
+                            {JSON_TYPE_ITEM_TYPE, dt_site_vk},
                             {tkn_grab_refresh, album.value(Vk::tkn_id).toString()}
                         },
                         album.value(Vk::tkn_title).toString(),
@@ -120,6 +120,11 @@ void VkModel::proceedJson(QJsonValue & hash) {
                 folder -> setArtPath(album.value(Vk::tkn_video_art).toString());
             }
         }
+
+    /////////////////////////////////////////////////////////////////////
+
+        if (videos.count() > 0)
+            itemsAmount += proceedVkList(videos, rootItem, dmt_video);
 
     /////////////////////////////////////////////////////////////////////
 

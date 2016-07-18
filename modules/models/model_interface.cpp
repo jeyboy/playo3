@@ -276,8 +276,7 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, cons
         if (dm_type == dmt_video) {
             uri = itm.value(Vk::tkn_files).toObject().toVariantMap();
         } else {
-            uri = itm.value(Vk::tkn_url).toString();
-            uri = uri.section('?', 0, 0); // remove extra info from url
+            uri = Vk::Queries::cleanUrl(itm.value(Vk::tkn_url).toString()); // remove extra info from url
         }
 
         QList<IItem *> items = store.values(uid);
@@ -418,7 +417,7 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
             } else {
                 parent -> createLoadablePlaylist(
                     {
-                        {JSON_TYPE_MEDIA_TYPE, dm_type},
+                        {tkn_media_type, dm_type},
                         {JSON_TYPE_ITEM_TYPE, wType},
                         {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()},
                         {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}
@@ -518,8 +517,8 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, cons
 
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
 
-            if (itm.contains(Soundcloud::tkn_video_url))
-                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
+//            if (itm.contains(Soundcloud::tkn_video_url))
+//                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
 
             if (itm.contains(Soundcloud::tkn_genre_id))
                 newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());

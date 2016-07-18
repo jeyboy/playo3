@@ -29,7 +29,7 @@ namespace Core {
                 }
 
                 QString refresh(const QString & audio_uid, const DataMediaType & /*itemMediaType*/) { // TODO: update for video refresh
-                    return refresh_postproc(trackUrl(audio_uid));
+                    return cleanUrl(trackUrl(audio_uid));
                 }
 
                 QList<Linkable> findFriendsById(const QString & uid) {

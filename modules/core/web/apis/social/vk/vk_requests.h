@@ -54,8 +54,6 @@ namespace Core {
                     return true; /*return connectSite(error);*/
                 }
 
-                QString refresh_postproc(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
-
                 QJsonValue popular(const SearchLimit & limits) {
                     QJsonObject res;
 
@@ -152,11 +150,19 @@ namespace Core {
                 }
 
                 inline QJsonValue loadSet(const QVariantMap & attrs) {
-                    return tracksByPlaylist(attrs[tkn_grab_refresh].toString());
+                    switch(attrs[tkn_media_type].toInt()) {
+                        case dmt_audio: return tracksByPlaylist(attrs[tkn_grab_refresh].toString());
+                        case dmt_video: return videoByPlaylist(attrs[tkn_grab_refresh].toString());
+                        default: qDebug() << "VK LOAD SET UNKNOWN TYPE";
+                    }
+
+                    return QJsonArray();
                 }
 
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
+
+                static QString cleanUrl(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
 //                QJsonValue userTracksGroupsFriends(const QString & user_id) {
 //                    return User::sRequest(
