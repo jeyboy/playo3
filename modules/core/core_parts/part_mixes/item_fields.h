@@ -38,7 +38,7 @@ namespace Core {
         inline QVariant songId() const                          { return attrs.value(JSON_TYPE_SONG_ID); }
 
         inline QVariant title() const                           { return attrs.value(JSON_TYPE_TITLE); }
-        inline QVariant path() const                            { return attrs.value(JSON_TYPE_PATH); }
+        QVariant path() const;
         virtual inline QString refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
         inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }

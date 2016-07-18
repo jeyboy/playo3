@@ -12,6 +12,56 @@
 
 #include "modules/core/media/interfaces/iplayer.h"
 
+
+//char *BASS_ChannelGetTags(
+//    DWORD handle,
+//    DWORD tags
+//);
+
+//Parameters
+//handle	The channel handle... a HMUSIC or HSTREAM.
+//tags	The tags/headers wanted... one of the following.
+//BASS_TAG_APE	APE (v1 or v2) tags. A pointer to a series of null-terminated UTF-8 strings is returned, the final string ending with a double null. Each string is in the form of "key=value", or "key=value1/value2/..." if there are multiple values.
+//BASS_TAG_APE_BINARY
+//+ tag number (0=first)	APE binary tag. A pointer to a TAG_APE_BINARY structure is returned.
+//BASS_TAG_CA_CODEC	CoreAudio codec information. A pointer to a TAG_CA_CODEC structure is returned.
+//BASS_TAG_HTTP	HTTP headers, only available when streaming from a HTTP server. A pointer to a series of null-terminated strings is returned, the final string ending with a double null.
+//BASS_TAG_ICY	ICY (Shoutcast) tags. A pointer to a series of null-terminated strings is returned, the final string ending with a double null.
+//BASS_TAG_ID3	ID3v1 tags. A pointer to a TAG_ID3 structure is returned.
+//BASS_TAG_ID3V2	ID3v2 tags. A pointer to a variable length block is returned. ID3v2 tags are supported at both the start and end of the file, and in designated RIFF/AIFF chunks. See www.id3.org for details of the block's structure.
+//BASS_TAG_LYRICS3	Lyrics3v2 tag. A single string is returned, containing the Lyrics3v2 information. See www.id3.org/Lyrics3v2 for details of its format.
+//BASS_TAG_META	Shoutcast metadata. A single string is returned, containing the current stream title and url (usually omitted). The format of the string is: StreamTitle='xxx';StreamUrl='xxx';
+//BASS_TAG_MF	Media Foundation metadata. A pointer to a series of null-terminated UTF-8 strings is returned, the final string ending with a double null.
+//BASS_TAG_MP4	MP4/iTunes metadata. A pointer to a series of null-terminated UTF-8 strings is returned, the final string ending with a double null.
+//BASS_TAG_MUSIC_AUTH	MOD music author. Only available in files created with the OpenMPT tracker.
+//BASS_TAG_MUSIC_INST
+//+ instrument number (0=first)	MOD instrument name. Only available with formats that have instruments, eg. IT and XM (and MO3).
+//BASS_TAG_MUSIC_MESSAGE	MOD message text.
+//BASS_TAG_MUSIC_NAME	MOD music title.
+//BASS_TAG_MUSIC_ORDERS	MOD music order list. A pointer to a byte array is returned, with each byte being the pattern number played at that order position. Pattern number 254 is "+++" (skip order) and 255 is "---" (end song).
+//BASS_TAG_MUSIC_SAMPLE
+//+ sample number (0=first)	MOD sample name.
+//BASS_TAG_OGG	OGG comments. A pointer to a series of null-terminated UTF-8 strings is returned, the final string ending with a double null.
+//BASS_TAG_RIFF_BEXT	RIFF/BWF "bext" chunk tags. A pointer to a TAG_BEXT structure is returned.
+//BASS_TAG_RIFF_CART	RIFF/BWF "cart" chunk tags. A pointer to a TAG_CART structure is returned.
+//BASS_TAG_RIFF_DISP	RIFF "DISP" chunk text (CF_TEXT) tag. A single string is returned.
+//BASS_TAG_RIFF_INFO	RIFF "INFO" chunk tags. A pointer to a series of null-terminated strings is returned, the final string ending with a double null. The tags are in the form of "XXXX=text", where "XXXX" is the chunk ID.
+//BASS_TAG_VENDOR	OGG encoder. A single UTF-8 string is returned.
+//BASS_TAG_WAVEFORMAT	WAVE "fmt " chunk contents. A pointer to a WAVEFORMATEX structure is returned. As well as WAVE files, this is also provided by Media Foundation codecs.
+//BASS_TAG_WMA	WMA tags. A pointer to a series of null-terminated UTF-8 strings is returned, the final string ending with a double null.
+//other tags may be supported by add-ons, see the documentation.
+
+//Return value
+//If successful, the requested tags are returned, else NULL is returned. Use BASS_ErrorGetCode to get the error code.
+
+//Error codes
+//BASS_ERROR_HANDLE	handle is not valid.
+//BASS_ERROR_NOTAVAIL	The requested tags are not available.
+
+//Remarks
+//Some tags (eg. ID3v1) are located at the end of the file, so when streaming a file from the internet, the tags will not be available until the download is complete. A BASS_SYNC_DOWNLOAD sync can be set via BASS_ChannelSetSync, to be informed of when the download is complete. A BASS_SYNC_META sync can be used to be informed of new Shoutcast metadata, and a BASS_SYNC_OGG_CHANGE sync for when a new logical bitstream begins in a chained OGG stream, which generally brings new OGG tags.
+
+
 void
     #ifdef Q_OS_WIN
         __stdcall
