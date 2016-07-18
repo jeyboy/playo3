@@ -19,7 +19,14 @@ namespace Core {
 
                     QString resp = response -> toText();
 
-                    return resp;
+                    QRegularExpressionMatch match;
+                    if (resp.indexOf(QRegularExpression("vars = ([^;]+);"), 0, &match) != -1) {
+                        QJsonObject obj = QJsonDocument::fromJson(match.captured(1).toUtf8()).object();
+
+
+                    }
+
+                    return QString();
                 }
 
                 QJsonArray videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000

@@ -20,24 +20,25 @@ ItemFields::ItemFields(const DataSubType & subType, int state) : ItemState(state
 
 QVariant ItemFields::path() const {
     QVariant res = attrs.value(JSON_TYPE_PATH);
+    return res;
 
-    switch(res.type()) {
-        case QVariant::Map: {
-            QVariantMap map = res.toMap();
+//    switch(res.type()) {
+//        case QVariant::Map: {
+//            QVariantMap map = res.toMap();
 
-            switch(dataType()) {
-                case dt_site_vk: {
-                    if (map.size() == 1 && map.contains(QStringLiteral("external"))) {
-                        // do some actions with embeded link
-                    } else { // get best quality
-                        return map.values().last();
-                    }
-                break;}
-                default: map.values().last();
-            }
-        }
-        default: res;
-    }
+//            switch(dataType()) {
+//                case dt_site_vk: {
+//                    if (map.size() == 1 && map.contains(QStringLiteral("external"))) {
+//                        // do some actions with embeded link
+//                    } else { // get best quality
+//                        return map.values().last();
+//                    }
+//                break;}
+//                default: map.values().last();
+//            }
+//        }
+//        default: res;
+//    }
 }
 
 QStringList ItemFields::info() const {
