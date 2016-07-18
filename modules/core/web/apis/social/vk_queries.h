@@ -32,6 +32,7 @@ namespace Core {
                     switch(itemMediaType) {
                         case dmt_audio: return cleanUrl(trackUrl(item_uid));
                         case dmt_video: return videoUrl(item_uid);
+                        default:;
                     }
 
                     return QString();
