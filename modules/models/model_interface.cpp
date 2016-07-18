@@ -878,18 +878,17 @@ void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
     playlist -> unset(IItem::flag_in_proc);
     playlist -> removeLoadability();
 
-    int row_index = playlist -> childCount() - 1;
+    IItem * temp_item = playlist -> child(0);
     int added = proceedList(data_type, json, playlist);
 
     if (added > 0) {
-        playlist -> removeChildren(row_index);
+        temp_item -> removeYouself();
         playlist -> backPropagateItemsCountInBranch(added);
 
-        beginInsertRows(index(playlist), row_index, row_index);
+        beginInsertRows(index(playlist), 0, added);
         endInsertRows();
     } else {
-        IItem * item = playlist -> child(row_index);
-        item -> setTitle(QStringLiteral("Error!!"));
+        temp_item -> setTitle(QStringLiteral("Error!!"));
     }
 }
 
