@@ -122,7 +122,7 @@ namespace Models {
             return set;
         }
 
-        int proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent);
+        int proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent, const DataMediaType & dmtype = dmt_unknow);
 
         int proceedVkList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
         int proceedScList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);

@@ -28,8 +28,13 @@ namespace Core {
                     ThreadUtils::obj().run((Track *)this, &Track::trackRecommendations, uid, byUser, randomize, func);
                 }
 
-                QString refresh(const QString & audio_uid, const DataMediaType & /*itemMediaType*/) { // TODO: update for video refresh
-                    return cleanUrl(trackUrl(audio_uid));
+                QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {
+                    switch(itemMediaType) {
+                        case dmt_audio: return cleanUrl(trackUrl(item_uid));
+                        case dmt_video: return videoUrl(item_uid);
+                    }
+
+                    return QString();
                 }
 
                 QList<Linkable> findFriendsById(const QString & uid) {

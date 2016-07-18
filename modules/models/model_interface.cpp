@@ -220,7 +220,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent) {
+int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent, const DataMediaType & dmtype) {
     int (IModel::*proc_func)(const QJsonArray &, Playlist *, const DataMediaType &, const DataSubType &);
 
     switch(wType) {
@@ -246,7 +246,7 @@ int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Play
 
         return amount;
     }
-    else return (*this.*proc_func)(json.toArray(), parent, dmt_unknow, wType);
+    else return (*this.*proc_func)(json.toArray(), parent, dmtype, wType);
 }
 
 int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
@@ -274,7 +274,7 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, cons
         QVariant uri;
 
         if (dm_type == dmt_video) {
-            uri = itm.value(Vk::tkn_files).toObject().toVariantMap();
+            uri = QString(); //itm.value(Vk::tkn_files).toObject().toVariantMap();
         } else {
             uri = Vk::Queries::cleanUrl(itm.value(Vk::tkn_url).toString()); // remove extra info from url
         }
@@ -875,11 +875,12 @@ void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
 
     QVariantMap hash = playlist -> loadableAttrs().toMap();
     DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
+    DataMediaType media_type = (DataMediaType)hash.value(tkn_media_type).toInt();
     playlist -> unset(IItem::flag_in_proc);
     playlist -> removeLoadability();
 
     IItem * temp_item = playlist -> child(0);
-    int added = proceedList(data_type, json, playlist);
+    int added = proceedList(data_type, json, playlist, media_type);
 
     if (added > 0) {
         temp_item -> removeYouself();
