@@ -6,7 +6,7 @@
 //#include "modules/core/web/interfaces/sociable.h"
 #include "modules/core/interfaces/isource.h"
 
-#include "yandex_request_api.h"
+#include "yandex/yandex_request_api.h"
 
 namespace Core {
     namespace Web {

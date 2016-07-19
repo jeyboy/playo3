@@ -7,8 +7,8 @@
 #include "modules/core/misc/file_utils/extensions.h"
 #include "modules/core/interfaces/iuser_interaction.h"
 
-#include "fourshared_request_api.h"
-#include "fourshared_request_site.h"
+#include "fourshared/fourshared_request_api.h"
+#include "fourshared/fourshared_request_site.h"
 
 namespace Core {
     namespace Web {
