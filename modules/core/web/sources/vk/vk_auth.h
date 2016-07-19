@@ -3,7 +3,7 @@
 
 #include "vk_defines.h"
 #include "modules/core/interfaces/iuser_interaction.h"
-#include "modules/core/web/apis/service/recaptcha.h"
+#include "modules/core/web/services/recaptcha.h"
 
 namespace Core {
     namespace Web {

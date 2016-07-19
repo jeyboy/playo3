@@ -147,26 +147,6 @@ HEADERS += \
     modules/core/misc/format.h \
     modules/core/misc/logger.h \
     modules/core/misc/screen.h \
-    modules/core/web/apis/site/_sites.h \
-    modules/core/web/apis/site/jetune.h \
-    modules/core/web/apis/site/mp3base.h \
-    modules/core/web/apis/site/mp3cc.h \
-    modules/core/web/apis/site/mp3pm.h \
-    modules/core/web/apis/site/musicshara.h \
-    modules/core/web/apis/site/myzuka_album.h \
-    modules/core/web/apis/site/promodj.h \
-    modules/core/web/apis/site/shmidt.h \
-    modules/core/web/apis/site/zaycev.h \
-    modules/core/web/apis/social/_socials.h \
-    modules/core/web/apis/social/od_api.h \
-    modules/core/web/apis/social/od_api_keys.h \
-    modules/core/web/apis/social/od_api_misc.h \
-    modules/core/web/apis/social/od_request_api.h \
-    modules/core/web/apis/social/vk/vk_keys.h \
-    modules/core/web/apis/storage/_storages.h \
-    modules/core/web/apis/storage/fourshared_api.h \
-    modules/core/web/apis/storage/fourshared_api_keys.h \
-    modules/core/web/apis/storage/fourshared_request_api.h \
     modules/core/web/utils/html_parser.h \
     modules/core/web/utils/unicode_decoding.h \
     modules/core/web/utils/web_manager.h \
@@ -233,7 +213,6 @@ HEADERS += \
     modules/core/interfaces/iplaylistable.h \
     player/player_callback.h \
     modules/controls/time_label.h \
-    modules/core/web/apis/service/recaptcha.h \
     modules/core/web/interfaces/sociable/friendable.h \
     modules/core/web/interfaces/sociable/groupable.h \
     modules/core/web/interfaces/sociable/sociable.h \
@@ -251,18 +230,10 @@ HEADERS += \
     modules/controls/toolbar_new_list_button.h \
     modules/controls/search_configurator.h \
     modules/core/misc/fuzzy_comparison.h \
-    modules/core/web/apis/site/redmp3.h \
-    modules/core/web/apis/social/yandex_api_keys.h \
-    modules/core/web/apis/social/yandex_request_api.h \
     modules/core/misc/file_utils/filesystem_watcher.h \
     modules/core/media/library_base.h \
-    modules/core/web/apis/social/youtube_api.h \
-    modules/core/web/apis/social/youtube_api_keys.h \
-    modules/core/web/apis/social/youtube_request_api.h \
-    modules/core/web/apis/social/yandex_api.h \
     modules/pizduck/duk_config.h \
     modules/pizduck/duktape.h \
-    modules/core/web/apis/social/youtube_api_misc.h \
     modules/core/core_parts/part_mixes/item_errors.h \
     modules/core/core_parts/part_mixes/item_field_defines.h \
     modules/core/data_sub_types.h \
@@ -288,32 +259,59 @@ HEADERS += \
     modules/models/web/fourshared_model.h \
     modules/core/web/utils/web_headers.h \
     modules/core/interfaces/iuser_interaction.h \
-    modules/core/web/apis/storage/fourshared_request_site.h \
-    modules/core/web/apis/storage/fourshared_defines.h \
     modules/core/interfaces/isource_perm_flags.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_auth.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_defines.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_group.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_playlist.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_set.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_track.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_user.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_keys.h \
-    modules/core/web/apis/social/soundcloud/soundcloud_requests.h \
-    modules/core/web/apis/social/soundcloud_queries.h \
     dialogs/packages_dialog.h \
-    modules/core/web/apis/social/vk/vk_auth.h \
-    modules/core/web/apis/social/vk/vk_defines.h \
-    modules/core/web/apis/social/vk/vk_track.h \
-    modules/core/web/apis/social/vk/vk_video.h \
-    modules/core/web/apis/social/vk/vk_playlist.h \
-    modules/core/web/apis/social/vk/vk_group.h \
-    modules/core/web/apis/social/vk/vk_user.h \
-    modules/core/web/apis/social/vk/vk_requests.h \
-    modules/core/web/apis/social/vk/vk_feed.h \
-    modules/core/web/apis/social/vk/vk_set.h \
-    modules/core/web/apis/social/vk_queries.h \
-    modules/core/web/utils/web_connection.h
+    modules/core/web/utils/web_connection.h \
+    modules/core/web/services/recaptcha.h \
+    modules/core/web/sources/soundcloud/soundcloud_auth.h \
+    modules/core/web/sources/soundcloud/soundcloud_defines.h \
+    modules/core/web/sources/soundcloud/soundcloud_group.h \
+    modules/core/web/sources/soundcloud/soundcloud_keys.h \
+    modules/core/web/sources/soundcloud/soundcloud_playlist.h \
+    modules/core/web/sources/soundcloud/soundcloud_requests.h \
+    modules/core/web/sources/soundcloud/soundcloud_set.h \
+    modules/core/web/sources/soundcloud/soundcloud_track.h \
+    modules/core/web/sources/soundcloud/soundcloud_user.h \
+    modules/core/web/sources/vk/vk_auth.h \
+    modules/core/web/sources/vk/vk_defines.h \
+    modules/core/web/sources/vk/vk_feed.h \
+    modules/core/web/sources/vk/vk_group.h \
+    modules/core/web/sources/vk/vk_keys.h \
+    modules/core/web/sources/vk/vk_playlist.h \
+    modules/core/web/sources/vk/vk_requests.h \
+    modules/core/web/sources/vk/vk_set.h \
+    modules/core/web/sources/vk/vk_track.h \
+    modules/core/web/sources/vk/vk_user.h \
+    modules/core/web/sources/vk/vk_video.h \
+    modules/core/web/sources/fourshared_api.h \
+    modules/core/web/sources/fourshared_api_keys.h \
+    modules/core/web/sources/fourshared_defines.h \
+    modules/core/web/sources/fourshared_request_api.h \
+    modules/core/web/sources/fourshared_request_site.h \
+    modules/core/web/sources/jetune.h \
+    modules/core/web/sources/mp3base.h \
+    modules/core/web/sources/mp3cc.h \
+    modules/core/web/sources/mp3pm.h \
+    modules/core/web/sources/musicshara.h \
+    modules/core/web/sources/myzuka_album.h \
+    modules/core/web/sources/od_api.h \
+    modules/core/web/sources/od_api_keys.h \
+    modules/core/web/sources/od_api_misc.h \
+    modules/core/web/sources/od_request_api.h \
+    modules/core/web/sources/promodj.h \
+    modules/core/web/sources/redmp3.h \
+    modules/core/web/sources/shmidt.h \
+    modules/core/web/sources/soundcloud_queries.h \
+    modules/core/web/sources/vk_queries.h \
+    modules/core/web/sources/yandex_api.h \
+    modules/core/web/sources/yandex_api_keys.h \
+    modules/core/web/sources/yandex_request_api.h \
+    modules/core/web/sources/youtube_api.h \
+    modules/core/web/sources/youtube_api_keys.h \
+    modules/core/web/sources/youtube_api_misc.h \
+    modules/core/web/sources/youtube_request_api.h \
+    modules/core/web/sources/zaycev.h \
+    modules/core/web/sources/_sources.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -357,19 +355,6 @@ SOURCES += \
     modules/core/misc/file_utils/icon_provider.cpp \
     modules/core/misc/format.cpp \
     modules/core/misc/logger.cpp \
-    modules/core/web/apis/site/exua.cpp \
-    modules/core/web/apis/site/jetune.cpp \
-    modules/core/web/apis/site/mp3base.cpp \
-    modules/core/web/apis/site/mp3cc.cpp \
-    modules/core/web/apis/site/mp3pm.cpp \
-    modules/core/web/apis/site/musicshara.cpp \
-    modules/core/web/apis/site/myzuka_album.cpp \
-    modules/core/web/apis/site/promodj.cpp \
-    modules/core/web/apis/site/shmidt.cpp \
-    modules/core/web/apis/site/zaycev.cpp \
-    modules/core/web/apis/social/od_api.cpp \
-    modules/core/web/apis/storage/fourshared_api.cpp \
-    modules/core/web/apis/storage/fourshared_api_keys.cpp \
     modules/core/web/utils/html_parser.cpp \
     modules/core/web/utils/web_manager.cpp \
     modules/core/web/web_apis.cpp \
@@ -421,22 +406,16 @@ SOURCES += \
     player/bass_player.cpp \
     external_keys.cpp \
     modules/core/web/utils/html_parser_keys.cpp \
-    modules/core/web/apis/social/vk/vk_keys.cpp \
     modules/models/service/relations_delegate.cpp \
     settings/stylesheets/dark_stylesheets.cpp \
     settings/stylesheets/light_stylesheets.cpp \
     settings/stylesheets/istylesheets.cpp \
-    modules/core/web/apis/social/od_api_keys.cpp \
     modules/controls/toolbar_drop_button.cpp \
     modules/controls/toolbar_user_button.cpp \
     modules/controls/toolbar_new_list_button.cpp \
     modules/controls/search_configurator.cpp \
-    modules/core/web/apis/site/redmp3.cpp \
-    modules/core/web/apis/social/yandex_api_keys.cpp \
     modules/core/misc/file_utils/filesystem_watcher.cpp \
     modules/core/media/library_base.cpp \
-    modules/core/web/apis/social/youtube_api_keys.cpp \
-    modules/core/web/apis/social/youtube_api.cpp \
     modules/pizduck/duktape.c \
     modules/core/core_parts/item.cpp \
     settings/apis_settings.cpp \
@@ -447,10 +426,29 @@ SOURCES += \
     modules/views/web/fourshared_view.cpp \
     modules/models/web/fourshared_model.cpp \
     modules/core/interfaces/iuser_interaction.cpp \
-    modules/core/web/apis/social/soundcloud/soundcloud_keys.cpp \
-    modules/core/web/apis/social/soundcloud/soundcloud_requests.cpp \
-    modules/core/web/apis/social/soundcloud_queries.cpp \
     dialogs/packages_dialog.cpp \
-    modules/core/web/apis/social/vk_queries.cpp \
     modules/core/web/utils/unicode_decoding.cpp \
-    modules/core/web/utils/web_connection.cpp
+    modules/core/web/utils/web_connection.cpp \
+    modules/core/web/sources/soundcloud/soundcloud_keys.cpp \
+    modules/core/web/sources/soundcloud/soundcloud_requests.cpp \
+    modules/core/web/sources/vk/vk_keys.cpp \
+    modules/core/web/sources/exua.cpp \
+    modules/core/web/sources/fourshared_api.cpp \
+    modules/core/web/sources/fourshared_api_keys.cpp \
+    modules/core/web/sources/jetune.cpp \
+    modules/core/web/sources/mp3base.cpp \
+    modules/core/web/sources/mp3cc.cpp \
+    modules/core/web/sources/mp3pm.cpp \
+    modules/core/web/sources/musicshara.cpp \
+    modules/core/web/sources/myzuka_album.cpp \
+    modules/core/web/sources/od_api.cpp \
+    modules/core/web/sources/od_api_keys.cpp \
+    modules/core/web/sources/promodj.cpp \
+    modules/core/web/sources/redmp3.cpp \
+    modules/core/web/sources/shmidt.cpp \
+    modules/core/web/sources/soundcloud_queries.cpp \
+    modules/core/web/sources/vk_queries.cpp \
+    modules/core/web/sources/yandex_api_keys.cpp \
+    modules/core/web/sources/youtube_api.cpp \
+    modules/core/web/sources/youtube_api_keys.cpp \
+    modules/core/web/sources/zaycev.cpp

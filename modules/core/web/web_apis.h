@@ -1,10 +1,7 @@
 #ifndef WEB_APIS
 #define WEB_APIS
 
-#include "apis/storage/_storages.h"
-#include "apis/site/_sites.h"
-#include "apis/social/_socials.h"
-//#include "modules/core/core_parts/playlist.h"
+#include "sources/_sources.h"
 
 namespace Core {
     namespace Web {

@@ -8,7 +8,7 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/file_utils/data_store.h"
 
-#include "modules/core/web/apis/social/_socials.h"
+#include "modules/core/web/sources/_sources.h"
 
 #include "modules/controls/time_label.h"
 #include "modules/controls/metric_slider.h"

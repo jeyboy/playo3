@@ -276,7 +276,7 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, cons
         if (dm_type == dmt_video) {
             QString player_url = itm.value(Vk::tkn_player).toString();
 
-            if (!player_url.startsWith(QStringLiteral("http://vk.com")))
+            if (QUrl(player_url).host() != QStringLiteral("vk.com")) // https://new.vk.com
                 uri = player_url;
             else
                 uri = QString(); // store only embeded videos // not playable at this time

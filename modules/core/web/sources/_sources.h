@@ -1,5 +1,11 @@
-#ifndef SITES
-#define SITES
+#ifndef _SOURCES
+#define _SOURCES
+
+#include "vk_queries.h"
+#include "od_api.h"
+#include "soundcloud_queries.h"
+#include "yandex_api.h"
+#include "youtube_api.h"
 
 #include "myzuka_album.h"
 #include "zaycev.h"
@@ -12,4 +18,7 @@
 #include "musicshara.h"
 #include "redmp3.h"
 
-#endif // SITES
+#include "fourshared_api.h"
+
+#endif // _SOURCES
+
