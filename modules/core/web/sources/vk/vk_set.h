@@ -8,7 +8,7 @@ namespace Core {
         namespace Vk {
             class Set : public Base {
             public:
-                enum SetType { popular_tracks = 1, popular_video };
+                enum SetType { set_popular_tracks = 1, set_popular_video };
 
                 QJsonValue setByType(const SetType & set_type, const QString & attrs) {
                     Permissions perm = permissions(pr_media_content);
@@ -18,7 +18,7 @@ namespace Core {
                         case perm_site:
                         case perm_api: {
                             switch(set_type) {
-                                case popular_tracks: {
+                                case set_popular_tracks: {
                                     int genre_id = -1; //params.last(); //genres.toInt(attrs);
 
                                     return saRequest(
@@ -41,7 +41,7 @@ namespace Core {
                                     );
                                 break;}
 
-                                case popular_video: {
+                                case set_popular_video: {
 
                                 break;}
                             }

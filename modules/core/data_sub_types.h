@@ -15,9 +15,6 @@ namespace Core {
         dmt_video
     };
 
-    #define DMT_AUDIO QString::number(dmt_audio)
-    #define DMT_VIDEO QString::number(dmt_video)
-
     enum DataSubType : int {
         dt_level = -199,
         dt_level_tree,

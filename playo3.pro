@@ -286,8 +286,6 @@ HEADERS += \
     modules/core/web/sources/fourshared_api.h \
     modules/core/web/sources/fourshared/fourshared_api_keys.h \
     modules/core/web/sources/fourshared/fourshared_defines.h \
-    modules/core/web/sources/fourshared/fourshared_request_api.h \
-    modules/core/web/sources/fourshared/fourshared_request_site.h \
     modules/core/web/sources/jetune.h \
     modules/core/web/sources/mp3base.h \
     modules/core/web/sources/mp3cc.h \
@@ -311,7 +309,11 @@ HEADERS += \
     modules/core/web/sources/youtube/youtube_api_misc.h \
     modules/core/web/sources/youtube/youtube_request_api.h \
     modules/core/web/sources/zaycev.h \
-    modules/core/web/sources/_sources.h
+    modules/core/web/sources/_sources.h \
+    modules/core/web/sources/fourshared/fourshared_set.h \
+    modules/core/web/sources/fourshared/fourshared_item.h \
+    modules/core/web/sources/fourshared/fourshared_requests.h \
+    modules/core/web/sources/fourshared/fourshared_auth.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

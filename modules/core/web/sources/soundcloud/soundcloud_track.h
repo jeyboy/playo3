@@ -164,8 +164,6 @@ namespace Core {
                 QJsonValue tracksSearch(const SearchLimit & limitations) {
                     Permissions perm = permissions(pr_media_content);
 
-                    Manager::printCookies();
-
                     switch(perm) {
                         case perm_api: {
                             return pRequest(
