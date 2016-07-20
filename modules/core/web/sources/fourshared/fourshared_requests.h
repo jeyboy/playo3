@@ -95,10 +95,6 @@ namespace Core {
                     return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
                 }
 
-                inline Headers siteHeaders() {
-                    return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});
-                }
-
                 void saveAdditionals(QJsonObject & obj) { Manager::saveCookies(obj, QUrl(url_html_site_base)); }
                 void loadAdditionals(QJsonObject & obj) {
                     Manager::loadCookies(obj);
@@ -109,17 +105,7 @@ namespace Core {
                 QJsonValue searchProc(const SearchLimit & limits) { return itemsSearch(limits); }
 
                 QJsonValue loadSet(const QVariantMap & attrs) {
-                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % attrs.value(tkn_grab_refresh).toString());
-
-                    return procUserData(sRequest(
-                        url,
-                        call_type_json,
-                        0,
-                        proc_none,
-                        QStringList(),
-                        call_method_post,
-                        siteHeaders()
-                    ));
+                    return procUserData(itemsByContainerId(attrs.value(tkn_grab_refresh).toString()).toObject());
                 }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
@@ -198,58 +184,17 @@ namespace Core {
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
 
                 bool connectUserSite() {
-                    Html::Document html = Manager::prepare() -> getFollowed(url_html_site_base) -> toHtml();
+                    QString user_id;
 
-                    Html::Tag * form = html.findFirst("form[name='loginForm']");
-                    if (!form) return false;
-                    QHash<QString, QString> vals;
-                    QString err;
-
-                    while(true) {
-                        if (!showingLogin(QStringLiteral("4shared auth"), vals[QStringLiteral("login")], vals[QStringLiteral("password")], err))
-                            return false;
-
-                        QUrl form_url = form -> serializeFormToUrl(vals);
-                        Html::Document doc = Manager::prepare() -> formFollowed(form_url) -> toHtml();
-                        form = doc.findFirst("form[name='loginForm']");
-
-                        if (!form) {
-                            Html::Document acc_doc = Manager::prepare() -> getFollowed(url_html_user_root) -> toHtml();
-                            Html::Tag * root_id_tag = acc_doc.findFirst("input.jsRootId");
-                            if (root_id_tag)
-                                setSiteUserID(root_id_tag -> value());
-                            else
-                                qDebug() << "Cannot find root id for current user";
-
-                            return true;
-                        }
+                    if (connectSite(user_id, error)) {
+                        setSiteUserID(user_id);
+                        return true;
                     }
 
                     return false;
                 }
 
-                bool connectUserApi() {
-                    // INFO: эти ебанные пидорасы не могут полгода уже как починить свой oauth
-////                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
-////                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
-////                    if (res)
-////                        res = auth.autorize(url_api_base.arg(val_version) % QStringLiteral("oauth/authorize"));
-////                    if (res)
-////                        res = auth.access(url_api_base.arg(val_version) % QStringLiteral("oauth/token"));
-
-////                    return res;
-
-////                    OAuth auth("i0SEyiZts1mMGizAVDjn4nhOH", "O52MLLcKA0LknMLf47ZKyvTQhwdhLshsSY865hEgERS6ediuSj", QStringLiteral("http://localhost:3000/"));
-////                    bool res = auth.initiate(QStringLiteral("https://api.twitter.com/oauth/request_token"));
-////                    if (res)
-////                        res = auth.autorize(QStringLiteral("https://api.twitter.com/oauth/authenticate"));
-////                    if (res)
-////                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
-
-//                    return res;
-
-                    return false;
-                }
+                bool connectUserApi() { return connectApi(); }
             public:
                 QJsonValue popular(const SearchLimit & limits) { return setByType(set_popular, limits); }
 
@@ -263,7 +208,7 @@ namespace Core {
                         case dmt_audio: {
                             if (is_uid) {
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % refresh_page);
-                                QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
+                                QString res = Manager::prepare() -> putFollowed(url, Auth::siteHeaders()) -> toText();
                                 Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
                                 return res;
                             } else {
@@ -275,7 +220,7 @@ namespace Core {
                         case dmt_video: {
                             if (is_uid) {
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % refresh_page);
-                                QString res = Manager::prepare() -> getFollowed(url, siteHeaders()) -> toText();
+                                QString res = Manager::prepare() -> getFollowed(url, Auth::siteHeaders()) -> toText();
                                 res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
                                 return res;
                             } else {

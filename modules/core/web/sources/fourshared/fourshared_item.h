@@ -8,6 +8,15 @@ namespace Core {
         namespace Fourshared {
             class Item : public Base {
             public:
+                QJsonValue itemsByContainerId(const QString & container_id) {
+                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % container_id);
+
+                    return sRequest(
+                        url, call_type_json, 0, proc_none,
+                        QStringList(), call_method_post, siteHeaders()
+                    );
+                }
+
                 QJsonValue itemsSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
 

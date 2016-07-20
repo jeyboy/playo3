@@ -7,23 +7,6 @@ namespace Core {
     namespace Web {
         namespace Fourshared {
             class Set : public Base {
-                QString searchApiUrl(const QString & predicate = QString(), const CategoryTypes & ctype = music) {
-                    QUrlQuery query = genDefaultParams(qst_api_def);
-
-                    setSearchPredicate(query, predicate);
-
-                    setCategory(query, ctype);
-                    return baseUrlStr(qst_api_def, tkn_files, query);
-                }
-
-                QString audioSearchApiUrl(const QString & predicate = QString()) {
-                    return searchApiUrl(predicate, music);
-                }
-
-                QString videoSearchApiUrl(const QString & predicate = QString()) {
-                    return searchApiUrl(predicate, video);
-                }
-
             public:
                 enum SetType { set_popular };
 
@@ -45,7 +28,7 @@ namespace Core {
 
                                     if (limits.include_audio())
                                         res.insert(
-                                            DMT_AUDIO,
+                                            block_audio,
                                             pRequest(
                                                 baseUrlStr(
                                                     qst_api_def, tkn_files,
@@ -61,7 +44,7 @@ namespace Core {
 
                                     if (limits.include_video())
                                         res.insert(
-                                            DMT_VIDEO,
+                                            block_video,
                                             pRequest(
                                                 baseUrlStr(
                                                     qst_api_def, tkn_files,
@@ -88,7 +71,7 @@ namespace Core {
 
                                     if (limits.include_audio())
                                         res.insert(
-                                            DMT_AUDIO,
+                                            block_audio,
                                             pRequest(
                                                 QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                                                 call_type_html,
@@ -99,7 +82,7 @@ namespace Core {
 
                                     if (limits.include_video())
                                         res.insert(
-                                            DMT_VIDEO,
+                                            block_video,
                                             pRequest(
                                                 QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                                                 call_type_html,

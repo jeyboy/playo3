@@ -58,10 +58,10 @@ namespace Core {
                     QJsonObject res;
 
                     if (limits.include_audio())
-                        res.insert(DMT_AUDIO, setByType(popular_tracks, PPACK(Auth::boolToStr(false), limits.genre)));
+                        res.insert(block_audio, setByType(set_popular_tracks, PPACK(Auth::boolToStr(false), limits.genre)));
 
 //                    if (limits.include_video())
-//                        res.insert(DMT_VIDEO, videoPopular(limits));
+//                        res.insert(block_video, videoPopular(limits));
 
                     return res;
                 }
@@ -73,10 +73,10 @@ namespace Core {
                         QJsonObject res;
 
                         if (limits.include_audio())
-                            res.insert(DMT_AUDIO, tracksSearch(limits));
+                            res.insert(block_audio, tracksSearch(limits));
 
                         if (limits.include_video())
-                            res.insert(DMT_VIDEO, videoSearch(limits));
+                            res.insert(block_video, videoSearch(limits));
 
                         return res;
                     }

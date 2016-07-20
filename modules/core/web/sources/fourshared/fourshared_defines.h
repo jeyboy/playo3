@@ -30,6 +30,10 @@ namespace Core {
 
                 virtual Permissions permissions(const PermitRequest & req_perm = pr_search_media) = 0;
 
+                inline Headers siteHeaders() {
+                    return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});
+                }
+
                 PolyQueryRules rulesApi(
                     int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
                     int per_request = FOURSHARED_PER_REQUEST_LIMIT,

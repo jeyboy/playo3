@@ -8,7 +8,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Queries: public ISource, public Requests, public Singleton<Queries> {
+            class Queries: public Requests, public Singleton<Queries> {
                 Q_OBJECT
 
                 friend class Singleton<Queries>;
@@ -17,7 +17,7 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType siteType() const { return dt_site_fourshared; }
 
-                inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Api::userInfo, uid, func); }
+                inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
                 QJsonArray userInfo(QString & uid) { return loadSet({{tkn_grab_refresh, uid}}).toArray(); }
 
 

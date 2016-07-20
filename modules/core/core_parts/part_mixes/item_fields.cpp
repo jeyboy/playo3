@@ -1,5 +1,5 @@
 #include "item_fields.h"
-#include "modules/core/web/apis/social/soundcloud_queries.h"
+#include "modules/core/web/sources/soundcloud_queries.h"
 
 #include <qdesktopservices.h>
 #include <qfile.h>
