@@ -240,9 +240,9 @@ int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Play
             DataMediaType dmt_type = dmtype;
             QString key = pair.key();
 
-            if (key == block_audio)
+            if (key == block_items_audio)
                 dmt_type = dmt_audio;
-            else if (key == block_video)
+            else if (key == block_items_video)
                 dmt_type = dmt_video;
 
             amount += (*this.*proc_func)(
