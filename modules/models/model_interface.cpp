@@ -236,13 +236,22 @@ int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Play
         QJsonObject obj = json.toObject();
         int amount = 0;
 
-        for(QJsonObject::Iterator pair = obj.begin(); pair != obj.end(); pair++)
+        for(QJsonObject::Iterator pair = obj.begin(); pair != obj.end(); pair++) {
+            DataMediaType dmt_type = dmtype;
+            QString key = pair.key();
+
+            if (key == block_audio)
+                dmt_type = dmt_audio;
+            else if (key == block_video)
+                dmt_type = dmt_video;
+
             amount += (*this.*proc_func)(
                 pair.value().toArray(),
                 parent,
-                (DataMediaType)pair.key().toInt(),
+                dmt_type,
                 wType
             );
+        }
 
         return amount;
     }

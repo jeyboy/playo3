@@ -8,7 +8,7 @@ namespace Models {
         Q_OBJECT
     public:       
         inline FoursharedModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
-        inline ISource * api() const { return &Web::Fourshared::Api::obj(); }
+        inline ISource * api() const { return &Fourshared::Queries::obj(); }
     public slots:
         void refresh();
     protected slots:

@@ -9,7 +9,7 @@ namespace Core {
             sources.insert(Yandex::Api::obj().siteType(),       &Yandex::Api::obj());
             sources.insert(Vk::Queries::obj().siteType(),           &Vk::Queries::obj());
             sources.insert(Soundcloud::Queries::obj().siteType(),   &Soundcloud::Queries::obj());
-            sources.insert(Fourshared::Api::obj().siteType(),   &Fourshared::Api::obj());
+            sources.insert(Fourshared::Queries::obj().siteType(),   &Fourshared::Queries::obj());
             sources.insert(Od::Api::obj().siteType(),           &Od::Api::obj());
             sources.insert(MyzukaAlbum::obj().siteType(),       &MyzukaAlbum::obj());
             sources.insert(Zaycev::obj().siteType(),            &Zaycev::obj());

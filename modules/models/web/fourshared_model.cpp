@@ -6,7 +6,7 @@ using namespace Models;
 void FoursharedModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
-    Fourshared::Api::obj().userInfo(
+    Fourshared::Queries::obj().userInfo(
         sttngs.uid,
         new Func(this, SLOT(proceedJson(QJsonArray &)))
     );

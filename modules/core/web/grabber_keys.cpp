@@ -2,6 +2,9 @@
 
 namespace Core {
     namespace Web {
+        extern const QString block_audio                = QStringLiteral("blk_a");
+        extern const QString block_video                = QStringLiteral("blk_v");
+
         extern const QString block_items                = QStringLiteral("blk_items");
         extern const QString block_likes                = QStringLiteral("blk_likes");
         extern const QString block_sets                 = QStringLiteral("blk_sets");
