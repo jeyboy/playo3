@@ -2,12 +2,16 @@
 
 namespace Core {
     namespace Web {
-        extern const QString block_audio                = QStringLiteral("blk_a");
-        extern const QString block_video                = QStringLiteral("blk_v");
-
         extern const QString block_items                = QStringLiteral("blk_items");
-        extern const QString block_likes                = QStringLiteral("blk_likes");
+        extern const QString block_items_audio          = QStringLiteral("blk_a");
+        extern const QString block_items_video          = QStringLiteral("blk_v");
+
         extern const QString block_sets                 = QStringLiteral("blk_sets");
+        extern const QString block_sets_audio           = QStringLiteral("blk_as");
+        extern const QString block_sets_video           = QStringLiteral("blk_vs");
+
+        extern const QString block_likes                = QStringLiteral("blk_likes");
+        extern const QString block_friends              = QStringLiteral("blk_friends");
         extern const QString block_followings           = QStringLiteral("blk_followings");
         extern const QString block_followers            = QStringLiteral("blk_followers");
         extern const QString block_groups               = QStringLiteral("blk_groups");

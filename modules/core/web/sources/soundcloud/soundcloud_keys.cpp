@@ -57,11 +57,6 @@ namespace Core {
             extern const QString tkn_error_code        = QStringLiteral("error_code");
             extern const QString tkn_offset            = QStringLiteral("offset");
             extern const QString tkn_limit             = QStringLiteral("limit");
-//            extern const QString tkn_audio_list        = QStringLiteral("audio_list");
-//            extern const QString tkn_playlist          = QStringLiteral("playlists");
-//            extern const QString tkn_followings        = QStringLiteral("followings");
-//            extern const QString tkn_followers         = QStringLiteral("followers");
-//            extern const QString tkn_groups            = QStringLiteral("groups");
             extern const QString tkn_tracks            = QStringLiteral("tracks");
             extern const QString tkn_id                = QStringLiteral("id");
             extern const QString tkn_title             = QStringLiteral("title");

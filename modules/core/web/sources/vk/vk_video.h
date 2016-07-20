@@ -56,12 +56,12 @@ namespace Core {
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < limit && items.length != 0;"
                                                 "} while(rule);"
-                                                "return {" % tkn_video_list % ": search};"
+                                                "return {" % block_items_video % ": search};"
                                             )
                                         }
                                     }
                                 ),
-                                call_type_json, arr, proc_json_extract, QStringList() << tkn_response << tkn_video_list
+                                call_type_json, arr, proc_json_extract, IQUERY_DEF_FIELDS << block_items_video
                             );
                         }
 
@@ -114,12 +114,12 @@ namespace Core {
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < 4000 && items.length != 0;"
                                                 "}"
-                                                "return {" % tkn_video_list % ": search};"
+                                                "return {" % block_items_video % ": search};"
                                             )
                                         }
                                     }
                                 ),
-                                call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_video_list
+                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_video
                             );
                         }
 

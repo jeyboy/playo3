@@ -7,13 +7,18 @@
 
 namespace Core {
     namespace Web {
-        extern const QString block_items;
+        extern const QString block_items; // mixed items
 
-        extern const QString block_audio;
-        extern const QString block_video;
+        extern const QString block_items_audio; // only audio items
+        extern const QString block_items_video; // only video items
 
-        extern const QString block_likes;
-        extern const QString block_sets;
+        extern const QString block_sets;  // mixed sets
+
+        extern const QString block_sets_audio;  // only audio sets
+        extern const QString block_sets_video;  // only video sets
+
+        extern const QString block_likes;       
+        extern const QString block_friends;
         extern const QString block_followings;
         extern const QString block_followers;
         extern const QString block_groups;

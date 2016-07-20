@@ -58,10 +58,10 @@ namespace Core {
                     QJsonObject res;
 
                     if (limits.include_audio())
-                        res.insert(block_audio, setByType(set_popular_tracks, PPACK(Auth::boolToStr(false), limits.genre)));
+                        res.insert(block_items_audio, setByType(set_popular_tracks, PPACK(Auth::boolToStr(false), limits.genre)));
 
 //                    if (limits.include_video())
-//                        res.insert(block_video, videoPopular(limits));
+//                        res.insert(block_items_video, videoPopular(limits));
 
                     return res;
                 }
@@ -73,10 +73,10 @@ namespace Core {
                         QJsonObject res;
 
                         if (limits.include_audio())
-                            res.insert(block_audio, tracksSearch(limits));
+                            res.insert(block_items_audio, tracksSearch(limits));
 
                         if (limits.include_video())
-                            res.insert(block_video, videoSearch(limits));
+                            res.insert(block_items_video, videoSearch(limits));
 
                         return res;
                     }
@@ -189,11 +189,11 @@ namespace Core {
 
                             QJsonObject media_ret = userMedia(user_id).toObject();
 
-                            ret.insert(tkn_audio_list, media_ret.value(tkn_audio_list).toArray());
-                            ret.insert(tkn_albums, media_ret.value(tkn_albums).toArray());
+                            ret.insert(block_items_audio, media_ret.value(block_items_audio).toArray());
+                            ret.insert(block_sets_audio, media_ret.value(block_sets_audio).toArray());
 
-                            ret.insert(tkn_video_list, media_ret.value(tkn_video_list).toArray());
-                            ret.insert(tkn_video_albums, media_ret.value(tkn_video_albums).toArray());
+                            ret.insert(block_items_video, media_ret.value(block_items_video).toArray());
+                            ret.insert(block_sets_video, media_ret.value(block_sets_video).toArray());
 
                             return ret;
                         }
@@ -208,9 +208,9 @@ namespace Core {
                             );
 
                             if (!ret.value(tkn_albums_finished).toBool()) {
-                                QJsonArray ar = ret.value(tkn_albums).toArray();
+                                QJsonArray ar = ret.value(block_sets_audio).toArray();
                                 tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
-                                ret.insert(tkn_albums, ar);
+                                ret.insert(block_sets_audio, ar);
                             }
                             return ret;
                         }
@@ -296,8 +296,8 @@ namespace Core {
                                 /////////////////////////////////////                               
                                 QJsonObject res = videoByUser(user_id).toObject();
 
-                                res.insert(tkn_audio_list, tracks_res);
-                                res.insert(tkn_albums, uplaylists_res);
+                                res.insert(block_items_audio, tracks_res);
+                                res.insert(block_sets_audio, uplaylists_res);
 
                                 return res;
                             }
@@ -313,13 +313,13 @@ namespace Core {
 
                             QJsonObject video_res = videoByUser(user_id).toObject();
 
-                            ret.insert(tkn_video_list, video_res.value(tkn_video_list).toArray());
-                            ret.insert(tkn_video_albums, video_res.value(tkn_video_albums).toArray());
+                            ret.insert(block_items_video, video_res.value(block_items_video).toArray());
+                            ret.insert(block_sets_video, video_res.value(block_sets_video).toArray());
 
                             if (!ret.value(tkn_albums_finished).toBool()) {
-                                QJsonArray ar = ret.value(tkn_albums).toArray();
+                                QJsonArray ar = ret.value(block_sets_audio).toArray();
                                 tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
-                                ret.insert(tkn_albums, ar);
+                                ret.insert(block_sets_audio, ar);
                             }
                             return ret;
                         }

@@ -31,13 +31,13 @@ namespace Core {
                                                             "only_eng: " + params.first()/*boolToStr(onlyEng)*/ + ", "
                                                             "count: 1000 " + (genre_id != -1 ? (", genre_id: " + QString::number(genre_id)) : "") + ""
                                                          "});"
-                                                       "return {" % tkn_audio_list % ": popular};"
+                                                       "return {" % block_items_audio % ": popular};"
                                                     )
                                                 }
                                             }
                                         ),
                                         call_type_json, 0, proc_json_extract,
-                                        IQUERY_DEF_FIELDS << tkn_audio_list
+                                        IQUERY_DEF_FIELDS << block_items_audio
                                     );
                                 break;}
 

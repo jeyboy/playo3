@@ -80,7 +80,7 @@ namespace Core {
                                                "   count: 1000, "
                                                "   shuffle: " % boolToStr(randomize) % ""
                                                "});"
-                                               "return {" % tkn_audio_list % ": recomendations };"
+                                               "return {" % block_items_audio % ": recomendations };"
                                           )
                                         }
                                     }
@@ -89,7 +89,7 @@ namespace Core {
                             );
                         }
 
-                        default: Logger::obj().write("VK", "track Lyric is not accessable", true);
+                        default: Logger::obj().write("VK", "trackRecommendations is not accessable", true);
                     }
 
                     return QJsonObject();
@@ -146,17 +146,17 @@ namespace Core {
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < limit && items.length != 0;"
                                                 "} while(rule);"
-                                                "return {" % tkn_audio_list % ": search};"
+                                                "return {" % block_items_audio % ": search};"
                                             )
                                         }
                                     }
                                 ),
                                 call_type_json, arr, proc_json_extract,
-                                IQUERY_DEF_FIELDS << tkn_audio_list
+                                IQUERY_DEF_FIELDS << block_items_audio
                             );
                         }
 
-                        default: Logger::obj().write("VK", "track Lyric is not accessable", true);
+                        default: Logger::obj().write("VK", "tracksSearch is not accessable", true);
                     }
 
                     return QJsonArray();

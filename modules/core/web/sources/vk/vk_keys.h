@@ -3,6 +3,8 @@
 
 #include <qstringbuilder.h>
 
+#include "modules/core/web/grabber_keys.h"
+
 #define VK_DEFAULT_OFFSET_TEMPLATE QStringLiteral("ZZZZ")
 
 namespace Core {
@@ -30,13 +32,13 @@ namespace Core {
             extern const QString tkn_captcha;
             extern const QString tkn_execute;
             extern const QString tkn_code;
-            extern const QString tkn_albums;
-            extern const QString tkn_video_albums;
-            extern const QString tkn_audios;
-            extern const QString tkn_audio_list;
-            extern const QString tkn_video_list;
-            extern const QString tkn_groups;
-            extern const QString tkn_friends;
+//            extern const QString tkn_albums;
+//            extern const QString tkn_video_albums;
+//            extern const QString tkn_audios;
+//            extern const QString tkn_audio_list;
+//            extern const QString tkn_video_list;
+//            extern const QString tkn_groups;
+//            extern const QString tkn_friends;
             extern const QString tkn_albums_offset;
             extern const QString tkn_albums_finished;
             extern const QString tkn_url;

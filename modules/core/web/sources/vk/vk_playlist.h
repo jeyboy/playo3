@@ -20,7 +20,7 @@ namespace Core {
                                     { { tkn_code, query_track_playlists.arg(user_id) } }
                                 ).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE),
                                 call_type_json, rules(offset), arr, proc_json_extract,
-                                QStringList() << tkn_response << tkn_albums,
+                                QStringList() << tkn_response << block_sets_audio,
                                 call_method_get, Headers(), 0, false
                             );
                         }

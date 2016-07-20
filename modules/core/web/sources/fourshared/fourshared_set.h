@@ -28,7 +28,7 @@ namespace Core {
 
                                     if (limits.include_audio())
                                         res.insert(
-                                            block_audio,
+                                            block_items_audio,
                                             pRequest(
                                                 baseUrlStr(
                                                     qst_api_def, tkn_files,
@@ -44,7 +44,7 @@ namespace Core {
 
                                     if (limits.include_video())
                                         res.insert(
-                                            block_video,
+                                            block_items_video,
                                             pRequest(
                                                 baseUrlStr(
                                                     qst_api_def, tkn_files,
@@ -71,7 +71,7 @@ namespace Core {
 
                                     if (limits.include_audio())
                                         res.insert(
-                                            block_audio,
+                                            block_items_audio,
                                             pRequest(
                                                 QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                                                 call_type_html,
@@ -82,7 +82,7 @@ namespace Core {
 
                                     if (limits.include_video())
                                         res.insert(
-                                            block_video,
+                                            block_items_video,
                                             pRequest(
                                                 QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                                                 call_type_html,
