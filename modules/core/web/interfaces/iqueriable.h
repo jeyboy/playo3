@@ -193,7 +193,7 @@ namespace Core {
 //                url.setQuery(query);
 //                return url.toString();
 
-                return baseUrlStr(stype, predicate) % '?' % query.toString();
+                return baseUrlStr(stype, predicate) % (query.isEmpty() ? QString() : '?' % query.toString());
             }
 
             QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params) {

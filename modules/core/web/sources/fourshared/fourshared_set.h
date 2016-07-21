@@ -18,7 +18,7 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    Permissions perm = permissions(pr_search_media);
 
                     switch(perm) {
                         case perm_api: {
@@ -31,14 +31,12 @@ namespace Core {
                                             block_items_audio,
                                             pRequest(
                                                 baseUrlStr(
-                                                    qst_api_def, tkn_files,
+                                                    qst_api_search, tkn_files,
                                                     {{ tkn_category, music }}
                                                 ),
                                                 call_type_json,
                                                 rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
-                                                0,
-                                                proc_json_extract,
-                                                QStringList() << tkn_files
+                                                0, proc_json_extract, QStringList() << tkn_files
                                             )
                                         );
 
@@ -47,14 +45,12 @@ namespace Core {
                                             block_items_video,
                                             pRequest(
                                                 baseUrlStr(
-                                                    qst_api_def, tkn_files,
+                                                    qst_api_search, tkn_files,
                                                     {{ tkn_category, video }}
                                                 ),
                                                 call_type_json,
                                                 rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
-                                                0,
-                                                proc_json_extract,
-                                                QStringList() << tkn_files
+                                                0, proc_json_extract, QStringList() << tkn_files
                                             )
                                         );
 
