@@ -17,7 +17,7 @@ namespace Core {
         extern const QString block_sets_audio;  // only audio sets
         extern const QString block_sets_video;  // only video sets
 
-        extern const QString block_likes;       
+        extern const QString block_likes;
         extern const QString block_friends;
         extern const QString block_followings;
         extern const QString block_followers;

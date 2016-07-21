@@ -95,15 +95,15 @@ namespace Core {
             extern const QString val_group_types;
 
 
-            extern const QString query_track_playlists;
-            extern const QString query_video_playlists;
+            extern const QString query_track_playlists(const QString & owner_id);
+            extern const QString query_video_playlists(const QString & owner_id);
 
-            extern const QString query_user_videos;
+            extern const QString query_user_videos(const QString & owner_id);
 
-            extern const QString query_user_groups_friends;
-            extern const QString query_user_tracks_groups_friends;
-            extern const QString query_user_tracks_playlists_groups_friends;
-            extern const QString query_user_tracks_playlists;
+            extern const QString query_user_groups_friends(const QString & owner_id);
+            extern const QString query_user_tracks_groups_friends(const QString & owner_id);
+            extern const QString query_user_tracks_playlists_groups_friends(const QString & owner_id);
+            extern const QString query_user_tracks_playlists(const QString & owner_id);
         }
     }
 }

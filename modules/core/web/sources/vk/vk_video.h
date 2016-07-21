@@ -75,7 +75,7 @@ namespace Core {
                     return sRequest(
                         baseUrlStr(
                             qst_api_def, tkn_execute,
-                            {{ tkn_code, query_user_videos.arg(user_id) }}
+                            {{ tkn_code, query_user_videos(user_id) }}
                         ),
                         call_type_json, 0, proc_json_extract
                     );

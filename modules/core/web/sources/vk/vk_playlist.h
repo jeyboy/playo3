@@ -17,7 +17,7 @@ namespace Core {
                             return pRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
-                                    { { tkn_code, query_track_playlists.arg(user_id) } }
+                                    { { tkn_code, query_track_playlists(user_id) } }
                                 ).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE),
                                 call_type_json, rules(offset), arr, proc_json_extract,
                                 QStringList() << tkn_response << block_sets_audio,

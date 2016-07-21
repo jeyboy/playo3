@@ -182,7 +182,7 @@ namespace Core {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
                                     qst_api_def, tkn_execute,
-                                    {{ tkn_code, query_user_groups_friends.arg(user_id) }}
+                                    {{ tkn_code, query_user_groups_friends(user_id) }}
                                 ),
                                 call_type_json, 0, proc_json_extract
                             );
@@ -202,7 +202,7 @@ namespace Core {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
                                     qst_api_def, tkn_execute,
-                                    {{ tkn_code, query_user_tracks_playlists_groups_friends.arg(user_id) }}
+                                    {{ tkn_code, query_user_tracks_playlists_groups_friends(user_id) }}
                                 ),
                                 call_type_json, 0, proc_json_extract
                             );
@@ -306,7 +306,7 @@ namespace Core {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
                                     qst_api_def, tkn_execute,
-                                    {{ tkn_code, query_user_tracks_playlists.arg(user_id) }}
+                                    {{ tkn_code, query_user_tracks_playlists(user_id) }}
                                 ),
                                 call_type_json, 0, proc_json_extract
                             );
