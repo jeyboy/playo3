@@ -88,9 +88,17 @@ namespace Core {
 //                    }
 //                }
 
-                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_api_base.arg(val_version) % predicate % val_json_ext; }
+                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+                    switch(stype) {
+                        case qst_api_base: return url_api_base % predicate % val_json_ext;
+                        case qst_api_search: return url_api_search % predicate % val_json_ext;
+                        case qst_site_base: return url_html_site_search % predicate;
+                        case qst_site_search: return url_html_site_search % predicate;
+                        default: return QString();
+                    }
+                }
 
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_def) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_base) {
 //                    QString token = ptype == qpt_json ? apiToken() : siteToken();
                     return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
                 }

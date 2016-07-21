@@ -73,7 +73,11 @@ namespace Core {
                                         res.insert(
                                             block_items_audio,
                                             pRequest(
-                                                QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                                baseUrlStr(
+                                                    qst_site_search,
+                                                    QStringLiteral("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                                    {}
+                                                ),
                                                 call_type_html,
                                                 rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                                 0, proc_tracks1
@@ -84,7 +88,11 @@ namespace Core {
                                         res.insert(
                                             block_items_video,
                                             pRequest(
-                                                QStringLiteral("http://search.4shared.com/q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                                baseUrlStr(
+                                                    qst_site_search,
+                                                    QStringLiteral("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                                    {}
+                                                ),
                                                 call_type_html,
                                                 rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                                 0, proc_video1

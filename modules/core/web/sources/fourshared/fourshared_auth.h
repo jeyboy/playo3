@@ -48,7 +48,12 @@ namespace Core {
                         form = doc.findFirst("form[name='loginForm']");
 
                         if (!form) {
-                            Html::Document acc_doc = Manager::prepare() -> getFollowed(url_html_user_root) -> toHtml();
+                            Html::Document acc_doc = Manager::prepare() -> getFollowed(
+                                baseUrlStr(
+                                    qst_site_base, QStringLiteral("account/home.jsp")
+                                )
+                            ) -> toHtml();
+
                             Html::Tag * root_id_tag = acc_doc.findFirst("input.jsRootId");
                             if (root_id_tag)
                                 user_id = root_id_tag -> value();

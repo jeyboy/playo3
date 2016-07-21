@@ -9,16 +9,18 @@ namespace Core {
             class Item : public Base {
             public:
                 QJsonValue itemsByContainerId(const QString & container_id) {
-                    QString url(url_html_change_dir % QStringLiteral("?dirId=") % container_id);
-
                     return sRequest(
-                        url, call_type_json, 0, proc_none,
+                        baseUrlStr(
+                            qst_site_base, QStringLiteral("web/accountActions/changeDir"),
+                            {{ QStringLiteral("dirId"), container_id }}
+                        ),
+                        call_type_json, 0, proc_none,
                         QStringList(), call_method_post, siteHeaders()
                     );
                 }
 
                 QJsonValue itemsSearch(const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    Permissions perm = permissions(pr_search_media);
 
                     switch(perm) {
                         case perm_api: {
@@ -29,7 +31,7 @@ namespace Core {
                                     block_items_audio,
                                     pRequest(
                                         baseUrlStr(
-                                            qst_api_def, tkn_files,
+                                            qst_api_search, tkn_files,
                                             {
                                                 { tkn_category, music },
                                                 { tkn_query, limits.predicate }
@@ -46,7 +48,7 @@ namespace Core {
                                     block_items_video,
                                     pRequest(
                                         baseUrlStr(
-                                            qst_api_def, tkn_files,
+                                            qst_api_search, tkn_files,
                                             {
                                                 { tkn_category, video },
                                                 { tkn_query, limits.predicate }
@@ -69,7 +71,10 @@ namespace Core {
                                 res.insert(
                                     block_items_audio,
                                     pRequest(
-                                        QStringLiteral("http://search.4shared.com/q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate),
+                                        baseUrlStr(
+                                            qst_site_search,
+                                            QStringLiteral("q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
+                                        ),
                                         call_type_html,
                                         rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                         0, proc_tracks1
@@ -80,7 +85,10 @@ namespace Core {
                                 res.insert(
                                     block_items_video,
                                     pRequest(
-                                        QStringLiteral("http://search.4shared.com/q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate),
+                                        baseUrlStr(
+                                            qst_site_search,
+                                            QStringLiteral("q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
+                                        ),
                                         call_type_html,
                                         rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
                                         0, proc_video1
