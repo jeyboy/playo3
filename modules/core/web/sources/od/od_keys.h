@@ -1,5 +1,5 @@
-#ifndef OD_API_KEYS
-#define OD_API_KEYS
+#ifndef OD_KEYS
+#define OD_KEYS
 
 #include <qstringbuilder.h>
 
@@ -84,4 +84,4 @@ namespace Core {
     }
 }
 
-#endif // OD_API_KEYS
+#endif // OD_KEYS

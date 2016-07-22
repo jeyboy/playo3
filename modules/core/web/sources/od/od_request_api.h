@@ -5,8 +5,6 @@
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 
-#define OD_LIMIT_PER_REQUEST 100
-
 namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
@@ -18,38 +16,6 @@ namespace Core { // NOT FINISHED
 //                    setParam(query, tkn_offset, OFFSET_TEMPLATE);
 //                    setParam(query, tkn_limit, qMin(per_request, OD_LIMIT_PER_REQUEST));
 //                }
-
-                PolyQueryRules rules(
-                    int offset = 0, int items_limit = 200, int pages_count = 10,
-                    int per_request = OD_LIMIT_PER_REQUEST,
-                    ApiCallIterType call_type = call_iter_type_item)
-                {
-                    return PolyQueryRules(
-                        call_type,
-                        call_iter_method_offset,
-                        qMin(items_limit, DEFAULT_ITEMS_LIMIT),
-                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT),
-                        tkn_limit,
-                        qMin(qMin(per_request, items_limit), OD_LIMIT_PER_REQUEST),
-                        tkn_offset,
-                        offset
-                    );
-                }
-
-                bool sessionIsValid() { return !hasError(Manager::prepare() -> jsonGet(initAudioUrl())); }
-
-                inline QUrl authRequestUrl(const QString & email, const QString & pass) const {
-                    return QUrl(url_base_auth % path_auth.arg(encodeStr(email), encodeStr(pass)));
-                }
-
-                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
-
-                inline QString audioUrl(const QString & func, const QUrlQuery & query = QUrlQuery()) {
-                    QUrlQuery base_query = genDefaultParams();
-                    QUrl url(url_base_audio % func % tkn_coma_dot % base_query.toString());
-                    url.setQuery(query);
-                    return url.toString();
-                }
 
                 inline QString addPlaylistUrl() { return audioUrl(path_audio_playlist_add); } // params : (name: '') (publicPlaylist: 'true')
                 inline QString removePlaylistUrl() { return audioUrl(path_audio_playlist_del); } // params : (pid: '' (id of playlist))
@@ -162,11 +128,6 @@ namespace Core { // NOT FINISHED
                         proc_json_extract,
                         QStringList() << tkn_tracks
                     );
-
-//                    return lQuery(
-//                        playlistAudioUrl(pid),
-//                        QueryRules(tkn_tracks, requestLimit(), qMin(count, OD_OFFSET_LIMIT))
-//                    );
                 }
 
                 QJsonArray audioInfo(const QStringList & uids) { // take only tracks - response also contains artists and albums arrays
@@ -174,8 +135,6 @@ namespace Core { // NOT FINISHED
                         customAudioUrl(uids),
                         call_type_json
                     ).value(tkn_tracks).toArray();
-
-//                    return sQuery(customAudioUrl(uids)).value(tkn_tracks).toArray();
                 }
             };
         }

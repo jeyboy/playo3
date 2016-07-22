@@ -293,8 +293,6 @@ HEADERS += \
     modules/core/web/sources/musicshara.h \
     modules/core/web/sources/myzuka_album.h \
     modules/core/web/sources/od_api.h \
-    modules/core/web/sources/od/od_api_keys.h \
-    modules/core/web/sources/od/od_api_misc.h \
     modules/core/web/sources/od/od_request_api.h \
     modules/core/web/sources/promodj.h \
     modules/core/web/sources/redmp3.h \
@@ -323,7 +321,9 @@ HEADERS += \
     modules/core/web/sources/od/od_video_playlist.h \
     modules/core/web/sources/od/od_radio.h \
     modules/core/web/sources/od/od_playlist.h \
-    modules/core/web/sources/od/od_requests.h
+    modules/core/web/sources/od/od_requests.h \
+    modules/core/web/sources/od/od_keys.h \
+    modules/core/web/sources/od/od_misc.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -454,7 +454,6 @@ SOURCES += \
     modules/core/web/sources/musicshara.cpp \
     modules/core/web/sources/myzuka_album.cpp \
     modules/core/web/sources/od_api.cpp \
-    modules/core/web/sources/od/od_api_keys.cpp \
     modules/core/web/sources/promodj.cpp \
     modules/core/web/sources/redmp3.cpp \
     modules/core/web/sources/shmidt.cpp \
@@ -463,4 +462,5 @@ SOURCES += \
     modules/core/web/sources/yandex/yandex_api_keys.cpp \
     modules/core/web/sources/youtube_api.cpp \
     modules/core/web/sources/youtube/youtube_api_keys.cpp \
-    modules/core/web/sources/zaycev.cpp
+    modules/core/web/sources/zaycev.cpp \
+    modules/core/web/sources/od/od_keys.cpp

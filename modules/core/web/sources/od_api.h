@@ -47,11 +47,9 @@ namespace Core {
             protected:
                 bool formConnection();
 
-                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) { return url_root % predicate; }
-
-//                inline QString offsetKey() const { return tkn_offset; }
-//                inline QString limitKey() const { return tkn_limit; }
-//                inline int requestLimit() const { return 100; }
+                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) {
+                    return url_root % predicate;
+                }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
