@@ -313,7 +313,16 @@ HEADERS += \
     modules/core/web/sources/fourshared/fourshared_set.h \
     modules/core/web/sources/fourshared/fourshared_item.h \
     modules/core/web/sources/fourshared/fourshared_requests.h \
-    modules/core/web/sources/fourshared/fourshared_auth.h
+    modules/core/web/sources/fourshared/fourshared_auth.h \
+    modules/core/web/sources/od/od_auth.h \
+    modules/core/web/sources/od/od_defines.h \
+    modules/core/web/sources/od/od_track.h \
+    modules/core/web/sources/od/ob_playlist.h \
+    modules/core/web/sources/od/od_artist.h \
+    modules/core/web/sources/od/od_set.h \
+    modules/core/web/sources/od/od_video.h \
+    modules/core/web/sources/od/od_video_playlist.h \
+    modules/core/web/sources/od/od_radio.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

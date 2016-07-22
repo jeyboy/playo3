@@ -3,13 +3,14 @@
 
 #include "od_api_misc.h"
 #include "modules/core/interfaces/isource.h"
+#include "modules/core/web/interfaces/sociable/sociable.h"
 
 #define OD_LIMIT_PER_REQUEST 100
 
 namespace Core { // NOT FINISHED
     namespace Web {
         namespace Od {
-            class RequestApi : public ISource, public Misc {
+            class RequestApi : public ISource, public Sociable, public Misc {
             protected:
                 RequestApi() {}
 

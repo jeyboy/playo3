@@ -3,14 +3,13 @@
 
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/thread_utils.h"
-#include "modules/core/web/interfaces/sociable/sociable.h"
 
 #include "od/od_request_api.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Api : public RequestApi, public Singleton<Api>, public Sociable {
+            class Api : public RequestApi, public Singleton<Api> {
                 Q_OBJECT
 
                 friend class Singleton<Api>;
