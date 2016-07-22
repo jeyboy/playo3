@@ -317,12 +317,13 @@ HEADERS += \
     modules/core/web/sources/od/od_auth.h \
     modules/core/web/sources/od/od_defines.h \
     modules/core/web/sources/od/od_track.h \
-    modules/core/web/sources/od/ob_playlist.h \
     modules/core/web/sources/od/od_artist.h \
     modules/core/web/sources/od/od_set.h \
     modules/core/web/sources/od/od_video.h \
     modules/core/web/sources/od/od_video_playlist.h \
-    modules/core/web/sources/od/od_radio.h
+    modules/core/web/sources/od/od_radio.h \
+    modules/core/web/sources/od/od_playlist.h \
+    modules/core/web/sources/od/od_requests.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

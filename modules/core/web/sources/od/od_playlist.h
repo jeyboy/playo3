@@ -1,12 +1,12 @@
-#ifndef OD_VIDEO_PLAYLIST
-#define OD_VIDEO_PLAYLIST
+#ifndef OD_PLAYLIST
+#define OD_PLAYLIST
 
 #include "od_defines.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class VideoPlaylist : public Base {
+            class Playlist : public Base {
             protected:
 
             };
@@ -14,4 +14,4 @@ namespace Core {
     }
 }
 
-#endif // OD_VIDEO_PLAYLIST
+#endif // OD_PLAYLIST
