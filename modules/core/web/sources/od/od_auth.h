@@ -18,6 +18,37 @@ namespace Core {
                 }
 
                 inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
+
+                bool siteConnection(QString & user_id, QString & hash, QString & err) {
+                    QString authE, authP;
+
+                    while(true) {
+                        if (!showingLogin(val_login_title, authE, authP, err)) return false;
+
+                        Response * reply = Manager::prepare() -> form(authRequestUrl(authE, authP), initHeaders());
+                        QUrl url = reply -> toRedirectUrl();
+                        QString hash_key = Manager::paramVal(url, tkn_httpsdata); // not used anywhere at this moment
+
+                        reply = Manager::prepare() -> getFollowed(url, initHeaders());
+                        err = reply -> paramVal(tkn_form_error);
+                        if (!err.isEmpty()) {
+                            reply -> deleteLater();
+                            continue;
+                        }
+
+                        Html::Document doc = reply -> toHtml();
+                        checkSecurity(doc);
+
+                        if (!Manager::cookie(tkn_authcode).isEmpty()) {
+                            setSiteUserID(grabUserId(doc));
+                            setSiteHash(hash_key);
+                            return true;
+                        }
+                        else err = doc.find(".anonym_e").text();
+                    }
+
+                    return false;
+                }
             };
         }
     }
