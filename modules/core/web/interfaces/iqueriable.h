@@ -95,7 +95,7 @@ namespace Core {
         protected:
             enum QuerySourceType {               
 //                qst_oauth_request, qst_oauth_token, qst_oauth_confirm
-                qst_api, qst_site, // od
+                qst_api, qst_site, qst_site_audio, // od
                 qst_api_base, qst_api_search, qst_site_base, qst_site_search, // fourshared
 
                 qst_api_def, qst_api_alt1, qst_api_alt2, qst_site_def, qst_site_alt1, qst_site_alt2
@@ -188,12 +188,12 @@ namespace Core {
             }
 
             virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
-            QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query, const char delimiter = '?') {
+            virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
 //                QUrl url(baseUrlStr(stype, predicate));
 //                url.setQuery(query);
 //                return url.toString();
 
-                return baseUrlStr(stype, predicate) % (query.isEmpty() ? QString() : delimiter % query.toString());
+                return baseUrlStr(stype, predicate) % (query.isEmpty() ? QString() : '?' % query.toString());
             }
 
             QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params) {

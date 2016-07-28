@@ -2,20 +2,25 @@
 #define OD_DEFINES
 
 #include "modules/core/interfaces/isource_perm_flags.h"
-#include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/search_limits.h"
-
 #include "modules/core/web/grabber_keys.h"
+
 #include "od_keys.h"
+#include "od_misc.h"
 
 #define OD_LIMIT_PER_REQUEST 100
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Base : public IQueriable {
+            class Base : public Misc {
             protected:
                 virtual Permissions permissions(const PermitRequest & req_perm = pr_search_media) = 0;
+
+                //                inline void setPagination(QUrlQuery & query, int per_request = OD_LIMIT_PER_REQUEST) {
+                //                    setParam(query, tkn_offset, OFFSET_TEMPLATE);
+                //                    setParam(query, tkn_limit, qMin(per_request, OD_LIMIT_PER_REQUEST));
+                //                }
 
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = 200, int pages_count = 10,
@@ -34,15 +39,17 @@ namespace Core {
                     );
                 }
 
-                inline QString audioUrlStr(const QString & predicate, const QUrlQuery & query = QUrlQuery()) {
-                    return url_base_audio % predicate % tkn_coma_dot % genDefaultParams(qst_site).toString() %
-                            (query.isEmpty() ? QString() : '?' % query.toString());
+                inline QString audioUrlStr(const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
+                    return baseUrlStr(qst_site_audio, predicate, params);
 
-//                    QUrlQuery base_query = genDefaultParams(qst_site);
-//                    QUrl url(url_base_audio % func % tkn_coma_dot % base_query.toString());
-//                    url.setQuery(query);
-//                    return url.toString();
+//                    return url_base_audio % predicate % tkn_coma_dot % genDefaultParams(qst_site).toString() %
+//                            (query.isEmpty() ? QString() : '?' % query.toString());
                 }
+
+                // info request per ids for items (track / album / artist)
+                inline QString audioInfoUrl(const QStringList & ids) { return audioUrlStr(path_audio_info, QUrlQuery(tkn_ids % ids.join(','))); } // param (ids: ids of (track / album / artist) splited by coma)
+
+                inline QString audioSearchUrl(const QString & predicate) { return audioUrlStr(path_audio_search, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
             };
         }
     }

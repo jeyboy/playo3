@@ -8,7 +8,8 @@ namespace Core {
         namespace Od {
             class Artist : public Base {
             protected:
-
+                inline QString artistAudiosUrl() { return audioUrlStr(path_audio_by_artist_id); } // params : (artistId: artist id)
+                inline QString searchArtistsUrl(const QString & predicate) { return audioUrlStr(path_audio_search_artists, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
             };
         }
     }
