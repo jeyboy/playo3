@@ -11,8 +11,6 @@ namespace Core {
         namespace Od {
             class Auth : public Base {
             protected:
-                bool sessionIsValid() { return !hasError(Manager::prepare() -> jsonGet(initAudioUrl())); }
-
                 inline QUrl authRequestUrl(const QString & email, const QString & pass) const {
                     return QUrl(url_base_auth % path_auth.arg(encodeStr(email), encodeStr(pass)));
                 }

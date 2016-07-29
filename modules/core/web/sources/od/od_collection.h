@@ -16,7 +16,7 @@ namespace Core {
                             path_audio_by_artist_id,
                             { {QStringLiteral("artistId"), artist_id} }
                         ),
-                        call_type_json, prules, 0,
+                        call_type_json, rules(), 0,
                         proc_json_extract, QStringList() << tkn_artists
                     );
                 }

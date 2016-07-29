@@ -14,7 +14,7 @@ namespace Core {
                 inline QString addToPlaylistsUrl() { return audioUrlStr(path_audio_to_playlist); } // params: (pid: playlist id) (pos: pos in playlist ?) (type: 'formaddpl' ?) (tid: id of track) and pagination attrs ?
                 inline QString removeFromPlaylistsUrl() { return audioUrlStr(path_audio_del_from_playlist); } // params: (pid: playlist id) (tid: id of track) and pagination attrs ? (start: '0' count: '1')
 
-                inline QString searchAlbumsUrl(const QString & predicate) { return audioUrlStr(path_audio_search_albums, QUrlQuery(tkn_q % predicate)); } // params : (q: predicate) and pagination attrs
+                inline QString searchAlbumsUrl(const QString & predicate) { return audioUrlStr(path_audio_search_albums, {{ tkn_q, predicate }}); } // params : (q: predicate) and pagination attrs
 
                 inline QString formaddplUrl() { return audioUrlStr(path_audio_add_to_playlist_form); } // params: (tid: track id) // used for adding new item to playlist
 

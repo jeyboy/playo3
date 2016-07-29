@@ -43,7 +43,7 @@ namespace Core {
                 }
 
                 QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
-                    return IQueriable::baseUrlStr(stype, predicate % tkn_coma_dot % tkn_jsessionid % siteToken(), query);
+                    return Auth::baseUrlStr(stype, predicate % tkn_coma_dot % tkn_jsessionid % siteToken(), query);
                 }
 
 //                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_site_def) {
@@ -62,15 +62,17 @@ namespace Core {
 
                     if (siteConnection(user_id, hash, error)) {
                         setSiteUserID(user_id);
-                        setSiteHash(hash);
+//                        setSiteHash(hash);
 
                         return true;
                     }
                     else return false;
                 }
 
+                bool sessionIsValid() { return !Auth::hasError(userInfo().toObject()); }
+
                 bool takeOnlineCredentials() {
-                    setSiteToken(grabSID());
+                    setSiteToken(Auth::grabSID());
                     return sessionIsValid();
                 }
 
@@ -82,7 +84,7 @@ namespace Core {
                     }
                 }
 
-                QJsonValue popular(const SearchLimit & limits) {
+                QJsonValue popular(const SearchLimit & /*limits*/) {
                     return setByType(set_popular_tracks);
                 }
 

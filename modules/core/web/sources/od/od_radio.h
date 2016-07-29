@@ -12,10 +12,7 @@ namespace Core {
                     return pRequest(
                         audioUrlStr(
                             path_audio_tuners_for_radio,
-                            {
-                                { tkn_pid, playlist_id },
-                                { QStringLiteral("locale"), locale }
-                            }
+                            {{ QStringLiteral("locale"), locale }}
                         ),
                         call_type_json, rules(offset, count),
                         0, proc_json_extract, QStringList() << tkn_tracks

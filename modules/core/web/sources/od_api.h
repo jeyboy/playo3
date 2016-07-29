@@ -19,7 +19,7 @@ namespace Core {
                 inline DataSubType siteType() const { return dt_site_od; }
 
                 void objectInfo(const QString & uid, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, uid, func);
+                    ThreadUtils::obj().run((User *)this, &User::userInfo, uid, func);
                 }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType); // here refresh_page must by eq to track id

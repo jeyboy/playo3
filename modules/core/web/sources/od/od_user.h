@@ -7,8 +7,8 @@ namespace Core {
     namespace Web {
         namespace Od {
             class User : public Base {
-            protected:
-                QJsonValue userInfo(const QString & user_id) {
+            public:
+                QJsonValue userInfo(const QString & user_id = QString()) {
                     if (user_id.isEmpty())
                         return Manager::prepare() -> jsonGet(audioUrlStr(path_audio_init));
                     else

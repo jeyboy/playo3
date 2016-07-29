@@ -34,6 +34,8 @@ namespace Core {
                             { {tkn_tid, track_id} }
                         )
                     );
+
+                    return false;
                 }
 
                 QJsonValue tracksInfo(const QStringList & uids) {
