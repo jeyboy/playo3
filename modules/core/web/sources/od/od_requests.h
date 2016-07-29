@@ -21,6 +21,8 @@ namespace Core {
             class Requests : public ISource, public Sociable, public Artist, public User, public Auth, public Collection,
                     public Playlist, public Radio, public Set, public Track, public Video, public VideoPlaylist {
             protected:
+                Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
+
                 void saveAdditionals(QJsonObject & obj) {
                     Sociable::toJson(obj);
                     Manager::saveCookies(obj, QUrl(url_root));
