@@ -9,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Auth : public Base, public IUserInteraction, public Misc {
+            class Auth : public Base {
             protected:
                 bool sessionIsValid() { return !hasError(Manager::prepare() -> jsonGet(initAudioUrl())); }
 
@@ -17,7 +17,7 @@ namespace Core {
                     return QUrl(url_base_auth % path_auth.arg(encodeStr(email), encodeStr(pass)));
                 }
 
-                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
+//                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
 
                 bool siteConnection(QString & user_id, QString & hash, QString & err) {
                     QString authE, authP;
@@ -27,7 +27,7 @@ namespace Core {
 
                         Response * reply = Manager::prepare() -> form(authRequestUrl(authE, authP), initHeaders());
                         QUrl url = reply -> toRedirectUrl();
-                        QString hash_key = Manager::paramVal(url, tkn_httpsdata); // not used anywhere at this moment
+                        hash = Manager::paramVal(url, tkn_httpsdata); // not used anywhere at this moment
 
                         reply = Manager::prepare() -> getFollowed(url, initHeaders());
                         err = reply -> paramVal(tkn_form_error);
@@ -40,8 +40,9 @@ namespace Core {
                         checkSecurity(doc);
 
                         if (!Manager::cookie(tkn_authcode).isEmpty()) {
-                            setSiteUserID(grabUserId(doc));
-                            setSiteHash(hash_key);
+                            user_id = grabUserId(doc);
+//                            setSiteUserID(grabUserId(doc));
+//                            setSiteHash(hash_key);
                             return true;
                         }
                         else err = doc.find(".anonym_e").text();

@@ -43,13 +43,14 @@ namespace Core {
 
 
             extern const QString tkn_ids;
-            extern const QString tkn_uid_eq;
-            extern const QString tkn_pid_eq;
-            extern const QString tkn_tid_eq;
-            extern const QString tkn_q_eq;
+            extern const QString tkn_uid;
+            extern const QString tkn_pid;
+            extern const QString tkn_tid;
+            extern const QString tkn_q;
             extern const QString tkn_my;
             extern const QString tkn_artists;
             extern const QString tkn_tracks;
+            extern const QString tkn_albums;
             extern const QString tkn_coma_dot;
             extern const QString tkn_authcode;
             extern const QString tkn_httpsdata;

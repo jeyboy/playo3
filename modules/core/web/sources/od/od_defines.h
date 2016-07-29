@@ -9,6 +9,7 @@
 #include "od_misc.h"
 
 #define OD_LIMIT_PER_REQUEST 100
+#define OD_SEARCH_LIMIT 200
 
 namespace Core {
     namespace Web {
@@ -23,7 +24,7 @@ namespace Core {
                 //                }
 
                 PolyQueryRules rules(
-                    int offset = 0, int items_limit = 200, int pages_count = 10,
+                    int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_count = 10,
                     int per_request = OD_LIMIT_PER_REQUEST,
                     ApiCallIterType call_type = call_iter_type_item)
                 {
@@ -47,9 +48,10 @@ namespace Core {
                 }
 
                 // info request per ids for items (track / album / artist)
-                inline QString audioInfoUrl(const QStringList & ids) { return audioUrlStr(path_audio_info, QUrlQuery(tkn_ids % ids.join(','))); } // param (ids: ids of (track / album / artist) splited by coma)
+                // param (ids: ids of (track / album / artist) splited by coma)
+                inline QString audioInfoUrl(const QStringList & ids) { return audioUrlStr(path_audio_info, {{tkn_ids, ids.join(',')}}); }
 
-                inline QString audioSearchUrl(const QString & predicate) { return audioUrlStr(path_audio_search, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
+                inline QString audioSearchUrl(const QString & predicate) { return audioUrlStr(path_audio_search, {{ tkn_q, predicate }}); } // params : (q: predicate) and pagination attrs
             };
         }
     }

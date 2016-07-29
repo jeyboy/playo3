@@ -8,14 +8,11 @@ namespace Core {
         namespace Od {
             class User : public Base {
             protected:
-                inline QString initAudioUrl() { return audioUrlStr(path_audio_init); }
-                inline QString myAudioUrl(const QString & uid) { return audioUrlStr(tkn_my, QUrlQuery(tkn_uid_eq % uid)); } // params: (uid: sets for friend request) and pagination attrs
-                QJsonObject userInfo(const QString & uid) {
-                    if (uid.isEmpty()) {
-                        qDebug() << initAudioUrl();
-                        return Manager::prepare() -> jsonGet(initAudioUrl());
-                    } else
-                        return Manager::prepare() -> jsonGet(myAudioUrl(uid));
+                QJsonValue userInfo(const QString & user_id) {
+                    if (user_id.isEmpty())
+                        return Manager::prepare() -> jsonGet(audioUrlStr(path_audio_init));
+                    else
+                        return Manager::prepare() -> jsonGet(audioUrlStr(tkn_my, {{tkn_uid, user_id}}));
                 }
 
 //                QJsonValue popular(const SearchLimit & /*limits*/) {

@@ -74,48 +74,22 @@ namespace Core {
                     return sessionIsValid();
                 }
 
+                QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
+                    switch(item_media_type) {
+                        case dmt_audio: return trackUrl(item_id);
+                        case dmt_video: return QString();
+                        case dmt_unknow: return QString();
+                    }
+                }
+
+                QJsonValue popular(const SearchLimit & limits) {
+                    return setByType(set_popular_tracks);
+                }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
                     if (limits.predicate.isEmpty() || limits.by_popularity())
                         return popular(limits);
-                    else {
-                        PolyQueryRules prules = rules(limits.start_offset, qMin(200, limits.items_limit));
-
-                        if (limits.by_artists())
-                            return pRequest(
-                                searchArtistsUrl(limits.predicate),
-                                call_type_json,
-                                prules,
-                                0,
-                                proc_json_extract,
-                                QStringList() << tkn_artists
-                            );
-
-//                            return lQuery(searchArtistsUrl(limits.predicate), QueryRules(tkn_artists, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
-                        else if (limits.by_songs_name())
-                            return pRequest(
-                                searchTracksUrl(limits.predicate),
-                                call_type_json,
-                                prules,
-                                0,
-                                proc_json_extract,
-                                QStringList() << tkn_tracks
-                            );
-
-
-//                            return lQuery(searchTracksUrl(limits.predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
-                        else
-                            return pRequest(
-                                searchUrl(limits.predicate),
-                                call_type_json,
-                                prules,
-                                0,
-                                proc_json_extract,
-                                QStringList() << tkn_tracks
-                            );
-
-//                            return lQuery(searchUrl(limits.predicate), QueryRules(tkn_tracks, qMin(requestLimit(), limits.total_limit), qMin(OD_SEARCH_LIMIT, limits.total_limit)));
-                    }
+                    else return tracksSearch(limits);
                 }
             public:
 

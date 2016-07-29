@@ -37,15 +37,16 @@ namespace Core {
             extern const QString path_audio_del_from_playlist =     QStringLiteral("dislike");
 
 
-            extern const QString tkn_ids =                          QStringLiteral("ids=");
-            extern const QString tkn_uid_eq =                       QStringLiteral("uid=");
-            extern const QString tkn_pid_eq =                       QStringLiteral("pid=");
-            extern const QString tkn_tid_eq =                       QStringLiteral("tid=");
-            extern const QString tkn_q_eq =                         QStringLiteral("q=");
+            extern const QString tkn_ids =                          QStringLiteral("ids");
+            extern const QString tkn_uid =                          QStringLiteral("uid");
+            extern const QString tkn_pid =                          QStringLiteral("pid");
+            extern const QString tkn_tid =                          QStringLiteral("tid");
+            extern const QString tkn_q =                            QStringLiteral("q");
 
             extern const QString tkn_my =                           QStringLiteral("my");
             extern const QString tkn_artists =                      QStringLiteral("artists");
             extern const QString tkn_tracks =                       QStringLiteral("tracks");
+            extern const QString tkn_albums =                       QStringLiteral("albums");
             extern const QString tkn_coma_dot =                     QStringLiteral(";");
             extern const QString tkn_authcode =                     QStringLiteral("AUTHCODE");
             extern const QString tkn_httpsdata =                    QStringLiteral("httpsdata");
@@ -61,7 +62,7 @@ namespace Core {
             extern const QString tkn_error =                        QStringLiteral("error");
             extern const QString tkn_offset =                       QStringLiteral("start");
             extern const QString tkn_limit =                        QStringLiteral("count"); // separate key for request limit
-            extern const QString tkn_count =                        QStringLiteral("count"); // separate key for json vakue
+            extern const QString tkn_count =                        QStringLiteral("count"); // separate key for json value
             extern const QString tkn_chunk =                        QStringLiteral("chunk");
             extern const QString tkn_jsessionid =                   QStringLiteral("jsessionid=");
 
