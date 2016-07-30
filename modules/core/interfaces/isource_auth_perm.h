@@ -182,6 +182,10 @@ namespace Core {
             SourceFlags flags = defaultFlags();
             return HAS_FLAG(flags, sf_sociable_users) || HAS_FLAG(flags, sf_sociable_groups);
         }
+
+        inline bool isUsersSociable()       { return HAS_FLAG(defaultFlags(), sf_sociable_users); }
+        inline bool isGroupsSociable()       { return HAS_FLAG(defaultFlags(), sf_sociable_groups); }
+
         inline bool hasOfflineSociable()    {
             SourceFlags flags = defaultFlags();
             return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_object_content_auth_only)) ||

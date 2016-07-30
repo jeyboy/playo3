@@ -64,7 +64,7 @@ namespace Core {
                 );
             }
 
-            QJsonValue loadSet(const QVariantMap & attrs) {
+            QJsonValue loadPlaylist(const QVariantMap & attrs) {
                 return saRequest(
                     attrs.value(tkn_grab_refresh).toString(),
                     call_type_html,

@@ -32,30 +32,37 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     ui -> errorStr -> setVisible(false);
     default_btn = ui -> cancelButton;
 
-    prepareLinkablesList(api -> friendsList(), ui -> friendsList);
-    ui -> friendsList -> sortItems();
-    prepareLinkablesList(api -> groupsList(), ui -> groupsList);
-    ui -> groupsList -> sortItems();
+    if (currApi -> isUsersSociable()) {
+        prepareLinkablesList(api -> friendsList(), ui -> friendsList);
+        ui -> friendsList -> sortItems();
 
-    bool by_friend_id = api -> hasSearchByFriendId();
+        bool by_friend_id = api -> hasSearchByFriendId();
 
-    ui -> friendId -> setVisible(by_friend_id);
-    ui -> friendById -> setVisible(by_friend_id);
+        ui -> friendId -> setVisible(by_friend_id);
+        ui -> friendById -> setVisible(by_friend_id);
 
-    bool by_friend_name = api -> hasSearchByFriendName();
+        bool by_friend_name = api -> hasSearchByFriendName();
 
-    ui -> friendName -> setVisible(by_friend_name);
-    ui -> friendByName -> setVisible(by_friend_name);
+        ui -> friendName -> setVisible(by_friend_name);
+        ui -> friendByName -> setVisible(by_friend_name);
+    }
+    else ui -> friendsTab -> setVisible(false);
 
-    bool by_group_id = api -> hasSearchByFriendId();
+    if (currApi -> isGroupsSociable()) {
+        prepareLinkablesList(api -> groupsList(), ui -> groupsList);
+        ui -> groupsList -> sortItems();
 
-    ui -> groupId -> setVisible(by_group_id);
-    ui -> groupById -> setVisible(by_group_id);
+        bool by_group_id = api -> hasSearchByGroupId();
 
-    bool by_group_name = api -> hasSearchByFriendName();
+        ui -> groupId -> setVisible(by_group_id);
+        ui -> groupById -> setVisible(by_group_id);
 
-    ui -> groupName -> setVisible(by_group_name);
-    ui -> groupByName -> setVisible(by_group_name);
+        bool by_group_name = api -> hasSearchByGroupName();
+
+        ui -> groupName -> setVisible(by_group_name);
+        ui -> groupByName -> setVisible(by_group_name);
+    }
+    else ui -> groupsTab -> setVisible(false);
 }
 
 void RelationsDialog::done(int status) {

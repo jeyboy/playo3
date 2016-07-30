@@ -29,7 +29,7 @@
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="friendsTab">
       <attribute name="title">
        <string>Friends</string>
       </attribute>
@@ -59,7 +59,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="groupsTab">
       <attribute name="title">
        <string>Groups</string>
       </attribute>

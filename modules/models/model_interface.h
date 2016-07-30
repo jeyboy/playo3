@@ -118,7 +118,7 @@ namespace Models {
             QVariantMap hash = loadable_attrs.toMap();
             DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
             ISource * source = Web::Apis::source(data_type);
-            QJsonValue set = source -> loadSet(hash);
+            QJsonValue set = source -> loadPlaylist(hash);
             return set;
         }
 

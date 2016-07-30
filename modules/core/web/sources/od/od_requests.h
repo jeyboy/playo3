@@ -156,6 +156,25 @@ namespace Core {
 //                   jsonToGroups(Groupable::linkables, res.take(tkn_friends).toArray());
                     return res;
                 }
+
+                inline QMap<QString, QString> setsList() {
+                    return {
+                        {setTypeToStr(set_popular_tracks),      QString::number(set_popular_tracks)},
+                        {setTypeToStr(set_popular_artists),     QString::number(set_popular_artists)},
+                        {setTypeToStr(set_popular_tuners),      QString::number(set_popular_tuners)},
+                        {setTypeToStr(set_popular_collections), QString::number(set_popular_collections)},
+                        {setTypeToStr(set_popular_albums),      QString::number(set_popular_albums)},
+                        {setTypeToStr(set_listened),            QString::number(set_listened)},
+                        {setTypeToStr(set_downloaded),          QString::number(set_downloaded)}
+                    };
+                }
+                inline QJsonValue takeSet(const QString & set_params) {
+                    QStringList params = set_params.split('|', QString::SkipEmptyParts);
+                    SetType set_type = (SetType)params.first().toInt();
+                    QString attrs = params.count() > 1 ? params.last() : QString();
+
+                    return setByType(set_type, attrs);
+                }
             };
         }
     }

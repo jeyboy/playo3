@@ -67,7 +67,7 @@ namespace Core {
                     }
 
                     if (tType == tag && token.isEmpty())
-                        token = QStringLiteral("*");
+                        token = tkn_any_elem;
 
                     _tokens.insert(tType, token);
                     token.clear();

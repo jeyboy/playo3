@@ -45,11 +45,11 @@ namespace Core {
             if (refresh_page.isEmpty() || !isShareable()) return QString();
             return refreshProc(takeRefreshPage(refresh_page), itemMediaType);
         }
-        virtual inline QJsonValue loadSet(const QVariantMap & /*attrs*/) { return QJsonArray(); }
+        virtual inline QJsonValue loadPlaylist(const QVariantMap & /*attrs*/) { return QJsonArray(); }
 
         // proc charts / tops and other ...
-        virtual inline QMap<QString, QString> customsList() { return QMap<QString, QString>(); }
-        virtual inline QJsonValue procCustom(const QString & /*custom_params*/) { return QJsonArray(); }
+        virtual inline QMap<QString, QString> setsList() { return QMap<QString, QString>(); }
+        virtual inline QJsonValue takeSet(const QString & /*set_params*/) { return QJsonArray(); }
 
         QToolButton * initButton(QWidget * parent = 0);
 

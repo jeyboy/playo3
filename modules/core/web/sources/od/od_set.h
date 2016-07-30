@@ -19,6 +19,19 @@ namespace Core {
                 // artists // tracks // tuners // collections // albums
 //                inline QString popAudioUrl() { return audioUrlStr(path_audio_popular); } // (locale: 'ru') and pagination attrs
 
+                QString setTypeToStr(const SetType & stype) {
+                    switch(stype) {
+                        case set_popular_tracks: return QStringLiteral("Popular tracks");
+                        case set_popular_artists: return QStringLiteral("Popular artists");
+                        case set_popular_tuners: return QStringLiteral("Popular radios");
+                        case set_popular_collections: return QStringLiteral("Popular collections");
+                        case set_popular_albums: return QStringLiteral("Popular albums");
+                        case set_listened: return QStringLiteral("Listened");
+                        case set_downloaded: return QStringLiteral("Downloaded");
+                        default: return QStringLiteral("Unknown: ");
+                    }
+                }
+
                 QJsonValue setByType(const SetType & set_type, const QString & /*attrs*/ = QString()) {
 //                    QStringList params = attrs.split('|', QString::SkipEmptyParts);
 

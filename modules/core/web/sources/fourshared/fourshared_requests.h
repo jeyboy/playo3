@@ -112,7 +112,7 @@ namespace Core {
 
                 QJsonValue searchProc(const SearchLimit & limits) { return itemsSearch(limits); }
 
-                QJsonValue loadSet(const QVariantMap & attrs) {
+                QJsonValue loadPlaylist(const QVariantMap & attrs) {
                     return procUserData(itemsByContainerId(attrs.value(tkn_grab_refresh).toString()).toObject());
                 }
 

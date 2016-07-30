@@ -49,6 +49,10 @@ namespace Core {
 
                 void addToken(SState & tType, QString & token, char & rel);
 
+//                QString toString() {
+
+//                }
+
                 inline bool isDirect() const { return sType == direct; }
                 inline bool isBackward() const { return sType == backward; }
 //                bool validTo(int index) const;

@@ -23,7 +23,7 @@ PackagesDialog::PackagesDialog(ISource * currApi, QWidget * parent)
 
     ui -> setupUi(this);
 
-    QMap<QString, QString> customs = currApi -> customsList();
+    QMap<QString, QString> customs = currApi -> setsList();
 
     for(QMap<QString, QString>::ConstIterator custom = customs.cbegin(); custom != customs.cend(); custom++) {
         QListWidgetItem * item = new QListWidgetItem(custom.key(), ui -> packagesList);

@@ -109,7 +109,7 @@ namespace Core {
                     }
                 }
 
-                inline QMap<QString, QString> customsList() {
+                inline QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
                     QMap<QString, QString> opts = siteOptions();
 
@@ -135,12 +135,12 @@ namespace Core {
 
                     return res;
                 }
-                inline QJsonValue procCustom(const QString & custom_params) {
-                    QStringList params = custom_params.split('|', QString::SkipEmptyParts);
+                inline QJsonValue takeSet(const QString & set_params) {
+                    QStringList params = set_params.split('|', QString::SkipEmptyParts);
                     SetType set_type = (SetType)params.first().toInt();
                     QString genre = params.last();
 
-                    return setByType(set_type, genre).toArray();
+                    return setByType(set_type, genre);
                 }
             };
         }

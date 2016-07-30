@@ -16,7 +16,7 @@ void SoundcloudModel::refresh() {
         break;}
 
         case rec_set: {
-            Soundcloud::Queries::obj().procCustomAsync(
+            Soundcloud::Queries::obj().takeSetAsync(
                 sttngs.uid,
                 new Func(this, SLOT(proceedJson(QJsonValue &)))
             );
