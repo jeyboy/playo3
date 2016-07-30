@@ -66,6 +66,9 @@ namespace Core {
                         default:;
                     }
 
+                    if (tType == tag && token.isEmpty())
+                        token = QStringLiteral("*");
+
                     _tokens.insert(tType, token);
                     token.clear();
                 }
@@ -85,7 +88,7 @@ namespace Core {
                             case type_token:
                             case class_token:
                             case id_token: {
-                                in_attr &= !(attr_token_end == *it);
+                                in_attr &= attr_token_end != *it;
 
                                 if (!in_attr) {
                                     if (!token.isEmpty()) selector -> addToken(state, token, rel);
@@ -116,8 +119,9 @@ namespace Core {
                             break;}
 
                             case space_token: {
-                                if (state != attr && !token.isEmpty()) {
-                                    selector -> addToken(state, token, rel);
+                                if (state != attr) {
+                                    if (!token.isEmpty())
+                                        selector -> addToken(state, token, rel);
                                     selector = new Selector(forward, selector);
                                     state = Selector::tag;
                                 }

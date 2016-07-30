@@ -154,9 +154,7 @@ bool Extensions::restoreExtension(QString & file_path, QString & restoredExt) {
         QByteArray arHex = f.read(11).toHex();
         QString sH(arHex);
 
-        QHash<QString, QString>::Iterator it = ext_signatures.begin();
-
-        for(; it != ext_signatures.end(); it++) {
+        for(QHash<QString, QString>::Iterator it = ext_signatures.begin(); it != ext_signatures.end(); it++) {
             if (sH.mid(ext_signature_offset.value(it.key(), 0) * 2, it.key().size()) == it.key()) {
                 if ((finded = f.rename(file_path + "." + it.value())))
                     file_path += "." + (restoredExt = it.value());

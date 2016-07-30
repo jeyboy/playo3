@@ -44,6 +44,7 @@ namespace Core {
                     }
 
                     inline void checkSecurity(Html::Document & doc) {
+                        doc.output();
                         Html::Tag * form = doc.findFirst("[id^'hook_Form'] form");
 
                         if (!form) {

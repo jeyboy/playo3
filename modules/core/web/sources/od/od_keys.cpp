@@ -49,6 +49,7 @@ namespace Core {
             extern const QString tkn_artists =                      QStringLiteral("artists");
             extern const QString tkn_tracks =                       QStringLiteral("tracks");
             extern const QString tkn_albums =                       QStringLiteral("albums");
+            extern const QString tkn_playlists                      QStringLiteral("playlists");
             extern const QString tkn_coma_dot =                     QStringLiteral(";");
             extern const QString tkn_authcode =                     QStringLiteral("AUTHCODE");
             extern const QString tkn_httpsdata =                    QStringLiteral("httpsdata");
@@ -71,6 +72,7 @@ namespace Core {
             extern const QString tkn_dash =                         QStringLiteral(" - ");
             extern const QString tkn_full_name =                    QStringLiteral("fullName");
             extern const QString tkn_id =                           QStringLiteral("id");
+            extern const QString tkn_owner =                        QStringLiteral("owner");
             extern const QString tkn_name =                         QStringLiteral("name");
             extern const QString tkn_duration =                     QStringLiteral("duration");
             extern const QString tkn_size =                         QStringLiteral("size");

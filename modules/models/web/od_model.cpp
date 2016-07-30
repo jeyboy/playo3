@@ -22,42 +22,30 @@ void OdModel::proceedJson(QJsonValue & jval) {
     } else
         hash = jval.toObject();
 
-    QJsonArray audios = hash.value(QStringLiteral("tracks")).toArray();
+    QJsonArray audios = hash.value(Od::tkn_tracks).toArray();
+    QJsonArray playlists = hash.value(Od::tkn_playlists).toArray();
 
-    if (audios.isEmpty()) {
-        int totalTracks = hash.value(QStringLiteral("totalTracks")).toInt();
-        if (totalTracks > 0)
-            audios = Od::Queries::obj().userMedia(QString::number((qint64)hash.value(Od::tkn_me).toDouble())).toObject().value(Od::tkn_tracks).toArray();
-    }
-
-    QJsonArray playlists = hash.value(QStringLiteral("playlists")).toArray();
-
-//    QJsonArray albums = hash.value(Soundcloud::playlist_key).toArray();
-//    QJsonArray audios = hash.value(Soundcloud::audio_list_key).toArray();
     int itemsAmount = 0, albums_count = 0, playlists_count = playlists.size(), audios_count = audios.size();
 
     beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + albums_count + audios_count + playlists_count); // refresh all indexes // maybe this its not good idea
         if (playlists_count > 0) {
-            Playlist * folder;
-            QJsonObject playlist;
-
             for(QJsonArray::Iterator it = playlists.begin(); it != playlists.end(); it++) {
-                playlist = (*it).toObject();
+                QJsonObject playlist = (*it).toObject();
 
-                int items_amount = playlist.value(QStringLiteral("count")).toInt();
+                int items_amount = playlist.value(Od::tkn_count).toInt();
                 if (items_amount > 0) {
-                    QString pid = QString::number((qint64)playlist.value(QStringLiteral("id")).toDouble());
+                    QString pid = Od::Requests::idToStr(playlist.value(Od::tkn_id));
 
-                    folder = rootItem -> createPlaylist(
+                    Playlist * folder = rootItem -> createPlaylist(
                         dt_playlist_od,
                         pid,
-                        playlist.value(QStringLiteral("name")).toString()
+                        playlist.value(Od::tkn_name).toString()
                     );
 
-                    folder -> setOwner(playlist.value(QStringLiteral("owner")).toString());
+                    folder -> setOwner(playlist.value(Od::tkn_owner).toString());
 
                     QJsonArray tracks = Od::Queries::obj().playlistInfo(pid, items_amount);
-                    int folderItemsAmount = proceedOdList(tracks, folder);
+                    int folderItemsAmount = proceedOdList(tracks, folder, dmt_audio);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;
                 }
@@ -67,7 +55,7 @@ void OdModel::proceedJson(QJsonValue & jval) {
 //    /////////////////////////////////////////////////////////////////////
 
         if (audios.size() > 0)
-            itemsAmount += proceedOdList(audios, rootItem);
+            itemsAmount += proceedOdList(audios, rootItem, dmt_audio);
 //    }
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();

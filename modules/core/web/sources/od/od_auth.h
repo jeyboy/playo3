@@ -17,7 +17,7 @@ namespace Core {
 
 //                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
 
-                bool siteConnection(QString & user_id, QString & hash, QString & err) {
+                bool siteConnection(QString & user_id, QString & /*hash*/, QString & err) {
                     QString authE, authP;
 
                     while(true) {
@@ -25,7 +25,7 @@ namespace Core {
 
                         Response * reply = Manager::prepare() -> form(authRequestUrl(authE, authP), initHeaders());
                         QUrl url = reply -> toRedirectUrl();
-                        hash = Manager::paramVal(url, tkn_httpsdata); // not used anywhere at this moment
+//                        hash = Manager::paramVal(url, tkn_httpsdata); // not used anywhere at this moment
 
                         reply = Manager::prepare() -> getFollowed(url, initHeaders());
                         err = reply -> paramVal(tkn_form_error);

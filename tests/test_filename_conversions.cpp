@@ -31,7 +31,7 @@ void TestFilenameConversions::extractExtension() {
     QFETCH(QString, res_extension);
     QString extension;
 
-    FilenameConversions::extractExtension(filename, extension);
+    Extensions::extractExtension(filename, extension);
 
     QCOMPARE(filename, res_filename);
     QCOMPARE(extension, res_extension);

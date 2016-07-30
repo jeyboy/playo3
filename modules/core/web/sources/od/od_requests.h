@@ -21,6 +21,22 @@ namespace Core {
             class Requests : public ISource, public Sociable, public Artist, public User, public Auth, public Collection,
                     public Playlist, public Radio, public Set, public Track, public Video, public VideoPlaylist {
             protected:
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        sf_primary_source |
+                        /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
+                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | /*sf_groups_serachable |*/
+                        sf_sociable_users | /*sf_sociable_groups |*/ sf_shareable | sf_packable |
+//                        sf_recomendable_by_item | sf_recomendable_by_user |
+                        /*sf_newable |*/ sf_populable |
+
+                        /*sf_content_lyrics_has |*/ sf_content_audio_has | sf_content_video_has |
+                        sf_content_photo_has | sf_content_news_has |
+
+                        sf_site_auth_mandatory
+                    );
+                }
+
                 Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
 
                 void saveAdditionals(QJsonObject & obj) {
@@ -122,6 +138,17 @@ namespace Core {
             public:
                 QJsonValue userInfo() {
                     QJsonObject res = User::userInfo().toObject();
+
+                    QJsonArray audios = res.value(tkn_tracks).toArray();
+                    if (audios.isEmpty()) {
+                        int totalTracks = res.value(QStringLiteral("totalTracks")).toInt();
+                        if (totalTracks > 0)
+                            res.insert(
+                                Od::tkn_tracks,
+                                userMedia(idToStr(res.value(tkn_me))).
+                                    toObject().value(tkn_tracks)
+                            );
+                    }
 
                     clearFriends();
                     jsonToUsers(Friendable::linkables, res.take(tkn_friends).toArray());

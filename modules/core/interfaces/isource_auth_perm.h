@@ -184,14 +184,16 @@ namespace Core {
         }
         inline bool hasOfflineSociable()    {
             SourceFlags flags = defaultFlags();
-            return NOT_HAS_FLAG(flags, sf_site_object_content_auth_only) || NOT_HAS_FLAG(flags, sf_api_object_content_auth_only);
+            return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_object_content_auth_only)) ||
+                    (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_object_content_auth_only));
         }
         inline bool isShareable()           { return HAS_FLAG(defaultFlags(), sf_shareable); }
 
         inline bool hasPacks()              { return HAS_FLAG(defaultFlags(), sf_packable); }
         inline bool hasOfflinePacks()    {
             SourceFlags flags = defaultFlags();
-            return NOT_HAS_FLAG(flags, sf_site_packs_auth_only) || NOT_HAS_FLAG(flags, sf_api_packs_auth_only);
+            return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_packs_auth_only)) ||
+                    (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_packs_auth_only));
         }
 
         inline bool hasItemRecomendations() { return HAS_FLAG(defaultFlags(), sf_recomendable_by_item); }

@@ -3,6 +3,7 @@
 
 #include <qtest.h>
 #include "../modules/core/misc/file_utils/filename_conversions.h"
+#include "../modules/core/misc/file_utils/extensions.h"
 
 namespace Core {
     class TestFilenameConversions : public QObject {

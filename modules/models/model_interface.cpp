@@ -3,6 +3,7 @@
 
 #include "modules/core/media/cue/cue.h"
 #include "modules/core/misc/fuzzy_comparison.h"
+#include "dialogs/extension_dialog.h"
 
 using namespace Models;
 using namespace Core::Web;
