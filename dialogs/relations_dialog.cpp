@@ -46,7 +46,7 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
         ui -> friendName -> setVisible(by_friend_name);
         ui -> friendByName -> setVisible(by_friend_name);
     }
-    else ui -> friendsTab -> setVisible(false);
+    else ui -> tabWidget -> setTabEnabled(0, false);
 
     if (currApi -> isGroupsSociable()) {
         prepareLinkablesList(api -> groupsList(), ui -> groupsList);
@@ -62,7 +62,7 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
         ui -> groupName -> setVisible(by_group_name);
         ui -> groupByName -> setVisible(by_group_name);
     }
-    else ui -> groupsTab -> setVisible(false);
+    else ui -> tabWidget -> setTabEnabled(1, false);
 }
 
 void RelationsDialog::done(int status) {
