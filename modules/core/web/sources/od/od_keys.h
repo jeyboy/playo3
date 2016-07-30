@@ -47,7 +47,10 @@ namespace Core {
             extern const QString tkn_pid;
             extern const QString tkn_tid;
             extern const QString tkn_q;
+
+            extern const QString tkn_me;
             extern const QString tkn_my;
+            extern const QString tkn_friends;
             extern const QString tkn_artists;
             extern const QString tkn_tracks;
             extern const QString tkn_albums;
@@ -71,6 +74,7 @@ namespace Core {
             extern const QString tkn_jsessionid;
 
             extern const QString tkn_dash;
+            extern const QString tkn_full_name;
             extern const QString tkn_id;
             extern const QString tkn_name;
             extern const QString tkn_duration;

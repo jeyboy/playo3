@@ -292,7 +292,6 @@ HEADERS += \
     modules/core/web/sources/mp3pm.h \
     modules/core/web/sources/musicshara.h \
     modules/core/web/sources/myzuka_album.h \
-    modules/core/web/sources/od_api.h \
     modules/core/web/sources/promodj.h \
     modules/core/web/sources/redmp3.h \
     modules/core/web/sources/shmidt.h \
@@ -324,7 +323,8 @@ HEADERS += \
     modules/core/web/sources/od/od_keys.h \
     modules/core/web/sources/od/od_misc.h \
     modules/core/web/sources/od/od_collection.h \
-    modules/core/web/sources/od/od_user.h
+    modules/core/web/sources/od/od_user.h \
+    modules/core/web/sources/od_queries.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

@@ -19,8 +19,8 @@ namespace Core {
                 inline QString formaddplUrl() { return audioUrlStr(path_audio_add_to_playlist_form); } // params: (tid: track id) // used for adding new item to playlist
 
 //                inline QString playlistAudioUrl(const QString & pid) { return audioUrlStr(tkn_my, QUrlQuery(tkn_pid_eq % pid)); } // params: (pid: playlist id) and pagination attrs
-
-                QJsonArray playlistInfo(const QString & playlist_id, int count, int offset) { //TODO: need to check
+            public:
+                QJsonArray playlistInfo(const QString & playlist_id, int count = DEFAULT_ITEMS_LIMIT, int offset = 0) { //TODO: need to check
                     return pRequest(
                         audioUrlStr(
                             tkn_my,

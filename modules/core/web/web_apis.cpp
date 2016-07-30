@@ -10,7 +10,7 @@ namespace Core {
             sources.insert(Vk::Queries::obj().siteType(),           &Vk::Queries::obj());
             sources.insert(Soundcloud::Queries::obj().siteType(),   &Soundcloud::Queries::obj());
             sources.insert(Fourshared::Queries::obj().siteType(),   &Fourshared::Queries::obj());
-            sources.insert(Od::Api::obj().siteType(),           &Od::Api::obj());
+            sources.insert(Od::Queries::obj().siteType(),           &Od::Queries::obj());
             sources.insert(MyzukaAlbum::obj().siteType(),       &MyzukaAlbum::obj());
             sources.insert(Zaycev::obj().siteType(),            &Zaycev::obj());
             sources.insert(Mp3Base::obj().siteType(),           &Mp3Base::obj());

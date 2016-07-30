@@ -228,14 +228,11 @@ namespace Core {
                         case perm_site: {
                             bool is_group = user_id[0] == '-';
 
-                            Response * response = Manager::prepare() -> postFollowed(
+                            Response * response = Manager::prepare() -> postFollowed( // TODO: improve me
                                 QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=%1&id=%2&please_dont_ddos=2").arg(is_group ? user_id.mid(1) : QStringLiteral("0"), is_group ? QStringLiteral("0") : user_id),
                                 {{ QStringLiteral("DNT"), QStringLiteral("1") }, { QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }}
                             );
 
-//                            QByteArray arr = response -> toBytes();
-//                            QTextCodec * codec = QTextCodec::codecForName("Windows-1251");
-//                            QString data = codec -> toUnicode(arr);
                             QString data = response -> toText();
 
                             QStringList parts = data.split(QStringLiteral("<!>"));
@@ -257,8 +254,7 @@ namespace Core {
 
                                 ///////////////////////////////////
 
-                                QJsonParseError jerr;
-                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].replace('\'', '"').toUtf8(), &jerr).object();
+                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].replace('\'', '"').toUtf8()).object();
 
                                 QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
                                 QJsonArray tracks_res;

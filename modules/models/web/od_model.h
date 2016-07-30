@@ -8,12 +8,12 @@ namespace Models {
         Q_OBJECT
     public:       
         inline OdModel(const Params & settings, QJsonObject * hash = 0, QObject * parent = 0) : WebModel(settings, hash, parent) {}
-        inline ISource * api() const { return &Od::Api::obj(); }
+        inline ISource * api() const { return &Od::Queries::obj(); }
     public slots:
         void refresh();
 
     protected slots:
-        void proceedJson(QJsonObject &);
+        void proceedJson(QJsonValue &);
     };
 }
 

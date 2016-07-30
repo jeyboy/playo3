@@ -82,8 +82,10 @@ namespace Core {
                     switch(item_media_type) {
                         case dmt_audio: return trackUrl(item_id);
                         case dmt_video: return QString();
-                        case dmt_unknow: return QString();
+                        default:;
                     }
+
+                    return QString();
                 }
 
                 QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -95,8 +97,38 @@ namespace Core {
                         return popular(limits);
                     else return tracksSearch(limits);
                 }
-            public:
 
+                inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+                        linkables << Linkable(
+                            obj.value(tkn_id).toString(),
+                            obj.value(tkn_full_name).toString()
+                        );
+                    }
+                }
+
+//                inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
+//                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+//                        QJsonObject obj = (*obj_iter).toObject();
+//                        linkables << Linkable(
+//                            QString::number(obj.value(tkn_id).toInt()),
+//                            obj.value(QStringLiteral("name")).toString(),
+//                            obj.value(tkn_screen_name).toString(),
+//                            obj.value(tkn_photo).toString()
+//                        );
+//                    }
+//                }
+            public:
+                QJsonValue userInfo() {
+                    QJsonObject res = User::userInfo().toObject();
+
+                    clearFriends();
+                    jsonToUsers(Friendable::linkables, res.take(tkn_friends).toArray());
+//                   clearGroups();
+//                   jsonToGroups(Groupable::linkables, res.take(tkn_friends).toArray());
+                    return res;
+                }
             };
         }
     }

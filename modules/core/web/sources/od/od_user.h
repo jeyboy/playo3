@@ -8,11 +8,12 @@ namespace Core {
         namespace Od {
             class User : public Base {
             public:
-                QJsonValue userInfo(const QString & user_id = QString()) {
-                    if (user_id.isEmpty())
-                        return Manager::prepare() -> jsonGet(audioUrlStr(path_audio_init));
-                    else
-                        return Manager::prepare() -> jsonGet(audioUrlStr(tkn_my, {{tkn_uid, user_id}}));
+                QJsonValue userInfo() {
+                   return Manager::prepare() -> jsonGet(audioUrlStr(path_audio_init));
+                }
+
+                QJsonValue userMedia(const QString & user_id) {
+                    return Manager::prepare() -> jsonGet(audioUrlStr(tkn_my, {{tkn_uid, user_id}}));
                 }
 
 //                QJsonValue popular(const SearchLimit & /*limits*/) {
