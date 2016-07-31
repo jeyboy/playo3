@@ -9,27 +9,26 @@ namespace Core {
             class Track : public Base {
             public:
                 QString trackUrl(const QString & track_id) {
-                    QJsonObject obj = Manager::prepare() -> jsonGet(
-                        audioUrlStr(
-                            path_audio_play,
-                            { {tkn_tid, track_id} }
-                        )
+                    Manager * manager = Manager::prepare();
+                    QString req_url = audioUrlStr(
+                        path_audio_play,
+                        { {tkn_tid, track_id} }
                     );
-//                    if (hasError(obj)) {
-//                        connectUser();
-//                        obj = Manager::prepare() -> jsonGet(playAudioUrl(refresh_page));
-//                        qDebug() << "RECONECTION";
-//                    }
 
-                    if (obj.contains(tkn_error)) {
-                        return obj.value(tkn_error).toString();
-                    } else {
-                        QUrl url(obj.value(tkn_play).toString());
-                        QUrlQuery query = QUrlQuery(url.query());
-                        query.addQueryItem(tkn_client_hash, calcMagicNumber(query.queryItemValue(tkn_md5)));
-                        url.setQuery(query);
-                        return url.toString();
+                    QJsonObject obj = manager -> jsonGet(req_url);
+                    bool has_err = hasError(obj);
+
+                    if (has_err) {
+                        if (retryRequired(obj))
+                            obj = manager -> jsonGet(req_url);
+                        else return obj.value(tkn_error).toString();
                     }
+
+                    QUrl url(obj.value(tkn_play).toString());
+                    QUrlQuery query = QUrlQuery(url.query());
+                    query.addQueryItem(tkn_client_hash, calcMagicNumber(query.queryItemValue(tkn_md5)));
+                    url.setQuery(query);
+                    return url.toString();
                 }
 
                 bool trackIsDownloaded(const QString & track_id) { //TODO: not finished
@@ -71,7 +70,7 @@ namespace Core {
                             call_type_json, prules, 0,
                             proc_json_extract, QStringList() << tkn_artists
                         );
-                    else if (limits.by_songs_name())
+                    else //if (limits.by_songs_name())
                         return pRequest(
                             audioUrlStr(
                                 path_audio_search_tracks,
@@ -80,12 +79,12 @@ namespace Core {
                             call_type_json, prules, 0,
                             proc_json_extract, QStringList() << tkn_tracks
                         );
-                    else
-                        return pRequest(
-                            audioSearchUrl(limits.predicate),
-                            call_type_json, prules, 0,
-                            proc_json_extract, QStringList() << tkn_tracks
-                        );
+//                    else // this block is related to serach by artists
+//                        return pRequest(
+//                            audioSearchUrl(limits.predicate),
+//                            call_type_json, prules, 0,
+//                            proc_json_extract, QStringList() << tkn_tracks
+//                        );
                 }
 
                 QJsonValue tracksByArtist(const QString & artist_id) { //TODO: not finished

@@ -16,10 +16,18 @@ namespace Core {
                 protected:
                     inline Misc() {}
 
+                    virtual bool takeOnlineCredentials() = 0;
+
                     inline QUrl authSidUrl() { return QUrl(baseUrlStr(qst_site_def, path_sid)); }
 
-                    inline bool hasError(const QJsonObject & obj) {
-                        return obj.contains(tkn_error);
+                    inline bool hasError(const QJsonObject & obj) { return obj.contains(tkn_error); }
+
+                    inline bool retryRequired(const QJsonObject & obj) {
+                        QString err = obj.value(tkn_error).toString();
+                        if (err == QStringLiteral("error.notloggedin"))
+                            return takeOnlineCredentials();
+
+                        return false;
                     }
 
                     inline Headers initHeaders() { return {{tkn_header_user_agent, DEFAULT_AGENT}}; }

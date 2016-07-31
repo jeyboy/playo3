@@ -87,11 +87,19 @@ namespace Core {
                     else return false;
                 }
 
-                bool sessionIsValid() { return !Auth::hasError(userInfo().toObject()); }
+//                bool sessionIsValid() { return !Auth::hasError(userInfo().toObject()); }
 
                 bool takeOnlineCredentials() {
-                    setSiteToken(Auth::grabSID());
-                    return sessionIsValid();
+                    QString sid = Auth::grabSID();
+
+                    if (sid.isEmpty()) {
+                        disconnectUser();
+                        return false;
+                    } else {
+                        setSiteToken(sid);
+                        return true;
+                    }
+//                    return sessionIsValid();
                 }
 
                 QJsonValue loadPlaylist(const QVariantMap & attrs) {
@@ -100,17 +108,7 @@ namespace Core {
 
                 QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
                     switch(item_media_type) {
-                        case dmt_audio: {
-                            QString result = trackUrl(item_id);
-                            if (result == QStringLiteral("error.notloggedin")) {
-                                if (takeOnlineCredentials())
-                                    result = trackUrl(item_id);
-                                else
-                                    result = OPERATION_BLOCKED;
-                            }
-
-                            return result;
-                        }
+                        case dmt_audio: return trackUrl(item_id);
                         case dmt_video: return QString();
                         default:;
                     }
@@ -118,14 +116,30 @@ namespace Core {
                     return QString();
                 }
 
-                QJsonValue popular(const SearchLimit & /*limits*/) {
-                    return setByType(set_popular_tracks);
+                QJsonValue popular(const SearchLimit & limits) {
+                    if (limits.include_audio())
+                        return setByType(set_popular_tracks);
+
+                    return QJsonArray();
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
-                    if (limits.predicate.isEmpty() || limits.by_popularity())
-                        return popular(limits);
-                    else return tracksSearch(limits);
+                    QJsonObject res; // TODO: not logged in error
+
+                    if (limits.include_audio()) {
+                        QJsonValue val;
+                        if (limits.predicate.isEmpty() || limits.by_popularity())
+                            val = popular(limits);
+                        else val = tracksSearch(limits);
+
+                        res.insert(block_items_audio, val);
+                    }
+
+                    if (limits.include_video()) {
+
+                    }
+
+                    return res;
                 }
 
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
