@@ -20,17 +20,6 @@ namespace Core {
 
 //                inline QString playlistAudioUrl(const QString & pid) { return audioUrlStr(tkn_my, QUrlQuery(tkn_pid_eq % pid)); } // params: (pid: playlist id) and pagination attrs
             public:
-                QJsonArray playlistInfo(const QString & playlist_id, int count = DEFAULT_ITEMS_LIMIT, int offset = 0) { //TODO: need to check
-                    return pRequest(
-                        audioUrlStr(
-                            tkn_my,
-                            {{ tkn_pid, playlist_id }}
-                        ),
-                        call_type_json, rules(offset, count),
-                        0, proc_json_extract, QStringList() << tkn_tracks
-                    );
-                }
-
                 QJsonValue playlistsInfo(const QStringList & playlist_ids) {
                     return sRequest(audioInfoUrl(playlist_ids), call_type_json).
                             value(tkn_albums).toArray();

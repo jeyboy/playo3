@@ -10,6 +10,7 @@
 #define UID_HEAD QStringLiteral("@")
 #define ISOURCE_ATTRS_KEY QStringLiteral("attrs")
 #define PPACK(param1,param2) param1 % '|' % param2
+#define OPERATION_BLOCKED QStringLiteral("block")
 
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable {

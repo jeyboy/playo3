@@ -32,9 +32,6 @@ void VkModel::proceedJson(QJsonValue & hash) {
 
         audios =  hash_obj.value(block_items_audio).toArray();
 
-        groups = hash_obj.value(block_groups).toArray();
-        friends = hash_obj.value(block_friends).toArray();
-
         videos = hash_obj.value(block_items_video).toArray();
         video_albums = hash_obj.value(block_sets_video).toArray();
     }
@@ -136,40 +133,5 @@ void VkModel::proceedJson(QJsonValue & hash) {
 
     rootItem -> updateItemsCountInBranch(itemsAmount);
     endInsertRows();
-    /////////////////////////////////////////////////////////////////////
-    {
-        QJsonObject group;
-
-        for(QJsonArray::Iterator it = groups.begin(); it != groups.end(); it++) {
-            group = (*it).toObject();
-
-            Vk::Queries::obj().addGroup(
-                Linkable(
-                    QString::number(group.value(Vk::tkn_id).toInt()),
-                    group.value(Vk::tkn_title).toString(),
-                    group.value(Vk::tkn_screen_name).toString(),
-                    group.value(Vk::tkn_photo).toString()
-                )
-            );
-        }
-    }
-/////////////////////////////////////////////////////////////////////
-    {
-        QJsonObject frend;
-
-        for(QJsonArray::Iterator it = friends.begin(); it != friends.end(); it++) {
-            frend = (*it).toObject();
-
-            Vk::Queries::obj().addFriend(
-                Linkable(
-                    QString::number(frend.value(Vk::tkn_id).toInt()),
-                    frend.value(Vk::tkn_title).toString(),
-                    frend.value(Vk::tkn_screen_name).toString(),
-                    frend.value(Vk::tkn_photo).toString()
-                )
-            );
-        }
-    }
-
     emit moveOutProcess();
 }

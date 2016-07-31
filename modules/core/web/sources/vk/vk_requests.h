@@ -110,9 +110,13 @@ namespace Core {
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
+                        QString title = obj.value(tkn_title).toString();
+                        if (title.isEmpty())
+                            title = QString(obj.value(QStringLiteral("first_name")).toString() % ' ' % obj.value(QStringLiteral("last_name")).toString());
+
                         linkables << Linkable(
-                            QString::number(obj.value(tkn_id).toInt()),
-                            QString(obj.value(QStringLiteral("first_name")).toString() % ' ' % obj.value(QStringLiteral("last_name")).toString()),
+                            idToStr(obj.value(tkn_id)),
+                            title,
                             obj.value(tkn_screen_name).toString(),
                             obj.value(tkn_photo).toString()
                         );
@@ -122,9 +126,14 @@ namespace Core {
                 inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
+
+                        QString title = obj.value(tkn_title).toString();
+                        if (title.isEmpty())
+                            title = obj.value(QStringLiteral("name")).toString();
+
                         linkables << Linkable(
-                            QString::number(obj.value(tkn_id).toInt()),
-                            obj.value(QStringLiteral("name")).toString(),
+                            idToStr(obj.value(tkn_id)),
+                            title,
                             obj.value(tkn_screen_name).toString(),
                             obj.value(tkn_photo).toString()
                         );
@@ -159,6 +168,12 @@ namespace Core {
                     return QJsonArray();
                 }
 
+                void procSociables(QJsonObject & json) {
+                    clearFriends();
+                    jsonToUsers(Friendable::linkables, json.take(block_friends).toArray());
+                    clearGroups();
+                    jsonToGroups(Groupable::linkables, json.take(block_groups).toArray());
+                }
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
 
@@ -195,6 +210,8 @@ namespace Core {
                             ret.insert(block_items_video, media_ret.value(block_items_video).toArray());
                             ret.insert(block_sets_video, media_ret.value(block_sets_video).toArray());
 
+                            procSociables(ret);
+
                             return ret;
                         }
 
@@ -212,6 +229,9 @@ namespace Core {
                                 tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
                                 ret.insert(block_sets_audio, ar);
                             }
+
+                            procSociables(ret);
+
                             return ret;
                         }
 

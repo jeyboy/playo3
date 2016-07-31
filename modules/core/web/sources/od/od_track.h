@@ -7,7 +7,7 @@ namespace Core {
     namespace Web {
         namespace Od {
             class Track : public Base {
-            protected:
+            public:
                 QString trackUrl(const QString & track_id) {
                     QJsonObject obj = Manager::prepare() -> jsonGet(
                         audioUrlStr(
@@ -20,11 +20,16 @@ namespace Core {
 //                        obj = Manager::prepare() -> jsonGet(playAudioUrl(refresh_page));
 //                        qDebug() << "RECONECTION";
 //                    }
-                    QUrl url(obj.value(tkn_play).toString());
-                    QUrlQuery query = QUrlQuery(url.query());
-                    query.addQueryItem(tkn_client_hash, calcMagicNumber(query.queryItemValue(tkn_md5)));
-                    url.setQuery(query);
-                    return url.toString();
+
+                    if (obj.contains(tkn_error)) {
+                        return obj.value(tkn_error).toString();
+                    } else {
+                        QUrl url(obj.value(tkn_play).toString());
+                        QUrlQuery query = QUrlQuery(url.query());
+                        query.addQueryItem(tkn_client_hash, calcMagicNumber(query.queryItemValue(tkn_md5)));
+                        url.setQuery(query);
+                        return url.toString();
+                    }
                 }
 
                 bool trackIsDownloaded(const QString & track_id) { //TODO: not finished
@@ -94,14 +99,25 @@ namespace Core {
                     );
                 }
 
-                QJsonValue tracksByPlaylist(const QString & playlist_id) { //TODO: not finished
+                QJsonValue tracksByPlaylist(const QString & playlist_id) { //INFO: url is not worked
                     return pRequest(
                         audioUrlStr(
                             path_audio_by_album_id,
                             { {QStringLiteral("albumId"), playlist_id} }
                         ),
                         call_type_json, rules(), 0,
-                        proc_json_extract, QStringList() << tkn_artists
+                        proc_json_extract, QStringList() << tkn_tracks
+                    );
+                }
+
+                QJsonValue playlistInfo(const QString & playlist_id, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
+                    return pRequest(
+                        audioUrlStr(
+                            tkn_my,
+                            {{ tkn_pid, playlist_id }}
+                        ),
+                        call_type_json, rules(0, count),
+                        0, proc_json_extract, QStringList() << tkn_tracks
                     );
                 }
 

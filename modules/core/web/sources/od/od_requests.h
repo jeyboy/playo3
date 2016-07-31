@@ -94,9 +94,23 @@ namespace Core {
                     return sessionIsValid();
                 }
 
+                QJsonValue loadPlaylist(const QVariantMap & attrs) {
+                    return tracksByPlaylist(attrs.value(tkn_grab_refresh).toString());
+                }
+
                 QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
                     switch(item_media_type) {
-                        case dmt_audio: return trackUrl(item_id);
+                        case dmt_audio: {
+                            QString result = trackUrl(item_id);
+                            if (result == QStringLiteral("error.notloggedin")) {
+                                if (takeOnlineCredentials())
+                                    result = trackUrl(item_id);
+                                else
+                                    result = OPERATION_BLOCKED;
+                            }
+
+                            return result;
+                        }
                         case dmt_video: return QString();
                         default:;
                     }

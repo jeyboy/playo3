@@ -13,7 +13,7 @@ bool IModel::restoreUrl(IItem * itm) {
     QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType(), itm -> mediaType());
 
     qDebug() << itm -> refresh_path() << newUrl;
-    if (!newUrl.isEmpty() && itm -> path().toString() != newUrl) {
+    if (!newUrl.isEmpty() && newUrl != OPERATION_BLOCKED && itm -> path().toString() != newUrl) {
         itm -> setPath(newUrl);
         return true;
     }

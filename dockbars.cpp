@@ -171,6 +171,7 @@ DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Mod
             view(bar) -> appendRows(urls);
         }
         linkedTabs.insert(identifier, bar);
+//        if (refresh) view(bar) -> refresh();
     }
     else {
         activate(bar);
