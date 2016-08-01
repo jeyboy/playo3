@@ -9,20 +9,13 @@ namespace Core {
             class Track : public Base {
             public:
                 QString trackUrl(const QString & track_id) {
-                    Manager * manager = Manager::prepare();
-                    QString req_url = audioUrlStr(
-                        path_audio_play,
-                        { {tkn_tid, track_id} }
+                    QJsonObject obj = sRequest(
+                        audioUrlStr(
+                            path_audio_play,
+                            { {tkn_tid, track_id} }
+                        ),
+                        call_type_json
                     );
-
-                    QJsonObject obj = manager -> jsonGet(req_url);
-//                    bool has_err = hasError(obj);
-
-//                    if (has_err) {
-//                        if (retryRequired(obj))
-//                            obj = manager -> jsonGet(req_url);
-//                        else return obj.value(tkn_error).toString();
-//                    }
 
                     QUrl url(obj.value(tkn_play).toString());
                     QUrlQuery query = QUrlQuery(url.query());
@@ -32,11 +25,12 @@ namespace Core {
                 }
 
                 bool trackIsDownloaded(const QString & track_id) { //TODO: not finished
-                    QJsonObject obj = Manager::prepare() -> jsonGet(
+                    QJsonObject obj = sRequest(
                         audioUrlStr(
                             path_audio_is_downloaded,
                             { {tkn_tid, track_id} }
-                        )
+                        ),
+                        call_type_json
                     );
 
                     return false;

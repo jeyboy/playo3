@@ -34,11 +34,13 @@ namespace Core {
                                 default: json = manager -> jsonGet(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap);
                             }
 
-                            if (manager -> statusCode() < 300) break;
+                            if (
+                                manager -> statusCode() < 300 &&
+                                (status = extractStatus(arg, json, code, message)) // check on retry requiring
+                            ) break;
                             else qDebug() << "RETRY" << retries;
                         }
 
-                        status = extractStatus(arg, json, code, message);
                         if (!status) {
                             Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, message, true);
                             sendError(arg -> error_receiver, message, code);

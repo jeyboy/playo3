@@ -9,11 +9,22 @@ namespace Core {
             class User : public Base {
             public:
                 QJsonValue userInfo() {
-                   return Manager::prepare() -> jsonGet(audioUrlStr(path_audio_init));
+                    return sRequest(
+                        audioUrlStr(path_audio_init),
+                        call_type_json
+                    );
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
-                    return Manager::prepare() -> jsonGet(audioUrlStr(tkn_my, {{tkn_uid, user_id}}));
+                    return sRequest(
+                        audioUrlStr(
+                            tkn_my,
+                            {
+                                {tkn_uid, user_id}
+                            }
+                        ),
+                        call_type_json
+                    );
                 }
 
 //                QJsonValue popular(const SearchLimit & /*limits*/) {

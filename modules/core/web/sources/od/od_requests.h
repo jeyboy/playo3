@@ -73,6 +73,18 @@ namespace Core {
 ////                    return QUrlQuery(tkn_jsessionid % siteToken());
 //                }
 
+                bool extractStatus(QueriableArg * /*arg*/, QJsonObject & json, int & code, QString & message) {
+                    if (Auth::retryRequired(json, message))
+                        return false;
+
+                    if (!message.isEmpty()) {
+                        code = -1;
+                        return false;
+                    }
+
+                    return true;
+                }
+
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
                     if (chunk_obj.isEmpty()) return false;

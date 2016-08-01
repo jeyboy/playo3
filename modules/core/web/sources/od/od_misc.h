@@ -22,9 +22,9 @@ namespace Core {
 
                     inline bool hasError(const QJsonObject & obj) { return obj.contains(tkn_error); }
 
-                    inline bool retryRequired(const QJsonObject & obj) {
-                        QString err = obj.value(tkn_error).toString();
-                        if (err == QStringLiteral("error.notloggedin"))
+                    inline bool retryRequired(const QJsonObject & obj, QString & message) {
+                        message = obj.value(tkn_error).toString();
+                        if (message == QStringLiteral("error.notloggedin"))
                             return takeOnlineCredentials();
 
                         return false;
