@@ -24,10 +24,7 @@ namespace Core {
 
                     inline bool retryRequired(const QJsonObject & obj, QString & message) {
                         message = obj.value(tkn_error).toString();
-                        if (message == QStringLiteral("error.notloggedin"))
-                            return takeOnlineCredentials();
-
-                        return false;
+                        return message == QStringLiteral("error.notloggedin");
                     }
 
                     inline Headers initHeaders() { return {{tkn_header_user_agent, DEFAULT_AGENT}}; }

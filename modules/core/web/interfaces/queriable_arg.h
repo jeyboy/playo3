@@ -177,6 +177,11 @@ namespace Core {
                 return url + delim + QStringLiteral("%1=%2").arg(field, token);
             }
 
+            void updateUrls(const QString & old_data, const QString & new_data) {
+                url_template.replace(old_data, new_data);
+                request_url.replace(old_data, new_data);
+            }
+
             QString url_template;
             QString request_url;
 

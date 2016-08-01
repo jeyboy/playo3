@@ -65,17 +65,19 @@ namespace Core {
                     if (siteToken().isEmpty())
                         takeOnlineCredentials();
 
-                    return Auth::baseUrlStr(stype, predicate % tkn_coma_dot % tkn_jsessionid % siteToken(), query);
+                    return Auth::baseUrlStr(stype, predicate % regPart(), query);
                 }
 
-//                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_site_def) {
-//                    return QUrlQuery();
-////                    return QUrlQuery(tkn_jsessionid % siteToken());
-//                }
+                QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
 
-                bool extractStatus(QueriableArg * /*arg*/, QJsonObject & json, int & code, QString & message) {
-                    if (Auth::retryRequired(json, message))
+                bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
+                    if (Auth::retryRequired(json, message)) {
+                        QString predicate = regPart();
+                        if (takeOnlineCredentials())
+                            arg -> updateUrls(predicate, regPart());
+
                         return false;
+                    }
 
                     if (!message.isEmpty()) {
                         code = -1;
