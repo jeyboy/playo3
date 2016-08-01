@@ -16,13 +16,13 @@ namespace Core {
                     );
 
                     QJsonObject obj = manager -> jsonGet(req_url);
-                    bool has_err = hasError(obj);
+//                    bool has_err = hasError(obj);
 
-                    if (has_err) {
-                        if (retryRequired(obj))
-                            obj = manager -> jsonGet(req_url);
-                        else return obj.value(tkn_error).toString();
-                    }
+//                    if (has_err) {
+//                        if (retryRequired(obj))
+//                            obj = manager -> jsonGet(req_url);
+//                        else return obj.value(tkn_error).toString();
+//                    }
 
                     QUrl url(obj.value(tkn_play).toString());
                     QUrlQuery query = QUrlQuery(url.query());

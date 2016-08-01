@@ -28,8 +28,9 @@ namespace Core {
 
         void toJson(QJsonObject & hash) {
             QJsonObject root;
+
+            saveAdditionals(root); // sometimes required to change attrs before saving
             root.insert(ISOURCE_ATTRS_KEY, QJsonObject::fromVariantHash(attrs));
-            saveAdditionals(root);
 
             hash.insert(name(), root);
         }

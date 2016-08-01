@@ -40,6 +40,7 @@ namespace Core {
                 Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
 
                 void saveAdditionals(QJsonObject & obj) {
+                    setSiteToken(QString()); // drop old token
                     Sociable::toJson(obj);
                     Manager::saveCookies(obj, QUrl(url_root));
                 }
@@ -61,6 +62,9 @@ namespace Core {
                 }
 
                 QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
+                    if (siteToken().isEmpty())
+                        takeOnlineCredentials();
+
                     return Auth::baseUrlStr(stype, predicate % tkn_coma_dot % tkn_jsessionid % siteToken(), query);
                 }
 

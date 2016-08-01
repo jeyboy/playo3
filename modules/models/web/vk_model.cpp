@@ -22,7 +22,7 @@ void VkModel::refresh() {
 }
 
 void VkModel::proceedJson(QJsonValue & hash) {
-    QJsonArray audio_albums, audios, groups, friends, videos, video_albums;
+    QJsonArray audio_albums, audios, videos, video_albums;
 
     if (hash.isArray()) {
         // reserved
