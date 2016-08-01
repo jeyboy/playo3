@@ -54,6 +54,16 @@ namespace Core {
                     Manager::removeCookies(QUrl(url_root));
                 }
 
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype) {
+                    switch(stype) {
+                        case qst_site_audio: return QUrlQuery();
+                        default: {
+                            if (siteHash().isEmpty()) setSiteHash(Auth::grabHash());
+                            return QUrlQuery((QStringLiteral("gwt.requested=") % siteHash()));
+                        }
+                    }
+                }
+
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
                         case qst_site_audio: return url_base_audio % predicate;
@@ -94,11 +104,10 @@ namespace Core {
                 }
 
                 bool connectUserSite() {
-                    QString user_id, hash;
+                    QString user_id;
 
-                    if (siteConnection(user_id, hash, error)) {
+                    if (siteConnection(user_id, error)) {
                         setSiteUserID(user_id);
-//                        setSiteHash(hash);
 
                         return true;
                     }
@@ -182,6 +191,8 @@ namespace Core {
 //                    }
 //                }
             public:
+                Requests() { setSociableLimitations(false, true, false, true); }
+
                 QJsonValue userInfo() {
                     QJsonObject res = User::userInfo().toObject();
 
@@ -198,6 +209,8 @@ namespace Core {
 
                     clearFriends();
                     jsonToUsers(Friendable::linkables, res.take(tkn_friends).toArray());
+
+
 //                   clearGroups();
 //                   jsonToGroups(Groupable::linkables, res.take(tkn_friends).toArray());
                     return res;

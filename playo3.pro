@@ -324,7 +324,8 @@ HEADERS += \
     modules/core/web/sources/od/od_misc.h \
     modules/core/web/sources/od/od_collection.h \
     modules/core/web/sources/od/od_user.h \
-    modules/core/web/sources/od_queries.h
+    modules/core/web/sources/od_queries.h \
+    modules/core/web/sources/od/od_group.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

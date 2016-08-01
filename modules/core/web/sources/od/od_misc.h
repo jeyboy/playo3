@@ -38,6 +38,14 @@ namespace Core {
                         else return results.link().section('/', 2).section('?', 0, 0);
                     }
 
+                    inline QString grabHash() {
+                        QString html = Manager::prepare() -> getFollowed(QStringLiteral("https://ok.ru/search?st.mode=Movie&st.posted=set")) -> toText();
+                        QRegularExpressionMatch match;
+                        if (html.indexOf(QRegularExpression(QStringLiteral("gwtHash:\"(\\w+)\"")), 0, &match) > -1) {
+                            return match.captured(1);
+                        } else return QString();
+                    }
+
                     inline QString grabSID() {
                         QJsonObject obj = Manager::prepare() -> jsonPost(authSidUrl(), initHeaders()); // calculate sid for requests
                         if (obj.contains(tkn_sid))

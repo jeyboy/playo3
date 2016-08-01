@@ -17,7 +17,7 @@ namespace Core {
 
 //                inline QUrl initUrl() const { return QUrl(url_base_auth % path_auth2 % siteHash()); }
 
-                bool siteConnection(QString & user_id, QString & /*hash*/, QString & err) {
+                bool siteConnection(QString & user_id, QString & err) {
                     QString authE, authP;
 
                     while(true) {
@@ -39,7 +39,6 @@ namespace Core {
 
                         if (!Manager::cookie(tkn_authcode).isEmpty()) {
                             user_id = grabUserId(doc);
-//                            setSiteUserID(grabUserId(doc));
 //                            setSiteHash(hash_key);
                             return true;
                         }
