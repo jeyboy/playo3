@@ -86,10 +86,16 @@ namespace Core {
                 }
 
                 QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
-                    if (siteToken().isEmpty())
-                        takeOnlineCredentials();
+                    switch(stype) {
+                        case qst_site_audio: {
+                            if (siteToken().isEmpty())
+                                takeOnlineCredentials();
 
-                    return Auth::baseUrlStr(stype, predicate % regPart(), query);
+                            return Auth::baseUrlStr(stype, predicate % regPart(), query);
+                        }
+
+                        default: return Auth::baseUrlStr(stype, predicate, query);
+                    }
                 }
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
@@ -97,11 +103,13 @@ namespace Core {
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);
 
+                    doc.output();
+
                     bool result = false;
 
                     switch(arg -> post_proc) {
                         case proc_group1: {
-                            Html::Set groups = doc.find("#hook_Block_UserGroupsBlock .groups_list li");
+                            Html::Set groups = doc.find(".groups_list li");
 
                             for(Html::Set::Iterator group = groups.begin(); group != groups.end(); group++) {
                                 QJsonObject group_obj;
@@ -110,6 +118,34 @@ namespace Core {
 
                                 group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
                                 group_obj.insert(tkn_name, (*group) -> findFirst(".caption a") -> text());
+                                Html::Tag * img = (*group) -> findFirst(".section img");
+                                if (img) {
+                                    QString img_url = img -> value(QStringLiteral("src"));
+
+                                    if (img_url.startsWith(QStringLiteral("//")))
+                                        img_url = QStringLiteral("http:") % img_url;
+
+                                    group_obj.insert(tkn_art_url, img_url);
+                                }
+
+                                arg -> append(group_obj, group + 1 == groups.end());
+                            }
+
+                            result = !groups.isEmpty();
+                        break;}
+
+                        case proc_group2: {
+                            Html::Set groups = doc.find("#userGroupsSearchResultList .groups-portlet");
+
+                            for(Html::Set::Iterator group = groups.begin(); group != groups.end(); group++) {
+                                QJsonObject group_obj;
+
+                                Html::Tag * name_link = (*group) -> findFirst(".caption .o");
+
+                                QString id_text = name_link -> link();
+
+                                group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
+                                group_obj.insert(tkn_name, name_link -> text());
                                 Html::Tag * img = (*group) -> findFirst(".section img");
                                 if (img) {
                                     QString img_url = img -> value(QStringLiteral("src"));
@@ -244,6 +280,24 @@ namespace Core {
                             obj.value(tkn_art_url).toString()
                         );
                     }
+                }
+
+//                QList<Linkable> findFriendsByName(const QString & name) {
+//                    QList<Linkable> linkables;
+
+//                    QJsonArray arr = usersByName(name).toArray();
+//                    jsonToUsers(linkables, arr);
+
+//                    return linkables;
+//                }
+
+                QList<Linkable> findGroupsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = groupsByName(name).toArray();
+                    jsonToGroups(linkables, arr);
+
+                    return linkables;
                 }
             public:
                 Requests() { setSociableLimitations(false, true, false, true); }

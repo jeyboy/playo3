@@ -20,6 +20,7 @@ namespace Core {
                 int code = -1;
                 QString message;
                 qDebug() << "REQUEST" << arg -> request_url;
+                qDebug() << "HEADERS" << arg -> headers;
 
                 switch(arg -> call_type) {
                     case call_type_json: {
