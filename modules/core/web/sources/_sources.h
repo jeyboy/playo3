@@ -18,7 +18,7 @@
 #include "musicshara.h"
 #include "redmp3.h"
 
-#include "fourshared_api.h"
+#include "fourshared_queries.h"
 
 #endif // _SOURCES
 

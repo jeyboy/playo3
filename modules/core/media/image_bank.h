@@ -158,10 +158,12 @@ public slots:
             if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
                 pix = pix.scaled(BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-            if (pix.save(filename, 0, 100)) // without compression
+            if (pix.save(filename, "PNG", 100)) // without compression
                 locale_pathes.insert(url_str, filename);
-            else
-                qDebug() << "File is not saved" << filename;
+            else {
+                qDebug() << "File is not saved" << filename << url_str;
+                locale_pathes.insert(url_str, QString()); // blocking retry of requests
+            }
         }
         else {
             qDebug() << "Pixmap is wrong";

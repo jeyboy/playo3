@@ -18,7 +18,11 @@ namespace Core {
 
                     virtual bool takeOnlineCredentials() = 0;
 
-                    inline QUrl authSidUrl() { return QUrl(baseUrlStr(qst_site_def, path_sid)); }
+                    inline QUrl authSidUrl() { return QUrl(baseUrlStr(qst_site, path_sid)); }
+
+                    inline QString dataPageUrl() {
+                        return baseUrlStr(qst_site, QStringLiteral("search?st.mode=Movie&st.posted=set"));
+                    }
 
                     inline bool hasError(const QJsonObject & obj) { return obj.contains(tkn_error); }
 
@@ -27,6 +31,7 @@ namespace Core {
                         return message == QStringLiteral("error.notloggedin");
                     }
 
+                    virtual Headers tknHeaders() = 0;
                     inline Headers initHeaders() { return {{tkn_header_user_agent, DEFAULT_AGENT}}; }
 
                     inline QString grabUserId(Html::Document & doc) {
@@ -38,10 +43,22 @@ namespace Core {
                         else return results.link().section('/', 2).section('?', 0, 0);
                     }
 
-                    inline QString grabHash() {
-                        QString html = Manager::prepare() -> getFollowed(QStringLiteral("https://ok.ru/search?st.mode=Movie&st.posted=set")) -> toText();
+                    inline QString grabAdditionalToken() {
+                        return grabAdditionalToken(Manager::prepare() -> getFollowed(dataPageUrl()) -> toText());
+                    }
+
+                    inline QString grabAdditionalToken(const QString & html) {
+                        QRegularExpressionMatch match;
+                        if (html.indexOf(QRegularExpression(QStringLiteral("OK.tkn.set\\('([\\w-]+)'\\);")), 0, &match) > -1) {
+                            return match.captured(1);
+                        } else return QString();
+                    }
+
+                    inline QString grabHash(QString & add_token) {
+                        QString html = Manager::prepare() -> getFollowed(dataPageUrl()) -> toText();
                         QRegularExpressionMatch match;
                         if (html.indexOf(QRegularExpression(QStringLiteral("gwtHash:\"(\\w+)\"")), 0, &match) > -1) {
+                            add_token = grabAdditionalToken(html);
                             return match.captured(1);
                         } else return QString();
                     }

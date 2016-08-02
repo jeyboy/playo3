@@ -12,6 +12,11 @@ namespace Core { // requests and response has memory leaks
                 inline Headers(std::initializer_list<std::pair<QString, QString> > list) : QHash<QString, QString>(list) {}
             #endif
 
+            inline Headers(QHash<QString, QString> & hsh) {
+                for(QHash<QString, QString>::ConstIterator it = hsh.constBegin(); it != hsh.constEnd(); it++)
+                    insert(it.key(), it.value());
+            }
+
             static inline Headers extract(const QString & url) {
                 QStringList heads = url.split(QRegularExpression("%0D%0A|\\r\\n"), QString::SkipEmptyParts);
                 Headers res;
@@ -32,6 +37,8 @@ namespace Core { // requests and response has memory leaks
                 if (!headers.isEmpty()) const_cast<QUrl &>(url) = QUrl(urlStr);
                 return headers;
             }
+
+            Headers & unite(const Headers & other) { return (Headers &) QHash<QString, QString>::unite((QHash<QString, QString>)other); }
         };
     }
 }

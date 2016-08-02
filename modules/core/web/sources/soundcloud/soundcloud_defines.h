@@ -62,11 +62,10 @@ namespace Core {
                 }
 
                 Headers headers() {
-                    return {
-                        {QStringLiteral("DNT"), QStringLiteral("1")},
+                    return dntHeader().unite({
                         {QStringLiteral("Origin"), QStringLiteral("https://soundcloud.com")},
                         {QStringLiteral("Referer"), QStringLiteral("https://soundcloud.com")}
-                    };
+                    });
                 }
 
                 PolyQueryRules rules(

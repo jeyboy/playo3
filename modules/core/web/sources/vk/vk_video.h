@@ -14,7 +14,7 @@ namespace Core {
 
                     Response * response = Manager::prepare() -> postFollowed(
                         QStringLiteral("https://vk.com/al_video.php?act=show&al=1&autoplay=1&force_no_repeat=1&preload=1&video=%1").arg(video_id),
-                        {{ QStringLiteral("DNT"), QStringLiteral("1") }}
+                        dntHeader()
                     );
 
                     QString resp = response -> toText();
@@ -23,7 +23,7 @@ namespace Core {
                     if (resp.indexOf(QRegularExpression("vars = ([^;]+);"), 0, &match) != -1) {
                         QJsonObject obj = QJsonDocument::fromJson(match.captured(1).toUtf8()).object();
 
-
+                        // TODO: finish me
                     }
 
                     return QString();

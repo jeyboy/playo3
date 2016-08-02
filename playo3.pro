@@ -283,7 +283,6 @@ HEADERS += \
     modules/core/web/sources/vk/vk_track.h \
     modules/core/web/sources/vk/vk_user.h \
     modules/core/web/sources/vk/vk_video.h \
-    modules/core/web/sources/fourshared_api.h \
     modules/core/web/sources/fourshared/fourshared_api_keys.h \
     modules/core/web/sources/fourshared/fourshared_defines.h \
     modules/core/web/sources/jetune.h \
@@ -325,7 +324,8 @@ HEADERS += \
     modules/core/web/sources/od/od_collection.h \
     modules/core/web/sources/od/od_user.h \
     modules/core/web/sources/od_queries.h \
-    modules/core/web/sources/od/od_group.h
+    modules/core/web/sources/od/od_group.h \
+    modules/core/web/sources/fourshared_queries.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -447,7 +447,6 @@ SOURCES += \
     modules/core/web/sources/soundcloud/soundcloud_requests.cpp \
     modules/core/web/sources/vk/vk_keys.cpp \
     modules/core/web/sources/exua.cpp \
-    modules/core/web/sources/fourshared_api.cpp \
     modules/core/web/sources/fourshared/fourshared_api_keys.cpp \
     modules/core/web/sources/jetune.cpp \
     modules/core/web/sources/mp3base.cpp \
@@ -455,7 +454,6 @@ SOURCES += \
     modules/core/web/sources/mp3pm.cpp \
     modules/core/web/sources/musicshara.cpp \
     modules/core/web/sources/myzuka_album.cpp \
-    modules/core/web/sources/od_api.cpp \
     modules/core/web/sources/promodj.cpp \
     modules/core/web/sources/redmp3.cpp \
     modules/core/web/sources/shmidt.cpp \
@@ -465,4 +463,6 @@ SOURCES += \
     modules/core/web/sources/youtube_api.cpp \
     modules/core/web/sources/youtube/youtube_api_keys.cpp \
     modules/core/web/sources/zaycev.cpp \
-    modules/core/web/sources/od/od_keys.cpp
+    modules/core/web/sources/od/od_keys.cpp \
+    modules/core/web/sources/od_queries.cpp \
+    modules/core/web/sources/fourshared_queries.cpp

@@ -2,6 +2,7 @@
 #define OD_REQUESTS
 
 #include "od_user.h"
+#include "od_group.h"
 #include "od_artist.h"
 #include "od_auth.h"
 #include "od_playlist.h"
@@ -19,14 +20,14 @@ namespace Core {
     namespace Web {
         namespace Od {
             class Requests : public ISource, public Sociable, public Artist, public User, public Auth, public Collection,
-                    public Playlist, public Radio, public Set, public Track, public Video, public VideoPlaylist {
+                    public Playlist, public Radio, public Set, public Track, public Video, public VideoPlaylist, public Group {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
                         sf_primary_source |
                         /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | /*sf_groups_serachable |*/
-                        sf_sociable_users | /*sf_sociable_groups |*/ sf_shareable | sf_packable |
+                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
+                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
 //                        sf_recomendable_by_item | sf_recomendable_by_user |
                         /*sf_newable |*/ sf_populable |
 
@@ -41,6 +42,8 @@ namespace Core {
 
                 void saveAdditionals(QJsonObject & obj) {
                     setSiteToken(QString()); // drop old token
+                    setSiteAdditionalToken(QString()); // drop old add token
+
                     Sociable::toJson(obj);
                     Manager::saveCookies(obj, QUrl(url_root));
                 }
@@ -54,11 +57,21 @@ namespace Core {
                     Manager::removeCookies(QUrl(url_root));
                 }
 
+                inline Headers tknHeaders() {
+                    if (siteAdditionalToken().isEmpty()) setSiteAdditionalToken(Auth::grabAdditionalToken());
+
+                    return {{QStringLiteral("TKN"), siteAdditionalToken()}};
+                }
+
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype) {
                     switch(stype) {
                         case qst_site_audio: return QUrlQuery();
                         default: {
-                            if (siteHash().isEmpty()) setSiteHash(Auth::grabHash());
+                            if (siteHash().isEmpty()) {
+                                QString add_token;
+                                setSiteHash(Auth::grabHash(add_token));
+                                setSiteAdditionalToken(add_token);
+                            }
                             return QUrlQuery((QStringLiteral("gwt.requested=") % siteHash()));
                         }
                     }
@@ -67,6 +80,7 @@ namespace Core {
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
                         case qst_site_audio: return url_base_audio % predicate;
+                        case qst_site: return url_root % predicate;
                         default: return url_root % predicate;
                     }
                 }
@@ -79,6 +93,44 @@ namespace Core {
                 }
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
+
+                bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
+                    Html::Document doc = reply -> toHtml(removeReply);
+
+                    bool result = false;
+
+                    switch(arg -> post_proc) {
+                        case proc_group1: {
+                            Html::Set groups = doc.find("#hook_Block_UserGroupsBlock .groups_list li");
+
+                            for(Html::Set::Iterator group = groups.begin(); group != groups.end(); group++) {
+                                QJsonObject group_obj;
+
+                                QString id_text = (*group) -> findFirst(".section .o") -> link();
+
+                                group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
+                                group_obj.insert(tkn_name, (*group) -> findFirst(".caption a") -> text());
+                                Html::Tag * img = (*group) -> findFirst(".section img");
+                                if (img) {
+                                    QString img_url = img -> value(QStringLiteral("src"));
+
+                                    if (img_url.startsWith(QStringLiteral("//")))
+                                        img_url = QStringLiteral("http:") % img_url;
+
+                                    group_obj.insert(tkn_art_url, img_url);
+                                }
+
+                                arg -> append(group_obj, group + 1 == groups.end());
+                            }
+
+                            result = !groups.isEmpty();
+                        break;}
+
+                        default: ;
+                    }
+
+                    return result;
+                }
 
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
                     if (Auth::retryRequired(json, message)) {
@@ -174,22 +226,25 @@ namespace Core {
                         QJsonObject obj = (*obj_iter).toObject();
                         linkables << Linkable(
                             obj.value(tkn_id).toString(),
-                            obj.value(tkn_full_name).toString()
+                            obj.value(tkn_full_name).toString(),
+                            QString(),
+                            obj.value(tkn_art_url).toString()
                         );
                     }
                 }
 
-//                inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
-//                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
-//                        QJsonObject obj = (*obj_iter).toObject();
-//                        linkables << Linkable(
-//                            QString::number(obj.value(tkn_id).toInt()),
-//                            obj.value(QStringLiteral("name")).toString(),
-//                            obj.value(tkn_screen_name).toString(),
-//                            obj.value(tkn_photo).toString()
-//                        );
-//                    }
-//                }
+                inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = (*obj_iter).toObject();
+
+                        linkables << Linkable(
+                            obj.value(tkn_id).toString(),
+                            obj.value(tkn_name).toString(),
+                            QString(),
+                            obj.value(tkn_art_url).toString()
+                        );
+                    }
+                }
             public:
                 Requests() { setSociableLimitations(false, true, false, true); }
 
@@ -210,9 +265,8 @@ namespace Core {
                     clearFriends();
                     jsonToUsers(Friendable::linkables, res.take(tkn_friends).toArray());
 
-
-//                   clearGroups();
-//                   jsonToGroups(Groupable::linkables, res.take(tkn_friends).toArray());
+                    clearGroups();
+                    jsonToGroups(Groupable::linkables, groupsByUser(userID()).toArray());
                     return res;
                 }
 

@@ -18,6 +18,7 @@
 #define SOURCE_SITE_USER_ID_JSON QStringLiteral("_su")
 #define SOURCE_SITE_HASH_JSON QStringLiteral("_sh")
 #define SOURCE_SITE_TOKEN_JSON QStringLiteral("_st")
+#define SOURCE_SITE_ADDITIONAL_TOKEN_JSON QStringLiteral("_sat")
 #define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
 
 
@@ -143,6 +144,13 @@ namespace Core {
         inline void setSiteToken(const QString & token)
                                             { attrs[SOURCE_SITE_TOKEN_JSON] = token; }
         inline QString siteToken() const    { return attrs[SOURCE_SITE_TOKEN_JSON].toString(); }
+
+
+        inline void setSiteAdditionalToken(const QString & token)
+                                            { attrs[SOURCE_SITE_ADDITIONAL_TOKEN_JSON] = token; }
+        inline QString siteAdditionalToken() const
+                                            { return attrs[SOURCE_SITE_ADDITIONAL_TOKEN_JSON].toString(); }
+
         inline void setSiteHash(const QString & token)
                                             { attrs[SOURCE_SITE_HASH_JSON] = token; }
         inline QString siteHash() const     { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
