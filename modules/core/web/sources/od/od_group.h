@@ -11,7 +11,7 @@ namespace Core {
                 QJsonValue groupsByUser(const QString & user_id) {
                     return saRequest(
                         baseUrlStr(
-                            qst_site, QStringLiteral("profile/%1/groups/mine").arg(user_id),
+                            qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
                             {
                                 { QStringLiteral("st.cmd"), QStringLiteral("userGroups") },
                                 { QStringLiteral("st._aid"), QStringLiteral("GroupsSubMenu_User_MyGroupsNav_All") },
@@ -26,7 +26,7 @@ namespace Core {
                 QJsonValue groupsByName(const QString & name) {
                     return saRequest(
                         baseUrlStr(
-                            qst_site, QStringLiteral("groups/search"),
+                            qst_site_group, QStringLiteral("groups/search"),
                             {
                                 { QStringLiteral("st.cmd"), QStringLiteral("userGroupsSearch") },
                                 { QStringLiteral("cmd"), QStringLiteral("UserGroupsMainBlock") },
@@ -37,6 +37,14 @@ namespace Core {
                         call_type_html, 0, proc_group2, QStringList(), call_method_post,
                         tknHeaders().unite(dntHeader())
                     );
+                }
+
+                QJsonValue groupsByIdOrPerma(const QString & group_id) {
+                    QString url = Info::isNumber(group_id) ?
+                        baseUrlStr(qst_site, QStringLiteral("group/") % group_id, {}) :
+                        baseUrlStr(qst_site, group_id, {});
+
+                    return saRequest(url, call_type_html, 0, proc_group3);
                 }
 
 //                QJsonValue userInfo() {

@@ -19,12 +19,25 @@ namespace Core {
                     return sRequest(
                         audioUrlStr(
                             tkn_my,
-                            {
-                                {tkn_uid, user_id}
-                            }
+                            {{tkn_uid, user_id}}
                         ),
                         call_type_json
                     );
+                }
+
+                QJsonValue usersById(const QString & user_id) {
+                    return sRequest(
+                        baseUrlStr(qst_site, QStringLiteral("profile/") % user_id, {}),
+                        call_type_html, 0, proc_user3
+                    );
+                }
+
+                QJsonValue usersByName(const QString & /*name*/) {
+//                    return sRequest(
+//                        baseUrlStr(qst_site, QStringLiteral("profile/") % user_id, {}),
+//                        call_type_html, 0, proc_user1
+//                    );
+                    return QJsonArray();
                 }
 
 //                QJsonValue popular(const SearchLimit & /*limits*/) {

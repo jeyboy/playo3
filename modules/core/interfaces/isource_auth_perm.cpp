@@ -53,10 +53,11 @@ Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
 
     Permissions res = perm_none;
 
-    if (!api_flag_permit || api_flag_permit == apiConnected())
+    // if respondable to api and did not has limitation by auth or has limitation and we are connected
+    if (HAS_FLAG(flags, sf_auth_api_has) && (!api_flag_permit || api_flag_permit == apiConnected()))
         res = perm_api;
 
-    if (!site_flag_permit || site_flag_permit == siteConnected()) {
+    if (HAS_FLAG(flags, sf_auth_site_has) && (!site_flag_permit || site_flag_permit == siteConnected())) {
         if (!res || (res > 0 && HAS_FLAG(flags, site_prefer)))
             res = perm_site;
     }

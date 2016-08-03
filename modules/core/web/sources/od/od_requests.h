@@ -41,6 +41,7 @@ namespace Core {
                 Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
 
                 void saveAdditionals(QJsonObject & obj) {
+                    setSiteHash(QString());
                     setSiteToken(QString()); // drop old token
                     setSiteAdditionalToken(QString()); // drop old add token
 
@@ -65,6 +66,7 @@ namespace Core {
 
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype) {
                     switch(stype) {
+                        case qst_site:
                         case qst_site_audio: return QUrlQuery();
                         default: {
                             if (siteHash().isEmpty()) {
@@ -103,7 +105,7 @@ namespace Core {
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);
 
-                    doc.output();
+//                    doc.output();
 
                     bool result = false;
 
@@ -116,6 +118,7 @@ namespace Core {
 
                                 QString id_text = (*group) -> findFirst(".section .o") -> link();
 
+                                group_obj.insert(tkn_perma, id_text.split('/', QString::SkipEmptyParts).first());
                                 group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
                                 group_obj.insert(tkn_name, (*group) -> findFirst(".caption a") -> text());
                                 Html::Tag * img = (*group) -> findFirst(".section img");
@@ -142,10 +145,12 @@ namespace Core {
 
                                 Html::Tag * name_link = (*group) -> findFirst(".caption .o");
 
-                                QString id_text = name_link -> link();
+                                QString id_text = name_link -> link(); // link also contains perma
 
+                                group_obj.insert(tkn_perma, Info::extractLimitedBy(id_text, QStringLiteral("st.referenceName="), QStringLiteral("&")));
                                 group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
                                 group_obj.insert(tkn_name, name_link -> text());
+
                                 Html::Tag * img = (*group) -> findFirst(".section img");
                                 if (img) {
                                     QString img_url = img -> value(QStringLiteral("src"));
@@ -160,6 +165,39 @@ namespace Core {
                             }
 
                             result = !groups.isEmpty();
+                        break;}
+
+                        case proc_group3: {
+                            result = !doc.findFirst(".p404");
+
+                            if (result) {
+                                QJsonObject group_obj;
+
+                                QString link = doc.findFirst(".media-text_a") -> link();
+
+                                group_obj.insert(tkn_id, Info::extractLimitedBy(link, QStringLiteral("st.groupId="), QStringLiteral("&")));
+                                group_obj.insert(tkn_perma, link.split('/', QString::SkipEmptyParts).first());
+                                group_obj.insert(tkn_name, doc.findFirst(".mctc_name_tx") -> text());
+                                Html::Tag * img = doc.findFirst(".add-happening_poster_img");
+                                if (img) {
+                                    QString img_url = img -> value(QStringLiteral("src"));
+
+                                    if (img_url.startsWith(QStringLiteral("//")))
+                                        img_url = QStringLiteral("http:") % img_url;
+
+                                    group_obj.insert(tkn_art_url, img_url);
+                                }
+
+                                arg -> append(group_obj, true);
+                            }
+                        break;}
+
+                        case proc_user3: {
+                            result = !doc.findFirst(".p404");
+
+                            if (result) {
+
+                            }
                         break;}
 
                         default: ;
@@ -276,10 +314,28 @@ namespace Core {
                         linkables << Linkable(
                             obj.value(tkn_id).toString(),
                             obj.value(tkn_name).toString(),
-                            QString(),
+                            obj.value(tkn_perma).toString(),
                             obj.value(tkn_art_url).toString()
                         );
                     }
+                }
+
+//                QList<Linkable> findFriendsById(const QString & uid) {
+//                    QList<Linkable> linkables;
+
+//                    QJsonArray arr = usersByIdOrPerma(uid).toArray();
+//                    jsonToUsers(linkables, arr);
+
+//                    return linkables;
+//                }
+
+                QList<Linkable> findGroupsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = groupsByIdOrPerma(uid).toArray();
+                    jsonToGroups(linkables, arr);
+
+                    return linkables;
                 }
 
 //                QList<Linkable> findFriendsByName(const QString & name) {
@@ -300,7 +356,7 @@ namespace Core {
                     return linkables;
                 }
             public:
-                Requests() { setSociableLimitations(false, true, false, true); }
+                Requests() { setSociableLimitations(true, true, true, true); }
 
                 QJsonValue userInfo() {
                     QJsonObject res = User::userInfo().toObject();
