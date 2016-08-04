@@ -24,19 +24,70 @@ namespace Core {
                 }
 
                 QJsonValue groupsByName(const QString & name) {
-                    return saRequest(
+//                    dirty	1
+//                    st._aid
+//                    st.army
+//                    st.bthDay
+//                    st.bthMonth
+//                    st.bthYear
+//                    st.city
+//                    st.cmode
+//                    st.colleage
+//                    st.country
+//                    st.fromAge
+//                    st.gcountry
+//                    st.gender
+//                    st.glocation
+//                    st.grmode	Groups
+//                    st.holiday
+//                    st.location
+//                    st.mode Groups
+//                    st.official
+//                    st.onSite
+//                    st.open
+//                    st.page
+//                    st.posted	set
+//                    st.query sos
+//                    st.refs
+//                    st.school
+//                    st.single
+//                    st.tillAge
+//                    st.university
+//                    st.vpl.mini false
+//                    st.workplace
+                    //st.tag on
+
+                    return pRequest(
                         baseUrlStr(
-                            qst_site_group, QStringLiteral("groups/search"),
+                            qst_site_group, QStringLiteral("search"),
                             {
-                                { QStringLiteral("st.cmd"), QStringLiteral("userGroupsSearch") },
-                                { QStringLiteral("cmd"), QStringLiteral("UserGroupsMainBlock") },
+                                { QStringLiteral("cmd"), QStringLiteral("PortalSearchResults") },
+                                { QStringLiteral("st.cmd"), QStringLiteral("searchResult") },
+                                { QStringLiteral("st.mode"), QStringLiteral("Groups") },
+                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
+                                { QStringLiteral("st.grmode"), QStringLiteral("Groups") },
                                 { QStringLiteral("st.posted"), QStringLiteral("set") },
-                                { QStringLiteral("st.query"), name }
+                                { QStringLiteral("st.query"),  name },
+                                { QStringLiteral("fetch"), QStringLiteral("false") },
                             }
                         ),
-                        call_type_html, 0, proc_group2, QStringList(), call_method_post,
-                        tknHeaders().unite(dntHeader())
+                        call_type_html, pageRules(QStringLiteral("st.page")), 0, proc_group2, QStringList(),
+                        call_method_post, tknHeaders().unite(dntHeader())
+
                     );
+//                    return saRequest(
+//                        baseUrlStr(
+//                            qst_site_group, QStringLiteral("groups/search"),
+//                            {
+//                                { QStringLiteral("st.cmd"), QStringLiteral("userGroupsSearch") },
+//                                { QStringLiteral("cmd"), QStringLiteral("UserGroupsMainBlock") },
+//                                { QStringLiteral("st.posted"), QStringLiteral("set") },
+//                                { QStringLiteral("st.query"), name }
+//                            }
+//                        ),
+//                        call_type_html, 0, proc_group2, QStringList(), call_method_post,
+//                        tknHeaders().unite(dntHeader())
+//                    );
                 }
 
                 QJsonValue groupsByIdOrPerma(const QString & group_id) {

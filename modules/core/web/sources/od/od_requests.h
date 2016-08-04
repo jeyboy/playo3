@@ -105,8 +105,6 @@ namespace Core {
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);
 
-//                    doc.output();
-
                     bool result = false;
 
                     switch(arg -> post_proc) {
@@ -138,20 +136,20 @@ namespace Core {
                         break;}
 
                         case proc_group2: {
-                            Html::Set groups = doc.find("#userGroupsSearchResultList .groups-portlet");
+                            Html::Set groups = doc.find(".gs_result_group-card");
 
                             for(Html::Set::Iterator group = groups.begin(); group != groups.end(); group++) {
                                 QJsonObject group_obj;
 
-                                Html::Tag * name_link = (*group) -> findFirst(".caption .o");
+                                Html::Tag * name_link = (*group) -> findFirst(".gs_result_i_t_name");
 
-                                QString id_text = name_link -> link(); // link also contains perma
+                                QString id_text = name_link -> link();
 
                                 group_obj.insert(tkn_perma, Info::extractLimitedBy(id_text, QStringLiteral("st.referenceName="), QStringLiteral("&")));
                                 group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
                                 group_obj.insert(tkn_name, name_link -> text());
 
-                                Html::Tag * img = (*group) -> findFirst(".section img");
+                                Html::Tag * img = (*group) -> findFirst(".ucard-b_img img");
                                 if (img) {
                                     QString img_url = img -> value(QStringLiteral("src"));
 
@@ -192,11 +190,56 @@ namespace Core {
                             }
                         break;}
 
-                        case proc_user3: {
+                        case proc_user1: {
+                            Html::Set users = doc.find(".gs_result_i_w");
+
+                            for(Html::Set::Iterator user = users.begin(); user != users.end(); user++) {
+                                QJsonObject user_obj;
+
+                                Html::Tag * name_link = (*user) -> findFirst(".caption a");
+
+                                QString id_text = name_link -> link(); // link also contains perma
+
+                                user_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.friendId="), QStringLiteral("&")));
+                                user_obj.insert(tkn_full_name, name_link -> text());
+
+                                Html::Tag * img = (*user) -> findFirst(".section img");
+                                if (img) {
+                                    QString img_url = img -> value(QStringLiteral("src"));
+
+                                    if (img_url.startsWith(QStringLiteral("//")))
+                                        img_url = QStringLiteral("http:") % img_url;
+
+                                    user_obj.insert(tkn_art_url, img_url);
+                                }
+
+                                arg -> append(user_obj, user + 1 == users.end());
+                            }
+
+                            result = !users.isEmpty();
+                        break;}
+
+                        case proc_user2: {
                             result = !doc.findFirst(".p404");
 
                             if (result) {
+                                QJsonObject user_obj;
 
+                                QString link = doc.findFirst(".media-text_a") -> link();
+
+                                user_obj.insert(tkn_id, link.split('/', QString::SkipEmptyParts)[1]);
+                                user_obj.insert(tkn_full_name, doc.findFirst(".mctc_name_tx") -> text());
+                                Html::Tag * img = doc.findFirst("#viewImageLinkId");
+                                if (img) {
+                                    QString img_url = img -> value(QStringLiteral("src"));
+
+                                    if (img_url.startsWith(QStringLiteral("//")))
+                                        img_url = QStringLiteral("http:") % img_url;
+
+                                    user_obj.insert(tkn_art_url, img_url);
+                                }
+
+                                arg -> append(user_obj, true);
                             }
                         break;}
 
@@ -320,14 +363,14 @@ namespace Core {
                     }
                 }
 
-//                QList<Linkable> findFriendsById(const QString & uid) {
-//                    QList<Linkable> linkables;
+                QList<Linkable> findFriendsById(const QString & uid) {
+                    QList<Linkable> linkables;
 
-//                    QJsonArray arr = usersByIdOrPerma(uid).toArray();
-//                    jsonToUsers(linkables, arr);
+                    QJsonArray arr = usersById(uid).toArray();
+                    jsonToUsers(linkables, arr);
 
-//                    return linkables;
-//                }
+                    return linkables;
+                }
 
                 QList<Linkable> findGroupsById(const QString & uid) {
                     QList<Linkable> linkables;
@@ -338,14 +381,14 @@ namespace Core {
                     return linkables;
                 }
 
-//                QList<Linkable> findFriendsByName(const QString & name) {
-//                    QList<Linkable> linkables;
+                QList<Linkable> findFriendsByName(const QString & name) {
+                    QList<Linkable> linkables;
 
-//                    QJsonArray arr = usersByName(name).toArray();
-//                    jsonToUsers(linkables, arr);
+                    QJsonArray arr = usersByName(name).toArray();
+                    jsonToUsers(linkables, arr);
 
-//                    return linkables;
-//                }
+                    return linkables;
+                }
 
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;

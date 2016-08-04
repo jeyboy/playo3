@@ -99,7 +99,7 @@ namespace Core {
             enum QuerySourceType {               
 //                qst_oauth_request, qst_oauth_token, qst_oauth_confirm
                 qst_api, qst_site,
-                qst_site_audio, qst_site_group, // od
+                qst_site_audio, qst_site_group, qst_site_user, // od
                 qst_api_base, qst_api_search, qst_site_base, qst_site_search, // fourshared
 
                 qst_api_def, qst_api_alt1, qst_api_alt2, qst_site_def, qst_site_alt1, qst_site_alt2

@@ -24,12 +24,11 @@ namespace Core {
                 //                }
 
                 PolyQueryRules rules(
-                    int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_count = 10,
-                    int per_request = OD_LIMIT_PER_REQUEST,
-                    ApiCallIterType call_type = call_iter_type_item)
+                    int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT,
+                    int pages_count = 10, int per_request = OD_LIMIT_PER_REQUEST)
                 {
                     return PolyQueryRules(
-                        call_type,
+                        call_iter_type_item,
                         call_iter_method_offset,
                         qMin(items_limit, DEFAULT_ITEMS_LIMIT),
                         qMin(pages_count, DEFAULT_REQUESTS_LIMIT),
@@ -37,6 +36,16 @@ namespace Core {
                         qMin(qMin(per_request, items_limit), OD_LIMIT_PER_REQUEST),
                         tkn_offset,
                         offset
+                    );
+                }
+
+                PolyQueryRules pageRules(
+                    const QString & offset_token, int offset = 1,
+                    int items_limit = DEFAULT_ITEMS_LIMIT, int pages_count = 5)
+                {
+                    return PolyQueryRules(
+                       call_iter_type_page, offset, qMin(items_limit, DEFAULT_ITEMS_LIMIT),
+                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT), offset_token
                     );
                 }
 
