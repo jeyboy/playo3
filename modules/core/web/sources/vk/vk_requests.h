@@ -282,8 +282,8 @@ namespace Core {
                                     QJsonArray track = (*track_arr).toArray();
                                     QJsonObject track_obj;
 
-                                    track_obj.insert(tkn_id, track[0].toString().toInt());
-                                    track_obj.insert(tkn_owner_id, track[1].toString().toInt());
+                                    track_obj.insert(tkn_owner_id, track[0].toString().toInt());
+                                    track_obj.insert(tkn_id, track[1].toString().toInt());
                                     track_obj.insert(tkn_url, track[2].toString());
 //                                    track[3].toString().toInt() // bitrate
 //                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
