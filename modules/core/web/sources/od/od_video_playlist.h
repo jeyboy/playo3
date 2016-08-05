@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class VideoPlaylist : public Base {
+            class VideoPlaylist : public virtual Base {
             protected:
 
             };

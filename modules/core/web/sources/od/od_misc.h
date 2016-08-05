@@ -32,7 +32,7 @@ namespace Core {
                     }
 
                     virtual Headers tknHeaders() = 0;
-                    inline Headers initHeaders() { return {{tkn_header_user_agent, DEFAULT_AGENT}}; }
+                    inline Headers initHeaders() { return {{USER_AGENT_HEADER_NAME, DEFAULT_AGENT}}; }
 
                     inline QString grabUserId(Html::Document & doc) {
                         Html::Set results = doc.find("a.u-menu_a.tdn[href^'/profile']");

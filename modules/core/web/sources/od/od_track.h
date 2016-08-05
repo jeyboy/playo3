@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Track : public Base {
+            class Track : public virtual Base {
             public:
                 QString trackUrl(const QString & track_id) {
                     QJsonObject obj = sRequest(
@@ -50,8 +50,6 @@ namespace Core {
 
 //                inline QString searchTracksUrl(const QString & predicate) { return audioUrlStr(path_audio_search_tracks, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
 
-
-
                 QJsonValue tracksSearch(const SearchLimit & limits) {
                     PolyQueryRules prules = rules(limits.start_offset, qMin(200, limits.items_limit));
 
@@ -81,42 +79,51 @@ namespace Core {
 //                        );
                 }
 
-                QJsonValue tracksByArtist(const QString & artist_id) { //TODO: not finished
+                QJsonValue tracksByArtist(const QString & artist_id, int offset = 0, int count = 100) { //TODO: not finished
                     return pRequest(
                         audioUrlStr(
                             path_audio_by_artist_id,
                             { {QStringLiteral("artistId"), artist_id} }
                         ),
-                        call_type_json, rules(), 0,
+                        call_type_json, rules(offset, count), 0,
                         proc_json_extract, QStringList() << tkn_artists
                     );
                 }
 
-                QJsonValue tracksByPlaylist(const QString & playlist_id) { //INFO: url is not worked
+                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = 100) { //TODO: not finished
+                    return pRequest(
+                        audioUrlStr(
+                            path_audio_collection,
+                            { {QStringLiteral("collectionId"), collection_id} }
+                        ),
+                        call_type_json, rules(offset, count), 0,
+                        proc_json_extract, QStringList() << tkn_tracks
+                    );
+                }
+
+                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //INFO: url is not worked
                     return pRequest(
                         audioUrlStr(
                             path_audio_by_album_id,
                             { {QStringLiteral("albumId"), playlist_id} }
                         ),
-                        call_type_json, rules(), 0,
+                        call_type_json, rules(offset, count), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
                 }
 
-                QJsonValue playlistInfo(const QString & playlist_id, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
+                QJsonValue playlistInfo(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
                     return pRequest(
                         audioUrlStr(
                             tkn_my,
                             {{ tkn_pid, playlist_id }}
                         ),
-                        call_type_json, rules(0, count),
+                        call_type_json, rules(offset, count),
                         0, proc_json_extract, QStringList() << tkn_tracks
                     );
                 }
 
-//                inline QString myAudioUrl(const QString & uid) { return audioUrlStr(tkn_my, QUrlQuery(tkn_uid_eq % uid)); } // params: (uid: sets for friend request) and pagination attrs
-
-                QJsonValue tracksByUser(const QString & user_id, int count = DEFAULT_ITEMS_LIMIT, int offset = 0) { //TODO: not finished
+                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: not finished
                     return pRequest(
                         audioUrlStr(tkn_my, {{tkn_uid, user_id}}),
                         call_type_json, rules(offset, count), 0,

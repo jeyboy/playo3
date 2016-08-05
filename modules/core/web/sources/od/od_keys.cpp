@@ -23,6 +23,7 @@ namespace Core {
             extern const QString path_audio_tuners_for_radio =      QStringLiteral("myTuners");
             extern const QString path_audio_is_downloaded =         QStringLiteral("isDownloaded");
             extern const QString path_audio_downloaded =            QStringLiteral("downloaded");
+            extern const QString path_audio_collection =           QStringLiteral("collection");
             extern const QString path_audio_collections =           QStringLiteral("collections");
             extern const QString path_audio_by_artist_id =          QStringLiteral("artist");
             extern const QString path_audio_by_album_id =           QStringLiteral("album");
@@ -45,11 +46,13 @@ namespace Core {
 
             extern const QString tkn_me =                           QStringLiteral("me");
             extern const QString tkn_my =                           QStringLiteral("my");
+            extern const QString tkn_tuners =                       QStringLiteral("tuners");
             extern const QString tkn_friends =                      QStringLiteral("friends");
             extern const QString tkn_artists =                      QStringLiteral("artists");
             extern const QString tkn_tracks =                       QStringLiteral("tracks");
             extern const QString tkn_albums =                       QStringLiteral("albums");
             extern const QString tkn_playlists                      QStringLiteral("playlists");
+            extern const QString tkn_collections                    QStringLiteral("collections");
             extern const QString tkn_coma_dot =                     QStringLiteral(";");
             extern const QString tkn_authcode =                     QStringLiteral("AUTHCODE");
             extern const QString tkn_httpsdata =                    QStringLiteral("httpsdata");
@@ -61,7 +64,6 @@ namespace Core {
             extern const QString tkn_secret =                       QStringLiteral("secret");
             extern const QString tkn_code =                         QStringLiteral("code");
             extern const QString tkn_sid =                          QStringLiteral("sid");
-            extern const QString tkn_header_user_agent =            QStringLiteral("User-Agent");
             extern const QString tkn_error =                        QStringLiteral("error");
             extern const QString tkn_offset =                       QStringLiteral("start");
             extern const QString tkn_limit =                        QStringLiteral("count"); // separate key for request limit
@@ -79,6 +81,8 @@ namespace Core {
             extern const QString tkn_ensemble =                     QStringLiteral("ensemble");
             extern const QString tkn_art_url =                      QStringLiteral("url4");
             extern const QString tkn_perma =                        QStringLiteral("perma");
+            extern const QString tkn_tuner =                        QStringLiteral("tuner");
+            extern const QString tkn_locale =                       QStringLiteral("locale");
 
             extern const QString val_login_title =                  QStringLiteral("Odnoklassniki auth");
             extern const QString val_resend_sms_title =             QStringLiteral("Resend sms");

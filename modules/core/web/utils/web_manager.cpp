@@ -96,8 +96,8 @@ namespace Core {
 //            if (!headers.contains(QStringLiteral("Referer")))
 //                setRawHeader("Referer", url().path().toUtf8());
 
-            if (!headers.contains(QStringLiteral("User-Agent")))
-                setRawHeader("User-Agent", DEFAULT_AGENT.toUtf8());
+            if (!headers.contains(USER_AGENT_HEADER_NAME))
+                setRawHeader(USER_AGENT_HEADER_NAME.toUtf8(), DEFAULT_AGENT.toUtf8());
 
             return *this;
         }

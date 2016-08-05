@@ -11,7 +11,6 @@ namespace Core {
                 enum VideoSearchSort { vss_creation_date = 0, vss_duration = 1, vss_relativity = 2 };
 
                 QString videoUrl(const QString & video_id) { // video id should by in format %owner_id_%video_id
-
                     Response * response = Manager::prepare() -> postFollowed(
                         QStringLiteral("https://vk.com/al_video.php?act=show&al=1&autoplay=1&force_no_repeat=1&preload=1&video=%1").arg(video_id),
                         dntHeader()
@@ -30,7 +29,6 @@ namespace Core {
                 }
 
                 QJsonArray videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000
-
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {

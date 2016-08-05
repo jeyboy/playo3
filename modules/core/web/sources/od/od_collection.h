@@ -6,18 +6,13 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Collection : public Base {
+            class Collection : public virtual Base {
             protected:
-                inline QString collectionsAudioUrl() { return audioUrlStr(path_audio_collections); } // params: (collectionId: not used for index of collections) and pagination attrs
-
-                QJsonValue tracksByArtist(const QString & artist_id) { //TODO: not finished
-                    return pRequest(
-                        audioUrlStr(
-                            path_audio_by_artist_id,
-                            { {QStringLiteral("artistId"), artist_id} }
-                        ),
-                        call_type_json, rules(), 0,
-                        proc_json_extract, QStringList() << tkn_artists
+                // collections did not have search or something else - just pseudo(?) random list
+                QJsonValue randomCollections() { // TODO: not tested
+                    return saRequest(
+                        audioUrlStr(path_audio_collections),
+                        call_type_json, 0, proc_json_extract, QStringList() << tkn_collections
                     );
                 }
             };

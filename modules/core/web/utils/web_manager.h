@@ -13,6 +13,7 @@
 #define COOKIES_KEY QStringLiteral("cookies")
 
 #define DEF_JSON_FIELD QStringLiteral("response")
+#define USER_AGENT_HEADER_NAME QStringLiteral("User-Agent")
 
 #ifdef Q_OS_WIN
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:39.0) Gecko/20100101 Firefox/39.0") // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")

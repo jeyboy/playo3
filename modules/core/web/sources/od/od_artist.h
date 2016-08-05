@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Artist : public Base {
+            class Artist : public virtual Base {
             protected:
 //                inline QString searchArtistsUrl(const QString & predicate) { return audioUrlStr(path_audio_search_artists, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
 

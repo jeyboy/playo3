@@ -9,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Auth : public Base {
+            class Auth : public virtual Base {
             protected:
                 inline QUrl authRequestUrl(const QString & email, const QString & pass) const {
                     return QUrl(url_base_auth % path_auth.arg(encodeStr(email), encodeStr(pass)));

@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Group : public Base {
+            class Group : public virtual Base {
             public:
                 QJsonValue groupsByUser(const QString & user_id) {
                     return saRequest(
@@ -97,38 +97,6 @@ namespace Core {
 
                     return saRequest(url, call_type_html, 0, proc_group3);
                 }
-
-//                QJsonValue userInfo() {
-//                    return sRequest(
-//                        audioUrlStr(path_audio_init),
-//                        call_type_json
-//                    );
-//                }
-
-//                QJsonValue userMedia(const QString & user_id) {
-//                    return sRequest(
-//                        audioUrlStr(
-//                            tkn_my,
-//                            {
-//                                {tkn_uid, user_id}
-//                            }
-//                        ),
-//                        call_type_json
-//                    );
-//                }
-
-//                QJsonValue popular(const SearchLimit & /*limits*/) {
-//                    return pRequest(
-//                        popAudioUrl(),
-//                        call_type_json,
-//                        rules(),
-//                        0,
-//                        proc_json_extract,
-//                        QStringList() << tkn_tracks
-//                    );
-
-////                    return lQuery(popAudioUrl(), QueryRules(tkn_tracks, requestLimit(), OD_SEARCH_LIMIT));
-//                }
             };
         }
     }

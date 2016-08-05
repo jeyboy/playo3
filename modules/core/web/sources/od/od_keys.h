@@ -27,6 +27,7 @@ namespace Core {
             extern const QString path_audio_tuners_for_radio;
             extern const QString path_audio_is_downloaded;
             extern const QString path_audio_downloaded;
+            extern const QString path_audio_collection;
             extern const QString path_audio_collections;
             extern const QString path_audio_by_artist_id;
             extern const QString path_audio_by_album_id;
@@ -50,11 +51,13 @@ namespace Core {
 
             extern const QString tkn_me;
             extern const QString tkn_my;
+            extern const QString tkn_tuners;
             extern const QString tkn_friends;
             extern const QString tkn_artists;
             extern const QString tkn_tracks;
             extern const QString tkn_albums;
             extern const QString tkn_playlists;
+            extern const QString tkn_collections;
             extern const QString tkn_coma_dot;
             extern const QString tkn_authcode;
             extern const QString tkn_httpsdata;
@@ -66,7 +69,6 @@ namespace Core {
             extern const QString tkn_secret;
             extern const QString tkn_code;
             extern const QString tkn_sid;
-            extern const QString tkn_header_user_agent;
             extern const QString tkn_error;
             extern const QString tkn_offset;
             extern const QString tkn_limit; // separate key for request limit
@@ -84,6 +86,8 @@ namespace Core {
             extern const QString tkn_ensemble;
             extern const QString tkn_art_url;
             extern const QString tkn_perma;
+            extern const QString tkn_tuner;
+            extern const QString tkn_locale;
 
             extern const QString val_login_title;
             extern const QString val_resend_sms_title;

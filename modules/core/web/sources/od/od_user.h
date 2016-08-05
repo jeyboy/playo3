@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class User : public Base {
+            class User : public virtual Base {
             public:
                 QJsonValue userInfo() {
                     return sRequest(

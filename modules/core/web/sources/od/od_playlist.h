@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Playlist : public Base {
+            class Playlist : public virtual Base {
             protected:
                 inline QString addPlaylistUrl() { return audioUrlStr(path_audio_playlist_add); } // params : (name: '') (publicPlaylist: 'true')
                 inline QString removePlaylistUrl() { return audioUrlStr(path_audio_playlist_del); } // params : (pid: '' (id of playlist))

@@ -6,16 +6,15 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Radio : public Base {
+            class Radio : public virtual Base {
             protected:
-                QJsonValue tunersList(const QString & locale = QStringLiteral("ru"), int count = 25, int offset = 0) { //TODO: need to check
-                    return pRequest(
+                QJsonValue tunersList(const QString & locale = QStringLiteral("ru")) {
+                    return saRequest(
                         audioUrlStr(
                             path_audio_tuners_for_radio,
-                            {{ QStringLiteral("locale"), locale }}
+                            {{ tkn_locale, locale }}
                         ),
-                        call_type_json, rules(offset, count),
-                        0, proc_json_extract, QStringList() << tkn_tracks
+                        call_type_json, 0, proc_json_extract, QStringList() << tkn_tuners
                     );
                 }
 
@@ -24,8 +23,8 @@ namespace Core {
                                 audioUrlStr(
                                     path_audio_radio,
                                     {
-                                        { QStringLiteral("tuner"), tuner_id },
-                                        { QStringLiteral("locale"), locale }
+                                        { tkn_tuner, tuner_id },
+                                        { tkn_locale, locale }
                                     }
                                 ),
                                 call_type_json
