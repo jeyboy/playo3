@@ -64,7 +64,7 @@ namespace Core {
                         }
                     break;}
 
-                    case call_type_html: {
+                    case call_type_html: { // TODO: html part required on additional check of completed state (set arg -> forse_completing), because at this time we have one additional request for each request series (lQuery)
                         Response * response = 0;
                         switch(arg -> call_method) {
                             case call_method_post: { response = Manager::prepare() -> postFollowed(arg -> request_url, arg -> headers); break; }
@@ -89,7 +89,7 @@ namespace Core {
                 bool status = true;
 
                 while ( (status &= sQuery(arg)) ) {
-                    if (arg -> isCompleted()) return status;
+                    if (arg -> isCompleted()) break;
                     QThread::msleep(REQUEST_DELAY);
                 }
 

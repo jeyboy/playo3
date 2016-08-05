@@ -17,17 +17,17 @@ namespace Core {
                     ).value(tkn_artists).toArray();
                 }
 
-//                QJsonValue artistsSearch(const SearchLimit & limits) { // need to check
-//                    return pRequest(
-//                        audioUrlStr(
-//                            path_audio_search_artists,
-//                            { {tkn_q, limits.predicate} }
-//                        ),
-//                        call_type_json,
-//                        rules(limits.start_offset, qMin(OD_SEARCH_LIMIT, limits.items_limit)),
-//                        0, proc_json_extract, QStringList() << tkn_artists
-//                    );
-//                }
+                QJsonValue artistsSearch(const SearchLimit & limits) { // need to check
+                    return pRequest(
+                        audioUrlStr(
+                            path_audio_search_artists,
+                            { {tkn_q, limits.predicate} }
+                        ),
+                        call_type_json,
+                        rules(limits.start_offset, qMin(OD_SEARCH_LIMIT, limits.items_limit)),
+                        0, proc_json_extract, QStringList() << tkn_artists
+                    );
+                }
             };
         }
     }

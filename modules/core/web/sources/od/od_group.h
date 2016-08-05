@@ -9,17 +9,18 @@ namespace Core {
             class Group : public virtual Base {
             public:
                 QJsonValue groupsByUser(const QString & user_id) {
-                    return saRequest(
-                        baseUrlStr(
-                            qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
-                            {
-                                { QStringLiteral("st.cmd"), QStringLiteral("userGroups") },
-                                { QStringLiteral("st._aid"), QStringLiteral("GroupsSubMenu_User_MyGroupsNav_All") },
-                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
-                            }
-                        ),
-                        call_type_html, 0, proc_group1, QStringList(), call_method_post,
-                        tknHeaders().unite(dntHeader())
+                    return pRequest(
+                                baseUrlStr(
+                                    qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
+                                    {
+                                        { QStringLiteral("st.cmd"), QStringLiteral("userGroups") },
+                                        { QStringLiteral("st._aid"), QStringLiteral("GroupsSubMenu_User_MyGroupsNav_All") },
+                                        { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
+                                    }
+                                ),
+                        call_type_html, pageRules(QStringLiteral("st.page")), 0, proc_group1, QStringList(),
+                        call_method_post, tknHeaders().unite(dntHeader())
+
                     );
                 }
 
@@ -75,19 +76,6 @@ namespace Core {
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
-//                    return saRequest(
-//                        baseUrlStr(
-//                            qst_site_group, QStringLiteral("groups/search"),
-//                            {
-//                                { QStringLiteral("st.cmd"), QStringLiteral("userGroupsSearch") },
-//                                { QStringLiteral("cmd"), QStringLiteral("UserGroupsMainBlock") },
-//                                { QStringLiteral("st.posted"), QStringLiteral("set") },
-//                                { QStringLiteral("st.query"), name }
-//                            }
-//                        ),
-//                        call_type_html, 0, proc_group2, QStringList(), call_method_post,
-//                        tknHeaders().unite(dntHeader())
-//                    );
                 }
 
                 QJsonValue groupsByIdOrPerma(const QString & group_id) {

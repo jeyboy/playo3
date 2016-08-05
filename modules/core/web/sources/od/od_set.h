@@ -2,12 +2,12 @@
 #define OD_SET
 
 #include "od_collection.h"
-#include "od_radio.h"
+#include "od_tuner.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Set : public Collection, public Radio {
+            class Set : public Collection, public Tuner {
             protected:
                 enum SetType {
                     set_popular_tracks = 1, set_popular_artists, set_popular_tuners, set_of_collections,

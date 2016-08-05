@@ -101,18 +101,32 @@ namespace Core {
                     );
                 }
 
-                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //INFO: url is not worked
-                    return pRequest(
+                QJsonValue tracksByTuner(const QString & tuner_id, int offset = 0, int count = 100, const QString & locale = QStringLiteral("ru")) { //TODO: need to check
+                    return pRequest( // artists // tracks //albums
                         audioUrlStr(
-                            path_audio_by_album_id,
-                            { {QStringLiteral("albumId"), playlist_id} }
+                            path_audio_radio,
+                            {
+                                { tkn_tuner, tuner_id },
+                                { tkn_locale, locale }
+                            }
                         ),
                         call_type_json, rules(offset, count), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
                 }
 
-                QJsonValue playlistInfo(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
+                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //INFO: url is not worked
+                    return pRequest(
+                        audioUrlStr(
+                            path_audio_by_album_id,
+                            { {QStringLiteral("albumId"), album_id} }
+                        ),
+                        call_type_json, rules(offset, count), 0,
+                        proc_json_extract, QStringList() << tkn_tracks
+                    );
+                }
+
+                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
                     return pRequest(
                         audioUrlStr(
                             tkn_my,

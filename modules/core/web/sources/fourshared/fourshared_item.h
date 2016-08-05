@@ -8,11 +8,11 @@ namespace Core {
         namespace Fourshared {
             class Item : public Base {
             public:
-                QJsonValue itemsByContainerId(const QString & container_id) {
+                QJsonValue itemsByCollection(const QString & collection_id) {
                     return sRequest(
                         baseUrlStr(
                             qst_site_base, QStringLiteral("web/accountActions/changeDir"),
-                            {{ QStringLiteral("dirId"), container_id }}
+                            {{ QStringLiteral("dirId"), collection_id }}
                         ),
                         call_type_json, 0, proc_none,
                         QStringList(), call_method_post, siteHeaders()

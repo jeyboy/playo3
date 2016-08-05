@@ -24,7 +24,7 @@ namespace Core {
             extern const QString path_audio_popular_tracks;
             extern const QString path_audio_add_to_playlist_form;
             extern const QString path_audio_radio;
-            extern const QString path_audio_tuners_for_radio;
+            extern const QString path_audio_tuners;
             extern const QString path_audio_is_downloaded;
             extern const QString path_audio_downloaded;
             extern const QString path_audio_collection;

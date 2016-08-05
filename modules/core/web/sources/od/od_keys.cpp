@@ -20,10 +20,10 @@ namespace Core {
             extern const QString path_audio_popular_tracks =        QStringLiteral("popTracks");
             extern const QString path_audio_add_to_playlist_form =  QStringLiteral("formaddpl");
             extern const QString path_audio_radio =                 QStringLiteral("myRadio");
-            extern const QString path_audio_tuners_for_radio =      QStringLiteral("myTuners");
+            extern const QString path_audio_tuners =                QStringLiteral("myTuners");
             extern const QString path_audio_is_downloaded =         QStringLiteral("isDownloaded");
             extern const QString path_audio_downloaded =            QStringLiteral("downloaded");
-            extern const QString path_audio_collection =           QStringLiteral("collection");
+            extern const QString path_audio_collection =            QStringLiteral("collection");
             extern const QString path_audio_collections =           QStringLiteral("collections");
             extern const QString path_audio_by_artist_id =          QStringLiteral("artist");
             extern const QString path_audio_by_album_id =           QStringLiteral("album");

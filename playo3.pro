@@ -316,7 +316,6 @@ HEADERS += \
     modules/core/web/sources/od/od_set.h \
     modules/core/web/sources/od/od_video.h \
     modules/core/web/sources/od/od_video_playlist.h \
-    modules/core/web/sources/od/od_radio.h \
     modules/core/web/sources/od/od_playlist.h \
     modules/core/web/sources/od/od_requests.h \
     modules/core/web/sources/od/od_keys.h \
@@ -325,7 +324,10 @@ HEADERS += \
     modules/core/web/sources/od/od_user.h \
     modules/core/web/sources/od_queries.h \
     modules/core/web/sources/od/od_group.h \
-    modules/core/web/sources/fourshared_queries.h
+    modules/core/web/sources/fourshared_queries.h \
+    modules/core/web/sources/od/od_tuner.h \
+    modules/core/interfaces/icmd.h \
+    modules/core/interfaces/icmd_fields.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

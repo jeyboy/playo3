@@ -44,7 +44,7 @@ void OdModel::proceedJson(QJsonValue & jval) {
 
                     folder -> setOwner(playlist.value(Od::tkn_owner).toString());
 
-                    QJsonArray tracks = Od::Queries::obj().playlistInfo(pid).toArray(); //playlistInfo(pid, items_amount);
+                    QJsonArray tracks = Od::Queries::obj().tracksByPlaylist(pid).toArray(); //tracksByPlaylist(pid, items_amount);
                     int folderItemsAmount = proceedOdList(tracks, folder, dmt_audio);
                     folder -> updateItemsCountInBranch(folderItemsAmount);
                     itemsAmount += folderItemsAmount;

@@ -8,6 +8,7 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+#include "icmd_fields.h"
 #include "modules/core/web/interfaces/quariable_defines.h"
 
 #define JSON_SEARCH_PREDICATE QStringLiteral("p")
@@ -97,6 +98,22 @@ namespace Core {
         QString genre;
 
         inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
+
+        QUrlQuery toICmdParams() {
+            QUrlQuery query;
+
+            query.addQueryItem(CMD_MEDIA_TYPE, QString::number(sc_type));
+            query.addQueryItem(CMD_PREDICATE_TYPE, QString::number(predicate_type));
+            query.addQueryItem(CMD_OFFSET, QString::number(start_offset));
+            query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(items_limit));
+            query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(requests_limit));
+
+            if (!predicate.isEmpty())
+                query.addQueryItem(CMD_PREDICATE, predicate);
+
+            if (!genre.isEmpty())
+                query.addQueryItem(CMD_GENRE, genre);
+        }
     };
 
     struct SearchLimitLayer : public SearchLimit {
