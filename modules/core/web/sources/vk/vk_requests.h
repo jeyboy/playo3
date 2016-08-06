@@ -157,10 +157,14 @@ namespace Core {
                     } else return code == 0;
                 }
 
-                inline QJsonValue loadSetData(const QVariantMap & attrs) {
-                    switch(attrs[tkn_media_type].toInt()) {
-                        case dmt_audio: return tracksByPlaylist(attrs[tkn_grab_refresh].toString());
-                        case dmt_video: return videoByPlaylist(attrs[tkn_grab_refresh].toString());
+                inline QJsonValue loadSetData(const QString & attrs) {
+                    QUrlQuery query(attrs);
+
+                    QString id = query.queryItemValue(CMD_ID);
+
+                    switch(query.queryItemValue(CMD_MEDIA_TYPE).toInt()) {
+                        case dmt_audio: return tracksByPlaylist(id);
+                        case dmt_video: return videoByPlaylist(id);
                         default: qDebug() << "VK LOAD SET UNKNOWN TYPE";
                     }
 

@@ -18,7 +18,7 @@ namespace Core {
                 inline DataSubType siteType() const { return dt_site_fourshared; }
 
                 inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
-                QJsonArray userInfo(QString & uid) { return loadSetData({{tkn_grab_refresh, uid}}).toArray(); }
+                QJsonArray userInfo(QString & uid) { return loadSetData(CMD_ID % '=' % uid).toArray(); }
 
 
 //                QString downloadLink(const QString & refresh_page) {

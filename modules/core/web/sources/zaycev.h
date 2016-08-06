@@ -64,12 +64,14 @@ namespace Core {
                 );
             }
 
-            QJsonValue loadSetData(const QVariantMap & attrs) {
+            QJsonValue loadSetData(const QString & attrs) {
+                QUrlQuery query(attrs);
+
                 return saRequest(
-                    attrs.value(tkn_grab_refresh).toString(),
+                    query.queryItemValue(CMD_ID),
                     call_type_html,
                     0,
-                    (AdditionalProc)attrs.value(tkn_grab_set_parser, proc_tracks1).toInt()
+                    (AdditionalProc)query.queryItemValue(CMD_PARSER).toInt()
                 );
             }
 

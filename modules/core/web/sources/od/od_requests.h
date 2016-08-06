@@ -293,8 +293,8 @@ namespace Core {
 //                    return sessionIsValid();
                 }
 
-                QJsonValue loadSetData(const QVariantMap & attrs) {
-                    return tracksByPlaylist(attrs.value(tkn_grab_refresh).toString());
+                QJsonValue loadSetData(const QString & attrs) {
+                    return tracksByPlaylist(QUrlQuery(attrs).queryItemValue(CMD_ID));
                 }
 
                 QString refresh(const QString & item_id, const DataMediaType & item_media_type) {

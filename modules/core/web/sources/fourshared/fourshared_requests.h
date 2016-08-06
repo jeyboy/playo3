@@ -9,7 +9,7 @@ namespace Core {
     namespace Web {
         namespace Fourshared {
             class Requests : public Auth, public Item, public Set {
-                QJsonArray procUserData(const QJsonObject & user_data) {
+                QJsonValue procUserData(const QJsonObject & user_data) {
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
 
                     QJsonArray dirs = info.value(QStringLiteral("dirs")).toArray();
@@ -108,8 +108,12 @@ namespace Core {
 
                 QJsonValue searchProc(const SearchLimit & limits) { return itemsSearch(limits); }
 
-                QJsonValue loadSetData(const QVariantMap & attrs) {
-                    return procUserData(itemsByCollection(attrs.value(tkn_grab_refresh).toString()).toObject());
+                QJsonValue loadSetData(const QString & attrs) {
+                    return procUserData(
+                        itemsByCollection(
+                            QUrlQuery(attrs).queryItemValue(CMD_ID)
+                        ).toObject()
+                    );
                 }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
