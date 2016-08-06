@@ -1,7 +1,7 @@
 #ifndef VK_DEFINES
 #define VK_DEFINES
 
-#include "modules/core/interfaces/isource_perm_flags.h"
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/search_limits.h"
 
@@ -10,12 +10,8 @@
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Base : public IQueriable {
+            class Base : public virtual ISource, public virtual IQueriable {
             protected:
-                virtual Permissions permissions(const PermitRequest & req_perm = pr_search_media) = 0;
-
-                inline QString boolToStr(const bool & val) { return val ? val_str_true : val_str_false; }
-
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT, int pages_limit = DEFAULT_REQUESTS_LIMIT,
                     int /*per_request*/ = 100,

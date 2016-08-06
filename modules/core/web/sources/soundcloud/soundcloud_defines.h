@@ -1,7 +1,7 @@
 #ifndef SOUNDCLOUD_BASE_DEFINES
 #define SOUNDCLOUD_BASE_DEFINES
 
-#include "modules/core/interfaces/isource_perm_flags.h"
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/search_limits.h"
 
@@ -21,10 +21,8 @@
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Base : public IQueriable {
+            class Base : public virtual ISource, public virtual IQueriable {
             protected:
-                virtual Permissions permissions(const PermitRequest & req_perm = pr_search_media) = 0;
-
                 inline void setAudioTypesParam(QUrlQuery & query) { setParam(query, tkn_types, val_audio_types); }
                 inline void setAudioTypesParamOriginal(QUrlQuery & query) { setParam(query, tkn_types, val_audio_org_types); }
                 inline void setAudioTypesParamRemix(QUrlQuery & query) { setParam(query, tkn_types, val_audio_rmx_types); }

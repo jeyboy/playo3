@@ -1,7 +1,6 @@
 #ifndef OD_DEFINES
 #define OD_DEFINES
 
-#include "modules/core/interfaces/isource_perm_flags.h"
 #include "modules/core/interfaces/search_limits.h"
 #include "modules/core/web/grabber_keys.h"
 
@@ -16,13 +15,6 @@ namespace Core {
         namespace Od {
             class Base : public Misc {
             protected:
-                virtual Permissions permissions(const PermitRequest & req_perm = pr_search_media) = 0;
-
-                //                inline void setPagination(QUrlQuery & query, int per_request = OD_LIMIT_PER_REQUEST) {
-                //                    setParam(query, tkn_offset, OFFSET_TEMPLATE);
-                //                    setParam(query, tkn_limit, qMin(per_request, OD_LIMIT_PER_REQUEST));
-                //                }
-
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT,
                     int pages_count = 10, int per_request = OD_LIMIT_PER_REQUEST)

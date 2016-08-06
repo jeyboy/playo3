@@ -4,7 +4,7 @@
 #include "fourshared_api_keys.h"
 #include "modules/core/web/grabber_keys.h"
 
-#include "modules/core/interfaces/isource_perm_flags.h"
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/search_limits.h"
 #include "modules/core/misc/file_utils/extensions.h"
@@ -18,7 +18,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Base : public IQueriable {
+            class Base : public virtual ISource, public virtual IQueriable {
             protected:
                 enum CategoryTypes {
                     music = 1, video = 2, photo = 3, archive = 4, book = 5,
@@ -27,8 +27,6 @@ namespace Core {
 
 //                inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
 //                inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
-
-                virtual Permissions permissions(const PermitRequest & req_perm = pr_search_media) = 0;
 
                 inline Headers siteHeaders() {
                     return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});

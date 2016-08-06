@@ -12,12 +12,11 @@
 #include "od_video_playlist.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
-#include "modules/core/interfaces/isource.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Requests : public ISource, public Sociable, public Artist, public User, public Auth, public Group,
+            class Requests : public Sociable, public Artist, public User, public Auth, public Group,
                     public Playlist, public Set, public Track, public Video, public VideoPlaylist {
             protected:
                 inline SourceFlags defaultFlags() {
@@ -35,8 +34,6 @@ namespace Core {
                         sf_site_auth_mandatory
                     );
                 }
-
-                Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
 
                 void saveAdditionals(QJsonObject & obj) {
                     setSiteHash(QString());

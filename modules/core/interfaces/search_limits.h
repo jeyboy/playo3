@@ -113,6 +113,8 @@ namespace Core {
 
             if (!genre.isEmpty())
                 query.addQueryItem(CMD_GENRE, genre);
+
+            return query;
         }
     };
 

@@ -4,6 +4,7 @@
 #include <qstring.h>
 #include <qcryptographichash.h>
 
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/iuser_interaction.h"
 #include "od_keys.h"
@@ -11,7 +12,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Misc : public IQueriable, public IUserInteraction {
+            class Misc : public virtual ISource, public virtual IQueriable, public virtual IUserInteraction {
                     int magic [33] = { 4, 3, 5, 6, 1, 2, 8, 7, 2, 9, 3, 5, 7, 1, 4, 8, 8, 3, 4, 3, 1, 7, 3, 5, 9, 8, 1, 4, 3, 7, 2, 8 };
                 protected:
                     inline Misc() {}

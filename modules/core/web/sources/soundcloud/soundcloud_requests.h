@@ -9,13 +9,12 @@
 #include "soundcloud_user.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
-#include "modules/core/interfaces/isource.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Requests : public ISource, public Sociable, public Auth,
-                    public Group, public Playlist, public Set, public Track, public User
+            class Requests : public Sociable, public Auth, public Group,
+                     public Playlist, public Set, public Track, public User
             {
             protected:
                 Requests() { setSociableLimitations(true, true, true, true); }
@@ -33,8 +32,6 @@ namespace Core {
                         sf_site_recomendations_auth_only | sf_site_object_content_auth_only
                     );
                 }
-
-                Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {

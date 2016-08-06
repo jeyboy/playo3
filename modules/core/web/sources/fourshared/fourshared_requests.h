@@ -5,12 +5,10 @@
 #include "fourshared_item.h"
 #include "fourshared_set.h"
 
-#include "modules/core/interfaces/isource.h"
-
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Requests : public ISource, public Auth, public Item, public Set {
+            class Requests : public Auth, public Item, public Set {
                 QJsonArray procUserData(const QJsonObject & user_data) {
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
 
@@ -76,8 +74,6 @@ namespace Core {
                         sf_site_object_content_auth_only
                     );
                 }
-
-                Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
 
 //                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
 //                    switch(stype) {

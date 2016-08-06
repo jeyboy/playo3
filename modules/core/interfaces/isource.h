@@ -1,6 +1,7 @@
 #ifndef ISOURCE
 #define ISOURCE
 
+#include "icmd.h"
 #include "isearchable.h"
 #include "isource_auth_perm.h"
 #include "isource_feeds.h"
@@ -13,7 +14,7 @@
 #define OPERATION_BLOCKED QStringLiteral("block")
 
 namespace Core {
-    class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable {
+    class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {
         Q_OBJECT
     public:
         virtual ~ISource() {}
@@ -47,11 +48,9 @@ namespace Core {
             if (refresh_page.isEmpty() || !isShareable()) return QString();
             return refreshProc(takeRefreshPage(refresh_page), itemMediaType);
         }
-        virtual inline QJsonValue loadPlaylist(const QVariantMap & /*attrs*/) { return QJsonArray(); }
 
         // proc charts / tops and other ...
         virtual inline QMap<QString, QString> setsList() { return QMap<QString, QString>(); }
-        virtual inline QJsonValue takeSet(const QString & /*set_params*/) { return QJsonArray(); }
 
         QToolButton * initButton(QWidget * parent = 0);
 

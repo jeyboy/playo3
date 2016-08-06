@@ -11,12 +11,11 @@
 #include "vk_user.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
-#include "modules/core/interfaces/isource.h"
 
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Requests : public ISource, public Sociable, public Auth, public Feed, public Group,
+            class Requests : public Sociable, public Auth, public Feed, public Group,
                     public Playlist, public Set, public Track, public Video, public User {
             protected:
                 inline SourceFlags defaultFlags() {
@@ -35,7 +34,7 @@ namespace Core {
                     );
                 }
 
-                Permissions permissions(const PermitRequest & req_perm = pr_search_media) { return ISource::permissions(req_perm); }
+                inline QString boolToStr(const bool & val) { return val ? val_str_true : val_str_false; }
 
                 bool connectUserApi() {
                     QString token, user_id, expiration;
