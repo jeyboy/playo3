@@ -293,7 +293,7 @@ namespace Core {
 //                    return sessionIsValid();
                 }
 
-                QJsonValue loadPlaylist(const QVariantMap & attrs) {
+                QJsonValue loadSetData(const QVariantMap & attrs) {
                     return tracksByPlaylist(attrs.value(tkn_grab_refresh).toString());
                 }
 
@@ -429,7 +429,7 @@ namespace Core {
                         {setTypeToStr(set_downloaded),          QString::number(set_downloaded)}
                     };
                 }
-                inline QJsonValue takeSet(const QString & set_params) {
+                inline QJsonValue openSet(const QString & set_params) {
                     QStringList params = set_params.split('|', QString::SkipEmptyParts);
                     SetType set_type = (SetType)params.first().toInt();
                     QString attrs = params.count() > 1 ? params.last() : QString();

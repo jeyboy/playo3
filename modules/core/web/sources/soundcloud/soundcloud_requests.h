@@ -132,7 +132,7 @@ namespace Core {
 
                     return res;
                 }
-                inline QJsonValue takeSet(const QString & set_params) {
+                inline QJsonValue openSet(const QString & set_params) {
                     QStringList params = set_params.split('|', QString::SkipEmptyParts);
                     SetType set_type = (SetType)params.first().toInt();
                     QString genre = params.last();

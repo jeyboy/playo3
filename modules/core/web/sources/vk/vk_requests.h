@@ -157,7 +157,7 @@ namespace Core {
                     } else return code == 0;
                 }
 
-                inline QJsonValue loadPlaylist(const QVariantMap & attrs) {
+                inline QJsonValue loadSetData(const QVariantMap & attrs) {
                     switch(attrs[tkn_media_type].toInt()) {
                         case dmt_audio: return tracksByPlaylist(attrs[tkn_grab_refresh].toString());
                         case dmt_video: return videoByPlaylist(attrs[tkn_grab_refresh].toString());

@@ -108,7 +108,7 @@ namespace Core {
 
                 QJsonValue searchProc(const SearchLimit & limits) { return itemsSearch(limits); }
 
-                QJsonValue loadPlaylist(const QVariantMap & attrs) {
+                QJsonValue loadSetData(const QVariantMap & attrs) {
                     return procUserData(itemsByCollection(attrs.value(tkn_grab_refresh).toString()).toObject());
                 }
 

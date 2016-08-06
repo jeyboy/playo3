@@ -30,7 +30,7 @@ namespace Core {
 
         inline bool isLoadable()                                { return attrs.contains(JSON_TYPE_CONTAINER_LOADABLE); }
         inline bool removeLoadability()                         { return attrs.remove(JSON_TYPE_CONTAINER_LOADABLE); }
-        inline QVariant loadableAttrs()                         { return attrs[JSON_TYPE_CONTAINER_LOADABLE]; }
+        inline QString loadableAttrs()                          { return attrs[JSON_TYPE_CONTAINER_LOADABLE].toString(); }
 
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
         inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }

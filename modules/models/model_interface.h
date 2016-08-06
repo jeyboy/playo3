@@ -82,7 +82,9 @@ namespace Models {
                     playlist
                 );
                 ThreadUtils::obj().run(
-                    (IModel *)this, &IModel::proceedLoadable, playlist -> loadableAttrs(), func
+                    (IModel *)this,
+                    &IModel::proceedLoadable,
+                    playlist -> loadableAttrs(), func
                 );
             }
 
@@ -114,13 +116,7 @@ namespace Models {
         DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
         bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
 
-        QJsonValue proceedLoadable(const QVariant & loadable_attrs) {
-            QVariantMap hash = loadable_attrs.toMap();
-            DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
-            ISource * source = Web::Apis::source(data_type);
-            QJsonValue set = source -> loadPlaylist(hash);
-            return set;
-        }
+        QJsonValue proceedLoadable(const QString & cmd) { return Web::Apis::run(cmd); }
 
         int proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent, const DataMediaType & dmtype = dmt_unknow);
 

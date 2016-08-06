@@ -9,6 +9,10 @@
 
 #define CMD_MEDIA_TYPE QStringLiteral("media_type")
 
+#define CMD_ID QStringLiteral("id")
+
+#define CMD_PARSER QStringLiteral("parser")
+
 #define CMD_GENRE QStringLiteral("genre")
 
 #define CMD_PREDICATE QStringLiteral("predicate")

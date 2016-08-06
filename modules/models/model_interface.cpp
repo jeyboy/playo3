@@ -431,12 +431,14 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
                 playlist -> updateItemsCountInBranch(taked_amount);
             } else {
                 parent -> createLoadablePlaylist(
-                    {
-                        {tkn_media_type, dm_type},
-                        {JSON_TYPE_ITEM_TYPE, wType},
-                        {tkn_grab_refresh, itm.value(tkn_grab_refresh).toString()},
-                        {tkn_grab_set_parser, itm.value(tkn_grab_set_parser).toInt()}
-                    },
+                    ICmd::buildCommand(
+                        wType, ICmd::cmd_mtd_load_set_data,
+                        {
+                            {CMD_MEDIA_TYPE, QString::number(dm_type)},
+                            {CMD_ID, itm.value(tkn_grab_refresh).toString()},
+                            {CMD_PARSER, QString::number(itm.value(tkn_grab_set_parser).toInt())}
+                        }
+                    ),
                     itm.value(tkn_grab_title).toString(),
                     itm.value(tkn_grab_id).toString()
                 );
@@ -888,9 +890,15 @@ void IModel::finishingItemsAdding() {
 void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
-    QVariantMap hash = playlist -> loadableAttrs().toMap();
-    DataSubType data_type = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
-    DataMediaType media_type = (DataMediaType)hash.value(tkn_media_type).toInt();
+    DataSubType data_type; // = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
+    DataMediaType media_type; // = (DataMediaType)hash.value(tkn_media_type).toInt();
+
+    Web::Apis::extractSourceTypeAndMediaType(
+        playlist -> loadableAttrs(),
+        (int &)data_type,
+        (int &)media_type
+    );
+
     playlist -> unset(IItem::flag_in_proc);
     playlist -> removeLoadability();
 

@@ -30,8 +30,8 @@ namespace Core {
                     ThreadUtils::obj().run(this, &Queries::objectInfo, oid, func);
                 }
 
-                inline void takeSetAsync(const QString & cutomParams, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::takeSet, cutomParams, func);
+                inline void openSetAsync(const QString & cutomParams, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::openSet, cutomParams, func);
                 }
 
                 inline void trackRelationsAsync(const QString & track_id, Func * func) {
