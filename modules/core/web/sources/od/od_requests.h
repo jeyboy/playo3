@@ -309,7 +309,7 @@ namespace Core {
 
                 QJsonValue popular(const SearchLimit & limits) {
                     if (limits.include_audio())
-                        return setByType(set_popular_tracks);
+                        return setByType(set_popular_tracks, limits);
 
                     return QJsonArray();
                 }
@@ -429,13 +429,22 @@ namespace Core {
                         {setTypeToStr(set_downloaded),          QString::number(set_downloaded)}
                     };
                 }
-                inline QJsonValue openSet(const QString & set_params) {
-                    QStringList params = set_params.split('|', QString::SkipEmptyParts);
-                    SetType set_type = (SetType)params.first().toInt();
-                    QString attrs = params.count() > 1 ? params.last() : QString();
 
-                    return setByType(set_type, attrs);
+                inline QJsonValue openSet(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
                 }
+
+                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
+//                inline QJsonValue openSet(const QString & set_params) {
+//                    QStringList params = set_params.split('|', QString::SkipEmptyParts);
+//                    SetType set_type = (SetType)params.first().toInt();
+//                    QString attrs = params.count() > 1 ? params.last() : QString();
+
+//                    return setByType(set_type, attrs);
+//                }
             };
         }
     }

@@ -75,7 +75,7 @@ namespace Core {
                                     return pRequest(
                                         baseUrlStr(
                                             qst_api_def, path_tracks,
-                                            trackSearchQuery(QString(), genre == SOUNDCLOUD_ALL_GENRES_PARAM ? QString() : genre, true)
+                                            trackSearchQuery(QString(), limits.genre == SOUNDCLOUD_ALL_GENRES_PARAM ? QString() : limits.genre, true)
                                         ),
                                         call_type_json, rules(limits.start_offset, limits.items_limit), 0, proc_json_patch
                                     );
@@ -88,7 +88,7 @@ namespace Core {
                                             qst_site_alt1, QStringLiteral("charts"),
                                             {
                                                 { tkn_limit, SOUNDCLOUD_PER_REQUEST_LIMIT },
-                                                { QStringLiteral("genre"), QString(QStringLiteral("soundcloud:genres:") % (genre.isEmpty() ? SOUNDCLOUD_ALL_GENRES_PARAM : genre)) },
+                                                { QStringLiteral("genre"), QString(QStringLiteral("soundcloud:genres:") % (limits.genre.isEmpty() ? SOUNDCLOUD_ALL_GENRES_PARAM : limits.genre)) },
                                                 { QStringLiteral("kind"), setType == set_new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
                                             }
                                         ),

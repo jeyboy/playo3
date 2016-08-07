@@ -66,13 +66,13 @@ void VkModel::proceedJson(QJsonValue & hash) {
                 }
                 else {
                     rootItem -> createLoadablePlaylist(
-                        ICmd::buildCommand(
+                        Cmd::build(
                             dt_site_vk, ICmd::cmd_mtd_load_set_data,
                             {
                                 {CMD_MEDIA_TYPE, QString::number(dmt_audio)},
                                 {CMD_ID, album_id}
                             }
-                        ),
+                        ).toString(),
                         album.value(Vk::tkn_title).toString(),
                         album_id
                     );
@@ -108,13 +108,13 @@ void VkModel::proceedJson(QJsonValue & hash) {
                 }
                 else {
                     folder = rootItem -> createLoadablePlaylist(
-                        ICmd::buildCommand(
+                        Cmd::build(
                             dt_site_vk, ICmd::cmd_mtd_load_set_data,
                             {
                                 {CMD_MEDIA_TYPE, QString::number(dmt_video)},
                                 {CMD_ID, album_id}
                             }
-                        ),
+                        ).toString(),
                         album.value(Vk::tkn_title).toString(),
                         album_id
                     );

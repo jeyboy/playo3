@@ -114,31 +114,83 @@ namespace Core {
                     QString top_50_title = setTypeToStr(set_top_50);
                     QString popular_title = setTypeToStr(set_popular);
 
+                    Cmd cmd_tmpl(dt_site_sc, cmd_mtd_open_set, sc_audio, {});
+
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
-                        res.insert(new_hot_title % opt.key(), PPACK(QString::number(set_new_hot), opt.value()));
-                        res.insert(top_50_title % opt.key(), PPACK(QString::number(set_top_50), opt.value()));
+                        res.insert(
+                            new_hot_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_new_hot) },
+                                    { CMD_GENRE, opt.value() }
+                                }
+                            ) -> toString()
+                        );
+                        res.insert(
+                            top_50_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_top_50) },
+                                    { CMD_GENRE, opt.value() }
+                                }
+                            ) -> toString()
+                        );
 
                         QStringList parts = opt.key().split('&', QString::SkipEmptyParts);
 
                         if (parts.size() == 1)
-                            res.insert(popular_title % opt.key(), PPACK(QString::number(set_popular), opt.value()));
+                            res.insert(
+                                popular_title % opt.key(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_GENRE, opt.value() }
+                                    }
+                                ) -> toString()
+                            );
                         else {
-                            res.insert(popular_title % parts.first(), PPACK(QString::number(set_popular), parts.first()));
-                            res.insert(popular_title % parts.last(), PPACK(QString::number(set_popular), parts.last()));
+                            res.insert(
+                                popular_title % parts.first(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_GENRE, parts.first() }
+                                    }
+                                ) -> toString()
+                            );
+                            res.insert(
+                                popular_title % parts.last(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_GENRE, parts.last() }
+                                    }
+                                ) -> toString()
+                            );
                         }
                     }
 
-                    res.insert(popular_title % PACKAGE_REPLACE_FRAGMENT, PPACK(QString::number(set_popular), '%'));
+                    res.insert(
+                        popular_title % PACKAGE_REPLACE_FRAGMENT,
+                        cmd_tmpl.setAttrs(
+                            {
+                                { CMD_SET_TYPE, QString::number(set_popular) },
+                                { CMD_GENRE, QStringLiteral("%") }
+                            }
+                        ) -> toString()
+                    );
 
                     return res;
                 }
-                inline QJsonValue openSet(const QString & set_params) {
-                    QStringList params = set_params.split('|', QString::SkipEmptyParts);
-                    SetType set_type = (SetType)params.first().toInt();
-                    QString genre = params.last();
 
-                    return setByType(set_type, SearchLimit(sc_all, sp_none, QString(), genre));
+                inline QJsonValue openSet(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
                 }
+
+//                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
             };
         }
     }

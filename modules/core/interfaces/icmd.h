@@ -6,6 +6,7 @@
 #include <qjsonobject.h>
 #include <qvariant.h>
 #include <qhash.h>
+#include <qregularexpression.h>
 
 namespace Core {
     struct Cmd {
@@ -23,6 +24,8 @@ namespace Core {
             return paramsToQuery(params).toString();
         }
 
+        static QUrlQuery extractQuery(const QString & cmd) { return QUrlQuery(cmd.split('?').last()); }
+
         Cmd() {}
 
         Cmd(const QString & cmd) {
@@ -37,6 +40,9 @@ namespace Core {
         Cmd(const int source_type, const int & mtd, const int & media_type, const QUrlQuery & attrs)
             : source_type(source_type), media_type(media_type), mtd(mtd), attrs(attrs) {}
 
+        Cmd(const int source_type, const int & mtd, const int & media_type, const std::initializer_list<std::pair<QString, QString> > & params)
+            : source_type(source_type), media_type(media_type), mtd(mtd), attrs(paramsToQuery(params)) {}
+
         static Cmd build(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & params) {
             QUrlQuery query = paramsToQuery(params);
 
@@ -46,6 +52,11 @@ namespace Core {
                 query.queryItemValue(CMD_MEDIA_TYPE).toInt(),
                 query
             );
+        }
+
+        Cmd * setAttrs(const std::initializer_list<std::pair<QString, QString> > & params) {
+            attrs = paramsToQuery(params);
+            return this;
         }
 
         QString toString() {

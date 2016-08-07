@@ -431,14 +431,14 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
                 playlist -> updateItemsCountInBranch(taked_amount);
             } else {
                 parent -> createLoadablePlaylist(
-                    ICmd::buildCommand(
+                    Cmd::build(
                         wType, ICmd::cmd_mtd_load_set_data,
                         {
                             {CMD_MEDIA_TYPE, QString::number(dm_type)},
                             {CMD_ID, itm.value(tkn_grab_refresh).toString()},
                             {CMD_PARSER, QString::number(itm.value(tkn_grab_set_parser).toInt())}
                         }
-                    ),
+                    ).toString(),
                     itm.value(tkn_grab_title).toString(),
                     itm.value(tkn_grab_id).toString()
                 );
