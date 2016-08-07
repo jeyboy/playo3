@@ -57,7 +57,7 @@ namespace Core {
                     QJsonObject res;
 
                     if (limits.include_audio())
-                        res.insert(block_items_audio, setByType(set_popular_tracks, PPACK(Auth::boolToStr(false), limits.genre)));
+                        res.insert(block_items_audio, setByType(set_popular_tracks, limits));
 
 //                    if (limits.include_video())
 //                        res.insert(block_items_video, videoPopular(limits));

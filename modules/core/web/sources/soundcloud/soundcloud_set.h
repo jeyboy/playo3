@@ -57,7 +57,14 @@ namespace Core {
                     };
                 }
 
-                QJsonValue setByType(const SetType & setType, const QString & genre = QString()) {
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
+                }
+
+                QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -70,7 +77,7 @@ namespace Core {
                                             qst_api_def, path_tracks,
                                             trackSearchQuery(QString(), genre == SOUNDCLOUD_ALL_GENRES_PARAM ? QString() : genre, true)
                                         ),
-                                        call_type_json, rules(), 0, proc_json_patch
+                                        call_type_json, rules(limits.start_offset, limits.items_limit), 0, proc_json_patch
                                     );
                                 }
 

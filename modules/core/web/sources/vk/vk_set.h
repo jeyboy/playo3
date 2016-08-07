@@ -10,16 +10,22 @@ namespace Core {
             public:
                 enum SetType { set_popular_tracks = 1, set_popular_video };
 
-                QJsonValue setByType(const SetType & set_type, const QString & attrs) {
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
+                }
+
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
-                    QStringList params = attrs.split('|', QString::SkipEmptyParts);
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
                             switch(set_type) {
                                 case set_popular_tracks: {
-                                    int genre_id = -1; //params.last(); //genres.toInt(attrs);
+                                    int genre_id = -1; //limits.genre; //genres.toInt(attrs);
 
                                     return saRequest(
                                         baseUrlStr(
@@ -28,7 +34,7 @@ namespace Core {
                                                 {
                                                     tkn_code, QString(
                                                        "var popular = API.audio.getPopular({"
-                                                            "only_eng: " + params.first()/*boolToStr(onlyEng)*/ + ", "
+                                                            "only_eng: " + boolToStr(limits.in_foreign())/*boolToStr(onlyEng)*/ + ", "
                                                             "count: 1000 " + (genre_id != -1 ? (", genre_id: " + QString::number(genre_id)) : "") + ""
                                                          "});"
                                                        "return {" % block_items_audio % ": popular};"

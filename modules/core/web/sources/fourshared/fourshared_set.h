@@ -17,6 +17,13 @@ namespace Core {
                     }
                 }
 
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
+                }
+
                 QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
 

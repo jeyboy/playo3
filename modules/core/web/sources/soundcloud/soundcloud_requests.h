@@ -137,7 +137,7 @@ namespace Core {
                     SetType set_type = (SetType)params.first().toInt();
                     QString genre = params.last();
 
-                    return setByType(set_type, genre);
+                    return setByType(set_type, SearchLimit(sc_all, sp_none, QString(), genre));
                 }
             };
         }

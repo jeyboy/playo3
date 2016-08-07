@@ -8,7 +8,7 @@
 #include <qhash.h>
 
 namespace Core {
-    class ICmd {
+    struct Cmd {
         static QUrlQuery paramsToQuery(const std::initializer_list<std::pair<QString, QString> > & params) {
             QUrlQuery query;
 
@@ -22,6 +22,49 @@ namespace Core {
         static QString paramsToStr(const std::initializer_list<std::pair<QString, QString> > & params) {
             return paramsToQuery(params).toString();
         }
+
+        Cmd() {}
+
+        Cmd(const QString & cmd) {
+            QStringList parts = cmd.split(QRegularExpression("[\\/\\?]"), QString::SkipEmptyParts);
+
+            source_type = parts[0].toInt();
+            media_type = parts[1].toInt();
+            mtd = parts[2].toInt();
+            attrs = QUrlQuery(parts[3]);
+        }
+
+        Cmd(const int source_type, const int & mtd, const int & media_type, const QUrlQuery & attrs)
+            : source_type(source_type), media_type(media_type), mtd(mtd), attrs(attrs) {}
+
+        static Cmd build(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & params) {
+            QUrlQuery query = paramsToQuery(params);
+
+            return Cmd(
+                source_type,
+                mtd,
+                query.queryItemValue(CMD_MEDIA_TYPE).toInt(),
+                query
+            );
+        }
+
+        QString toString() {
+            return QStringLiteral("%1/%2/%3?%4").arg(
+                QString::number(source_type),
+                attrs.queryItemValue(CMD_MEDIA_TYPE),
+                QString::number(mtd),
+                attrs.toString()
+            );
+        }
+
+        int source_type;
+        int media_type;
+        int mtd;
+
+        QUrlQuery attrs;
+    };
+
+    class ICmd {
     public:
         enum ICmdMethods {
             cmd_mtd_unknown = 0,
@@ -69,20 +112,7 @@ namespace Core {
             cmd_mtd_tracks_playlists_by_group
         };
 
-        static QUrl cmdToParams(const QString & cmd) { return QUrl(cmd); }
-
-        static QString buildCommand(const int source_type, const ICmdMethods & mtd, const std::initializer_list<std::pair<QString, QString> > & params) {
-            QUrl url;
-            QUrlQuery query = paramsToQuery(params);
-
-            url.setScheme(QString::number(source_type));
-            url.setHost(query.queryItemValue(CMD_MEDIA_TYPE)); // duplicate media type for fast access
-            url.setPath(QString::number(mtd));
-            url.setQuery(query);
-            return url.toString();
-        }
-
-        QJsonValue run(const ICmdMethods & cmd, const QString & params) {
+        QJsonValue run(const ICmdMethods & cmd, const QUrlQuery & params) {
             switch(cmd) {
                 case cmd_mtd_set_by_type: return setByType(params);
                 case cmd_mtd_open_set: return openSet(params);
@@ -129,51 +159,51 @@ namespace Core {
             }
         }
 
-        virtual QJsonValue setByType(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue setByType(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
 //        virtual QJsonValue takeSet(const QString & /*args*/) { return QJsonObject(); }
 //        virtual QJsonValue loadPlaylist(const QVariantMap & /*attrs*/) { return QJsonObject(); } // TODO: rebuild on QString attrs
 
-        virtual QJsonValue openSet(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue loadSetData(const QString & /*args*/) { return QJsonObject(); } // TODO: rebuild on QString attrs
+        virtual QJsonValue openSet(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue loadSetData(const QUrlQuery & /*args*/) { return QJsonObject(); } // TODO: rebuild on QString attrs
 
-        virtual QJsonValue usersByName(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue usersByTrackLikes(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue usersByTrackReposting(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue userFollowings(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue userFollowers(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue usersByName(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue usersByTrackLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue usersByTrackReposting(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue userFollowings(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue userFollowers(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue groupsByTrack(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue groupsByUser(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue groupsByName(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue groupsByTrack(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue groupsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue groupsByName(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue itemsSearch(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue itemsByCollection(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue itemsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue itemsByCollection(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue tracksSearch(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue trackRecommendations(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByArtist(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByTag(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByGroup(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByUser(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByUserLikes(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByAlbum(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByPlaylist(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByCollection(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByTuner(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue trackRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByTag(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByUserLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByAlbum(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByPlaylist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByCollection(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksByTuner(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue videoSearch(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue videoByUser(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue videoByPlaylist(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoByPlaylist(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         // mixed types playlists
-        virtual QJsonValue playlistsByTag(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue playlistsByTrack(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue playlistsByPredicate(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue playlistsByUser(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue playlistsByTag(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue playlistsByTrack(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue playlistsByPredicate(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue playlistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue tracksPlaylistsByUser(const QString & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksPlaylistsByGroup(const QString & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue tracksPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }
 

@@ -33,6 +33,7 @@ namespace Core {
         sc_all = sc_audio | sc_video
     };
     enum SearchPredicateType {
+        sp_none = 0,
         sp_abc = 1,
         sp_title = 2,
         sp_artist = 4,
@@ -115,6 +116,18 @@ namespace Core {
                 query.addQueryItem(CMD_GENRE, genre);
 
             return query;
+        }
+
+        static SearchLimit fromICmdParams(const QUrlQuery & params) {
+            return SearchLimit(
+                (SearchContentType)params.queryItemValue(CMD_MEDIA_TYPE).toInt(),
+                (SearchPredicateType)params.queryItemValue(CMD_PREDICATE_TYPE).toInt(),
+                params.queryItemValue(CMD_PREDICATE),
+                params.queryItemValue(CMD_GENRE),
+                params.queryItemValue(CMD_ITEMS_LIMIT).toInt(),
+                params.queryItemValue(CMD_OFFSET).toInt(),
+                params.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
+            );
         }
     };
 

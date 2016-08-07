@@ -16,20 +16,20 @@ namespace Core {
             static void close(QJsonObject & obj);
 
             static QJsonValue run(const QString & cmd) {
-                QUrl url = ICmd::cmdToParams(cmd);
+                Cmd cmnd = Cmd(cmd);
 
-                ISource * source = sources.value((DataSubType)url.scheme().toInt());
+                ISource * source = sources.value((DataSubType)cmnd.source_type);
                 if (source == 0)
                     return QJsonObject();
                 else
-                    return source -> run((Core::ICmd::ICmdMethods)url.path().toInt(), url.query());
+                    return source -> run((Core::ICmd::ICmdMethods)cmnd.mtd, cmnd.attrs);
             }
 
             static void extractSourceTypeAndMediaType(const QString & cmd, int & source_type, int & media_type) {
-                QUrl url = ICmd::cmdToParams(cmd);
+                Cmd cmnd = Cmd(cmd);
 
-                source_type = url.scheme().toInt();
-                media_type = url.host().toInt();
+                source_type = cmnd.source_type;
+                media_type = cmnd.media_type;
             }
 
             static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType, const DataMediaType & itemMediaType) {

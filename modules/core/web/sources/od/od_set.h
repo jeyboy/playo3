@@ -36,14 +36,19 @@ namespace Core {
                     }
                 }
 
-                QJsonValue setByType(const SetType & set_type, const QString & /*attrs*/ = QString()) {
-//                    QStringList params = attrs.split('|', QString::SkipEmptyParts);
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
+                }
 
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     switch(set_type) {
                         case set_popular_tracks: {
                             return pRequest(
                                 audioUrlStr(path_audio_popular_tracks), // path_audio_popular_tracks respondable to 'tuner' field for style clarification of popular tracks
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_tracks
                             );
                         break;}
@@ -54,7 +59,7 @@ namespace Core {
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
                                 ),
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_artists
                             );
                         break;}
@@ -65,7 +70,7 @@ namespace Core {
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
                                 ),
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << QStringLiteral("tuners")
                             );
                         break;}
@@ -76,7 +81,7 @@ namespace Core {
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
                                 ),
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << QStringLiteral("collections")
                             );
                         break;}
@@ -87,7 +92,7 @@ namespace Core {
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
                                 ),
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
                         break;}
@@ -95,7 +100,7 @@ namespace Core {
                         case set_listened: { //TODO: not finished
                             return pRequest(
                                 audioUrlStr(path_audio_history),
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
                         break;}
@@ -103,7 +108,7 @@ namespace Core {
                         case set_downloaded: {//TODO: not finished
                             return pRequest(
                                 audioUrlStr(path_audio_downloaded),
-                                call_type_json, rules(), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
                         break;}
