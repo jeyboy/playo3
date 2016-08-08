@@ -14,9 +14,6 @@ namespace Core {
                 friend class Singleton<Queries>;
                 inline Queries() { }
             public:
-                inline QString name() const { return val_name; }
-                inline DataSubType siteType() const { return dt_site_fourshared; }
-
                 inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
                 QJsonArray userInfo(QString & uid) { return loadSetData(CMD_ID % '=' % uid).toArray(); }
 

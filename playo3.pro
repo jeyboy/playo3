@@ -327,7 +327,9 @@ HEADERS += \
     modules/core/web/sources/fourshared_queries.h \
     modules/core/web/sources/od/od_tuner.h \
     modules/core/interfaces/icmd.h \
-    modules/core/interfaces/icmd_fields.h
+    modules/core/interfaces/icmd_fields.h \
+    modules/core/web/sources/fourshared/fourshared_track.h \
+    modules/core/web/sources/fourshared/fourshared_video.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

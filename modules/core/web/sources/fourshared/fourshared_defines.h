@@ -60,6 +60,9 @@ namespace Core {
                         qMin(pages_limit, FOURSHARED_PAGES_LIMIT)
                     );
                 }
+            public:
+                inline QString name() const { return val_name; }
+                inline DataSubType siteType() const { return dt_site_fourshared; }
             };
         }
     }

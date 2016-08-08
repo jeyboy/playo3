@@ -265,6 +265,20 @@ namespace Core {
                     for(QStringList::ConstIterator val = values.constBegin(); val != values.constEnd(); val++)
                         query.addQueryItem(name, *val);
             }
+
+            void addBlockToJson(QJsonObject & json, const QString & block_name, const QJsonValue & block_content, const QString & more_cmd = QString(), const QString & parser = QString()) {
+                QJsonObject block;
+
+                block.insert(tkn_content, block_content);
+
+                if (!more_cmd.isEmpty())
+                    block.insert(tkn_more_cmd, more_cmd);
+
+                if (!parser.isEmpty())
+                    block.insert(tkn_cmd_parser, parser);
+
+                json.insert(block_name, block);
+            }
         public:
             Headers dntHeader() { return {{ QStringLiteral("DNT"), QStringLiteral("1")}}; }
         };

@@ -3,12 +3,14 @@
 
 #include "fourshared_auth.h"
 #include "fourshared_item.h"
+#include "fourshared_track.h"
+#include "fourshared_video.h"
 #include "fourshared_set.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Requests : public Auth, public Item, public Set {
+            class Requests : public Auth, public Item, public Set, public Track, public Video {
                 QJsonValue procUserData(const QJsonObject & user_data) {
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
 
@@ -106,7 +108,44 @@ namespace Core {
                 }
                 void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
 
-                QJsonValue searchProc(const SearchLimit & limits) { return itemsSearch(limits); }
+                QJsonValue searchProc(const SearchLimit & limits) {
+                    QJsonObject res;
+
+                    if (limits.include_audio()) {
+                        QJsonArray block_content = tracksSearch(limits);
+
+                        addBlockToJson(
+                            res,
+                            block_items_audio,
+                            block_content,
+                            block_content.size() < limits.items_limit ? QString() :
+                                Cmd::build(
+                                    siteType(),
+                                    cmd_mtd_tracks_search,
+                                    limits.toICmdParams(block_content.size())
+                                )
+                        );
+                    }
+
+                    if (limits.include_video()) {
+                        QJsonArray block_content = videoSearch(limits);
+
+                        addBlockToJson(
+                            res,
+                            block_items_video,
+                            block_content,
+                            block_content.size() < limits.items_limit ? QString() :
+                                Cmd::build(
+                                    siteType(),
+                                    cmd_mtd_video_search,
+                                    limits.toICmdParams(block_content.size())
+                                )
+                        );
+                    }
+
+
+                    return res;
+                }
 
                 QJsonValue loadSetData(const QString & attrs) {
                     return procUserData(

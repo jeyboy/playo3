@@ -172,11 +172,11 @@ namespace Core {
                                 base_url.resolved(QUrl(link_tag -> findFirst("img") -> value(QStringLiteral("src")))).toString()
                             );
 
-                            if (Info::extractNumber((*set) -> findFirst(&tracks_amount) -> text(), digit))
-                                set_obj.insert(
-                                    tkn_grab_set_items_amount,
-                                    digit.toInt()
-                                );
+//                            if (Info::extractNumber((*set) -> findFirst(&tracks_amount) -> text(), digit))
+//                                set_obj.insert(
+//                                    tkn_grab_set_items_amount,
+//                                    digit.toInt()
+//                                );
 
                             arg -> append(set_obj, set + 1 == sets.end());
                         }

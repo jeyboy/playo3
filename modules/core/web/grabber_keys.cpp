@@ -16,6 +16,11 @@ namespace Core {
         extern const QString block_followers            = QStringLiteral("blk_followers");
         extern const QString block_groups               = QStringLiteral("blk_groups");
 
+        extern const QString tkn_content                = QStringLiteral("cnt");
+        extern const QString tkn_loadable_cmd           = QStringLiteral("ld_cmd");
+        extern const QString tkn_more_cmd               = QStringLiteral("mr_cmd");
+        extern const QString tkn_cmd_parser             = QStringLiteral("cmd_prsr");
+
         extern const QString tkn_grab_title             = QStringLiteral("gtitle");
         extern const QString tkn_grab_duration          = QStringLiteral("gduration");
         extern const QString tkn_grab_size              = QStringLiteral("gsize");
@@ -32,10 +37,10 @@ namespace Core {
         extern const QString tkn_grab_album             = QStringLiteral("galbum");
         extern const QString tkn_grab_art_url           = QStringLiteral("gart");
 
-        extern const QString tkn_grab_is_set            = QStringLiteral("gset");
-        extern const QString tkn_grab_set_items         = QStringLiteral("gset_items");
-        extern const QString tkn_grab_set_parser        = QStringLiteral("gset_parser");
-        extern const QString tkn_grab_set_items_amount  = QStringLiteral("gamount");
+//        extern const QString tkn_grab_is_set            = QStringLiteral("gset");
+//        extern const QString tkn_grab_set_items         = QStringLiteral("gset_items");
+//        extern const QString tkn_grab_set_parser        = QStringLiteral("gset_parser");
+//        extern const QString tkn_grab_set_items_amount  = QStringLiteral("gamount");
 
         extern const QString tkn_media_type             = QStringLiteral("gmedia_type");
         extern const QString tkn_skip_info              = QStringLiteral("gskip");
