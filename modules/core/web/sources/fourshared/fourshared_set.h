@@ -8,11 +8,12 @@ namespace Core {
         namespace Fourshared {
             class Set : public Base {
             public:
-                enum SetType { set_popular };
+                enum SetType { set_popular_audio, set_popular_video };
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_popular: return QStringLiteral("Popular: ");
+                        case set_popular_audio: return QStringLiteral("Popular audio: ");
+                        case set_popular_video: return QStringLiteral("Popular video: ");
                         default: return QStringLiteral("Unknown: ");
                     }
                 }
@@ -26,91 +27,73 @@ namespace Core {
 
                 QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
+                    QJsonArray block_content;
 
-                    switch(perm) {
-                        case perm_api: {
-                            switch(setType) {
-                                case set_popular: {
-                                    QJsonObject res;
+                    switch(setType) {
+                        case set_popular_audio: {
+                            switch(perm) {
+                                case perm_api: {
+                                    block_content = pRequest(
+                                        baseUrlStr(
+                                            qst_api_search, tkn_files,
+                                            {{ tkn_category, music }}
+                                        ),
+                                        call_type_json,
+                                        rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                        0, proc_json_extract, QStringList() << tkn_files
+                                    );
+                                break;}
 
-                                    if (limits.include_audio())
-                                        res.insert(
-                                            block_items_audio,
-                                            pRequest(
-                                                baseUrlStr(
-                                                    qst_api_search, tkn_files,
-                                                    {{ tkn_category, music }}
-                                                ),
-                                                call_type_json,
-                                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
-                                                0, proc_json_extract, QStringList() << tkn_files
-                                            )
-                                        );
+                                case perm_site: {
+                                    block_content = pRequest(
+                                        baseUrlStr(
+                                            qst_site_search,
+                                            QStringLiteral("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                            {}
+                                        ),
+                                        call_type_html,
+                                        rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                        0, proc_tracks1
+                                    );
+                                break;}
 
-                                    if (limits.include_video())
-                                        res.insert(
-                                            block_items_video,
-                                            pRequest(
-                                                baseUrlStr(
-                                                    qst_api_search, tkn_files,
-                                                    {{ tkn_category, video }}
-                                                ),
-                                                call_type_json,
-                                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
-                                                0, proc_json_extract, QStringList() << tkn_files
-                                            )
-                                        );
-
-
-                                    return res;
-                                }
+                                default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
                             }
-                        break;}
+                        }
 
-                        case perm_site: {
-                            switch(setType) {
-                                case set_popular: {
-                                    QJsonObject res;
+                        case set_popular_video: {
+                            switch(perm) {
+                                case perm_api: {
+                                    block_content = pRequest(
+                                        baseUrlStr(
+                                            qst_api_search, tkn_files,
+                                            {{ tkn_category, video }}
+                                        ),
+                                        call_type_json,
+                                        rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                        0, proc_json_extract, QStringList() << tkn_files
+                                    );
+                                break;}
 
-                                    if (limits.include_audio())
-                                        res.insert(
-                                            block_items_audio,
-                                            pRequest(
-                                                baseUrlStr(
-                                                    qst_site_search,
-                                                    QStringLiteral("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
-                                                    {}
-                                                ),
-                                                call_type_html,
-                                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
-                                                0, proc_tracks1
-                                            )
-                                        );
+                                case perm_site: {
+                                    block_content = pRequest(
+                                        baseUrlStr(
+                                            qst_site_search,
+                                            QStringLiteral("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                            {}
+                                        ),
+                                        call_type_html,
+                                        rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                        0, proc_video1
+                                    );
+                                break;}
 
-                                    if (limits.include_video())
-                                        res.insert(
-                                            block_items_video,
-                                            pRequest(
-                                                baseUrlStr(
-                                                    qst_site_search,
-                                                    QStringLiteral("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
-                                                    {}
-                                                ),
-                                                call_type_html,
-                                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
-                                                0, proc_video1
-                                            )
-                                        );
-
-                                    return res;
-                                }
+                                default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
                             }
-                        break;}
-
-                        default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
+                        }
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(limits, cmd_mtd_set_by_type, block_content);
                 }
             };
         }

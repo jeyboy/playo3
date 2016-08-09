@@ -77,15 +77,6 @@ namespace Core {
                     );
                 }
 
-//                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
-//                    switch(stype) {
-//                        case qst_api_def: return url_api_base % predicate % val_default_format;
-//                        case qst_site_def: return url_api_base % predicate;
-//                        case qst_site_alt1: return url_api_base2 % predicate;
-//                        default: return QString();
-//                    }
-//                }
-
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
                         case qst_api_base: return url_api_base % predicate % val_json_ext;
@@ -111,38 +102,11 @@ namespace Core {
                 QJsonValue searchProc(const SearchLimit & limits) {
                     QJsonObject res;
 
-                    if (limits.include_audio()) {
-                        QJsonArray block_content = tracksSearch(limits);
+                    if (limits.include_audio())
+                        res.insert(block_items_audio, tracksSearch(limits));
 
-                        addBlockToJson(
-                            res,
-                            block_items_audio,
-                            block_content,
-                            block_content.size() < limits.items_limit ? QString() :
-                                Cmd::build(
-                                    siteType(),
-                                    cmd_mtd_tracks_search,
-                                    limits.toICmdParams(block_content.size())
-                                )
-                        );
-                    }
-
-                    if (limits.include_video()) {
-                        QJsonArray block_content = videoSearch(limits);
-
-                        addBlockToJson(
-                            res,
-                            block_items_video,
-                            block_content,
-                            block_content.size() < limits.items_limit ? QString() :
-                                Cmd::build(
-                                    siteType(),
-                                    cmd_mtd_video_search,
-                                    limits.toICmdParams(block_content.size())
-                                )
-                        );
-                    }
-
+                    if (limits.include_video())
+                        res.insert(block_items_video, videoSearch(limits));
 
                     return res;
                 }
@@ -243,7 +207,17 @@ namespace Core {
 
                 bool connectUserApi() { return connectApi(); }
             public:
-                QJsonValue popular(const SearchLimit & limits) { return setByType(set_popular, limits); }
+                QJsonValue popular(const SearchLimit & limits) {
+                    QJsonObject res;
+
+                    if (limits.include_audio())
+                        res.insert(block_items_audio, setByType(set_popular_audio, limits));
+
+                    if (limits.include_video())
+                        res.insert(block_items_video, setByType(set_popular_video, limits));
+
+                    return res;
+                }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
                     if (!permissions(pr_media_content)) return QString();
