@@ -25,10 +25,18 @@ namespace Core {
                         if (dir_obj.value(QStringLiteral("canPlay")).toBool()) { // check on audio fides only :(
                             QJsonObject set_obj;
 
-
                             set_obj.insert(tkn_grab_is_set, true);
+
+                            set_obj.insert(
+                                tkn_loadable_cmd,
+                                Cmd::build(
+                                    siteType(), cmd_mtd_load_set_data,
+                                    {{CMD_ID, dir_obj.value(QStringLiteral("id")).toString()}}
+                                ).toString()
+                            );
+
                             set_obj.insert(tkn_grab_title, dir_obj.value(QStringLiteral("name")).toString());
-                            set_obj.insert(tkn_grab_refresh, dir_obj.value(QStringLiteral("id")).toString());
+//                            set_obj.insert(tkn_grab_refresh, dir_obj.value(QStringLiteral("id")).toString());
 
                             res.append(set_obj);
                         }

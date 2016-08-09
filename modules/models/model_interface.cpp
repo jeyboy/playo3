@@ -424,26 +424,24 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
             dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
 
         if (itm.contains(tkn_grab_is_set)) {
-            if (itm.contains(tkn_grab_set_items)) {
-                Playlist * playlist = parent -> createPlaylist(wType, itm.value(tkn_grab_id).toString(), itm.value(tkn_grab_title).toString());
-                int taked_amount = proceedGrabberList(itm.value(tkn_grab_set_items).toArray(), playlist, dm_type, wType);
-                itemsAmount += taked_amount;
-                playlist -> updateItemsCountInBranch(taked_amount);
-            } else {
+            if (itm.contains(tkn_loadable_cmd)) {
                 parent -> createLoadablePlaylist(
-                    Cmd::build(
-                        wType, ICmd::cmd_mtd_load_set_data,
-                        {
-                            {CMD_MEDIA_TYPE, QString::number(dm_type)},
-                            {CMD_ID, itm.value(tkn_grab_refresh).toString()},
-                            {CMD_PARSER, QString::number(itm.value(tkn_grab_set_parser).toInt())}
-                        }
-                    ).toString(),
+                    itm.value(tkn_loadable_cmd).toString(),
                     itm.value(tkn_grab_title).toString(),
                     itm.value(tkn_grab_id).toString()
                 );
 
                 itemsAmount++;
+            } else {
+                Playlist * playlist = parent -> createPlaylist(wType, itm.value(tkn_grab_id).toString(), itm.value(tkn_grab_title).toString());
+                int taked_amount = proceedGrabberList(itm.value(tkn_content).toArray(), playlist, dm_type, wType);
+
+                if (itm.contains(tkn_more_cmd)) {
+                    // add more items btn
+                }
+
+                itemsAmount += taked_amount;
+                playlist -> updateItemsCountInBranch(taked_amount);
             }
         } else {
             QString id = QString::number(itm.value(tkn_grab_id).toInt());

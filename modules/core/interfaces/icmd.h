@@ -54,6 +54,15 @@ namespace Core {
             );
         }
 
+        static Cmd build(const int source_type, const int & mtd, const QUrlQuery & attrs) {
+            return Cmd(
+                source_type,
+                mtd,
+                attrs.queryItemValue(CMD_MEDIA_TYPE).toInt(),
+                attrs
+            );
+        }
+
         Cmd * setAttrs(const std::initializer_list<std::pair<QString, QString> > & params) {
             attrs = paramsToQuery(params);
             return this;

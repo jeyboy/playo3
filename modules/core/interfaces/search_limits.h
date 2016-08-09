@@ -100,7 +100,7 @@ namespace Core {
 
         inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
 
-        QUrlQuery toICmdParams(int offset = 0) {
+        QUrlQuery toICmdParams(int offset = 0) const {
             QUrlQuery query;
 
             query.addQueryItem(CMD_MEDIA_TYPE, QString::number(sc_type));

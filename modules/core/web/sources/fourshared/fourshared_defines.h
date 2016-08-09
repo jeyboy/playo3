@@ -28,7 +28,7 @@ namespace Core {
 //                inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
 //                inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
 
-                QJsonObject prepareBlock(const SearchLimit & limits, const ICmdMethods & mtd, const QJsonValue & block_content) {
+                QJsonObject prepareBlock(const SearchLimit & limits, const ICmdMethods & mtd, const QJsonArray & block_content) {
                     QJsonObject block;
 
                     block.insert(tkn_content, block_content);
@@ -36,8 +36,10 @@ namespace Core {
                     if (block_content.size() < limits.items_limit)
                         block.insert(
                             tkn_more_cmd,
-                            Cmd::build(siteType(), mtd, limits.toICmdParams(block_content.size()))
+                            Cmd::build(siteType(), mtd, limits.toICmdParams(block_content.size())).toString()
                         );
+
+                    return block;
                 }
 
                 inline Headers siteHeaders() {

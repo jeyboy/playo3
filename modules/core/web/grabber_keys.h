@@ -44,7 +44,7 @@ namespace Core {
         extern const QString tkn_grab_album;
         extern const QString tkn_grab_art_url;
 
-//        extern const QString tkn_grab_is_set;
+        extern const QString tkn_grab_is_set;
 //        extern const QString tkn_grab_set_items;
 //        extern const QString tkn_grab_set_parser;
 //        extern const QString tkn_grab_set_items_amount;

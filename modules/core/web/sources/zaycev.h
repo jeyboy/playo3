@@ -147,25 +147,37 @@ namespace Core {
                         Html::Set sets = parser.find(".musicset-list__item");
                         Html::Selector title_selector(".musicset-item__title a");
                         Html::Selector link_selector(".musicset-item__pic .musicset-item__pic-link");
-                        Html::Selector tracks_amount(".musicset-item__details p");
+//                        Html::Selector tracks_amount(".musicset-item__details p");
 
                         QUrl base_url(QStringLiteral("http://zaycev.net"));
-                        QString digit;
+//                        QString digit;
 
                         qDebug() << "SETS AMOUNT" << sets.size();
                         for(Html::Set::Iterator set = sets.begin(); set != sets.end(); set++) {
                             QJsonObject set_obj;
-
-                            set_obj.insert(tkn_grab_is_set, true);
-                            set_obj.insert(tkn_grab_set_parser, proc_tracks1);
-                            set_obj.insert(tkn_grab_title, (*set) -> findFirst(&title_selector) -> text());
-
                             Html::Tag * link_tag = (*set) -> findFirst(&link_selector);
 
+                            set_obj.insert(tkn_grab_is_set, true);
+
                             set_obj.insert(
-                                tkn_grab_refresh,
-                                base_url.resolved(QUrl(link_tag -> link())).toString()
+                                tkn_loadable_cmd,
+                                Cmd::build(
+                                    siteType(), cmd_mtd_load_set_data,
+                                    {
+                                        {CMD_ID, base_url.resolved(QUrl(link_tag -> link())).toString()},
+                                        {CMD_PARSER, QString::number(proc_tracks1)}
+                                    }
+                                ).toString()
                             );
+
+                            set_obj.insert(tkn_grab_title, (*set) -> findFirst(&title_selector) -> text());
+
+
+
+//                            set_obj.insert(
+//                                tkn_grab_refresh,
+//                                base_url.resolved(QUrl(link_tag -> link())).toString()
+//                            );
 
                             set_obj.insert(
                                 tkn_grab_art_url,
@@ -216,7 +228,6 @@ namespace Core {
                 genres.addGenre(QStringLiteral("other"), 12);
             }
 
-            // {"url":"http://dl.zaycev.net/85673/2745662/rick_ross_-_love_sosa.mp3?dlKind=play&format=json"}
             inline QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 QJsonObject obj = reply -> toJson();
                 return obj.value(QStringLiteral("url")).toString();
