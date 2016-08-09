@@ -84,7 +84,7 @@ namespace Models {
                 ThreadUtils::obj().run(
                     (IModel *)this,
                     &IModel::proceedLoadable,
-                    playlist -> loadableAttrs(), func
+                    playlist -> loadableCmd(), func
                 );
             }
 
@@ -118,14 +118,14 @@ namespace Models {
 
         QJsonValue proceedLoadable(const QString & cmd) { return Web::Apis::run(cmd); }
 
-        int proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent, const DataMediaType & dmtype = dmt_unknow);
+        int proceedList(const DataSubType & wType, const QJsonObject & json, Playlist * parent, const DataMediaType & dmtype = dmt_unknow);
 
-        int proceedVkList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
-        int proceedScList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
-        int proceedOdList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_od);
-        int proceedYandexList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_yandex);
-        int proceedYoutubeList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_youtube);
-        int proceedGrabberList( const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & wType);
+        int proceedVkList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
+        int proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
+        int proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_od);
+        int proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_yandex);
+        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_youtube);
+        int proceedGrabberList( const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & wType);
 
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 

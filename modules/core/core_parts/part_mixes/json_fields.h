@@ -7,6 +7,7 @@ namespace Core {
     const QString JSON_TYPE_CONTAINER_LOADABLE = QStringLiteral("0");
     const QString JSON_TYPE_MEDIA_TYPE = QStringLiteral("1");
     const QString JSON_TYPE_MEDIA_ART = QStringLiteral("2");
+    const QString JSON_TYPE_CONTAINER_FETCHABLE = QStringLiteral("3");
 
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");

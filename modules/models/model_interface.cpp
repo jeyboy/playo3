@@ -221,8 +221,8 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Playlist * parent, const DataMediaType & dmtype) {
-    int (IModel::*proc_func)(const QJsonArray &, Playlist *, const DataMediaType &, const DataSubType &);
+int IModel::proceedList(const DataSubType & wType, const QJsonObject & json, Playlist * parent, const DataMediaType & dmtype) {
+    int (IModel::*proc_func)(const QJsonObject &, Playlist *, const DataMediaType &, const DataSubType &);
 
     switch(wType) {
         case dt_site_vk: { proc_func = &IModel::proceedVkList; break;}
@@ -233,33 +233,29 @@ int IModel::proceedList(const DataSubType & wType, const QJsonValue & json, Play
         default: proc_func = &IModel::proceedGrabberList;
     }
 
-    if (json.isObject()) {
-        QJsonObject obj = json.toObject();
-        int amount = 0;
+    int amount = 0;
 
-        for(QJsonObject::Iterator pair = obj.begin(); pair != obj.end(); pair++) {
-            DataMediaType dmt_type = dmtype;
-            QString key = pair.key();
+    for(QJsonObject::Iterator pair = json.begin(); pair != json.end(); pair++) {
+        DataMediaType dmt_type = dmtype;
+        QString key = pair.key();
 
-            if (key == block_items_audio)
-                dmt_type = dmt_audio;
-            else if (key == block_items_video)
-                dmt_type = dmt_video;
+        if (key == block_items_audio)
+            dmt_type = dmt_audio;
+        else if (key == block_items_video)
+            dmt_type = dmt_video;
 
-            amount += (*this.*proc_func)(
-                pair.value().toArray(),
-                parent,
-                dmt_type,
-                wType
-            );
-        }
-
-        return amount;
+        amount += (*this.*proc_func)(
+            pair.value().toObject(),
+            parent,
+            dmt_type,
+            wType
+        );
     }
-    else return (*this.*proc_func)(json.toArray(), parent, dmtype, wType);
+
+    return amount;
 }
 
-int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
+int IModel::proceedVkList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
     if (collection.isEmpty()) return 0;
     DataMediaType dm_type = dmtype;
     int itemsAmount = 0;
@@ -322,7 +318,7 @@ int IModel::proceedVkList(const QJsonArray & collection, Playlist * parent, cons
     return itemsAmount;
 }
 
-int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
+int IModel::proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
 
     if (collection.isEmpty()) return 0;
@@ -366,7 +362,7 @@ int IModel::proceedYandexList(const QJsonArray & collection, Playlist * parent, 
     return itemsAmount;
 }
 
-int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent, const DataMediaType & /*dmtype*/, const DataSubType & /*wType*/) {
+int IModel::proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & /*dmtype*/, const DataSubType & /*wType*/) {
     if (collection.isEmpty()) return 0;
     int itemsAmount = 0;
 
@@ -410,7 +406,7 @@ int IModel::proceedYoutubeList(const QJsonArray & collection, Playlist * parent,
     return itemsAmount;
 }
 
-int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & wType) {
+int IModel::proceedGrabberList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & wType) {
     if (collection.isEmpty()) return 0;
     DataMediaType dm_type = dmtype;
     int itemsAmount = 0;
@@ -487,7 +483,7 @@ int IModel::proceedGrabberList(const QJsonArray & collection, Playlist * parent,
     return itemsAmount;
 }
 
-int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
+int IModel::proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
     if (collection.isEmpty()) return 0;
     DataMediaType dm_type = dmtype;
     int itemsAmount = 0;
@@ -548,7 +544,7 @@ int IModel::proceedScList(const QJsonArray & collection, Playlist * parent, cons
     return itemsAmount;
 }
 
-int IModel::proceedOdList(const QJsonArray & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
+int IModel::proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & /*wType*/) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
     // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
 
