@@ -11,13 +11,6 @@
 #define IQUERY_DEF_FIELDS QStringList() << DEF_JSON_FIELD
 #define QUERY_RETRY_AMOUNT 3
 
-//#define BUILD_BLOCK(content, more_cmd) \
-//    QJsonObject block; \
-//    block.insert(tkn_content, block_content); \
-//    if (!more_cmd.isEmpty()) \
-//        block.insert(tkn_more_cmd, more_cmd);
-
-
 namespace Core {
     namespace Web {    
         class IQueriable {
@@ -274,6 +267,15 @@ namespace Core {
             }
         public:
             Headers dntHeader() { return {{ QStringLiteral("DNT"), QStringLiteral("1")}}; }
+
+//            static QJsonObject hashToJson(const std::initializer_list<std::pair<QString, QVariant> > & hash) {
+//                QJsonObject json;
+
+//                for (typename std::initializer_list<std::pair<QString, QVariant> >::const_iterator it = hash.begin(); it != hash.end(); ++it)
+//                    json.insert(it -> first, QJsonValue::fromVariant(it -> second));
+
+//                return json;
+//            }
         };
     }
 }

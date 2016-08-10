@@ -126,8 +126,8 @@ namespace Core {
                     );
                 }
 
-                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
-                    return pRequest(
+                QJsonObject tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
+                    QJsonArray tracks = pRequest(
                         audioUrlStr(
                             tkn_my,
                             {{ tkn_pid, playlist_id }}
@@ -135,6 +135,14 @@ namespace Core {
                         call_type_json, rules(offset, count),
                         0, proc_json_extract, QStringList() << tkn_tracks
                     );
+
+                    return QJsonObject {
+                        {
+                            block_items_audio, QJsonObject {
+                                { tkn_content, tracks }
+                            }
+                        }
+                    };
                 }
 
                 QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: not finished

@@ -2,13 +2,13 @@
 
 namespace Core {
     namespace Web {
-        extern const QString block_items                = QStringLiteral("blk_items");
-        extern const QString block_items_audio          = QStringLiteral("blk_a");
-        extern const QString block_items_video          = QStringLiteral("blk_v");
+        extern const QString block_items                = QString::number(dmt_any);
+        extern const QString block_items_audio          = QString::number(dmt_audio);
+        extern const QString block_items_video          = QString::number(dmt_video);
 
-        extern const QString block_sets                 = QStringLiteral("blk_sets");
-        extern const QString block_sets_audio           = QStringLiteral("blk_as");
-        extern const QString block_sets_video           = QStringLiteral("blk_vs");
+        extern const QString block_sets                 = QString::number(dmt_any_set);
+        extern const QString block_sets_audio           = QString::number(dmt_audio_set);
+        extern const QString block_sets_video           = QString::number(dmt_video_set);
 
         extern const QString block_likes                = QStringLiteral("blk_likes");
         extern const QString block_friends              = QStringLiteral("blk_friends");
@@ -17,6 +17,7 @@ namespace Core {
         extern const QString block_groups               = QStringLiteral("blk_groups");
 
         extern const QString tkn_content                = QStringLiteral("cnt");
+        extern const QString tkn_amount                 = QStringLiteral("amount");
         extern const QString tkn_loadable_cmd           = QStringLiteral("ld_cmd");
         extern const QString tkn_more_cmd               = QStringLiteral("mr_cmd");
         extern const QString tkn_cmd_parser             = QStringLiteral("cmd_prsr");

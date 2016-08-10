@@ -399,23 +399,31 @@ namespace Core {
                 QJsonValue userInfo() {
                     QJsonObject res = User::userInfo().toObject();
 
-                    QJsonArray audios = res.value(tkn_tracks).toArray();
-                    if (audios.isEmpty()) {
+                    QJsonArray tracks = res.value(tkn_tracks).toArray();
+                    if (tracks.isEmpty()) {
                         int totalTracks = res.value(QStringLiteral("totalTracks")).toInt();
                         if (totalTracks > 0)
-                            res.insert(
-                                Od::tkn_tracks,
-                                userMedia(idToStr(res.value(tkn_me))).
-                                    toObject().value(tkn_tracks)
-                            );
+                            tracks = userMedia(idToStr(res.value(tkn_me))).toObject().value(tkn_tracks).toArray();
                     }
 
                     clearFriends();
-                    jsonToUsers(Friendable::linkables, res.take(tkn_friends).toArray());
+                    jsonToUsers(Friendable::linkables, res.value(tkn_friends).toArray());
 
                     clearGroups();
                     jsonToGroups(Groupable::linkables, groupsByUser(userID()).toArray());
-                    return res;
+
+                    return QJsonObject {
+                        {
+                            block_items_audio, QJsonObject {
+                                { tkn_content, tracks }
+                            }
+                        },
+                        {
+                            block_sets_audio, QJsonObject {
+                                { tkn_content, res.value(tkn_playlists) }
+                            }
+                        }
+                    };
                 }
 
                 inline QMap<QString, QString> setsList() {

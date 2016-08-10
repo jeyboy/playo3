@@ -11,9 +11,20 @@ namespace Core {
 
     enum DataMediaType : int {
         dmt_unknow = 0,
-        dmt_audio,
-        dmt_video
+
+        dmt_audio = 1,
+        dmt_video = 2,
+
+        dmt_set = 4,
+
+        dmt_audio_set = dmt_set | dmt_audio,
+        dmt_video_set = dmt_set | dmt_video,
+
+        dmt_any = dmt_audio | dmt_video,
+        dmt_any_set = dmt_set | dmt_any
     };
+
+    #define EXTRACT_MEDIA_TYPE(val) val & 3
 
     enum DataSubType : int {
         dt_level = -199,

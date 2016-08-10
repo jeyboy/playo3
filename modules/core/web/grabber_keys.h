@@ -3,7 +3,12 @@
 
 #include <qstringbuilder.h>
 
+#include "modules/core/data_sub_types.h"
+
 #define PACKAGE_REPLACE_FRAGMENT QStringLiteral("Custom filter...")
+
+//#define EXTRACT_AUDIO_ITEMS(json)\
+//    json.value(block_items_audio).toObject().value(tkn_content).toArray()
 
 namespace Core {
     namespace Web {
@@ -24,6 +29,7 @@ namespace Core {
         extern const QString block_groups;
 
         extern const QString tkn_content;
+        extern const QString tkn_amount;
         extern const QString tkn_loadable_cmd;
         extern const QString tkn_more_cmd;
         extern const QString tkn_cmd_parser;
