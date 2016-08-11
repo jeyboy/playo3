@@ -1,7 +1,7 @@
 #ifndef FOURSHARED_DEFINES
 #define FOURSHARED_DEFINES
 
-#include "fourshared_api_keys.h"
+#include "fourshared_keys.h"
 #include "modules/core/web/grabber_keys.h"
 
 #include "modules/core/interfaces/isource.h"

@@ -29,6 +29,9 @@ namespace Core {
         extern const QString block_groups;
 
         extern const QString tkn_content;
+        extern const QString tkn_media_type;
+        extern const QString tkn_block_type;
+        extern const QString tkn_dir_name;
         extern const QString tkn_amount;
         extern const QString tkn_loadable_cmd;
         extern const QString tkn_more_cmd;
@@ -50,13 +53,9 @@ namespace Core {
         extern const QString tkn_grab_album;
         extern const QString tkn_grab_art_url;
 
-        extern const QString tkn_grab_is_set;
-//        extern const QString tkn_grab_set_items;
-//        extern const QString tkn_grab_set_parser;
-//        extern const QString tkn_grab_set_items_amount;
+//        extern const QString tkn_grab_is_set;
 
         extern const QString tkn_skip_info;
-        extern const QString tkn_media_type;
 
         extern const QString val_def_extension;
     }

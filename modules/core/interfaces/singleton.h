@@ -49,17 +49,16 @@ namespace Core {
 
 
     template<class T> class Singleton {
+        Singleton(const Singleton &) = delete;
+        Singleton & operator=(const Singleton &) = delete;
     public:
         static T & obj() {
             static T obj;
             return obj;
         }
-
-        virtual ~Singleton() {}
     protected:
-        Singleton() {}
-        Singleton(const Singleton &);
-        Singleton & operator=(const Singleton &);
+        Singleton() = default;
+        virtual ~Singleton() = default;
     };
 /////////////////////////////////////////////////////////////////////////////
 /// singleton without removing control

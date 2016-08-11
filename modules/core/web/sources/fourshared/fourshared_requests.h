@@ -25,7 +25,8 @@ namespace Core {
                         if (dir_obj.value(QStringLiteral("canPlay")).toBool()) { // check on audio fides only :(
                             QJsonObject set_obj;
 
-                            set_obj.insert(tkn_grab_is_set, true);
+//                            set_obj.insert(tkn_grab_is_set, true);
+                            set_obj.insert(tkn_media_type, dmt_any_set);
 
                             set_obj.insert(
                                 tkn_loadable_cmd,

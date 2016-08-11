@@ -283,7 +283,6 @@ HEADERS += \
     modules/core/web/sources/vk/vk_track.h \
     modules/core/web/sources/vk/vk_user.h \
     modules/core/web/sources/vk/vk_video.h \
-    modules/core/web/sources/fourshared/fourshared_api_keys.h \
     modules/core/web/sources/fourshared/fourshared_defines.h \
     modules/core/web/sources/jetune.h \
     modules/core/web/sources/mp3base.h \
@@ -329,7 +328,8 @@ HEADERS += \
     modules/core/interfaces/icmd.h \
     modules/core/interfaces/icmd_fields.h \
     modules/core/web/sources/fourshared/fourshared_track.h \
-    modules/core/web/sources/fourshared/fourshared_video.h
+    modules/core/web/sources/fourshared/fourshared_video.h \
+    modules/core/web/sources/fourshared/fourshared_keys.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -451,7 +451,6 @@ SOURCES += \
     modules/core/web/sources/soundcloud/soundcloud_requests.cpp \
     modules/core/web/sources/vk/vk_keys.cpp \
     modules/core/web/sources/exua.cpp \
-    modules/core/web/sources/fourshared/fourshared_api_keys.cpp \
     modules/core/web/sources/jetune.cpp \
     modules/core/web/sources/mp3base.cpp \
     modules/core/web/sources/mp3cc.cpp \
@@ -469,4 +468,5 @@ SOURCES += \
     modules/core/web/sources/zaycev.cpp \
     modules/core/web/sources/od/od_keys.cpp \
     modules/core/web/sources/od_queries.cpp \
-    modules/core/web/sources/fourshared_queries.cpp
+    modules/core/web/sources/fourshared_queries.cpp \
+    modules/core/web/sources/fourshared/fourshared_keys.cpp

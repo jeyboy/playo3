@@ -17,6 +17,9 @@ namespace Core {
         extern const QString block_groups               = QStringLiteral("blk_groups");
 
         extern const QString tkn_content                = QStringLiteral("cnt");
+        extern const QString tkn_media_type             = QStringLiteral("mtype");
+        extern const QString tkn_block_type             = QStringLiteral("btype");
+        extern const QString tkn_dir_name               = QStringLiteral("dir_name");
         extern const QString tkn_amount                 = QStringLiteral("amount");
         extern const QString tkn_loadable_cmd           = QStringLiteral("ld_cmd");
         extern const QString tkn_more_cmd               = QStringLiteral("mr_cmd");
@@ -38,14 +41,9 @@ namespace Core {
         extern const QString tkn_grab_album             = QStringLiteral("galbum");
         extern const QString tkn_grab_art_url           = QStringLiteral("gart");
 
-        extern const QString tkn_grab_is_set            = QStringLiteral("gset");
-//        extern const QString tkn_grab_set_items         = QStringLiteral("gset_items");
-//        extern const QString tkn_grab_set_parser        = QStringLiteral("gset_parser");
-//        extern const QString tkn_grab_set_items_amount  = QStringLiteral("gamount");
+//        extern const QString tkn_grab_is_set            = QStringLiteral("gset");
 
-        extern const QString tkn_media_type             = QStringLiteral("gmedia_type");
         extern const QString tkn_skip_info              = QStringLiteral("gskip");
-
         extern const QString val_def_extension          = QStringLiteral("mp3");
 
     //    extern const QString page_offset_key        = QStringLiteral("%1");

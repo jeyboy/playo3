@@ -24,7 +24,7 @@ namespace Core {
         dmt_any_set = dmt_set | dmt_any
     };
 
-    #define EXTRACT_MEDIA_TYPE(val) val & 3
+    #define EXTRACT_MEDIA_TYPE(val) (DataMediaType)(val & 3)
 
     enum DataSubType : int {
         dt_level = -199,

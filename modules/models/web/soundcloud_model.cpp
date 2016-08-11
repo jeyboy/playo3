@@ -31,56 +31,59 @@ void SoundcloudModel::refresh() {
 }
 
 void SoundcloudModel::proceedJson(QJsonValue & hash) {
-    QJsonArray items, liked_items, sets;
+    proceedBlocks(dt_playlist_sc, hash.toObject(), rootItem);
 
-    if (hash.isArray()) {
-        items = hash.toArray();
-    } else {
-        QJsonObject hash_obj = hash.toObject();
-        items = hash_obj.value(block_items).toArray();
-        liked_items = hash_obj.value(block_likes).toArray();
-        sets = hash_obj.value(block_sets).toArray();
-    }
+//    QJsonObject tracks, liked_tracks, playlists;
 
-    int total_amount = 0, sets_amount = sets.size(), items_amount = items.size(), likes_amount = liked_items.size();
+//    if (hash.isArray()) {
+//        tracks = hash.toArray();
+//    } else {
+//        QJsonObject hash_obj = hash.toObject();
+//        tracks = hash_obj.value(block_items).toObject();
+//        liked_tracks = hash_obj.value(block_likes).toObject();
+//        playlists = hash_obj.value(block_sets).toObject();
+//    }
 
-    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + sets_amount + items_amount + likes_amount);
-    {
-        if (likes_amount > 0) {
-            Playlist * playlist = rootItem -> createPlaylist(dt_playlist_sc, QStringLiteral("User Likes"));
-            total_amount += proceedScList(liked_items, playlist);
-        }
+////    int start_index = rootItem -> childCount(), items_amount = 0;
+////    int total_amount = 0, sets_amount = sets.size(), items_amount = items.size(), likes_amount = liked_items.size();
 
-    /////////////////////////////////////////////////////////////////////
 
-        if (sets_amount > 0) {
-            for(QJsonArray::Iterator it = sets.begin(); it != sets.end(); it++) {
-                QJsonObject set = (*it).toObject();
+//    {
+//        if (likes_amount > 0) {
+//            Playlist * playlist = rootItem -> createPlaylist(dt_playlist_sc, QStringLiteral("User Likes"));
+//            total_amount += proceedScList(liked_items, playlist);
+//        }
 
-                QJsonArray set_items = set.value(Soundcloud::tkn_tracks).toArray();
-                if (set_items.size() > 0) {
-                    Playlist * playlist = rootItem -> createPlaylist(
-                        dt_playlist_sc,
-                        set.value(Soundcloud::tkn_id).toString(),
-                        set.value(Soundcloud::tkn_title).toString()
-                    );
+//    /////////////////////////////////////////////////////////////////////
 
-                    int playlistSize = proceedScList(set_items, playlist);
-                    playlist -> updateItemsCountInBranch(playlistSize);
-                    total_amount += playlistSize;
-                }
-            }
-        }
+//        if (sets_amount > 0) {
+//            for(QJsonArray::Iterator it = sets.begin(); it != sets.end(); it++) {
+//                QJsonObject set = (*it).toObject();
 
-    /////////////////////////////////////////////////////////////////////
+//                QJsonArray set_items = set.value(Soundcloud::tkn_tracks).toArray();
+//                if (set_items.size() > 0) {
+//                    Playlist * playlist = rootItem -> createPlaylist(
+//                        dt_playlist_sc,
+//                        set.value(Soundcloud::tkn_id).toString(),
+//                        set.value(Soundcloud::tkn_title).toString()
+//                    );
 
-        if (items_amount > 0)
-            total_amount += proceedScList(items, rootItem);
-    }
+//                    int playlistSize = proceedScList(set_items, playlist);
+//                    playlist -> updateItemsCountInBranch(playlistSize);
+//                    total_amount += playlistSize;
+//                }
+//            }
+//        }
 
-    rootItem -> updateItemsCountInBranch(total_amount);
-    endInsertRows();
-    /////////////////////////////////////////////////////////////////////
+//    /////////////////////////////////////////////////////////////////////
+
+//        if (items_amount > 0)
+//            total_amount += proceedScList(items, rootItem);
+//    }
+
+//    beginInsertRows(QModelIndex(), 0, rootItem -> childCount() + sets_amount + items_amount + likes_amount);
+//    rootItem -> updateItemsCountInBranch(total_amount);
+//    endInsertRows();
 
     emit moveOutProcess();
 }

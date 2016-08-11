@@ -157,7 +157,8 @@ namespace Core {
                             QJsonObject set_obj;
                             Html::Tag * link_tag = (*set) -> findFirst(&link_selector);
 
-                            set_obj.insert(tkn_grab_is_set, true);
+//                            set_obj.insert(tkn_grab_is_set, true);
+                            set_obj.insert(tkn_media_type, dmt_audio_set);
 
                             set_obj.insert(
                                 tkn_loadable_cmd,
