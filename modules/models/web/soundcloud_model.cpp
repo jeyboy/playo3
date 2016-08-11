@@ -31,7 +31,7 @@ void SoundcloudModel::refresh() {
 }
 
 void SoundcloudModel::proceedJson(QJsonValue & hash) {
-    proceedBlocks(dt_playlist_sc, hash.toObject(), rootItem);
+    proceedBlocks(dt_playlist_sc, hash.toArray(), rootItem);
 
 //    QJsonObject tracks, liked_tracks, playlists;
 
