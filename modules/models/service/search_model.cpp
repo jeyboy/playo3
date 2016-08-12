@@ -147,10 +147,10 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
 
             case sr_remote: {
                 ISource * iface = Web::Apis::source((DataSubType)r.context.toInt());
-                qDebug() << "SO START" << iface -> siteType();
+                qDebug() << "SO START" << iface -> sourceType();
                 QJsonValue json = iface -> search(r);
-                propagate_count = proceedBlocks(iface -> siteType(), json.toArray(), parent);
-                qDebug() << "SOSOSO" << iface -> siteType() << propagate_count;
+                propagate_count = proceedBlocks(json.toArray(), parent);
+                qDebug() << "SOSOSO" << iface -> sourceType() << propagate_count;
             break;}
 
             default:;

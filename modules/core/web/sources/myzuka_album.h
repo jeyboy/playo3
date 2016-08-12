@@ -4,7 +4,6 @@
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/iqueriable.h"
-#include "modules/core/web/grabber_keys.h"
 
 #define ITEMS_PER_PAGE 50
 #define MAX_PAGES_PER_ARTIST 2
@@ -17,7 +16,7 @@ namespace Core {
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:
             inline QString name() const { return QStringLiteral("Myzuka"); }
-            inline DataSubType siteType() const { return dt_site_myzuka; }
+            inline DataSubType sourceType() const { return dt_site_myzuka; }
 
             // artists by genre
             QJsonValue searchByGenre(const SearchLimit & /*limits*/) { // https://myzuka.org/Genre/92/8-Bit https://myzuka.org/Genre/11/Pop/Page2

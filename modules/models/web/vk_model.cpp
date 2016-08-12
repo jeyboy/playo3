@@ -22,7 +22,7 @@ void VkModel::refresh() {
 }
 
 void VkModel::proceedJson(QJsonValue & hash) {
-    proceedBlocks(dt_site_vk, hash.toArray(), rootItem);
+    proceedBlocks(hash.toArray(), rootItem);
 //    QJsonArray audio_albums, audios, videos, video_albums;
 
 //    if (hash.isArray()) {

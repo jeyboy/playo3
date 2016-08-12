@@ -15,10 +15,10 @@ namespace Core {
                 inline Queries() { }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType siteType() const { return dt_site_fourshared; }
+                inline DataSubType sourceType() const { return dt_site_fourshared; }
 
-                inline void userInfo(QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
-                QJsonArray userInfo(QString & uid) { return loadSetData(CMD_ID % '=' % uid).toArray(); }
+                inline void userInfo(const QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
+                QJsonArray userInfo(const QString & uid) { return QJsonArray() << loadSetData(CMD_ID % '=' % uid); }
 
 
 //                QString downloadLink(const QString & refresh_page) {

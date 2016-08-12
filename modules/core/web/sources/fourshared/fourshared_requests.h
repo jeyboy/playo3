@@ -11,7 +11,7 @@ namespace Core {
     namespace Web {
         namespace Fourshared {
             class Requests : public Auth, public Item, public Set, public Track, public Video {
-                QJsonValue procUserData(const QJsonObject & user_data) {
+                QJsonObject procUserData(const QJsonObject & user_data) {
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
 
                     QJsonArray dirs = info.value(QStringLiteral("dirs")).toArray();
@@ -26,12 +26,12 @@ namespace Core {
                             QJsonObject set_obj;
 
 //                            set_obj.insert(tkn_grab_is_set, true);
-                            set_obj.insert(tkn_media_type, dmt_any_set);
+                            set_obj.insert(tkn_media_type, dmt_any);
 
                             set_obj.insert(
                                 tkn_loadable_cmd,
                                 Cmd::build(
-                                    siteType(), cmd_mtd_load_set_data,
+                                    sourceType(), cmd_mtd_load_set_data,
                                     {{CMD_ID, dir_obj.value(QStringLiteral("id")).toString()}}
                                 ).toString()
                             );
@@ -70,7 +70,7 @@ namespace Core {
                         }
                     }
 
-                    return res;
+                    return QJsonObject {{tkn_content, res}, {tkn_media_type, dmt_any}, {tkn_source_id, sourceType()}};
                 }
             protected:
                 inline virtual ~Requests() {}
@@ -120,13 +120,13 @@ namespace Core {
                     return res;
                 }
 
-                QJsonValue loadSetData(const QString & attrs) {
+                QJsonValue loadSetData(const QUrlQuery & attrs) {
                     return procUserData(
-                        itemsByCollection(
-                            QUrlQuery(attrs).queryItemValue(CMD_ID)
-                        ).toObject()
+                        itemsByCollection(attrs.queryItemValue(CMD_ID)).toObject()
                     );
                 }
+
+                QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);

@@ -28,9 +28,12 @@ namespace Core {
                 QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
                     QJsonArray block_content;
+                    DataMediaType dmt_val = dmt_unknow;
 
                     switch(setType) {
                         case set_popular_audio: {
+                            dmt_val = dmt_audio;
+
                             switch(perm) {
                                 case perm_api: {
                                     block_content = pRequest(
@@ -62,6 +65,8 @@ namespace Core {
                         }
 
                         case set_popular_video: {
+                            dmt_val = dmt_video;
+
                             switch(perm) {
                                 case perm_api: {
                                     block_content = pRequest(
@@ -93,7 +98,7 @@ namespace Core {
                         }
                     }
 
-                    return prepareBlock(limits, cmd_mtd_set_by_type, block_content);
+                    return prepareBlock(dmt_val, limits, cmd_mtd_set_by_type, block_content);
                 }
             };
         }

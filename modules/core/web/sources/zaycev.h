@@ -4,7 +4,6 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
-#include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
@@ -35,7 +34,7 @@ namespace Core {
             }
         public:
             inline QString name() const { return QStringLiteral("Zaycev"); }
-            inline DataSubType siteType() const { return dt_site_zaycev; }
+            inline DataSubType sourceType() const { return dt_site_zaycev; }
 
             QJsonValue searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
                 return pRequest(
@@ -163,7 +162,7 @@ namespace Core {
                             set_obj.insert(
                                 tkn_loadable_cmd,
                                 Cmd::build(
-                                    siteType(), cmd_mtd_load_set_data,
+                                    sourceType(), cmd_mtd_load_set_data,
                                     {
                                         {CMD_ID, base_url.resolved(QUrl(link_tag -> link())).toString()},
                                         {CMD_PARSER, QString::number(proc_tracks1)}

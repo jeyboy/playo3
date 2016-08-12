@@ -20,8 +20,8 @@ namespace Core {
         dmt_audio_set = dmt_set | dmt_audio,
         dmt_video_set = dmt_set | dmt_video,
 
-        dmt_any = dmt_audio | dmt_video,
-        dmt_any_set = dmt_set | dmt_any
+        dmt_any_item = dmt_audio | dmt_video,
+        dmt_any = dmt_set | dmt_any_item
     };
 
     #define EXTRACT_MEDIA_TYPE(val) (DataMediaType)(val & 3)

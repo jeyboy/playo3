@@ -19,7 +19,7 @@ namespace Core {
         virtual ~ISource() {}
 
         virtual QString name() const = 0;
-        virtual DataSubType siteType() const = 0;
+        virtual DataSubType sourceType() const = 0;
 
         inline QString lastError() const { return error; }
 
@@ -41,7 +41,7 @@ namespace Core {
             loadAdditionals(root);
         }
 
-        virtual QJsonArray itemsInfo(const QStringList & /*items_uids*/) { return QJsonArray(); }
+        virtual QJsonObject itemsInfo(const QStringList & /*items_uids*/) { return QJsonObject(); }
 
         virtual inline QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
             if (refresh_page.isEmpty() || !isShareable()) return QString();

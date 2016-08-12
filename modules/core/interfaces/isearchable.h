@@ -11,7 +11,7 @@
 namespace Core {
     class ISearchable : public IGenreable {
     public:
-        virtual DataSubType siteType() const = 0;
+        virtual DataSubType sourceType() const = 0;
 
         inline ISearchable() { }
         inline virtual ~ISearchable() {}

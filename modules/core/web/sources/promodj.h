@@ -4,7 +4,6 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
-#include "modules/core/web/grabber_keys.h"
 
 #define ITEMS_PER_PAGE 50
 
@@ -14,7 +13,7 @@ namespace Core {
         class PromoDj : public ISource, public IQueriable, public Singleton<PromoDj> {
         public:
             inline QString name() const { return QStringLiteral("PromoDJ"); }
-            inline DataSubType siteType() const { return dt_site_promodj; }
+            inline DataSubType sourceType() const { return dt_site_promodj; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);

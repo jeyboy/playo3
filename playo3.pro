@@ -128,7 +128,6 @@ HEADERS += \
     modules/core/core_parts/item_drop_formats.h \
     modules/core/core_parts/playlist.h \
     modules/core/web/grabber_keys.h \
-    modules/core/web/interfaces/igrabber_api.h \
     modules/core/interfaces/isearchable.h \
     modules/core/media/cue/cue.h \
     modules/core/media/cue/cue_structs.h \

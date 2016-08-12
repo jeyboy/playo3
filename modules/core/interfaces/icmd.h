@@ -69,6 +69,9 @@ namespace Core {
         }
 
         QString toString() {
+            if (!attrs.hasQueryItem(CMD_MEDIA_TYPE))
+                attrs.addQueryItem(CMD_MEDIA_TYPE, QStringLiteral("0"));
+
             return QStringLiteral("%1/%2/%3?%4").arg(
                 QString::number(source_type),
                 attrs.queryItemValue(CMD_MEDIA_TYPE),

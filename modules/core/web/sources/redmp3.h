@@ -4,7 +4,6 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
-#include "modules/core/web/grabber_keys.h"
 
 // store all selectors in global variables
 namespace Core {
@@ -12,7 +11,7 @@ namespace Core {
         class RedMp3 : public ISource, public IQueriable, public Singleton<RedMp3> {
         public:
             inline QString name() const { return QStringLiteral("RedMp3"); }
-            inline DataSubType siteType() const { return dt_site_redmp3; }
+            inline DataSubType sourceType() const { return dt_site_redmp3; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);

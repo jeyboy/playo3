@@ -18,7 +18,7 @@ namespace Models {
 
         inline bool isRelative() const { return false; }
         virtual ISource * api() const = 0;
-        inline Core::DataSubType playlistType() const { return api() -> siteType(); }
+        inline Core::DataSubType playlistType() const { return api() -> sourceType(); }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);
         QJsonObject toJson();

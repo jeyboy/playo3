@@ -2,11 +2,11 @@
 
 namespace Core {
     namespace Web {
-        extern const QString block_items                = QString::number(dmt_any);
+        extern const QString block_items                = QString::number(dmt_any_item);
         extern const QString block_items_audio          = QString::number(dmt_audio);
         extern const QString block_items_video          = QString::number(dmt_video);
 
-        extern const QString block_sets                 = QString::number(dmt_any_set);
+        extern const QString block_sets                 = QString::number(dmt_set);
         extern const QString block_sets_audio           = QString::number(dmt_audio_set);
         extern const QString block_sets_video           = QString::number(dmt_video_set);
 
@@ -17,6 +17,7 @@ namespace Core {
         extern const QString block_groups               = QStringLiteral("blk_groups");
 
         extern const QString tkn_content                = QStringLiteral("cnt");
+        extern const QString tkn_source_id              = QStringLiteral("sid");
         extern const QString tkn_media_type             = QStringLiteral("mtype");
         extern const QString tkn_block_type             = QStringLiteral("btype");
         extern const QString tkn_dir_name               = QStringLiteral("dir_name");

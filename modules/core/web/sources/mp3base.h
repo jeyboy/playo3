@@ -4,7 +4,6 @@
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/interfaces/isource.h"
-#include "modules/core/web/grabber_keys.h"
 
 //function playSong(id)
 //{
@@ -104,7 +103,7 @@ namespace Core {
         class Mp3Base : public ISource, public IQueriable, public Singleton<Mp3Base> {
         public:
             inline QString name() const { return QStringLiteral("Mp3Base"); }
-            inline DataSubType siteType() const { return dt_site_mp3base; }
+            inline DataSubType sourceType() const { return dt_site_mp3base; }
 
             QJsonValue popular(const SearchLimit & /*limitations*/) {
                 return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);

@@ -74,7 +74,7 @@ void ISource::openTab() {
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(user_id)),
-            Models::Params(siteType(), user_id), 0, true, true, 0, true
+            Models::Params(sourceType(), user_id), 0, true, true, 0, true
         );
     }
 }
@@ -84,7 +84,7 @@ void ISource::openRecomendations() {
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Models::Params(siteType(), user_id, rec_user), 0, true, true
+        Models::Params(sourceType(), user_id, rec_user), 0, true, true
     );
 }
 
@@ -96,7 +96,7 @@ void ISource::openRelationTab() {
                 QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
                 uidStr(dialog.getId())
             ),
-            Models::Params(siteType(), dialog.getId()), 0, true, true
+            Models::Params(sourceType(), dialog.getId()), 0, true, true
         );
 }
 
@@ -108,6 +108,6 @@ void ISource::openPackageTab() {
                 QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
                 uidStr(dialog.getParams())
             ),
-            Models::Params(siteType(), dialog.getParams(), rec_set), 0, true, true
+            Models::Params(sourceType(), dialog.getParams(), rec_set), 0, true, true
         );
 }

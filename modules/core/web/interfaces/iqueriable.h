@@ -8,6 +8,8 @@
 #include "modules/core/misc/logger.h"
 #include "queriable_arg.h"
 
+#include "modules/core/web/grabber_keys.h"
+
 #define IQUERY_DEF_FIELDS QStringList() << DEF_JSON_FIELD
 #define QUERY_RETRY_AMOUNT 3
 

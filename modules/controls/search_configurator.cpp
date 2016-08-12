@@ -308,7 +308,7 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
         QList<Core::ISource *> sources = Core::Web::Apis::sourcesList().values();
         for(QList<Core::ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
             if ((*it) -> permissions(pr_search_media))
-                res.sites.append((*it) -> siteType());
+                res.sites.append((*it) -> sourceType());
     }
 
     if (blocks & block_tabs) {

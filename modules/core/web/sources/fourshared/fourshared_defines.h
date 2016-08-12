@@ -2,7 +2,6 @@
 #define FOURSHARED_DEFINES
 
 #include "fourshared_keys.h"
-#include "modules/core/web/grabber_keys.h"
 
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/iqueriable.h"
@@ -28,15 +27,19 @@ namespace Core {
 //                inline void setGenreFilter(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genre, genre); }
 //                inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
 
-                QJsonObject prepareBlock(const SearchLimit & limits, const ICmdMethods & mtd, const QJsonArray & block_content) {
+                QJsonObject prepareBlock(const DataMediaType & dmt_val, const SearchLimit & limits, const ICmdMethods & mtd, const QJsonArray & block_content) {
                     QJsonObject block;
 
+                    int source_id = sourceType();
+
                     block.insert(tkn_content, block_content);
+                    block.insert(tkn_media_type, dmt_val);
+                    block.insert(tkn_source_id, source_id);
 
                     if (block_content.size() < limits.items_limit)
                         block.insert(
                             tkn_more_cmd,
-                            Cmd::build(siteType(), mtd, limits.toICmdParams(block_content.size())).toString()
+                            Cmd::build(source_id, mtd, limits.toICmdParams(block_content.size())).toString()
                         );
 
                     return block;

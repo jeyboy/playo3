@@ -14,7 +14,7 @@ namespace Core {
                 inline Queries() { }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType siteType() const { return dt_site_sc; }
+                inline DataSubType sourceType() const { return dt_site_sc; }
 
                 QJsonValue objectInfo(const QString & oid) {
                     QJsonObject res;

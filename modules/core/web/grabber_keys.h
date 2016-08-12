@@ -28,6 +28,7 @@ namespace Core {
         extern const QString block_groups;
 
         extern const QString tkn_content;
+        extern const QString tkn_source_id;
         extern const QString tkn_media_type;
         extern const QString tkn_block_type;
         extern const QString tkn_dir_name;

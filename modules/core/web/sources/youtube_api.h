@@ -21,7 +21,7 @@ namespace Core {
                 inline Api() { }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType siteType() const { return dt_site_youtube; }
+                inline DataSubType sourceType() const { return dt_site_youtube; }
                 inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_def) {
                     QUrlQuery query;
                     query.addQueryItem(tkn_key, val_client_tkn);

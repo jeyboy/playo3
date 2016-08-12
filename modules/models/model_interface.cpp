@@ -221,31 +221,9 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedBlocks(const DataSubType & wType, const QJsonArray & blocks, Playlist * parent/*, const DataMediaType & dmtype*/) {
+int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent/*, const DataMediaType & dmtype*/) {
     int (IModel::*proc_func)(const QJsonObject &, Playlist *, const DataMediaType &, const DataSubType &);
     int (IModel::*proc_set_func)(const QJsonObject &, Playlist *, const DataMediaType &, const DataSubType &);
-
-    switch(wType) {
-        case dt_site_vk: {
-            proc_func = &IModel::proceedVkList;
-            proc_set_func = &IModel::proceedVkSet;
-        break;}
-        case dt_site_sc: {
-            proc_func = &IModel::proceedScList;
-            proc_set_func = &IModel::proceedScSet;
-        break;}
-        case dt_site_od: {
-            proc_func = &IModel::proceedOdList;
-        break;}
-        case dt_site_yandex: {
-            proc_func = &IModel::proceedYandexList;
-        break;}
-        case dt_site_youtube: {
-            proc_func = &IModel::proceedYoutubeList;
-        break;}
-        default:
-            proc_func = &IModel::proceedGrabberList;
-    }
 
     int start_index = parent -> childCount(), items_amount = 0;
 
@@ -256,14 +234,43 @@ int IModel::proceedBlocks(const DataSubType & wType, const QJsonArray & blocks, 
 //        if (dmt_type == 0) dmt_type = dmtype;
 
         Playlist * curr_parent = parent;
+        DataSubType wType = (DataSubType)block_obj.value(tkn_source_id).toInt();
 
+        switch(wType) {
+            case dt_site_vk: {
+                proc_func = &IModel::proceedVkList;
+                proc_set_func = &IModel::proceedVkSet;
+            break;}
+            case dt_site_sc: {
+                proc_func = &IModel::proceedScList;
+                proc_set_func = &IModel::proceedScSet;
+            break;}
+            case dt_site_od: {
+                proc_func = &IModel::proceedOdList;
+                proc_set_func = 0;
+            break;}
+            case dt_site_yandex: {
+                proc_func = &IModel::proceedYandexList;
+                proc_set_func = 0;
+            break;}
+            case dt_site_youtube: {
+                proc_func = &IModel::proceedYoutubeList;
+                proc_set_func = 0;
+            break;}
+            default:
+                proc_func = &IModel::proceedGrabberList;
+                proc_set_func = 0;
+        }
+
+
+        // if used other playlist - should updating (beginInsertRows) for it and add + 1 to parent :(
         if (block_obj.contains(tkn_dir_name)) {
             // we can use there building of subtree if needed
             QString name = block_obj.value(tkn_dir_name).toString();
             curr_parent = parent -> createPlaylist(wType, name);
         }
 
-        if (dmt_type & dmt_set)
+        if (dmt_type != dmt_any && dmt_type & dmt_set)
             items_amount += (*this.*proc_set_func)(block_obj, curr_parent, dmt_type, wType);
         else
             items_amount += (*this.*proc_func)(block_obj, curr_parent, dmt_type, wType);
@@ -912,33 +919,41 @@ void IModel::importIds(const QStringList & ids) {
         uidsMap[parts.first().toInt()].append(parts.last());
     }
 
-    Playlist * parentNode = 0;
+    Playlist * parentNode = rootItem;
     bool is_new = false;
 
-    switch(playlistType()) {
-        case dt_search:
-        case dt_site_sc:
-        case dt_site_vk:
-        case dt_level: { parentNode = rootItem; break; }
-        case dt_tree:
-        case dt_level_tree: {
-            QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
-            QString path = file.path();
-            if (path.isEmpty()) path = Extensions::folderName(file);
-            parentNode = rootItem -> playlist(path);
-            is_new = !parentNode;
-            if (is_new) parentNode = rootItem -> createPlaylist(dt_playlist, path);
-        break;}
-        default:;
+    if (!hasFreeMoving()) {
+        QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
+        QString path = file.path();
+        if (path.isEmpty()) path = Extensions::folderName(file);
+        parentNode = rootItem -> playlist(path);
+        is_new = !parentNode;
+        if (is_new) parentNode = rootItem -> createPlaylist(dt_playlist, path);
     }
 
-    if (!parentNode) qDebug() << "UNDEF FOLDER";
+//    switch(playlistType()) {
+//        case dt_search:
+//        case dt_site_sc:
+//        case dt_site_vk:
+//        case dt_level: { parentNode = rootItem; break; }
+//        case dt_tree:
+//        case dt_level_tree: {
+//            QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
+//            QString path = file.path();
+//            if (path.isEmpty()) path = Extensions::folderName(file);
+//            parentNode = rootItem -> playlist(path);
+//            is_new = !parentNode;
+//            if (is_new) parentNode = rootItem -> createPlaylist(dt_playlist, path);
+//        break;}
+//        default:;
+//    }
 
-    if (is_new) { // registering new folder node
-        int from = parentNode -> row();
-        beginInsertRows(index(parentNode -> parent()), from, from + ids.size() - 1);
-        endInsertRows();
-    }
+//    if (!parentNode) {
+//        qDebug() << "UNDEF FOLDER";
+//        return;
+//    }
+
+    QJsonArray blocks;
 
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
         ISource * source = Web::Apis::source((DataSubType)map_it.key());
@@ -947,15 +962,21 @@ void IModel::importIds(const QStringList & ids) {
             source -> connectUser(); // check connection and ask user to connect if it not
 
             if (source -> isConnected()) {
-                proceedBlocks(
-                    source -> siteType(),
-                    QJsonArray() << source -> itemsInfo(map_it.value()),
-                    parentNode
-                );
+                blocks << source -> itemsInfo(map_it.value());
             }
 //            else // some actions
         }
         else qDebug() << "UNSUPPORTED EXPORT TYPE";
+    }
+
+    if (!blocks.isEmpty()) {
+        if (is_new) { // registering new folder node // a little dirty
+            int from = parentNode -> row();
+            beginInsertRows(index(parentNode -> parent()), from, from);
+            endInsertRows();
+        }
+
+        proceedBlocks(blocks, parentNode);
     }
 
     emit moveOutBackgroundProcess();
@@ -1014,20 +1035,20 @@ void IModel::finishingItemsAdding() {
 void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
-    DataSubType data_type; // = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
-    DataMediaType media_type; // = (DataMediaType)hash.value(tkn_media_type).toInt();
+//    DataSubType data_type; // = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
+//    DataMediaType media_type; // = (DataMediaType)hash.value(tkn_media_type).toInt();
 
-    Web::Apis::extractSourceTypeAndMediaType(
-        playlist -> loadableCmd(),
-        (int &)data_type,
-        (int &)media_type
-    );
+//    Web::Apis::extractSourceTypeAndMediaType(
+//        playlist -> loadableCmd(),
+//        (int &)data_type,
+//        (int &)media_type
+//    );
 
     playlist -> unset(IItem::flag_in_proc);
     playlist -> removeLoadability();
 
     IItem * temp_item = playlist -> child(0);
-    int added = proceedBlocks(data_type, QJsonArray() << json.toObject(), playlist/*, media_type*/);
+    int added = proceedBlocks(QJsonArray() << json.toObject(), playlist/*, media_type*/);
 
     if (added > 0) {
         temp_item -> removeYouself();
