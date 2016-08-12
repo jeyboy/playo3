@@ -498,18 +498,24 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, con
         if (itm.contains(tkn_media_type))
             dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
 
-        if (itm.contains(tkn_grab_is_set)) { // use there dm_type & dmt_set
+        if (dm_type & dmt_set) {
+            QString pid = itm.value(tkn_grab_id).toString();
+            QString ptitle = itm.value(tkn_grab_title).toString();
+
             if (itm.contains(tkn_loadable_cmd)) {
                 parent -> createLoadablePlaylist(
                     itm.value(tkn_loadable_cmd).toString(),
-                    itm.value(tkn_grab_title).toString(),
-                    itm.value(tkn_grab_id).toString()
+                    ptitle,
+                    pid
                 );
 
                 items_amount++;
             } else {
-                Playlist * playlist = parent -> createPlaylist(wType, itm.value(tkn_grab_id).toString(), itm.value(tkn_grab_title).toString());
-                int taked_amount = proceedGrabberList(itm.value(tkn_content).toArray(), playlist, dm_type, wType);
+                Playlist * playlist = parent -> createPlaylist(wType, pid, ptitle);
+                int taked_amount = proceedGrabberList(
+                    QJsonObject {{tkn_content, itm.value(tkn_content)}},
+                    playlist, EXTRACT_MEDIA_TYPE(dm_type), wType
+                );
 
                 if (itm.contains(tkn_more_cmd)) {
                     // add more items btn
@@ -523,7 +529,7 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, con
             QString uri = itm.value(tkn_grab_url).toString();
             QString refresh_url = itm.value(tkn_grab_refresh).toString();
 
-            itemsAmount++;
+            items_amount++;
             IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
                 itm.value(tkn_grab_title).toString(),
                 wType, refresh_url,
@@ -630,7 +636,7 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const Dat
     if (collection.isEmpty()) return 0;
     int items_amount = 0;
 
-//    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject playlist = (*it).toObject();
@@ -645,15 +651,18 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const Dat
                 playlist_id
             );
         } else {
-            QJsonArray set_items = set.value(Soundcloud::tkn_tracks).toArray();
-            if (set_items.size() > 0) {
+            QJsonArray playlist_items = playlist.value(Soundcloud::tkn_tracks).toArray();
+            if (!playlist_items.isEmpty()) {
                 Playlist * playlist = parent -> createPlaylist(
                     dt_playlist_sc,
                     playlist_id,
                     title
                 );
 
-                int amount = proceedScList(set_items, playlist);
+                int amount = proceedScList(
+                    QJsonObject {{tkn_content, playlist_items}},
+                    playlist, dmt_type
+                );
                 playlist -> updateItemsCountInBranch(amount);
                 items_amount += amount;
             }
@@ -940,8 +949,8 @@ void IModel::importIds(const QStringList & ids) {
             source -> connectUser(); // check connection and ask user to connect if it not
 
             if (source -> isConnected()) {
-                QJsonValue obj = source -> itemsInfo(map_it.value());
-                proceedList(source -> siteType(), obj, parentNode);
+                QJsonObject obj = source -> itemsInfo(map_it.value());
+                proceedBlocks(source -> siteType(), QJsonArray() << obj, parentNode);
             }
 //            else // some actions
         }
@@ -1018,14 +1027,11 @@ void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
     playlist -> removeLoadability();
 
     IItem * temp_item = playlist -> child(0);
-    int added = proceedList(data_type, json, playlist, media_type);
+    int added = proceedBlocks(data_type, QJsonArray() << json.toObject(), playlist/*, media_type*/);
 
     if (added > 0) {
         temp_item -> removeYouself();
-        playlist -> backPropagateItemsCountInBranch(added);
-
-        beginInsertRows(index(playlist), 0, added);
-        endInsertRows();
+//        playlist -> backPropagateItemsCountInBranch(added);
     } else {
         temp_item -> setTitle(QStringLiteral("Error!!"));
     }
