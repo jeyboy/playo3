@@ -123,13 +123,13 @@ namespace Models {
         int proceedVkList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
         int proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
 
-        int proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
-        int proceedScSet(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
+        int proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
+        int proceedScSet(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
 
-        int proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_od);
-        int proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_yandex);
-        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype = dmt_unknow, const DataSubType & wType = dt_site_youtube);
-        int proceedGrabberList( const QJsonObject & collection, Playlist * parent, const DataMediaType & dmtype, const DataSubType & wType);
+        int proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_od);
+        int proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_yandex);
+        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_youtube);
+        int proceedGrabberList( const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & wType);
 
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 

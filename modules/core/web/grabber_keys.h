@@ -7,8 +7,7 @@
 
 #define PACKAGE_REPLACE_FRAGMENT QStringLiteral("Custom filter...")
 
-//#define EXTRACT_AUDIO_ITEMS(json)\
-//    json.value(block_items_audio).toObject().value(tkn_content).toArray()
+#define EXTRACT_ITEMS(json) json.value(tkn_content).toArray()
 
 namespace Core {
     namespace Web {
