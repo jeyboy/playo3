@@ -13,15 +13,7 @@ void FoursharedModel::refresh() {
 }
 
 void FoursharedModel::proceedJson(QJsonArray & hash) {
-    int added = proceedList(dt_site_fourshared, hash, rootItem);
-
-    if (added > 0) {
-        int row_index = rootItem -> childCount();
-        rootItem -> updateItemsCountInBranch(added);
-
-        beginInsertRows(QModelIndex(), row_index, row_index + added);
-        endInsertRows();
-    }
+    proceedBlocks(dt_site_fourshared, hash, rootItem);
 
     emit moveOutProcess();
 }

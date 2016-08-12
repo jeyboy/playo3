@@ -934,12 +934,10 @@ void IModel::importIds(const QStringList & ids) {
 
     if (!parentNode) qDebug() << "UNDEF FOLDER";
 
-    if (is_new) {
+    if (is_new) { // registering new folder node
         int from = parentNode -> row();
         beginInsertRows(index(parentNode -> parent()), from, from + ids.size() - 1);
-    } else {
-        int from = parentNode -> childCount();
-        beginInsertRows(index(parentNode), from, from + ids.size() - 1);
+        endInsertRows();
     }
 
     for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
@@ -949,15 +947,17 @@ void IModel::importIds(const QStringList & ids) {
             source -> connectUser(); // check connection and ask user to connect if it not
 
             if (source -> isConnected()) {
-                QJsonObject obj = source -> itemsInfo(map_it.value());
-                proceedBlocks(source -> siteType(), QJsonArray() << obj, parentNode);
+                proceedBlocks(
+                    source -> siteType(),
+                    QJsonArray() << source -> itemsInfo(map_it.value()),
+                    parentNode
+                );
             }
 //            else // some actions
         }
         else qDebug() << "UNSUPPORTED EXPORT TYPE";
     }
 
-    endInsertRows();
     emit moveOutBackgroundProcess();
 }
 
