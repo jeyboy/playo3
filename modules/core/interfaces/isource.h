@@ -21,6 +21,7 @@ namespace Core {
 
         virtual QString name() const = 0;
         virtual DataSubType sourceType() const = 0;
+        virtual QString cookies() const { return QString(); }
 
         inline QString lastError() const { return error; }
 

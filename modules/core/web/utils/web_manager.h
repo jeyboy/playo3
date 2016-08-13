@@ -149,6 +149,19 @@ namespace Core { // requests and response has memory leaks
 
                 qDebug() << " -----------------------------------------------------------------";
             }
+            static inline QString cookiesAsHeaderStr(QUrl url = QUrl(), QHash<QString, bool> acceptable = QHash<QString, bool>()) {
+                QString res;
+                bool ignore_filter = acceptable.isEmpty();
+
+                const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
+                for(QList<QNetworkCookie>::ConstIterator cookie = items.cbegin(); cookie != items.cend(); cookie++) {
+                    QString name = QString((*cookie).name());
+                    if (ignore_filter || acceptable.contains(name))
+                        res = res % name % '=' % (*cookie).value() % QStringLiteral("; ");
+                }
+
+                return QStringLiteral("Cookie: ") % res;
+            }
             static inline QString cookie(const QString & name, QUrl url = QUrl()) {
                 const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
                 for(QList<QNetworkCookie>::ConstIterator cookie = items.cbegin(); cookie != items.cend(); cookie++)

@@ -86,6 +86,7 @@ namespace Core {
 
         current_playlist = playlist;
         current_item = item;
+        attempts = 0;
 
         if (item) {
             if (item -> error().toInt() != ItemErrors::warn_not_permitted) {
@@ -122,7 +123,6 @@ namespace Core {
             break;}
 
             case PlaingMedia: {
-                attempts = 0;
                 int add_state = 0;
                 qDebug() << "PLAING MEDIA";
                 if (current_item -> isRemote() && Settings::obj().isInitiateOnPlaying()) {
@@ -168,8 +168,14 @@ namespace Core {
 
             case InvalidMedia: {
                 qDebug() << "INVALID MEDIA";
-                setError(ItemErrors::warn_not_supported);
-                playNext(true);
+
+                if (current_item -> isRemote())
+                    restoreOrNext();
+                else {
+                    setError(ItemErrors::warn_not_supported);
+                    playNext(true);
+                }
+//                playNext(true);
             break;}
 
             case NoMedia: {

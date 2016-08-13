@@ -61,8 +61,11 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
     if (!new_chan) {
         qDebug() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
         proceedErrorState();
-    } else if (watcher -> isCanceled())
-        BASS_StreamFree(new_chan);
+    } else {
+        qDebug() << "OPENED" << url.toString();
+        if (watcher -> isCanceled())
+            BASS_StreamFree(new_chan);
+    }
 
     //TODO: need to realise proc of situation when timeout is to short - because now this is fired refresh many times
 

@@ -237,15 +237,18 @@ namespace Core {
 
                     switch(itemMediaType) {
                         case dmt_audio: {
+                            QString res;
+
                             if (is_uid) {
                                 url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % refresh_page);
-                                QString res = Manager::prepare() -> putFollowed(url, Auth::siteHeaders()) -> toText();
+                                res = Manager::prepare() -> putFollowed(url, Auth::siteHeaders()) -> toText();
                                 Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
-                                return res;
                             } else {
                                 Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
-                                return doc.find("input.jsD1PreviewUrl").value();
+                                res = doc.find("input.jsD1PreviewUrl").value();
                             }
+
+                            return res % QStringLiteral("\r\n") % cookies();
                         }
 
                         case dmt_video: {
