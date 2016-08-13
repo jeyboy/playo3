@@ -13,7 +13,7 @@ void FoursharedModel::refresh() {
 }
 
 void FoursharedModel::proceedJson(QJsonArray & hash) {
-    proceedBlocks(dt_site_fourshared, hash, rootItem);
+    proceedBlocks(hash, rootItem);
 
     emit moveOutProcess();
 }
