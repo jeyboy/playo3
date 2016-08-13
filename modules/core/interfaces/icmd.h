@@ -32,35 +32,22 @@ namespace Core {
             QStringList parts = cmd.split(QRegularExpression("[\\/\\?]"), QString::SkipEmptyParts);
 
             source_type = parts[0].toInt();
-            media_type = parts[1].toInt();
-            mtd = parts[2].toInt();
-            attrs = QUrlQuery(parts[3]);
+            mtd = parts[1].toInt();
+            attrs = QUrlQuery(parts[2]);
         }
 
-        Cmd(const int source_type, const int & mtd, const int & media_type, const QUrlQuery & attrs)
-            : source_type(source_type), media_type(media_type), mtd(mtd), attrs(attrs) {}
+        Cmd(const int source_type, const int & mtd, const QUrlQuery & attrs)
+            : source_type(source_type), mtd(mtd), attrs(attrs) {}
 
-        Cmd(const int source_type, const int & mtd, const int & media_type, const std::initializer_list<std::pair<QString, QString> > & params)
-            : source_type(source_type), media_type(media_type), mtd(mtd), attrs(paramsToQuery(params)) {}
+        Cmd(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & params)
+            : source_type(source_type), mtd(mtd), attrs(paramsToQuery(params)) {}
 
         static Cmd build(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & params) {
-            QUrlQuery query = paramsToQuery(params);
-
-            return Cmd(
-                source_type,
-                mtd,
-                query.queryItemValue(CMD_MEDIA_TYPE).toInt(),
-                query
-            );
+            return Cmd(source_type, mtd, paramsToQuery(params));
         }
 
         static Cmd build(const int source_type, const int & mtd, const QUrlQuery & attrs) {
-            return Cmd(
-                source_type,
-                mtd,
-                attrs.queryItemValue(CMD_MEDIA_TYPE).toInt(),
-                attrs
-            );
+            return Cmd(source_type, mtd, attrs);
         }
 
         Cmd * setAttrs(const std::initializer_list<std::pair<QString, QString> > & params) {
@@ -69,19 +56,14 @@ namespace Core {
         }
 
         QString toString() {
-            if (!attrs.hasQueryItem(CMD_MEDIA_TYPE))
-                attrs.addQueryItem(CMD_MEDIA_TYPE, QStringLiteral("0"));
-
-            return QStringLiteral("%1/%2/%3?%4").arg(
+            return QStringLiteral("%1/%2?%3").arg(
                 QString::number(source_type),
-                attrs.queryItemValue(CMD_MEDIA_TYPE),
                 QString::number(mtd),
                 attrs.toString()
             );
         }
 
         int source_type;
-        int media_type;
         int mtd;
 
         QUrlQuery attrs;

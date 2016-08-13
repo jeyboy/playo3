@@ -8,7 +8,7 @@
 #include "modules/core/misc/logger.h"
 #include "queriable_arg.h"
 
-#include "modules/core/web/grabber_keys.h"
+//#include "modules/core/web/grabber_keys.h"
 
 #define IQUERY_DEF_FIELDS QStringList() << DEF_JSON_FIELD
 #define QUERY_RETRY_AMOUNT 3
@@ -48,18 +48,20 @@ namespace Core {
                             Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, message, true);
                             sendError(arg -> error_receiver, message, code);
                         } else {
-                            if (arg -> post_proc & proc_json_extract) {
-                                QJsonValue val = json;
+                            QJsonValue val = json;
 
+                            if (arg -> post_proc & proc_json_extract) {
                                 for(QStringList::Iterator field = arg -> fields.begin(); field != arg -> fields.end(); field++)
                                     val = val.toObject().value(*field);
-
-                                if (val.isArray())
-                                    arg -> append(val.toArray());
-                                else
-                                    arg -> append(val.toObject());
                             }
-                            else arg -> append(json);
+
+                            if (arg -> post_proc & proc_json_proc)
+                                val = procJson(val, arg -> post_proc);
+
+                            if (val.isArray())
+                                arg -> append(val.toArray());
+                            else
+                                arg -> append(val.toObject());
 
                             arg -> forse_completing = endReached(json, arg);
                             Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, json.keys());
@@ -186,6 +188,8 @@ namespace Core {
             // for html
             // extract content and update request url if required
             virtual bool htmlToJson(QueriableArg * /*arg*/, Response * /*reply*/, QString & /*message*/, bool /*removeReply*/ = false) { return false; }
+
+            virtual QJsonValue procJson(const QJsonValue & json, const AdditionalProc & /*proc*/) { return json; }
 
             inline void sendError(QObject * errorReceiver, QString & message, int code = -1) {
                 if (errorReceiver)

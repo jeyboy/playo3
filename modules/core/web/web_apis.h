@@ -25,13 +25,6 @@ namespace Core {
                     return source -> run((Core::ICmd::ICmdMethods)cmnd.mtd, cmnd.attrs);
             }
 
-//            static void extractSourceTypeAndMediaType(const QString & cmd, int & source_type, int & media_type) {
-//                Cmd cmnd = Cmd(cmd);
-
-//                source_type = cmnd.source_type;
-//                media_type = cmnd.media_type;
-//            }
-
             static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType, const DataMediaType & itemMediaType) {
                 qDebug() << "RESTORING" << itemSubType << itemMediaType << refreshStr;
 

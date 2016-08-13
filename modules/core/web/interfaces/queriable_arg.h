@@ -17,7 +17,7 @@ namespace Core {
         enum ApiCallIterType { call_iter_type_page, call_iter_type_item };
         enum ApiCallIterMethod { call_iter_method_offset, call_iter_method_token };
         enum AdditionalProc {
-            proc_none = 0, proc_json_wrap = 1, proc_json_extract = 2, proc_json_patch = proc_json_wrap | proc_json_extract, // patch used if returned {} as response
+            proc_none = 0, proc_json_wrap = 1, proc_json_extract = 2, proc_json_proc = 4, proc_json_patch = proc_json_wrap | proc_json_extract, // patch used if returned {} as response
             proc_tracks1 = 4, proc_tracks2, proc_tracks3, proc_artists1, proc_artists2, proc_artists3, proc_genres1,
             proc_genres2, proc_genres3, proc_video1, proc_video2, proc_video3, proc_set1, proc_set2, proc_set3,
             proc_char1, proc_char2, proc_group1, proc_group2, proc_group3, proc_user1, proc_user2, proc_user3
@@ -209,6 +209,13 @@ namespace Core {
 
             bool isCompleted() {
                 return last_result_is_empty || forse_completing || items_fact_count >= items_total_limit || requests_fact_count >= requests_limit;
+            }
+
+            void append(const QJsonValue & item, bool iterate = true) {
+                if (item.isArray())
+                    append(item.toArray());
+                else
+                    append(item.toObject(), iterate);
             }
 
             void append(const QJsonObject & item, bool iterate = true) {

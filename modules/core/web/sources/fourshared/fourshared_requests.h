@@ -11,7 +11,9 @@ namespace Core {
     namespace Web {
         namespace Fourshared {
             class Requests : public Auth, public Item, public Set, public Track, public Video {
-                QJsonObject procUserData(const QJsonObject & user_data) {
+                QJsonValue procJson(const QJsonValue & json, const AdditionalProc & /*proc*/) {
+                    QJsonObject user_data = json.toObject();
+
                     QJsonObject info = user_data[QStringLiteral("info")].toObject();
 
                     QJsonArray dirs = info.value(QStringLiteral("dirs")).toArray();
@@ -70,8 +72,9 @@ namespace Core {
                         }
                     }
 
-                    return QJsonObject {{tkn_content, res}, {tkn_media_type, dmt_any}, {tkn_source_id, sourceType()}};
+                    return res;
                 }
+                // return QJsonObject {{tkn_content, res}, {tkn_media_type, dmt_any}, {tkn_source_id, sourceType()}};
             protected:
                 inline virtual ~Requests() {}
 
@@ -121,9 +124,7 @@ namespace Core {
                 }
 
                 QJsonValue loadSetData(const QUrlQuery & attrs) {
-                    return procUserData(
-                        itemsByCollection(attrs.queryItemValue(CMD_ID)).toObject()
-                    );
+                    return itemsByCollection(attrs.queryItemValue(CMD_ID));
                 }
 
                 QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
