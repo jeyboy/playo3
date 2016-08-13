@@ -79,23 +79,11 @@ namespace Core {
             return block;
         }
 
-//        QJsonObject prepareBlock(const DataMediaType & dmt_val, const SearchLimit & limits, const ICmdMethods & mtd, const QJsonArray & block_content) {
-//            QJsonObject block;
-
-//            int source_id = sourceType();
-
-//            block.insert(Web::tkn_content, block_content);
-//            block.insert(Web::tkn_media_type, dmt_val);
-//            block.insert(Web::tkn_source_id, source_id);
-
-//            if (block_content.size() < limits.items_limit)
-//                block.insert(
-//                    Web::tkn_more_cmd,
-//                    Cmd::build(source_id, mtd, limits.toICmdParams(block_content.size())).toString()
-//                );
-
-//            return block;
-//        }
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content) {
+            return QJsonObject {
+                {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()}
+            };
+        }
 
         virtual Web::Response * takeRefreshPage(const QString & refresh_page) { return Web::Manager::prepare() -> getFollowed(QUrl(refresh_page)); }
         virtual QString refreshProc(Web::Response * response, const DataMediaType & /*itemMediaType*/) { delete response; return QString(); }

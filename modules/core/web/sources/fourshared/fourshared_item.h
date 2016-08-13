@@ -18,7 +18,7 @@ namespace Core {
                         QStringList(), call_method_post, siteHeaders()
                     );
 
-                    return QJsonObject {{tkn_content, res}, {tkn_media_type, dmt_any}, {tkn_source_id, sourceType()}};
+                    return prepareBlock(dmt_any, res);
                 }
             };
         }
