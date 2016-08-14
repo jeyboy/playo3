@@ -45,7 +45,7 @@ namespace Core {
                         default: Logger::obj().write("Fourshared", "TRACK SEARCH is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, limits, response);
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
                 }
             };
         }

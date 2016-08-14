@@ -98,7 +98,7 @@ namespace Core {
                         }
                     }
 
-                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, limits, response);
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits);
                 }
             };
         }

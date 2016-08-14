@@ -74,60 +74,6 @@ namespace Core {
 
                     return res;
                 }
-                // return QJsonObject {{tkn_content, res}, {tkn_media_type, dmt_any}, {tkn_source_id, sourceType()}};
-            protected:
-                inline virtual ~Requests() {}
-
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        /*sf_auth_api_has | */ sf_auth_site_has |
-                        sf_content_audio_has | sf_content_video_has |
-                        sf_items_serachable |
-                        sf_populable | sf_shareable |
-                        sf_api_object_content_auth_only | sf_api_search_media_auth_only |
-                        sf_site_object_content_auth_only
-                    );
-                }
-
-                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
-                    switch(stype) {
-                        case qst_api_base: return url_api_base % predicate % val_json_ext;
-                        case qst_api_search: return url_api_search % predicate % val_json_ext;
-                        case qst_site_base: return url_html_site_search % predicate;
-                        case qst_site_search: return url_html_site_search % predicate;
-                        default: return QString();
-                    }
-                }
-
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_base) {
-//                    QString token = ptype == qpt_json ? apiToken() : siteToken();
-                    return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
-                }
-
-                void saveAdditionals(QJsonObject & obj) { Manager::saveCookies(obj, QUrl(url_html_site_base)); }
-                void loadAdditionals(QJsonObject & obj) {
-                    Manager::loadCookies(obj);
-                    Manager::addCookie(val_lang_cookie);
-                }
-                void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
-
-                QJsonValue searchProc(const SearchLimit & limits) {
-                    QJsonObject res;
-
-                    if (limits.include_audio())
-                        res.insert(block_items_audio, tracksSearch(limits));
-
-                    if (limits.include_video())
-                        res.insert(block_items_video, videoSearch(limits));
-
-                    return res;
-                }
-
-                QJsonValue loadSetData(const QUrlQuery & attrs) {
-                    return itemsByCollection(attrs.queryItemValue(CMD_ID));
-                }
-
-                QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
 
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);
@@ -203,6 +149,59 @@ namespace Core {
                 }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
+            protected:
+                inline virtual ~Requests() {}
+
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        /*sf_auth_api_has | */ sf_auth_site_has |
+                        sf_content_audio_has | sf_content_video_has |
+                        sf_items_serachable |
+                        sf_populable | sf_shareable |
+                        sf_api_object_content_auth_only | sf_api_search_media_auth_only |
+                        sf_site_object_content_auth_only
+                    );
+                }
+
+                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+                    switch(stype) {
+                        case qst_api_base: return url_api_base % predicate % val_json_ext;
+                        case qst_api_search: return url_api_search % predicate % val_json_ext;
+                        case qst_site_base: return url_html_site_search % predicate;
+                        case qst_site_search: return url_html_site_search % predicate;
+                        default: return QString();
+                    }
+                }
+
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_base) {
+//                    QString token = ptype == qpt_json ? apiToken() : siteToken();
+                    return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
+                }
+
+                void saveAdditionals(QJsonObject & obj) { Manager::saveCookies(obj, QUrl(url_html_site_base)); }
+                void loadAdditionals(QJsonObject & obj) {
+                    Manager::loadCookies(obj);
+                    Manager::addCookie(val_lang_cookie);
+                }
+                void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
+
+                QJsonValue searchProc(const SearchLimit & limits) {
+                    QJsonObject res;
+
+                    if (limits.include_audio())
+                        res.insert(block_items_audio, tracksSearch(limits));
+
+                    if (limits.include_video())
+                        res.insert(block_items_video, videoSearch(limits));
+
+                    return res;
+                }
+
+                QJsonValue loadSetData(const QUrlQuery & attrs) {
+                    return itemsByCollection(attrs.queryItemValue(CMD_ID));
+                }
+
+                QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
 
                 bool connectUserSite() {
                     QString user_id;

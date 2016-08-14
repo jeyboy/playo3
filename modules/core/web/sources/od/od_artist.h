@@ -26,11 +26,11 @@ namespace Core {
                             { {tkn_q, limits.predicate} }
                         ),
                         call_type_json,
-                        rules(limits.start_offset, qMin(OD_SEARCH_LIMIT, limits.items_limit)),
+                        rules(limits.start_offset, qMin(OD_SEARCH_LIMIT, limits.items_limit), limits.requests_limit),
                         0, proc_json_extract, QStringList() << tkn_artists
                     );
 
-                    return prepareBlock(dmt_artists, cmd_mtd_artists_search, limits, response);
+                    return prepareBlock(dmt_artists, cmd_mtd_artists_search, response, limits);
                 }
             };
         }

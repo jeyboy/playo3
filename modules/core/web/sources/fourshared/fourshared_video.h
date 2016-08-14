@@ -45,7 +45,7 @@ namespace Core {
                         default: Logger::obj().write("Fourshared", "TRACK SEARCH is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_video, cmd_mtd_video_search, limits, response);
+                    return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits);
                 }
             };
         }

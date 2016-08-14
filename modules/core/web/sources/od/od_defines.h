@@ -32,7 +32,7 @@ namespace Core {
 
                 PolyQueryRules pageRules(
                     const QString & offset_token, int offset = 1,
-                    int items_limit = DEFAULT_ITEMS_LIMIT, int pages_count = 5)
+                    int pages_count = 5, int items_limit = DEFAULT_ITEMS_LIMIT)
                 {
                     return PolyQueryRules(
                        call_iter_type_page, offset, qMin(items_limit, DEFAULT_ITEMS_LIMIT),

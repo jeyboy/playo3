@@ -186,6 +186,7 @@ namespace Core {
                 const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
                 QObject * error_receiver = 0, bool ignore_arr_content = true)
             {
+                QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
 
@@ -196,7 +197,7 @@ namespace Core {
                 arg.setPolyLimitations(poly_rules);
 
                 request(&arg);
-                return QueriableResponse(*arr, arg.start_offset);
+                return QueriableResponse(*arr, arg.start_offset, arg.items_total_limit, arg.requests_limit);
             }
 
             // for json

@@ -66,7 +66,7 @@ namespace Core {
                 {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()}
             };
         }
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const SearchLimit & limits, const Web::QueriableResponse & response) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
             QJsonObject block;
 
             int source_id = sourceType();
@@ -75,7 +75,30 @@ namespace Core {
             block.insert(Web::tkn_media_type, dmt_val);
             block.insert(Web::tkn_source_id, source_id);
 
-            if (block_content.size() < limits.items_limit)
+            QUrlQuery query = Cmd::paramsToQuery(params);
+            query.addQueryItem(CMD_OFFSET, QString::number(response.next_offset));
+            query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(response.items_limit));
+            query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(response.requests_limit));
+
+            if (!response.isFinished())
+                block.insert(
+                    Web::tkn_more_cmd,
+                    Cmd::build(source_id, mtd, query).toString()
+                );
+
+            return block;
+        }
+
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits) {
+            QJsonObject block;
+
+            int source_id = sourceType();
+
+            block.insert(Web::tkn_content, response.content);
+            block.insert(Web::tkn_media_type, dmt_val);
+            block.insert(Web::tkn_source_id, source_id);
+
+            if (!response.isFinished())
                 block.insert(
                     Web::tkn_more_cmd,
                     Cmd::build(
