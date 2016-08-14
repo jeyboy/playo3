@@ -46,7 +46,7 @@ namespace Core {
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     switch(set_type) {
                         case set_popular_tracks: {
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(path_audio_popular_tracks), // path_audio_popular_tracks respondable to 'tuner' field for style clarification of popular tracks
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_tracks
@@ -54,7 +54,7 @@ namespace Core {
                         break;}
 
                         case set_popular_artists: {
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -65,7 +65,7 @@ namespace Core {
                         break;}
 
                         case set_popular_tuners: {
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -76,7 +76,7 @@ namespace Core {
                         break;}
 
                         case set_popular_collections: {
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -87,7 +87,7 @@ namespace Core {
                         break;}
 
                         case set_popular_albums: {
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -98,7 +98,7 @@ namespace Core {
                         break;}
 
                         case set_listened: { //TODO: not finished
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(path_audio_history),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
@@ -106,7 +106,7 @@ namespace Core {
                         break;}
 
                         case set_downloaded: {//TODO: not finished
-                            return pRequest(
+                            QueriableResponse response = pRequest(
                                 audioUrlStr(path_audio_downloaded),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums

@@ -98,7 +98,7 @@ namespace Core {
                         }
                     }
 
-                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits);
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, QString::number(setType)}});
                 }
             };
         }

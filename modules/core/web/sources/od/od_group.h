@@ -8,7 +8,7 @@ namespace Core {
         namespace Od {
             class Group : public virtual Base {
             public:
-                QJsonValue groupsByName(const QUrlQuery & args) {
+                QJsonValue groupsByUser(const QUrlQuery & args) {
                     return groupsByUser(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
@@ -31,7 +31,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_groups, block_content, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_groups, cmd_mtd_groups_by_user, response, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue groupsByName(const QUrlQuery & args) {

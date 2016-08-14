@@ -14,7 +14,7 @@ namespace Core {
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return pRequest(
+                            return paRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     { { tkn_code, query_track_playlists(user_id) } }

@@ -58,7 +58,7 @@ namespace Core {
 //                    st.vpl.mini	false
 //                    st.workplace
 
-                    return pRequest(
+                    return paRequest(
                         baseUrlStr(
                             qst_site_user, QStringLiteral("search"),
                             {

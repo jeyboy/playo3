@@ -89,7 +89,7 @@ namespace Core {
             return block;
         }
 
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
             QJsonObject block;
 
             int source_id = sourceType();
@@ -98,12 +98,15 @@ namespace Core {
             block.insert(Web::tkn_media_type, dmt_val);
             block.insert(Web::tkn_source_id, source_id);
 
+            QUrlQuery query = limits.toICmdParams(response.next_offset);
+            Cmd::paramsToQuery(query, params);
+
             if (!response.isFinished())
                 block.insert(
                     Web::tkn_more_cmd,
                     Cmd::build(
                         source_id, mtd,
-                        limits.toICmdParams(response.next_offset)
+                        query
                     ).toString()
                 );
 

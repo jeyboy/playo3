@@ -12,12 +12,13 @@ namespace Core {
     struct Cmd {
         static QUrlQuery paramsToQuery(const std::initializer_list<std::pair<QString, QString> > & params) {
             QUrlQuery query;
-
+            paramsToQuery(query, params);
+            return query;
+        }
+        static void paramsToQuery(QUrlQuery & query, const std::initializer_list<std::pair<QString, QString> > & params) {
             if (params.size() > 0)
                 for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = params.begin(); it != params.end(); ++it)
                     query.addQueryItem(it -> first, it -> second);
-
-            return query;
         }
 
         static QString paramsToStr(const std::initializer_list<std::pair<QString, QString> > & params) {
