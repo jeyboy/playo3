@@ -293,15 +293,6 @@ namespace Core {
             }
         public:
             Headers dntHeader() { return {{ QStringLiteral("DNT"), QStringLiteral("1")}}; }
-
-//            static QJsonObject hashToJson(const std::initializer_list<std::pair<QString, QVariant> > & hash) {
-//                QJsonObject json;
-
-//                for (typename std::initializer_list<std::pair<QString, QVariant> >::const_iterator it = hash.begin(); it != hash.end(); ++it)
-//                    json.insert(it -> first, QJsonValue::fromVariant(it -> second));
-
-//                return json;
-//            }
         };
     }
 }

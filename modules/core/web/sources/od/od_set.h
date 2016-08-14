@@ -44,17 +44,21 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
+                    QueriableResponse response;
+                    DataMediaType dmt_val = dmt_unknow;
+
                     switch(set_type) {
                         case set_popular_tracks: {
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(path_audio_popular_tracks), // path_audio_popular_tracks respondable to 'tuner' field for style clarification of popular tracks
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_tracks
                             );
+                            dmt_val = dmt_audio;
                         break;}
 
                         case set_popular_artists: {
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -62,10 +66,11 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_artists
                             );
+                            dmt_val = dmt_artist;
                         break;}
 
                         case set_popular_tuners: {
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -73,10 +78,11 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << QStringLiteral("tuners")
                             );
+                            dmt_val = dmt_set;
                         break;}
 
                         case set_popular_collections: {
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -84,10 +90,11 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << QStringLiteral("collections")
                             );
+                            dmt_val = dmt_set;
                         break;}
 
                         case set_popular_albums: {
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
@@ -95,22 +102,25 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
+                            dmt_val = dmt_set;
                         break;}
 
                         case set_listened: { //TODO: not finished
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(path_audio_history),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
+                            dmt_val = dmt_audio;
                         break;}
 
                         case set_downloaded: {//TODO: not finished
-                            QueriableResponse response = pRequest(
+                            response = pRequest(
                                 audioUrlStr(path_audio_downloaded),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
+                            dmt_val = dmt_audio;
                         break;}
 
                         case set_of_collections: return randomCollections();
@@ -120,7 +130,7 @@ namespace Core {
                         default:;
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                 }
             };
         }

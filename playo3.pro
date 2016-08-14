@@ -329,7 +329,8 @@ HEADERS += \
     modules/core/web/sources/fourshared/fourshared_video.h \
     modules/core/web/sources/fourshared/fourshared_keys.h \
     modules/core/web/interfaces/queriable_response.h \
-    modules/core/web/interfaces/queriable_defines.h
+    modules/core/web/interfaces/queriable_defines.h \
+    modules/core/web/sources/od/od_album.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

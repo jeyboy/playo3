@@ -10,10 +10,12 @@ namespace Core {
             protected:
                 // collections did not have search or something else - just pseudo(?) random list
                 QJsonValue randomCollections() { // TODO: not tested
-                    return saRequest(
+                    QJsonArray block_content = saRequest(
                         audioUrlStr(path_audio_collections),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_collections
                     );
+
+                    return prepareBlock(dmt_audio_set, block_content);
                 }
             };
         }

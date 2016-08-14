@@ -31,7 +31,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_groups, cmd_mtd_groups_by_user, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue groupsByName(const QUrlQuery & args) {
@@ -95,7 +95,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_groups, cmd_mtd_groups_by_name, response, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {{CMD_PREDICATE, name}});
                 }
 
                 QJsonValue groupsByIdOrPerma(const QString & group_id) {
@@ -103,7 +103,8 @@ namespace Core {
                         baseUrlStr(qst_site, QStringLiteral("group/") % group_id, {}) :
                         baseUrlStr(qst_site, group_id, {});
 
-                    return saRequest(url, call_type_html, 0, proc_group3);
+                    QJsonArray block_content = saRequest(url, call_type_html, 0, proc_group3);
+                    return prepareBlock(dmt_group, block_content);
                 }
             };
         }

@@ -25,12 +25,12 @@ namespace Core {
                     );
                 }
 
-                QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;
                     DataMediaType dmt_val = dmt_unknow;
 
-                    switch(setType) {
+                    switch(set_type) {
                         case set_popular_audio: {
                             dmt_val = dmt_audio;
 
@@ -98,7 +98,7 @@ namespace Core {
                         }
                     }
 
-                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, QString::number(setType)}});
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                 }
             };
         }

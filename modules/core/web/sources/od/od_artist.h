@@ -30,7 +30,7 @@ namespace Core {
                         0, proc_json_extract, QStringList() << tkn_artists
                     );
 
-                    return prepareBlock(dmt_artists, cmd_mtd_artists_search, response, limits);
+                    return prepareBlock(dmt_artist, cmd_mtd_artists_search, response, limits);
                 }
             };
         }

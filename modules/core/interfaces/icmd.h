@@ -10,18 +10,24 @@
 
 namespace Core {
     struct Cmd {
-        static QUrlQuery paramsToQuery(const std::initializer_list<std::pair<QString, QString> > & params) {
+        static QUrlQuery paramsToQuery(const std::initializer_list<std::pair<QString, QVariant> > & params) {
             QUrlQuery query;
             paramsToQuery(query, params);
             return query;
         }
-        static void paramsToQuery(QUrlQuery & query, const std::initializer_list<std::pair<QString, QString> > & params) {
+        static void paramsToQuery(QUrlQuery & query, const std::initializer_list<std::pair<QString, QVariant> > & params) {
             if (params.size() > 0)
-                for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = params.begin(); it != params.end(); ++it)
-                    query.addQueryItem(it -> first, it -> second);
+                for (typename std::initializer_list<std::pair<QString, QVariant> >::const_iterator it = params.begin(); it != params.end(); ++it) {
+                    switch (it -> second.type()) {
+                        case QVariant::Int:             { query.addQueryItem(it -> first, QString::number(it -> second.toInt())); break;}
+                        case QVariant::Double:          { query.addQueryItem(it -> first, QString::number(it -> second.toDouble())); break;}
+                        case QVariant::String:          { query.addQueryItem(it -> first, it -> second.toString()); break;}
+                        default: qDebug() << "paramsToQuery: unsupported type" << it -> second.type();
+                    }
+                }
         }
 
-        static QString paramsToStr(const std::initializer_list<std::pair<QString, QString> > & params) {
+        static QString paramsToStr(const std::initializer_list<std::pair<QString, QVariant> > & params) {
             return paramsToQuery(params).toString();
         }
 
@@ -40,10 +46,10 @@ namespace Core {
         Cmd(const int source_type, const int & mtd, const QUrlQuery & attrs)
             : source_type(source_type), mtd(mtd), attrs(attrs) {}
 
-        Cmd(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & params)
+        Cmd(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QVariant> > & params)
             : source_type(source_type), mtd(mtd), attrs(paramsToQuery(params)) {}
 
-        static Cmd build(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & params) {
+        static Cmd build(const int source_type, const int & mtd, const std::initializer_list<std::pair<QString, QVariant> > & params) {
             return Cmd(source_type, mtd, paramsToQuery(params));
         }
 
@@ -51,7 +57,7 @@ namespace Core {
             return Cmd(source_type, mtd, attrs);
         }
 
-        Cmd * setAttrs(const std::initializer_list<std::pair<QString, QString> > & params) {
+        Cmd * setAttrs(const std::initializer_list<std::pair<QString, QVariant> > & params) {
             attrs = paramsToQuery(params);
             return this;
         }
@@ -117,7 +123,8 @@ namespace Core {
             cmd_mtd_tracks_playlists_by_user,
             cmd_mtd_tracks_playlists_by_group,
 
-            cmd_mtd_artists_search
+            cmd_mtd_artists_search,
+            cmd_mtd_albums_search
         };
 
         QJsonValue run(const ICmdMethods & cmd, const QUrlQuery & params) {
@@ -162,6 +169,9 @@ namespace Core {
 
                 case cmd_mtd_tracks_playlists_by_user: return tracksPlaylistsByUser(params);
                 case cmd_mtd_tracks_playlists_by_group: return tracksPlaylistsByGroup(params);
+
+                case cmd_mtd_artists_search: return artistsSearch(params);
+                case cmd_mtd_albums_search: return albumsSearch(params);
 
                 default: return QJsonObject();
             }
@@ -214,6 +224,8 @@ namespace Core {
         virtual QJsonValue tracksPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+
+        virtual QJsonValue albumsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }
 

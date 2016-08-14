@@ -9,7 +9,7 @@ namespace Core {
             class Item : public Base {
             public:
                 QJsonValue itemsByCollection(const QString & collection_id) {
-                    QJsonArray res = saRequest(
+                    QJsonArray block_content = saRequest(
                         baseUrlStr(
                             qst_site_base, QStringLiteral("web/accountActions/changeDir"),
                             {{ QStringLiteral("dirId"), collection_id }}
@@ -18,7 +18,7 @@ namespace Core {
                         QStringList(), call_method_post, siteHeaders()
                     );
 
-                    return prepareBlock(dmt_any, res);
+                    return prepareBlock(dmt_any, block_content);
                 }
             };
         }

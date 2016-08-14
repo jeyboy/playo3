@@ -66,7 +66,7 @@ namespace Core {
                 {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()}
             };
         }
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
             QJsonObject block;
 
             int source_id = sourceType();
@@ -88,8 +88,7 @@ namespace Core {
 
             return block;
         }
-
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
             QJsonObject block;
 
             int source_id = sourceType();
