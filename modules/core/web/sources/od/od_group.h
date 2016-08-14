@@ -8,8 +8,10 @@ namespace Core {
         namespace Od {
             class Group : public virtual Base {
             public:
+                //QJsonValue groupsByName(const QUrlQuery & args) { return groupsByName(SearchLimit::fromICmdParams(args)); }
+
                 QJsonValue groupsByUser(const QString & user_id) {
-                    return pRequest(
+                    QJsonArray block_content = paRequest(
                                 baseUrlStr(
                                     qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
                                     {
@@ -22,7 +24,11 @@ namespace Core {
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
+
+                    return prepareBlock(dmt_groups, block_content);
                 }
+
+//                QJsonValue groupsByName(const QUrlQuery & args) { return groupsByName(SearchLimit::fromICmdParams(args)); }
 
                 QJsonValue groupsByName(const QString & name) {
 //                    dirty	1
@@ -58,7 +64,7 @@ namespace Core {
 //                    st.workplace
                     //st.tag on
 
-                    return pRequest(
+                    QueriableResponse response = pRequest(
                         baseUrlStr(
                             qst_site_group, QStringLiteral("search"),
                             {
@@ -69,13 +75,15 @@ namespace Core {
                                 { QStringLiteral("st.grmode"), QStringLiteral("Groups") },
                                 { QStringLiteral("st.posted"), QStringLiteral("set") },
                                 { QStringLiteral("st.query"),  name },
-                                { QStringLiteral("fetch"), QStringLiteral("false") },
+                                { QStringLiteral("fetch"), QStringLiteral("false") }
                             }
                         ),
                         call_type_html, pageRules(QStringLiteral("st.page")), 0, proc_group2, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
+
+                    return prepareBlock(dmt_groups, cmd_mtd_groups_by_name, limits, response);
                 }
 
                 QJsonValue groupsByIdOrPerma(const QString & group_id) {

@@ -2,6 +2,7 @@
 #define ICMD_FIELDS
 
 #include <qurlquery.h>
+#include "modules/core/data_sub_types.h"
 
 #define CMD_OFFSET QStringLiteral("offset")
 #define CMD_ITEMS_LIMIT QStringLiteral("items_limit")

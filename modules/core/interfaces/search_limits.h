@@ -9,7 +9,7 @@
 #include <qjsonarray.h>
 
 #include "icmd_fields.h"
-#include "modules/core/web/interfaces/quariable_defines.h"
+#include "modules/core/web/interfaces/queriable_defines.h"
 
 #define JSON_SEARCH_PREDICATE QStringLiteral("p")
 #define JSON_SEARCH_GENRE QStringLiteral("g")
@@ -27,11 +27,11 @@
 namespace Core {
     enum SearchRequestType { sr_local, sr_inner, sr_remote };
 
-    enum SearchContentType {
-        sc_audio = 1,
-        sc_video = 2,
-        sc_all = sc_audio | sc_video
-    };
+//    enum SearchContentType { // TODO: use DataMediaType
+//        sc_audio = 1,
+//        sc_video = 2,
+//        sc_all = sc_audio | sc_video
+//    };
     enum SearchPredicateType {
         sp_none = 0,
         sp_abc = 1,
@@ -53,20 +53,20 @@ namespace Core {
     };
 
     struct SearchLimitBase {
-        SearchLimitBase(const SearchContentType & sc_type = sc_all, const SearchPredicateType & predicate_type = sp_popular,
+        SearchLimitBase(const DataMediaType & sc_type = dmt_any_item, const SearchPredicateType & predicate_type = sp_popular,
             int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             sc_type(sc_type), predicate_type(predicate_type), items_limit(items_limit), start_offset(start_offset),
             requests_limit(requests_limit) {}
 
-        SearchContentType sc_type;
+        DataMediaType sc_type;
         SearchPredicateType predicate_type;
 
         int items_limit;
         int start_offset;
         int requests_limit;
 
-        inline bool include_audio() const { return sc_type & sc_audio; }
-        inline bool include_video() const { return sc_type & sc_video; }
+        inline bool include_audio() const { return sc_type & dmt_audio; }
+        inline bool include_video() const { return sc_type & dmt_video; }
 
         inline bool by_abc() const { return predicate_type & sp_abc; }
         inline bool by_lyrics() const { return predicate_type & sp_lyrics; }
@@ -89,7 +89,7 @@ namespace Core {
 
     struct SearchLimit : SearchLimitBase {
         SearchLimit(
-            const SearchContentType & sc_type, const SearchPredicateType & predicate_type,
+            const DataMediaType & sc_type, const SearchPredicateType & predicate_type,
             const QString & predicate, const QString & genre, int items_limit = DEFAULT_ITEMS_LIMIT,
             int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimitBase(sc_type, predicate_type, items_limit, start_offset, requests_limit),
@@ -105,7 +105,7 @@ namespace Core {
 
             query.addQueryItem(CMD_MEDIA_TYPE, QString::number(sc_type));
             query.addQueryItem(CMD_PREDICATE_TYPE, QString::number(predicate_type));
-            query.addQueryItem(CMD_OFFSET, QString::number(start_offset + offset));
+            query.addQueryItem(CMD_OFFSET, QString::number(offset));
             query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(items_limit));
             query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(requests_limit));
 
@@ -120,7 +120,7 @@ namespace Core {
 
         static SearchLimit fromICmdParams(const QUrlQuery & params) {
             return SearchLimit(
-                (SearchContentType)params.queryItemValue(CMD_MEDIA_TYPE).toInt(),
+                (DataMediaType)params.queryItemValue(CMD_MEDIA_TYPE).toInt(),
                 (SearchPredicateType)params.queryItemValue(CMD_PREDICATE_TYPE).toInt(),
                 params.queryItemValue(CMD_PREDICATE),
                 params.queryItemValue(CMD_GENRE),
@@ -133,7 +133,7 @@ namespace Core {
 
     struct SearchLimitLayer : public SearchLimit {
         SearchLimitLayer(
-            const SearchRequestType & rt, const QVariant & context, const SearchContentType & sc_type,
+            const SearchRequestType & rt, const QVariant & context, const DataMediaType & sc_type,
             const SearchPredicateType & predicate_type, const QString & predicate, const QString & genre,
             int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimit(sc_type, predicate_type, predicate, genre, items_limit, start_offset, requests_limit),
@@ -149,7 +149,7 @@ namespace Core {
     };
 
     struct SearchLimitLayers : public SearchLimitBase {
-        SearchLimitLayers(const SearchContentType & sc_type = sc_all, const SearchPredicateType & predicate_type = sp_popular,
+        SearchLimitLayers(const DataMediaType & sc_type = dmt_any_item, const SearchPredicateType & predicate_type = sp_popular,
             int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimitBase(sc_type, predicate_type, items_limit, start_offset, requests_limit) {}
 

@@ -22,7 +22,6 @@ namespace Core {
             QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.cc") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
-//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 if (reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200) return false;
 
                 Html::Document parser = reply -> toHtml(removeReply);

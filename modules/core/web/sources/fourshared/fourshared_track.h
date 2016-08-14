@@ -12,11 +12,11 @@ namespace Core {
 
                 QJsonValue tracksSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
-                    QJsonArray block_content;
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            block_content = pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_api_search, tkn_files,
                                     {
@@ -31,7 +31,7 @@ namespace Core {
                         break;}
 
                         case perm_site: {
-                            block_content = pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_site_search,
                                     QStringLiteral("q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
@@ -45,7 +45,7 @@ namespace Core {
                         default: Logger::obj().write("Fourshared", "TRACK SEARCH is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_audio, limits, cmd_mtd_tracks_search, block_content);
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, limits, response);
                 }
             };
         }

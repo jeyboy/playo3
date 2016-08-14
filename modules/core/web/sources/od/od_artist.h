@@ -17,8 +17,10 @@ namespace Core {
                     ).value(tkn_artists).toArray();
                 }
 
+                QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
+
                 QJsonValue artistsSearch(const SearchLimit & limits) { // need to check
-                    return pRequest(
+                    QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_search_artists,
                             { {tkn_q, limits.predicate} }
@@ -27,6 +29,8 @@ namespace Core {
                         rules(limits.start_offset, qMin(OD_SEARCH_LIMIT, limits.items_limit)),
                         0, proc_json_extract, QStringList() << tkn_artists
                     );
+
+                    return prepareBlock(dmt_artists, cmd_mtd_artists_search, limits, response);
                 }
             };
         }

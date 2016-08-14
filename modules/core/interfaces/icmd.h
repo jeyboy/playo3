@@ -114,7 +114,9 @@ namespace Core {
             cmd_mtd_playlists_by_user,
 
             cmd_mtd_tracks_playlists_by_user,
-            cmd_mtd_tracks_playlists_by_group
+            cmd_mtd_tracks_playlists_by_group,
+
+            cmd_mtd_artists_search
         };
 
         QJsonValue run(const ICmdMethods & cmd, const QUrlQuery & params) {
@@ -209,6 +211,8 @@ namespace Core {
 
         virtual QJsonValue tracksPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue tracksPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
+
+        virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }
 

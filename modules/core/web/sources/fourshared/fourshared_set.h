@@ -27,7 +27,7 @@ namespace Core {
 
                 QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
-                    QJsonArray block_content;
+                    QueriableResponse response;
                     DataMediaType dmt_val = dmt_unknow;
 
                     switch(setType) {
@@ -36,7 +36,7 @@ namespace Core {
 
                             switch(perm) {
                                 case perm_api: {
-                                    block_content = pRequest(
+                                    response = pRequest(
                                         baseUrlStr(
                                             qst_api_search, tkn_files,
                                             {{ tkn_category, music }}
@@ -48,7 +48,7 @@ namespace Core {
                                 break;}
 
                                 case perm_site: {
-                                    block_content = pRequest(
+                                    response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
                                             QStringLiteral("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
@@ -69,7 +69,7 @@ namespace Core {
 
                             switch(perm) {
                                 case perm_api: {
-                                    block_content = pRequest(
+                                    response = pRequest(
                                         baseUrlStr(
                                             qst_api_search, tkn_files,
                                             {{ tkn_category, video }}
@@ -81,7 +81,7 @@ namespace Core {
                                 break;}
 
                                 case perm_site: {
-                                    block_content = pRequest(
+                                    response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
                                             QStringLiteral("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
@@ -98,7 +98,7 @@ namespace Core {
                         }
                     }
 
-                    return prepareBlock(dmt_val, limits, cmd_mtd_set_by_type, block_content);
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, limits, response);
                 }
             };
         }

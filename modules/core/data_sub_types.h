@@ -15,7 +15,10 @@ namespace Core {
         dmt_audio = 1,
         dmt_video = 2,
 
-        dmt_set = 4,
+        dmt_artists = 4,
+        dmt_groups = 8,
+
+        dmt_set = 128,
 
         dmt_audio_set = dmt_set | dmt_audio,
         dmt_video_set = dmt_set | dmt_video,

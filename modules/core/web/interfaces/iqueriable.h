@@ -14,7 +14,7 @@
 #define QUERY_RETRY_AMOUNT 3
 
 namespace Core {
-    namespace Web {    
+    namespace Web {
         class IQueriable {
             bool sQuery(QueriableArg * arg) {
                 Logger::obj().startMark();
@@ -160,7 +160,7 @@ namespace Core {
             }
 
 
-            QJsonArray pRequest(
+            QJsonArray paRequest(
                 const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
                 const AdditionalProc & post_proc = proc_none, const QStringList & fields = IQUERY_DEF_FIELDS,
                 const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
@@ -178,6 +178,25 @@ namespace Core {
 
                 request(&arg);
                 return *arr;
+            }
+
+            QueriableResponse pRequest(
+                const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
+                const AdditionalProc & post_proc = proc_none, const QStringList & fields = IQUERY_DEF_FIELDS,
+                const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
+                QObject * error_receiver = 0, bool ignore_arr_content = true)
+            {
+                if (!arr)
+                    arr = &temp_arr;
+
+                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
+                arg.ignoreArrContent(ignore_arr_content);
+                arg.changeCallMethod(call_method);
+                arg.setRequestHeaders(headers);
+                arg.setPolyLimitations(poly_rules);
+
+                request(&arg);
+                return QueriableResponse(*arr, arg.start_offset);
             }
 
             // for json

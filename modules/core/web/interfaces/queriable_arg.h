@@ -7,7 +7,8 @@
 #include <qjsonarray.h>
 
 #include "modules/core/web/utils/web_headers.h"
-#include "quariable_defines.h"
+#include "queriable_defines.h"
+#include "queriable_response.h"
 
 namespace Core {
     namespace Web {

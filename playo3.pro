@@ -244,7 +244,6 @@ HEADERS += \
     modules/core/web/interfaces/iqueriable.h \
     modules/core/web/interfaces/queriable_arg.h \
     modules/core/web/utils/js_document.h \
-    modules/core/web/interfaces/quariable_defines.h \
     modules/core/feeder/aspect_ratio_label.h \
     modules/core/feeder/feed_widget.h \
     modules/core/feeder/feeder.h \
@@ -328,7 +327,9 @@ HEADERS += \
     modules/core/interfaces/icmd_fields.h \
     modules/core/web/sources/fourshared/fourshared_track.h \
     modules/core/web/sources/fourshared/fourshared_video.h \
-    modules/core/web/sources/fourshared/fourshared_keys.h
+    modules/core/web/sources/fourshared/fourshared_keys.h \
+    modules/core/web/interfaces/queriable_response.h \
+    modules/core/web/interfaces/queriable_defines.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
