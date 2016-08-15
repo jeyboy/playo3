@@ -75,7 +75,7 @@ namespace Core {
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByName(name, 400).toArray();
+                    QJsonArray arr = usersByName(name, 0, 400).toArray();
                     jsonToUsers(linkables, arr);
 
                     return linkables;
@@ -92,7 +92,7 @@ namespace Core {
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name, 400).toArray();
+                    QJsonArray arr = groupsByName(name, 0, 400).toArray();
                     jsonToGroups(linkables, arr);
 
                     return linkables;

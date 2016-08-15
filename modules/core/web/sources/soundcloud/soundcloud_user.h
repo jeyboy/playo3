@@ -8,7 +8,7 @@ namespace Core {
         namespace Soundcloud {
             class User : public Base {
             public:
-                QJsonValue usersById(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue usersById(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -32,7 +32,7 @@ namespace Core {
 
                     return QJsonArray();
                 }
-                QJsonValue usersByName(const QString & name, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue usersByName(const QString & name, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -63,7 +63,7 @@ namespace Core {
                     }
                     return QJsonArray();
                 }
-                QJsonValue usersByTrackLikes(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue usersByTrackLikes(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -87,7 +87,7 @@ namespace Core {
                     }
                     return QJsonArray();
                 }
-                QJsonValue usersByTrackReposting(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue usersByTrackReposting(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -107,7 +107,7 @@ namespace Core {
                     return QJsonArray();
                 }
 
-                QJsonValue userFollowings(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue userFollowings(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -131,7 +131,7 @@ namespace Core {
                     }
                     return QJsonArray();
                 }
-                QJsonValue userFollowers(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue userFollowers(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
 
                     switch(perm) {

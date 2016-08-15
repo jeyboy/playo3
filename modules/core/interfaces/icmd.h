@@ -91,6 +91,7 @@ namespace Core {
             cmd_mtd_user_followings,
             cmd_mtd_user_followers,
 
+            cmd_mtd_groups_by_id,
             cmd_mtd_groups_by_track,
             cmd_mtd_groups_by_user,
             cmd_mtd_groups_by_name,
@@ -139,6 +140,7 @@ namespace Core {
                 case cmd_mtd_user_followings: return userFollowings(params);
                 case cmd_mtd_user_followers: return userFollowers(params);
 
+                case cmd_mtd_groups_by_id: return groupsById(params);
                 case cmd_mtd_groups_by_track: return groupsByTrack(params);
                 case cmd_mtd_groups_by_user: return groupsByUser(params);
                 case cmd_mtd_groups_by_name: return groupsByName(params);
@@ -191,6 +193,7 @@ namespace Core {
         virtual QJsonValue userFollowings(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue userFollowers(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
+        virtual QJsonValue groupsById(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue groupsByTrack(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue groupsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue groupsByName(const QUrlQuery & /*args*/) { return QJsonObject(); }
