@@ -15,10 +15,20 @@ namespace Core {
         dmt_audio = 1,
         dmt_video = 2,
 
-        dmt_artist = 4,
-        dmt_group = 8,
+        //reserved 4
+        //reserved 8
+        //reserved 16
+        //reserved 32
+        //reserved 64
+        //reserved 128
+        //reserved 256
+        //reserved 512
+        dmt_artist = 1024,
 
-        dmt_set = 128,
+        dmt_user = 2048,
+        dmt_group = 4096,
+
+        dmt_set = 8192,
 
         dmt_audio_set = dmt_set | dmt_audio,
         dmt_video_set = dmt_set | dmt_video,

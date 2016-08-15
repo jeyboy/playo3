@@ -25,7 +25,7 @@ namespace Core {
                     );
                 }
 
-                QJsonValue usersByName(const QString & name) {
+                QJsonValue usersByName(const QString & name, int offset = 1, int pages_limit = 5) {
 //                    st._aid
 //                    st.army
 //                    st.bthDay
@@ -58,7 +58,7 @@ namespace Core {
 //                    st.vpl.mini	false
 //                    st.workplace
 
-                    return paRequest(
+                    QueriableResponse response = pRequest(
                         baseUrlStr(
                             qst_site_user, QStringLiteral("search"),
                             {
@@ -72,17 +72,21 @@ namespace Core {
                                 { QStringLiteral("fetch"), QStringLiteral("false") },
                             }
                         ),
-                        call_type_html, pageRules(QStringLiteral("st.page")), 0, proc_user1, QStringList(),
+                        call_type_html, pageRules(QStringLiteral("st.page"), offset, pages_limit), 0, proc_user1, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
+
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {{CMD_PREDICATE, name}});
                 }
 
                 QJsonValue usersById(const QString & user_id) {
-                    return saRequest(
+                    QJsonArray block_content = saRequest(
                         baseUrlStr(qst_site, QStringLiteral("profile/") % user_id, {}),
                         call_type_html, 0, proc_user2
                     );
+
+                    return prepareBlock(dmt_user, block_content);
                 }
             };
         }
