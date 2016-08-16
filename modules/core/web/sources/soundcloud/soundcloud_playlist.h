@@ -8,13 +8,21 @@ namespace Core {
         namespace Soundcloud {
             class Playlist : public Base {
             public:
+                QJsonValue playlistsByTag(const QUrlQuery & args) {
+                    return playlistsByTag(
+                        args.queryItemValue(CMD_PREDICATE),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
                 QJsonValue playlistsByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api:
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("playlists/discovery"),
                                     {{ QStringLiteral("tag"), tag }}
@@ -26,14 +34,23 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLIST BY TAG is not accessable", true);
                     }
-                    return QJsonArray();
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_tag, response, {{CMD_PREDICATE, tag}});
+                }
+
+                QJsonValue playlistsByTrack(const QUrlQuery & args) {
+                    return playlistsByTrack(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
                 }
                 QJsonValue playlistsByTrack(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch
@@ -41,7 +58,7 @@ namespace Core {
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
@@ -50,16 +67,24 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLIST BY TRACKS is not accessable", true);
                     }
-                    return QJsonArray();
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_track, response, {{CMD_ID, track_id}});
                 }
 
+                QJsonValue playlistsByPredicate(const QUrlQuery & args) {
+                    return playlistsByPredicate(
+                        args.queryItemValue(CMD_PREDICATE),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
                 // predicate is used for search in title - genre - tags - permalinks
                 QJsonValue playlistsByPredicate(const QString & predicate, int count = 10, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_playlists, {{tkn_q, predicate}}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch
@@ -67,7 +92,7 @@ namespace Core {
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("search/playlists"),
                                     {
@@ -84,21 +109,30 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLISTS BY PREDICATE is not accessable", true);
                     }
-                    return QJsonArray();
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_predicate, response, {{CMD_PREDICATE, predicate}});
+                }
+
+                QJsonValue playlistsByUser(const QUrlQuery & args) {
+                    return playlistsByUser(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
                 }
                 QJsonValue playlistsByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_user_playlists.arg(user_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/playlists").arg(user_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
@@ -107,7 +141,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLIST BY USER is not accessable", true);
                     }
-                    return QJsonArray();
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_user, response, {{CMD_ID, user_id}});
                 }
             };
         }
