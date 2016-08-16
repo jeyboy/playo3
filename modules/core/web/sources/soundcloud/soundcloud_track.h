@@ -92,64 +92,58 @@ namespace Core {
                 //"permalink": "sam-smith-stay-with-me"
                 QJsonValue tracksInfo(const QStringList & track_ids) {
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray response;
+                    QJsonObject obj;
 
-                    switch(perm) {
-                        case perm_api: {
-                            QJsonArray arr;
-                            int limiter = track_ids.size() / SOUNDCLOUD_IDS_PER_REQUEST + (int)(track_ids.size() % SOUNDCLOUD_IDS_PER_REQUEST != 0);
-                            for(int step = 0; step < limiter; step++) {
-                                QJsonObject obj = sRequest(
-                                    baseUrlStr(
-                                        qst_api_def, path_tracks,
-                                        {{ tkn_ids, (QStringList)track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }}
-                                    ),
+                    int limiter = track_ids.size() / SOUNDCLOUD_IDS_PER_REQUEST + (int)(track_ids.size() % SOUNDCLOUD_IDS_PER_REQUEST != 0);
+                    for(int step = 0; step < limiter; step++) {
+                        std::initializer_list<std::pair<QString, QVariant> > params = {{ tkn_ids, (QStringList)track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }};
+
+                        switch(perm) {
+                            case perm_api: {
+                                obj = sRequest(
+                                    baseUrlStr(qst_api_def, path_tracks, params),
                                     call_type_json, 0, proc_json_wrap
                                 );
+                            break;}
 
-                                QJsonArray new_items = obj.value(DEF_JSON_FIELD).toArray();
-                                QueriableArg::arrAppend(arr, new_items);
-                            }
-
-                            return arr;
-                        }
-
-                        case perm_site: {
-                            QJsonArray arr;
-                            int limiter = track_ids.size() / SOUNDCLOUD_IDS_PER_REQUEST + (int)(track_ids.size() % SOUNDCLOUD_IDS_PER_REQUEST != 0);
-                            for(int step = 0; step < limiter; step++) {
-                                QJsonObject obj = sRequest(
-                                    baseUrlStr(
-                                        qst_site_alt1, path_tracks,
-                                        {{ tkn_ids, (QStringList)track_ids.mid(step * SOUNDCLOUD_IDS_PER_REQUEST, SOUNDCLOUD_IDS_PER_REQUEST) }}
-                                    ),
+                            case perm_site: {
+                                obj = sRequest(
+                                    baseUrlStr(qst_site_alt1, path_tracks, params),
                                     call_type_json, 0, proc_json_wrap, IQUERY_DEF_FIELDS, call_method_get, headers()
                                 );
+                            break;}
 
-                                QJsonArray new_items = obj.value(DEF_JSON_FIELD).toArray();
-                                QueriableArg::arrAppend(arr, new_items);
-                            }
-
-                            return arr;
+                            default: { Logger::obj().write("Soundcloud", "TRACKS INFO is not accessable", true); break;}
                         }
 
-                        default: Logger::obj().write("Soundcloud", "TRACKS INFO is not accessable", true);
+                        QueriableArg::arrAppend(response, obj.value(DEF_JSON_FIELD).toArray());
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, response);
                 }
-                QJsonValue trackRecommendations(const QString & track_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+
+                QJsonValue trackRecommendations(const QUrlQuery & args) {
+                    return trackRecommendations(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_related_tracks.arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_site_alt1, path_related_tracks.arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
@@ -159,36 +153,39 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "TRACK RELATIONS is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_track_recommendations, response, {{CMD_ID, track_id}});
                 }
-                QJsonValue tracksSearch(const SearchLimit & limitations) {
+
+                QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue tracksSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_api_def, path_tracks,
-                                    trackSearchQuery(limitations.predicate, limitations.genre, limitations.by_popularity())
+                                    trackSearchQuery(limits.predicate, limits.genre, limits.by_popularity())
                                 ),
                                 call_type_json,
-                                rules(limitations.start_offset, limitations.items_limit), 0, proc_json_patch
+                                rules(limits.start_offset, limits.items_limit, limits.requests_limit), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1,
                                     QStringLiteral("search/tracks"),
                                     {
-                                        { tkn_q, limitations.predicate },
+                                        { tkn_q, limits.predicate },
                                         { QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base) },
                                         { QStringLiteral("sc_a_id"), generateMark() },
                                         { QStringLiteral("facet"), QStringLiteral("genre") }
                                     }
                                 ),
-                                call_type_json, rules(limitations.start_offset, limitations.items_limit), 0,
+                                call_type_json, rules(limits.start_offset, limits.items_limit, limits.requests_limit), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
                         }
@@ -196,22 +193,30 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "TRACK SEARCH is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
                 }
 
-                QJsonValue tracksByTag(const QString & tag, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
+                QJsonValue tracksByTag(const QUrlQuery & args) {
+                    return tracksByTag(
+                        args.queryItemValue(CMD_PREDICATE),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue tracksByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: { // support a comma separated list of tags
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_tracks, {{ QStringLiteral("tags"), tag }}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
-                            QJsonArray res = pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_site_def, QStringLiteral("search/sounds"),
                                     {
@@ -222,28 +227,35 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
-
-                            return res;
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "TRACK BY TAG is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tag, response, {{CMD_PREDICATE, tag}});
+                }
+
+                QJsonValue tracksByGroup(const QUrlQuery & args) {
+                    return tracksByGroup(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
                 }
                 QJsonValue tracksByGroup(const QString & group_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_group_tracks.arg(group_id), {{tkn_types, val_audio_types}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_site_def, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
@@ -254,21 +266,30 @@ namespace Core {
                             Logger::obj().write("Soundcloud", "TRACK BY GROUP is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_group, response, {{CMD_ID, group_id}});
+                }
+
+                QJsonValue tracksByUser(const QUrlQuery & args) {
+                    return tracksByUser(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
                 }
                 QJsonValue tracksByUser(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_user_tracks.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("users/%1/tracks").arg(user_id),
                                     {{ QStringLiteral("representation"), QString() }}
@@ -281,21 +302,30 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "TRACK BY USER is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {{CMD_ID, user_id}});
+                }
+
+                QJsonValue tracksByUserLikes(const QUrlQuery & args) {
+                    return tracksByUserLikes(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
                 }
                 QJsonValue tracksByUserLikes(const QString & user_id, int count = SOUNDCLOUD_ITEMS_LIMIT, int offset = 0) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_api_def, path_user_favorites.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
-                            return pRequest(
+                            response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/likes").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
@@ -305,7 +335,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "TRACK BY USER LIKES is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user_likes, response, {{CMD_ID, user_id}});
                 }
             };
         }

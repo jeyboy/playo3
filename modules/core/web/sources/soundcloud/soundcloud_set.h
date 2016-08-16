@@ -64,22 +64,23 @@ namespace Core {
                     );
                 }
 
-                QJsonValue setByType(const SetType & setType, const SearchLimit & limits) {
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_api:
                         case perm_site: {
-                            switch(setType) {
+                            switch(set_type) {
                                 case set_popular: {
-                                    return pRequest(
+                                    response = pRequest(
                                         baseUrlStr(
                                             qst_api_def, path_tracks,
                                             trackSearchQuery(QString(), limits.genre == SOUNDCLOUD_ALL_GENRES_PARAM ? QString() : limits.genre, true)
                                         ),
                                         call_type_json, rules(limits.start_offset, limits.items_limit), 0, proc_json_patch
                                     );
-                                }
+                                break;}
 
                                 case set_new_hot:
                                 case set_top_50: {
@@ -89,26 +90,26 @@ namespace Core {
                                             {
                                                 { tkn_limit, SOUNDCLOUD_PER_REQUEST_LIMIT },
                                                 { QStringLiteral("genre"), QString(QStringLiteral("soundcloud:genres:") % (limits.genre.isEmpty() ? SOUNDCLOUD_ALL_GENRES_PARAM : limits.genre)) },
-                                                { QStringLiteral("kind"), setType == set_new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
+                                                { QStringLiteral("kind"), set_type == set_new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
                                             }
                                         ),
                                         call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                                     );
-                                    QJsonArray res; // "last_updated":"2016-07-01T05:27:38Z"
+                                    QJsonArray block_content; // "last_updated":"2016-07-01T05:27:38Z"
 
                                     QJsonArray collection = obj.value(QStringLiteral("collection")).toArray();
                                     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++)
-                                        res.append((*it).toObject().value(QStringLiteral("track")));
+                                        block_content.append((*it).toObject().value(QStringLiteral("track")));
 
-                                    return res;
-                                }
+                                    return prepareBlock(dmt_set, block_content);
+                                break;}
                             }
                         }
 
                         default: Logger::obj().write("Soundcloud", "SET BY TYPE is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_set, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                 }
             };
         }
