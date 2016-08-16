@@ -15,7 +15,6 @@ namespace Core {
                         args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
                     );
                 }
-
                 QJsonValue groupsByUser(const QString & user_id, int offset = 1, int pages_limit = 5) {
                     QueriableResponse response = pRequest(
                                 baseUrlStr(
@@ -41,7 +40,6 @@ namespace Core {
                         args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
                     );
                 }
-
                 QJsonValue groupsByName(const QString & name, int offset = 1, int pages_limit = 5) {
 //                    dirty	1
 //                    st._aid

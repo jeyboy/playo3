@@ -85,6 +85,7 @@ namespace Core {
             cmd_mtd_open_set,
             cmd_mtd_load_set_data,
 
+            cmd_mtd_users_by_id,
             cmd_mtd_users_by_name,
             cmd_mtd_users_by_track_likes,
             cmd_mtd_users_by_track_reposting,
@@ -134,6 +135,7 @@ namespace Core {
                 case cmd_mtd_open_set: return openSet(params);
                 case cmd_mtd_load_set_data: return loadSetData(params);
 
+                case cmd_mtd_users_by_id: return usersById(params);
                 case cmd_mtd_users_by_name: return usersByName(params);
                 case cmd_mtd_users_by_track_likes: return usersByTrackLikes(params);
                 case cmd_mtd_users_by_track_reposting: return usersByTrackReposting(params);
@@ -187,6 +189,7 @@ namespace Core {
         virtual QJsonValue openSet(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue loadSetData(const QUrlQuery & /*args*/) { return QJsonObject(); } // TODO: rebuild on QString attrs
 
+        virtual QJsonValue usersById(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue usersByName(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue usersByTrackLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue usersByTrackReposting(const QUrlQuery & /*args*/) { return QJsonObject(); }
