@@ -17,8 +17,10 @@ namespace Core {
                     );
                 }
 
-                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
+                    DataMediaType dmt_val = dmt_unknow;
 
                     switch(perm) {
                         case perm_site:
@@ -27,7 +29,7 @@ namespace Core {
                                 case set_popular_tracks: {
                                     int genre_id = -1; //limits.genre; //genres.toInt(attrs);
 
-                                    return saRequest(
+                                    block_content = saRequest(
                                         baseUrlStr(
                                             qst_api_def, tkn_execute,
                                             {
@@ -53,10 +55,10 @@ namespace Core {
                             }
                         }
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_val, block_content/*cmd_mtd_groups_by_id, response, {{CMD_ID, group_id}}*/);
                 }
             };
         }
