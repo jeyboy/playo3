@@ -54,13 +54,13 @@ namespace Core {
                 }
 
                 QJsonValue popular(const SearchLimit & limits) {
-                    QJsonObject res;
+                    QJsonArray res;
 
                     if (limits.include_audio())
-                        res.insert(block_items_audio, setByType(set_popular_tracks, limits));
+                        res << setByType(set_popular_tracks, limits);
 
-//                    if (limits.include_video())
-//                        res.insert(block_items_video, videoPopular(limits));
+                    if (limits.include_video())
+                        res << setByType(set_popular_video, limits);
 
                     return res;
                 }
@@ -69,13 +69,13 @@ namespace Core {
                     if (limits.predicate.isEmpty() && limits.by_popularity())
                         return popular(limits);
                     else {
-                        QJsonObject res;
+                        QJsonArray res;
 
                         if (limits.include_audio())
-                            res.insert(block_items_audio, tracksSearch(limits));
+                            res << tracksSearch(limits);
 
                         if (limits.include_video())
-                            res.insert(block_items_video, videoSearch(limits));
+                            res << videoSearch(limits);
 
                         return res;
                     }
@@ -173,9 +173,9 @@ namespace Core {
 
                 void procSociables(QJsonObject & json) {
                     clearFriends();
-                    jsonToUsers(Friendable::linkables, json.take(block_friends).toArray());
+                    jsonToUsers(Friendable::linkables, json.value(block_friends).toArray());
                     clearGroups();
-                    jsonToGroups(Groupable::linkables, json.take(block_groups).toArray());
+                    jsonToGroups(Groupable::linkables, json.value(block_groups).toArray());
                 }
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
@@ -194,6 +194,8 @@ namespace Core {
 
                 QJsonValue userInfo(const QString & user_id) {
                     Permissions perm = permissions(pr_object_content);
+                    QJsonArray blocks;
+                    QJsonObject media_ret;
 
                     switch(perm) {
                         case perm_site: {
@@ -204,22 +206,13 @@ namespace Core {
                                 ),
                                 call_type_json, 0, proc_json_extract
                             );
-
-                            QJsonObject media_ret = userMedia(user_id).toObject();
-
-                            ret.insert(block_items_audio, media_ret.value(block_items_audio).toArray());
-                            ret.insert(block_sets_audio, media_ret.value(block_sets_audio).toArray());
-
-                            ret.insert(block_items_video, media_ret.value(block_items_video).toArray());
-                            ret.insert(block_sets_video, media_ret.value(block_sets_video).toArray());
-
                             procSociables(ret);
 
-                            return ret;
-                        }
+                            media_ret = userMedia(user_id).toObject();
+                        break;}
 
                         case perm_api: {
-                            QJsonObject ret = User::sRequest(
+                            media_ret = User::sRequest(
                                 User::baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     {{ tkn_code, query_user_tracks_playlists_groups_friends(user_id) }}
@@ -227,21 +220,25 @@ namespace Core {
                                 call_type_json, 0, proc_json_extract
                             );
 
-                            if (!ret.value(tkn_albums_finished).toBool()) {
-                                QJsonArray ar = ret.value(block_sets_audio).toArray();
-                                tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
-                                ret.insert(block_sets_audio, ar);
+                            procSociables(media_ret);
+
+                            if (!media_ret.value(tkn_albums_finished).toBool()) {
+                                QJsonArray ar = media_ret.value(block_sets_audio).toArray();
+                                tracksPlaylistsByUser(user_id, &ar, media_ret.value(tkn_albums_offset).toInt());
+                                media_ret.insert(block_sets_audio, ar);
                             }
+                        break;}
 
-                            procSociables(ret);
-
-                            return ret;
-                        }
-
-                        default: ;
+                        default: return blocks;
                     }
 
-                    return QJsonObject();
+                    blocks << prepareBlock(dmt_audio_set, media_ret.value(block_sets_audio));
+                    blocks << prepareBlock(dmt_video_set, media_ret.value(block_sets_video));
+
+                    blocks << prepareBlock(dmt_audio, media_ret.value(block_items_audio));
+                    blocks << prepareBlock(dmt_video, media_ret.value(block_items_video));
+
+                    return blocks;
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
@@ -249,76 +246,96 @@ namespace Core {
 
                     switch(perm) {
                         case perm_site: {
-                            bool is_group = user_id[0] == '-';
-
                             Response * response = Manager::prepare() -> postFollowed( // TODO: improve me
-                                QStringLiteral("http://vk.com/audio?act=load_audios_silent&al=1&gid=%1&id=%2&please_dont_ddos=2").arg(is_group ? user_id.mid(1) : QStringLiteral("0"), is_group ? QStringLiteral("0") : user_id),
+                                QString(QStringLiteral("http://vk.com/al_audio.php?act=load_silent&al=1&album_id=-2&band=true&owner_id=") % user_id),
                                 Auth::dntHeader().unite({{ QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }})
                             );
 
                             QString data = response -> toText();
 
-                            QStringList parts = data.split(QStringLiteral("<!>"));
+                            QStringList parts = data.split(QStringLiteral("<!json>"));
 
-                            if (parts.length() < 7) {
+                            if (parts.length() == 1) {
                                 Logger::obj().write("VK", "LOAD AUDIO", true);
                                 return QJsonObject();
                             } else {
-                                QHash<QString, QJsonArray> albums;
+                                QJsonObject info_obj = QJsonDocument::fromJson(parts.last().toUtf8()).object();
 
-                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
-                                QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
-                                QJsonArray playlists_res;
+                                if (!info_obj.value(QStringLiteral("isComplete")).toBool())
+                                    qDebug() << "VK HAS MORE RECORDS";
 
-                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end(); playlist++) {
-                                    playlists_res << playlist.value();
-                                    albums.insert(playlist.key(), QJsonArray());
-                                }
+                                int i = 0;
 
-                                ///////////////////////////////////
+                                // 0 - id
+                                // 1 - owner_id
+                                // 2 -
+                                // 3 - title
+                                // 4 - artist
+                                // 5 - duration
+                                // 6 - album_id
+                                // 7 -
+                                // 8 -
+                                // 9 - lyrics
+                                // 10 -
+                                // 11 -
+                                // 12 -
+                                // 13 - some token
 
-                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].replace('\'', '"').toUtf8()).object();
+//                                QHash<QString, QJsonArray> albums;
 
-                                QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
-                                QJsonArray tracks_res;
-                                for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end(); track_arr++) {
-                                    QJsonArray track = (*track_arr).toArray();
-                                    QJsonObject track_obj;
+//                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
+//                                QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
+//                                QJsonArray playlists_res;
 
-                                    track_obj.insert(tkn_owner_id, track[0].toString().toInt());
-                                    track_obj.insert(tkn_id, track[1].toString().toInt());
-                                    track_obj.insert(tkn_url, track[2].toString());
-//                                    track[3].toString().toInt() // bitrate
-//                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
+//                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end(); playlist++) {
+//                                    playlists_res << playlist.value();
+//                                    albums.insert(playlist.key(), QJsonArray());
+//                                }
 
-                                    track_obj.insert(tkn_artist, UnicodeDecoding::decodeHtmlEntites(track[5].toString()));
-                                    track_obj.insert(tkn_title, UnicodeDecoding::decodeHtmlEntites(track[6].toString()));
-                                    track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()) / 1000);
-//                                    track_obj.insert(tkn_genre_id, ); // not presented
+//                                ///////////////////////////////////
 
-                                    if (track[8].toString().toInt() > 0) // album_id // '0' if empty
-                                        albums[track[8].toString()] << track_obj;
+//                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].replace('\'', '"').toUtf8()).object();
 
-                                    tracks_res << track_obj;
-                                }
+//                                QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
+//                                QJsonArray tracks_res;
+//                                for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end(); track_arr++) {
+//                                    QJsonArray track = (*track_arr).toArray();
+//                                    QJsonObject track_obj;
 
-                                /////////////////////////////////////
+//                                    track_obj.insert(tkn_owner_id, track[0].toString().toInt());
+//                                    track_obj.insert(tkn_id, track[1].toString().toInt());
+//                                    track_obj.insert(tkn_url, track[2].toString());
+////                                    track[3].toString().toInt() // bitrate
+////                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
 
-                                QJsonArray uplaylists_res;
-                                for(QJsonArray::Iterator playlist_it = playlists_res.begin(); playlist_it != playlists_res.end(); playlist_it++) {
-                                    QJsonObject playlist_obj = (*playlist_it).toObject();
+//                                    track_obj.insert(tkn_artist, UnicodeDecoding::decodeHtmlEntites(track[5].toString()));
+//                                    track_obj.insert(tkn_title, UnicodeDecoding::decodeHtmlEntites(track[6].toString()));
+//                                    track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()) / 1000);
+////                                    track_obj.insert(tkn_genre_id, ); // not presented
 
-                                    playlist_obj.insert(tkn_items, albums[playlist_obj.value(tkn_id).toString()]);
-                                    uplaylists_res << playlist_obj;
-                                }
+//                                    if (track[8].toString().toInt() > 0) // album_id // '0' if empty
+//                                        albums[track[8].toString()] << track_obj;
 
-                                /////////////////////////////////////                               
-                                QJsonObject res = videoByUser(user_id).toObject();
+//                                    tracks_res << track_obj;
+//                                }
 
-                                res.insert(block_items_audio, tracks_res);
-                                res.insert(block_sets_audio, uplaylists_res);
+//                                /////////////////////////////////////
 
-                                return res;
+//                                QJsonArray uplaylists_res;
+//                                for(QJsonArray::Iterator playlist_it = playlists_res.begin(); playlist_it != playlists_res.end(); playlist_it++) {
+//                                    QJsonObject playlist_obj = (*playlist_it).toObject();
+
+//                                    playlist_obj.insert(tkn_items, albums[playlist_obj.value(tkn_id).toString()]);
+//                                    uplaylists_res << playlist_obj;
+//                                }
+
+//                                /////////////////////////////////////
+//                                QJsonObject res = videoByUser(user_id).toObject();
+
+//                                res.insert(block_items_audio, tracks_res);
+//                                res.insert(block_sets_audio, uplaylists_res);
+
+//                                return res;
                             }
                         break;}
                         case perm_api: {
@@ -341,7 +358,7 @@ namespace Core {
                                 ret.insert(block_sets_audio, ar);
                             }
                             return ret;
-                        }
+                        break;}
 
                         default:;
                     }

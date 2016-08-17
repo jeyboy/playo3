@@ -21,7 +21,7 @@ namespace Core {
                     QRegularExpressionMatch match;
                     if (resp.indexOf(QRegularExpression("vars = ([^;]+);"), 0, &match) != -1) {
                         QJsonObject obj = QJsonDocument::fromJson(match.captured(1).toUtf8()).object();
-
+                        int i = 0;
                         // TODO: finish me
                     }
 

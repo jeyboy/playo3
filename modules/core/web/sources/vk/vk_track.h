@@ -10,6 +10,7 @@ namespace Core {
             public:
                 enum AudioSearchSort { ass_creation_date = 0, ass_duration = 1, ass_popularity = 2 };
 
+                // curl 'https://vk.com/al_audio.php' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Cookie: remixlang=0; remixstid=1076597543_28815117269d9b09eb; remixflash=20.0.0; remixscreen_depth=24; remixdt=0; remixrefkey=ce710b7f9b892b478e; remixseenads=0; remixab=1; audio_vol=100; remixsid=8ac0cdcba71ec450bf16ee7749837a9f394452eeeb29d273a48a6; remixsslsid=1; remixcurr_audio=20284990_365364675' -H 'DNT: 1' -H 'Host: vk.com' -H 'Referer: https://vk.com/audios20284990' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' --data 'act=reload_audio&ads_section=audio&ads_showed=&al=1&al_ad=1&ids=20284990_365364675%2C20284990_364502322%2C20284990_359025135%2C20284990_358285225%2C20284990_356796749%2C20284990_365364675'
                 QString trackUrl(const QString & track_id) { return trackInfo(track_id).toObject().value(tkn_url).toString(); }
 
                 QString trackLyric(const QString & lyrics_id) { //TODO: finish me // not tested
