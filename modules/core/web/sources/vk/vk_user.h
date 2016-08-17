@@ -31,14 +31,21 @@ namespace Core {
                 QJsonValue usersByIdsOrPermas(const QStringList & ids) {
                     return usersByIdOrPerma(ids.join(QStringLiteral(",")));
                 }
-
+                QJsonValue usersById(const QUrlQuery & args) {
+                    return usersByIdOrPerma(
+                        args.queryItemValue(CMD_ID)/*,
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()*/
+                    );
+                }
                 QJsonValue usersByIdOrPerma(const QString & id) {
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, path_user_info,
                                     {
@@ -48,36 +55,46 @@ namespace Core {
                                 ),
                                 call_type_json, 0, proc_json_extract
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_user, block_content);
                 }
 
-                QJsonValue usersByName(const QString & name) {
+                QJsonValue usersByName(const QUrlQuery & args) {
+                    return usersByName(
+                        args.queryItemValue(CMD_PREDICATE),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue usersByName(const QString & name, int offset = 0, int count = 100) {
                     Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            response = pRequest(
                                 baseUrlStr(
                                     qst_api_def, path_users_search,
                                     {
                                         { tkn_q, name },
-                                        { tkn_fields, val_user_fields }
+                                        { tkn_fields, val_user_fields },
+                                        { tkn_limit, count },
+                                        { tkn_offset, OFFSET_TEMPLATE }
                                     }
                                 ),
-                                call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
+                                call_type_json, rules(offset, count), 0, proc_json_extract, QStringList() << tkn_response << tkn_items
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, cmd_mtd_users_by_name, response, {{CMD_PREDICATE, name}});
                 }
             };
         }

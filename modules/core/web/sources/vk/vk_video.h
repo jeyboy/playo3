@@ -28,13 +28,15 @@ namespace Core {
                     return QString();
                 }
 
-                QJsonArray videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000
+                QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     {
@@ -61,31 +63,43 @@ namespace Core {
                                 ),
                                 call_type_json, arr, proc_json_extract, IQUERY_DEF_FIELDS << block_items_video
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "video Search is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_video, block_content);
                 }
 
+
+                QJsonValue videoByUser(const QUrlQuery & args) {
+                    return videoByUser(
+                        args.queryItemValue(CMD_ID)
+                    );
+                }
                 QJsonValue videoByUser(const QString & user_id) {
-                    return sRequest(
+                    QJsonObject content = sRequest(
                         baseUrlStr(
                             qst_api_def, tkn_execute,
                             {{ tkn_code, query_user_videos(user_id) }}
                         ),
                         call_type_json, 0, proc_json_extract
                     );
+
+                    return QJsonArray()
+                        << prepareBlock(dmt_video, content.value(block_items_video))
+                        << prepareBlock(dmt_video_set, content.value(block_sets_video));
                 }
+
 
                 QJsonValue videoByPlaylist(const QString & playlist_id) { // not finished
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-//                            return saRequest(
+//                            block_content = saRequest(
 //                                baseUrlStr(
 //                                    qst_api_def, QStringLiteral("video.get"),
 //                                    {
@@ -96,7 +110,7 @@ namespace Core {
 //                                call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
 //                            );
 
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     {
@@ -119,12 +133,12 @@ namespace Core {
                                 ),
                                 call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_video
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "tracksByPlaylist is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_video, block_content);
                 }
             };
         }

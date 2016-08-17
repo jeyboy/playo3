@@ -24,8 +24,11 @@ namespace Core {
                         ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, user_id, func);
                 }
 
-                void trackRecommendationsAsync(const QString & uid, bool byUser, bool randomize, Func * func) {
-                    ThreadUtils::obj().run((Track *)this, &Track::trackRecommendations, uid, byUser, randomize, func);
+                void trackRecommendationsAsync(const QString & uid, bool by_user, bool randomize, Func * func) {
+                    if (by_user)
+                        ThreadUtils::obj().run((Track *)this, &Track::userRecommendations, uid, randomize, func);
+                    else
+                        ThreadUtils::obj().run((Track *)this, &Track::trackRecommendations, uid, randomize, func);
                 }
 
                 QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {

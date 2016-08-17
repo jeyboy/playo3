@@ -40,11 +40,12 @@ namespace Core {
 
                 QJsonValue tracksInfo(const QStringList & track_ids) {
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     {
@@ -61,22 +62,31 @@ namespace Core {
                         default: Logger::obj().write("VK", "track Lyric is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, block_content);
                 }
 
-                QJsonValue trackRecommendations(const QString & user_id, bool byOwn, bool randomize) {
+                QJsonValue userRecommendations(const QUrlQuery & args) {
+                    return userRecommendations(
+                        args.queryItemValue(CMD_ID),
+                        (bool)args.queryItemValue(CMD_PREDICATE).toInt()//,
+//                        args.queryItemValue(CMD_OFFSET).toInt(),
+//                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue userRecommendations(const QString & user_id, bool randomize) {
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return sRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     {
                                         { tkn_code, QString(
                                                "var recomendations = API.audio.getRecommendations({"
-                                               + QString(byOwn ? "user_id: " : "target_audio: ") % "\"" % user_id % "\", "
+                                               "user_id: \"" % user_id % "\", "
                                                "   count: 1000, "
                                                "   shuffle: " % boolToStr(randomize) % ""
                                                "});"
@@ -85,14 +95,56 @@ namespace Core {
                                         }
                                     }
                                 ),
-                                call_type_json, 0, proc_json_extract
+                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_audio
                             );
-                        }
+                        break;}
+
+                        default: Logger::obj().write("VK", "userRecommendations is not accessable", true);
+                    }
+
+//                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {{CMD_ID, user_id}, {CMD_PREDICATE, (int)randomize}});
+                    return prepareBlock(dmt_audio, block_content);
+                }
+
+                QJsonValue trackRecommendations(const QUrlQuery & args) {
+                    return trackRecommendations(
+                        args.queryItemValue(CMD_ID),
+                        (bool)args.queryItemValue(CMD_PREDICATE).toInt()//,
+//                        args.queryItemValue(CMD_OFFSET).toInt(),
+//                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue trackRecommendations(const QString & track_id, bool randomize) {
+                    Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
+
+                    switch(perm) {
+                        case perm_site:
+                        case perm_api: {
+                            block_content = saRequest(
+                                baseUrlStr(
+                                    qst_api_def, tkn_execute,
+                                    {
+                                        { tkn_code, QString(
+                                               "var recomendations = API.audio.getRecommendations({"
+                                               "target_audio: \"" % track_id % "\", "
+                                               "   count: 1000, "
+                                               "   shuffle: " % boolToStr(randomize) % ""
+                                               "});"
+                                               "return {" % block_items_audio % ": recomendations };"
+                                          )
+                                        }
+                                    }
+                                ),
+                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_audio
+                            );
+                        break;}
 
                         default: Logger::obj().write("VK", "trackRecommendations is not accessable", true);
                     }
 
-                    return QJsonObject();
+//                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
+                    return prepareBlock(dmt_audio, block_content);
                 }
 
 //                QString audioSearchLimitedUrl(QString & searchStr, int limit) {
@@ -119,13 +171,15 @@ namespace Core {
 ////                    return sQuery(audioSearchLimitedUrl(predicate, limitation), extract);
 //                }
 
+                QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits, QJsonArray * arr = 0, bool autoFix = false) {
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, tkn_execute,
                                     {
@@ -154,21 +208,29 @@ namespace Core {
                                 call_type_json, arr, proc_json_extract,
                                 IQUERY_DEF_FIELDS << block_items_audio
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "tracksSearch is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, block_content);
                 }
 
+                QJsonValue tracksByPlaylist(const QUrlQuery & args) {
+                    return tracksByPlaylist(
+                        args.queryItemValue(CMD_ID)/*,
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()*/
+                    );
+                }
                 QJsonValue tracksByPlaylist(const QString & playlist_id) { // not finished
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, QStringLiteral("audio.get"),
                                     {
@@ -178,12 +240,12 @@ namespace Core {
                                 ),
                                 call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "tracksByPlaylist is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_audio, block_content);
                 }
             };
         }
