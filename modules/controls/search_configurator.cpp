@@ -296,7 +296,7 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
     int items_limit, const SearchSettingsBlocks & blocks, const QStringList & predicates,
     const QStringList & genres, int predicate_types, int content_type)
 {   
-    SearchLimitLayers res((SearchContentType)content_type, (SearchPredicateType)predicate_types, items_limit);
+    SearchLimitLayers res((DataMediaType)content_type, (SearchPredicateType)predicate_types, items_limit);
 
     for(QStringList::ConstIterator predicate = predicates.cbegin(); predicate != predicates.cend(); predicate++)
         res.predicates.append((*predicate).toLower());
@@ -374,12 +374,12 @@ Core::SearchLimitLayers SearchConfigurator::params() {
     if (byOwns -> isChecked()) predicate_types |= Core::sp_owns;
 
 
-    SearchContentType content_types = sc_all;
+    DataMediaType content_types = dmt_any_item;
 
     if (byAudioTypes -> isChecked())
-        content_types = Core::sc_audio;
+        content_types = dmt_audio;
     else if (byVideoTypes -> isChecked())
-        content_types = Core::sc_video;
+        content_types = dmt_video;
 
 
     SearchLimitLayers res(content_types, (SearchPredicateType)predicate_types);

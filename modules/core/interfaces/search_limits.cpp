@@ -105,7 +105,7 @@ void SearchLimitLayer::fromJson(const QJsonArray & objs, QList<SearchLimitLayer>
         list << SearchLimitLayer(
             (SearchRequestType)obj.value(JSON_SEARCH_REQUEST_TYPE).toInt(),
              obj.value(JSON_SEARCH_CONTEXT).toVariant(),
-            (SearchContentType)obj.value(JSON_SEARCH_CONTENT_TYPE).toInt(),
+            (DataMediaType)obj.value(JSON_SEARCH_CONTENT_TYPE).toInt(),
             (SearchPredicateType)obj.value(JSON_SEARCH_PREDICATE_TYPE).toInt(),
             obj.value(JSON_SEARCH_PREDICATE).toString(),
             obj.value(JSON_SEARCH_GENRE).toString(),

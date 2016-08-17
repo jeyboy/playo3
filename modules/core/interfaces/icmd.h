@@ -3,6 +3,7 @@
 
 #include "icmd_fields.h"
 
+#include <qdebug.h>
 #include <qjsonobject.h>
 #include <qvariant.h>
 #include <qhash.h>
