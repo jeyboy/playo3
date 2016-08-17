@@ -22,7 +22,7 @@ namespace Core {
         //reserved 64
         //reserved 128
         //reserved 256
-        //reserved 512
+        dmt_feed = 512,
         dmt_artist = 1024,
 
         dmt_user = 2048,

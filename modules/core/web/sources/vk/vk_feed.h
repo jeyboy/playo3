@@ -24,11 +24,12 @@ namespace Core {
                 // https://new.vk.com/dev/newsfeed.getRecommended
                 QJsonValue feedsBySource(const QStringList & sources = QStringList()) { // not finished
                     Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            return saRequest(
+                            block_content = saRequest(
                                 baseUrlStr(
                                     qst_api_def, QStringLiteral("newsfeed.get"),
                                     {
@@ -39,12 +40,12 @@ namespace Core {
                                 ),
                                 call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("VK", "feedsBySource is not accessable", true);
                     }
 
-                    return QJsonArray();
+                    return prepareBlock(dmt_feed, block_content);
                 }
             };
         }
