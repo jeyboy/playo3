@@ -37,30 +37,36 @@ namespace Core {
             inline DataSubType sourceType() const { return dt_site_zaycev; }
 
             QJsonValue searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
-                return pRequest(
+                QueriableResponse response = pRequest(
                     QStringLiteral("http://zaycev.net/genres/%1/%2_%3.html")
                         .arg(limits.genre, // need to convert genre !!!
                              limits.by_newest() ? QStringLiteral("new") : QStringLiteral("index"),
                              OFFSET_TEMPLATE),
                     call_type_html, rules(limits), 0, proc_tracks1
                 );
+
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
 
             // http://zaycev.net/artist/letter-rus-zh-more.html?page=1
             QJsonValue searchByChar(const SearchLimit & limits) { // by default - sort by popularity
-                return pRequest(
+                QueriableResponse response = pRequest(
                     QStringLiteral("http://zaycev.net/artist/letter-%1-more.html?page=%2")
                         .arg(prepareLetter(limits), OFFSET_TEMPLATE),
                     call_type_html, rules(limits), 0, proc_char1
                 );
+
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
 
             QJsonValue searchInSets(const SearchLimit & limits) { // required on loadable containers // not finished
-                return pRequest(
+                QueriableResponse response = pRequest(
                     QStringLiteral("http://zaycev.net/musicset%1/more.html?page=%2")
                         .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"
                     call_type_html, rules(limits), 0, proc_set1
                 );
+
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
 
             QJsonValue loadSetData(const QString & attrs) {
@@ -75,19 +81,21 @@ namespace Core {
             }
 
             QJsonValue newest(const SearchLimit & limits) {
-                return pRequest(
+                QueriableResponse response = pRequest(
                     QStringLiteral("http://zaycev.net/new/more.html?page=") % OFFSET_TEMPLATE,
                     call_type_html, rules(limits), 0, proc_tracks1
                 );
+
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
 
             QJsonValue popular(const SearchLimit & limits) {
-                return pRequest(
+                QueriableResponse response = pRequest(
                     QStringLiteral("http://zaycev.net/top/more.html?page=") % OFFSET_TEMPLATE,
                     call_type_html, rules(limits), 0, proc_tracks1
                 );
 
-//                return saRequest(baseUrlStr(), call_type_html, 0, proc_tracks1);
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
 
         protected:
@@ -243,12 +251,8 @@ namespace Core {
                     call_iter_type_page, limits.start_offset,
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.requests_limit, 2)
                 );
-                return pRequest(url_str, call_type_html, rules, 0, proc_tracks1);
-
-
-//                QJsonArray json;
-//                lQuery(url_str, json, proc_tracks1, qMin(limitations.count_page, 2), limitations.start_page, limitations.total_limit); // 2 pages at this time
-//                return json;
+                QueriableResponse response = pRequest(url_str, call_type_html, rules, 0, proc_tracks1);
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
         private:
             friend class Singleton<Zaycev>;

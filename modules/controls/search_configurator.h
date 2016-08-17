@@ -77,7 +77,7 @@ namespace Controls {
         static Core::SearchLimitLayers buildParams(
             int items_limit = DEFAULT_ITEMS_LIMIT, const SearchSettingsBlocks & blocks = block_all,
             const QStringList & predicates = QStringList(), const QStringList & genres = QStringList(),
-            int predicate_types = Core::sp_title, int content_type = Core::sc_all
+            int predicate_types = Core::sp_title, int content_type = Core::dmt_any_item
         );
 
         SearchConfigurator(QWidget * parent, QPushButton * activationBtn = 0, QLabel * errors_output = 0);

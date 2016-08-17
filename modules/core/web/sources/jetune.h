@@ -90,11 +90,9 @@ namespace Core {
                     call_iter_type_page, limits.start_offset,
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.requests_limit, 1)
                 );
-                return pRequest(url_str, call_type_html, rules, 0, proc_tracks1);
 
-//                QJsonArray json;
-//                lQuery(url_str, json, songs1, 1/*limitations.count_page*/, limitations.start_page, limitations.total_limit);
-//                return json;
+                QueriableResponse response = pRequest(url_str, call_type_html, rules, 0, proc_tracks1);
+                return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
         private:
             friend class Singleton<Jetune>;

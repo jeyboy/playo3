@@ -41,8 +41,10 @@ namespace Core {
                 bool connectUser() { return true; }
 
             protected:
-                QJsonValue popular(const SearchLimit & /*limits*/) {
-                    return pRequest(
+                QJsonValue popular(const SearchLimit & limits) {
+                    QueriableResponse response;
+
+                    response = pRequest(
                         videosUrl(),
                         call_type_json,
                         rules()
@@ -52,23 +54,19 @@ namespace Core {
 //                        videosUrl(),
 //                        queryRules(100)
 //                    );
+
+                    return prepareBlock(dmt_set, cmd_mtd_set_by_type, response, limits/*, {{CMD_SET_TYPE, set_type}}*/);
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) { //count = 5
-//                    QJsonArray res = lQuery(
-//                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
-//                        queryRules(limits.items_limit)
-//                    );
-
-
-                    QJsonArray res = pRequest(
+                    QueriableResponse response = pRequest(
                         searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
                         call_type_json,
                         rules(QString(), limits.items_limit)
                     );
 
-                    initDuration(res);
-                    return res;
+                    initDuration(response.content);
+                    return prepareBlock(dmt_video, cmd_mtd_unknown, response, limits);
                 }
 
                 inline QString refresh(const QString & path, const DataMediaType & /*itemMediaType*/) { return idToUrl(path); }
