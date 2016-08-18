@@ -62,7 +62,7 @@ namespace Core {
 
                                 default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
                             }
-                        }
+                        break;}
 
                         case set_popular_video: {
                             dmt_val = dmt_video;
@@ -95,7 +95,7 @@ namespace Core {
 
                                 default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
                             }
-                        }
+                        break;}
                     }
 
                     return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
