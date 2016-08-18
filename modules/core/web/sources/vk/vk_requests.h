@@ -198,51 +198,21 @@ namespace Core {
 
                 QJsonValue userInfo(const QString & user_id) {
                     Permissions perm = permissions(pr_object_content);
-                    QJsonArray blocks;
-                    QJsonObject media_ret;
 
-                    switch(perm) {
-                        case perm_site: {
-                            QJsonObject ret = User::sRequest(
-                                User::baseUrlStr(
-                                    qst_api, tkn_execute,
-                                    {{ tkn_code, query_user_groups_friends(user_id) }}
-                                ),
-                                call_type_json, 0, proc_json_extract
-                            );
-                            procSociables(ret);
+                    if (perm > perm_none) {
+                        QJsonObject ret = User::sRequest(
+                            User::baseUrlStr(
+                                qst_api, tkn_execute,
+                                {{ tkn_code, query_user_groups_friends(user_id) }}
+                            ),
+                            call_type_json, 0, proc_json_extract
+                        );
+                        procSociables(ret);
 
-                            media_ret = userMedia(user_id).toObject();
-                        break;}
-
-                        case perm_api: {
-                            media_ret = User::sRequest(
-                                User::baseUrlStr(
-                                    qst_api, tkn_execute,
-                                    {{ tkn_code, query_user_tracks_playlists_groups_friends(user_id) }}
-                                ),
-                                call_type_json, 0, proc_json_extract
-                            );
-
-                            procSociables(media_ret);
-
-                            if (!media_ret.value(tkn_albums_finished).toBool()) {
-                                QJsonArray ar = media_ret.value(block_sets_audio).toArray();
-                                tracksPlaylistsByUser(user_id, &ar, media_ret.value(tkn_albums_offset).toInt());
-                                media_ret.insert(block_sets_audio, ar);
-                            }
-                        break;}
-
-                        default: return blocks;
+                        return userMedia(user_id);
                     }
 
-                    blocks << prepareBlock(dmt_audio_set, media_ret.value(block_sets_audio));
-                    blocks << prepareBlock(dmt_video_set, media_ret.value(block_sets_video));
-
-                    blocks << prepareBlock(dmt_audio, media_ret.value(block_items_audio));
-                    blocks << prepareBlock(dmt_video, media_ret.value(block_items_video));
-
-                    return blocks;
+                    return QJsonArray();
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
@@ -250,8 +220,17 @@ namespace Core {
 
                     switch(perm) {
                         case perm_site: {
-                            Response * response = Manager::prepare() -> postFollowed( // TODO: improve me
-                                QString(QStringLiteral("http://vk.com/al_audio.php?act=load_silent&al=1&album_id=-2&band=true&owner_id=") % user_id),
+                            Response * response = Manager::prepare() -> postFollowed(
+                                IQueriable::baseUrlStr(
+                                    qst_site, QStringLiteral("al_audio.php"),
+                                    {
+                                        { QStringLiteral("act"), QStringLiteral("load_silent") },
+                                        { QStringLiteral("al"), QStringLiteral("1") },
+                                        { QStringLiteral("album_id"), QStringLiteral("-2") },
+                                        { QStringLiteral("band"), QStringLiteral("true") },
+                                        { QStringLiteral("owner_id"), user_id }
+                                    }
+                                ),
                                 Auth::dntHeader().unite({{ QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }})
                             );
 
@@ -324,14 +303,15 @@ namespace Core {
                                 }
 
                                 /////////////////////////////////////
-                                QJsonObject res = videoByUser(user_id).toObject();
+                                QJsonArray res = videoByUser(user_id).toArray();
 
-                                res.insert(block_items_audio, tracks_res);
-                                res.insert(block_sets_audio, playlists_res);
+                                res.prepend(prepareBlock(dmt_audio, tracks_res));
+                                res.prepend(prepareBlock(dmt_audio_set, playlists_res));
 
                                 return res;
                             }
                         break;}
+
                         case perm_api: {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
@@ -341,23 +321,24 @@ namespace Core {
                                 call_type_json, 0, proc_json_extract
                             );
 
-                            QJsonObject video_res = videoByUser(user_id).toObject();
-
-                            ret.insert(block_items_video, video_res.value(block_items_video).toArray());
-                            ret.insert(block_sets_video, video_res.value(block_sets_video).toArray());
+                            QJsonArray res = videoByUser(user_id).toArray();
 
                             if (!ret.value(tkn_albums_finished).toBool()) {
                                 QJsonArray ar = ret.value(block_sets_audio).toArray();
                                 tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
                                 ret.insert(block_sets_audio, ar);
                             }
+
+                            res.prepend(prepareBlock(dmt_audio, ret.value(block_items_audio)));
+                            res.prepend(prepareBlock(dmt_audio_set, ret.value(block_sets_audio)));
+
                             return ret;
                         break;}
 
                         default:;
                     }
 
-                    return QJsonObject();
+                    return QJsonArray();
                 }
             };
         }

@@ -64,7 +64,7 @@ namespace Core {
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
             extern const QString url_api_base          = QStringLiteral("https://api.vk.com/method/");
-            extern const QString url_site_base         = QStringLiteral("https://api.vk.com/method/");
+            extern const QString url_site_base         = QStringLiteral("http://vk.com/");
             extern const QString url_auth              = QStringLiteral("https://oauth.vk.com/authorize");
 
 
@@ -226,8 +226,8 @@ namespace Core {
                     "}"
 
                     "return {"
-                    "    " % block_items_video % ": videos,"
-                    "    " % block_sets_video % ": albums"
+                    "    \"" % block_items_video % "\": videos,"
+                    "    \"" % block_sets_video % "\": albums"
                     "};"
                 );
             }
