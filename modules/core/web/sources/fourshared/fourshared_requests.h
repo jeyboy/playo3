@@ -186,15 +186,15 @@ namespace Core {
                 void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
-                    QJsonObject res;
+                    QJsonArray blocks;
 
                     if (limits.include_audio())
-                        res.insert(block_items_audio, tracksSearch(limits));
+                        blocks << tracksSearch(limits);
 
                     if (limits.include_video())
-                        res.insert(block_items_video, videoSearch(limits));
+                        blocks << videoSearch(limits);
 
-                    return res;
+                    return blocks;
                 }
 
                 QJsonValue loadSetData(const QUrlQuery & attrs) {
@@ -217,15 +217,15 @@ namespace Core {
                 bool connectUserApi() { return connectApi(); }
             public:
                 QJsonValue popular(const SearchLimit & limits) {
-                    QJsonObject res;
+                    QJsonArray blocks;
 
                     if (limits.include_audio())
-                        res.insert(block_items_audio, setByType(set_popular_audio, limits));
+                        blocks << setByType(set_popular_audio, limits);
 
                     if (limits.include_video())
-                        res.insert(block_items_video, setByType(set_popular_video, limits));
+                        blocks << setByType(set_popular_video, limits);
 
-                    return res;
+                    return blocks;
                 }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {

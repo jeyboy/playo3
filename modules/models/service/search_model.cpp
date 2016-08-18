@@ -113,7 +113,6 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
     if (requests.isEmpty())
         layers.prepareLayers(requests);
 
-
     QHash<QString, QAbstractItemModel *> inners;
     QList<Controls::DockBar *> bars = Presentation::Dockbars::obj().dockbars();
 
