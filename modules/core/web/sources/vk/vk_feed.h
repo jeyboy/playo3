@@ -31,7 +31,7 @@ namespace Core {
                         case perm_api: {
                             block_content = saRequest(
                                 baseUrlStr(
-                                    qst_api_def, QStringLiteral("newsfeed.get"),
+                                    qst_api, QStringLiteral("newsfeed.get"),
                                     {
                                         { QStringLiteral("filters"), QStringLiteral("audio,video") },
                                         { QStringLiteral("count"), 100 },

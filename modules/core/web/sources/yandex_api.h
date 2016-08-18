@@ -22,7 +22,7 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType sourceType() const { return dt_site_yandex; }
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_def) { return QUrlQuery(); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api) { return QUrlQuery(); }
 
                 void fromJson(const QJsonObject & /*hash*/) {}
                 void toJson(QJsonObject & /*hash*/) {}

@@ -28,7 +28,7 @@ namespace Core {
                         case perm_api: {
 //                            block_content = saRequest(
 //                                baseUrlStr(
-//                                    qst_api_def, path_groups_by_id,
+//                                    qst_api, path_groups_by_id,
 //                                    { { tkn_group_ids, id } }
 //                                ),
 //                                call_type_json, 0, proc_json_extract
@@ -36,7 +36,7 @@ namespace Core {
 
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_api_def, path_groups_by_id,
+                                    qst_api, path_groups_by_id,
                                     { { tkn_group_ids, id }, { tkn_offset, OFFSET_TEMPLATE } }
                                 ),
                                 call_type_json, rules(offset, count), 0, proc_json_extract
@@ -65,7 +65,7 @@ namespace Core {
                         case perm_api: {
 //                            return saRequest(
 //                                baseUrlStr(
-//                                    qst_api_def, path_groups_search,
+//                                    qst_api, path_groups_search,
 //                                    {
 //                                        { tkn_type, val_group_types },
 //                                        { tkn_q, name },
@@ -78,7 +78,7 @@ namespace Core {
 
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_api_def, path_groups_search,
+                                    qst_api, path_groups_search,
                                     {
                                         { tkn_type, val_group_types },
                                         { tkn_q, name },

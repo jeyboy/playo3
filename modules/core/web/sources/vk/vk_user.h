@@ -18,7 +18,7 @@ namespace Core {
                             setParam(query, tkn_fields, tkn_counters);
                             setParam(query, tkn_user_ids, user_id);
 
-                            QJsonObject ret = sRequest(baseUrlStr(qst_api_def, path_user_info, query), call_type_json);
+                            QJsonObject ret = sRequest(baseUrlStr(qst_api, path_user_info, query), call_type_json);
                             return ret.value(tkn_response).toArray().first().toObject();
                         }
 
@@ -47,7 +47,7 @@ namespace Core {
                         case perm_api: {
                             block_content = saRequest(
                                 baseUrlStr(
-                                    qst_api_def, path_user_info,
+                                    qst_api, path_user_info,
                                     {
                                         { tkn_user_ids, id },
                                         { tkn_fields, val_user_fields }
@@ -79,7 +79,7 @@ namespace Core {
                         case perm_api: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_api_def, path_users_search,
+                                    qst_api, path_users_search,
                                     {
                                         { tkn_q, name },
                                         { tkn_fields, val_user_fields },

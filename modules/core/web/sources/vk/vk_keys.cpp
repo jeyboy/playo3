@@ -63,7 +63,8 @@ namespace Core {
 
 
             extern const QString url_redirect_uri      = QStringLiteral("https://oauth.vk.com/blank.html");
-            extern const QString url_base              = QStringLiteral("https://api.vk.com/method/");
+            extern const QString url_api_base          = QStringLiteral("https://api.vk.com/method/");
+            extern const QString url_site_base         = QStringLiteral("https://api.vk.com/method/");
             extern const QString url_auth              = QStringLiteral("https://oauth.vk.com/authorize");
 
 

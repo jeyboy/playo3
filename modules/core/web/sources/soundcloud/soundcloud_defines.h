@@ -30,7 +30,7 @@ namespace Core {
                 inline void setGenreLimitation(QUrlQuery & query, const QString & genre) { setParam(query, tkn_genres, genre); }
 
                 QUrlQuery trackSearchQuery(const QString & predicate, const QString & genre, bool hottest = false) {
-                    QUrlQuery query = genDefaultParams(qst_api_def);
+                    QUrlQuery query = genDefaultParams(qst_api);
 
                     setAudioTypesParam(query);
 

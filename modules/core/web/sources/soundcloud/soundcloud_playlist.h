@@ -51,7 +51,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
+                                baseUrlStr(qst_api, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch
                             );
@@ -85,7 +85,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_playlists, {{tkn_q, predicate}}),
+                                baseUrlStr(qst_api, path_playlists, {{tkn_q, predicate}}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch
                             );
@@ -126,7 +126,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_user_playlists.arg(user_id), {}),
+                                baseUrlStr(qst_api, path_user_playlists.arg(user_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET), 0, proc_json_patch
                             );
                         }

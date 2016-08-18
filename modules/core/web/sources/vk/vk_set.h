@@ -31,7 +31,7 @@ namespace Core {
 
                                     block_content = saRequest(
                                         baseUrlStr(
-                                            qst_api_def, tkn_execute,
+                                            qst_api, tkn_execute,
                                             {
                                                 {
                                                     tkn_code, QString(

@@ -34,7 +34,7 @@ namespace Core {
                     setParam(query, tkn_screen_name, perma);
 
                     QJsonObject ret = sRequest(
-                        baseUrlStr(qst_api_def, path_resole_user, query),
+                        baseUrlStr(qst_api, path_resole_user, query),
                         call_type_json, 0, proc_json_extract
                     );
 

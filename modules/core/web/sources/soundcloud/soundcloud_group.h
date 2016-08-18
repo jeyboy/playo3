@@ -15,14 +15,14 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             return sRequest(
-                                baseUrlStr(qst_api_def, path_groups % '/' % group_id, {}),
+                                baseUrlStr(qst_api, path_groups % '/' % group_id, {}),
                                 call_type_json, 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
                             return sRequest(
-                                baseUrlStr(qst_site_def, path_groups % '/' % group_id, {}),
+                                baseUrlStr(qst_site, path_groups % '/' % group_id, {}),
                                 call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
                         }
@@ -51,14 +51,14 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_groups % '/' % group_id, {}),
+                                baseUrlStr(qst_api, path_groups % '/' % group_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_def, path_groups % '/' % group_id, {}),
+                                baseUrlStr(qst_site, path_groups % '/' % group_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -110,7 +110,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_user_groups.arg(user_id), {}),
+                                baseUrlStr(qst_api, path_user_groups.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
@@ -118,7 +118,7 @@ namespace Core {
                         case perm_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_def, path_user_groups.arg(user_id),
+                                    qst_site, path_user_groups.arg(user_id),
                                     {{QStringLiteral("representation"), QStringLiteral("mini")}}
                                 ),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
@@ -146,7 +146,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_groups, {{tkn_q, name}}),
+                                baseUrlStr(qst_api, path_groups, {{tkn_q, name}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }

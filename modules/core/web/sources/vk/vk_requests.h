@@ -81,10 +81,18 @@ namespace Core {
                     }
                 }
 
-                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api_def) {
+                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+                    switch(stype) {
+                        case qst_api: return url_api_base % predicate;
+                        case qst_site: return url_site_base % predicate;
+                        default: return QString();
+                    }
+                }
+
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api) {
                     QUrlQuery query = QUrlQuery();
 
-                    if (stype == qst_api_def) {
+                    if (stype == qst_api) {
                         query.addQueryItem(tkn_version, val_version);
                         query.addQueryItem(tkn_access_token, apiToken());
                     }
@@ -94,7 +102,7 @@ namespace Core {
 
                 void saveAdditionals(QJsonObject & obj) {
                     Sociable::toJson(obj);
-                    Manager::saveCookies(obj, QUrl(url_base));
+                    Manager::saveCookies(obj, QUrl(url_api_base));
                 }
                 void loadAdditionals(QJsonObject & obj) {
                     Sociable::fromJson(obj);
@@ -103,7 +111,7 @@ namespace Core {
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
-                    Manager::removeCookies(url_base);
+                    Manager::removeCookies(url_api_base);
                 }
 
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
@@ -137,10 +145,6 @@ namespace Core {
                             obj.value(tkn_photo).toString()
                         );
                     }
-                }
-
-                inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) {
-                    return url_base % predicate;
                 }
 
                 inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) { return response.value(tkn_finished).toBool(); }
@@ -185,7 +189,7 @@ namespace Core {
 //                QJsonValue userTracksGroupsFriends(const QString & user_id) {
 //                    return User::sRequest(
 //                        User::baseUrlStr(
-//                            qst_api_def, tkn_execute,
+//                            qst_api, tkn_execute,
 //                            {{ tkn_code, query_user_tracks_groups_friends.arg(user_id) }}
 //                        ),
 //                        call_type_json, 0, proc_json_extract
@@ -201,7 +205,7 @@ namespace Core {
                         case perm_site: {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
-                                    qst_api_def, tkn_execute,
+                                    qst_api, tkn_execute,
                                     {{ tkn_code, query_user_groups_friends(user_id) }}
                                 ),
                                 call_type_json, 0, proc_json_extract
@@ -214,7 +218,7 @@ namespace Core {
                         case perm_api: {
                             media_ret = User::sRequest(
                                 User::baseUrlStr(
-                                    qst_api_def, tkn_execute,
+                                    qst_api, tkn_execute,
                                     {{ tkn_code, query_user_tracks_playlists_groups_friends(user_id) }}
                                 ),
                                 call_type_json, 0, proc_json_extract
@@ -264,84 +268,74 @@ namespace Core {
                                 if (!info_obj.value(QStringLiteral("isComplete")).toBool())
                                     qDebug() << "VK HAS MORE RECORDS";
 
-                                int i = 0;
+                                QHash<QString, QJsonArray> albums;
+                                QJsonArray tracks_res, items = info_obj.value(QStringLiteral("list")).toArray();
 
-                                // 0 - id
-                                // 1 - owner_id
-                                // 2 -
-                                // 3 - title
-                                // 4 - artist
-                                // 5 - duration
-                                // 6 - album_id
-                                // 7 -
-                                // 8 -
-                                // 9 - lyrics
-                                // 10 -
-                                // 11 -
-                                // 12 -
-                                // 13 - some token
+                                for(QJsonArray::Iterator item = items.begin(); item != items.end(); item++) {
+                                    QJsonArray track = (*item).toArray();
+                                    QJsonObject track_obj;
 
-//                                QHash<QString, QJsonArray> albums;
+                                    track_obj.insert(tkn_owner_id, track[1].toString().toInt());
+                                    track_obj.insert(tkn_id, track[0].toString().toInt());
 
-//                                QJsonObject info_obj = QJsonDocument::fromJson(parts[6].toUtf8()).object();
-//                                QJsonObject playlists_info = info_obj.value(QStringLiteral("albums")).toObject();
-//                                QJsonArray playlists_res;
+                                    QString url = track[2].toString();
+                                    if (!url.isEmpty())
+                                        track_obj.insert(tkn_url, url);
 
-//                                for(QJsonObject::Iterator playlist = playlists_info.begin(); playlist != playlists_info.end(); playlist++) {
-//                                    playlists_res << playlist.value();
-//                                    albums.insert(playlist.key(), QJsonArray());
-//                                }
+////                                    track[9].toString().toInt() // ?lyrics_id // '0' if empty
 
-//                                ///////////////////////////////////
-
-//                                QJsonObject audio_info_obj = QJsonDocument::fromJson(parts[5].replace('\'', '"').toUtf8()).object();
-
-//                                QJsonArray tracks_arr = audio_info_obj.value(QStringLiteral("all")).toArray();
-//                                QJsonArray tracks_res;
-//                                for(QJsonArray::Iterator track_arr = tracks_arr.begin(); track_arr != tracks_arr.end(); track_arr++) {
-//                                    QJsonArray track = (*track_arr).toArray();
-//                                    QJsonObject track_obj;
-
-//                                    track_obj.insert(tkn_owner_id, track[0].toString().toInt());
-//                                    track_obj.insert(tkn_id, track[1].toString().toInt());
-//                                    track_obj.insert(tkn_url, track[2].toString());
-////                                    track[3].toString().toInt() // bitrate
-////                                    track[7].toString().toInt() // ?lyrics_id // '0' if empty
-
-//                                    track_obj.insert(tkn_artist, UnicodeDecoding::decodeHtmlEntites(track[5].toString()));
-//                                    track_obj.insert(tkn_title, UnicodeDecoding::decodeHtmlEntites(track[6].toString()));
-//                                    track_obj.insert(tkn_duration, Duration::toMillis(track[4].toString()) / 1000);
+                                    track_obj.insert(tkn_artist, UnicodeDecoding::decodeHtmlEntites(track[4].toString()));
+                                    track_obj.insert(tkn_title, UnicodeDecoding::decodeHtmlEntites(track[3].toString()));
+                                    track_obj.insert(tkn_duration, track[5].toInt());
 ////                                    track_obj.insert(tkn_genre_id, ); // not presented
 
-//                                    if (track[8].toString().toInt() > 0) // album_id // '0' if empty
-//                                        albums[track[8].toString()] << track_obj;
+                                    QString album_id = ISource::idToStr(track[6]);
+                                    if (album_id.toInt() > 0)// album_id // '0' if empty
+                                        albums[album_id] << track_obj;
 
-//                                    tracks_res << track_obj;
-//                                }
+                                    tracks_res << track_obj;
 
-//                                /////////////////////////////////////
+                                    // 0 - id
+                                    // 1 - owner_id
+                                    // 2 - url
+                                    // 3 - title
+                                    // 4 - artist
+                                    // 5 - duration
+                                    // 6 - album_id
+                                    // 7 -
+                                    // 8 -
+                                    // 9 - lyrics
+                                    // 10 -
+                                    // 11 -
+                                    // 12 -
+                                    // 13 - some token
+                                }
 
-//                                QJsonArray uplaylists_res;
-//                                for(QJsonArray::Iterator playlist_it = playlists_res.begin(); playlist_it != playlists_res.end(); playlist_it++) {
-//                                    QJsonObject playlist_obj = (*playlist_it).toObject();
+                                /////////////////////////////////////
 
-//                                    playlist_obj.insert(tkn_items, albums[playlist_obj.value(tkn_id).toString()]);
-//                                    uplaylists_res << playlist_obj;
-//                                }
+                                QJsonArray playlists_res;
 
-//                                /////////////////////////////////////
-//                                QJsonObject res = videoByUser(user_id).toObject();
+                                for(QHash<QString, QJsonArray>::Iterator album = albums.begin(); album != albums.end(); album++) {
+                                    playlists_res << QJsonObject {
+                                        {tkn_items, album.value()},
+                                        {tkn_id, album.key()},
+                                        {tkn_title, QString::number(playlists_res.size())} // for real names need send request to get user playlists
+                                    };
+                                }
 
-//                                res.insert(block_items_audio, tracks_res);
-//                                res.insert(block_sets_audio, uplaylists_res);
+                                /////////////////////////////////////
+                                QJsonObject res = videoByUser(user_id).toObject();
 
-//                                return res;
+                                res.insert(block_items_audio, tracks_res);
+                                res.insert(block_sets_audio, playlists_res);
+
+                                return res;
                             }
                         break;}
                         case perm_api: {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
-                                    qst_api_def, tkn_execute,
+                                    qst_api, tkn_execute,
                                     {{ tkn_code, query_user_tracks_playlists(user_id) }}
                                 ),
                                 call_type_json, 0, proc_json_extract

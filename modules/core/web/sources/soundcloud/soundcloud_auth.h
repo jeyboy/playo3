@@ -13,7 +13,7 @@ namespace Core {
                 QString authUrl() {
                     QUrl url(url_connect);
 
-                    QUrlQuery query = genDefaultParams(qst_api_def);
+                    QUrlQuery query = genDefaultParams(qst_api);
                     setParam(query, tkn_response_type, val_response_type);
                     setParam(query, tkn_scope, val_scope);
                     setParam(query, tkn_redirect_uri, url_redirect);

@@ -38,7 +38,7 @@ namespace Core {
                         case perm_api: {
                             block_content = saRequest(
                                 baseUrlStr(
-                                    qst_api_def, tkn_execute,
+                                    qst_api, tkn_execute,
                                     {
                                         {
                                             tkn_code, QString(
@@ -80,7 +80,7 @@ namespace Core {
                 QJsonValue videoByUser(const QString & user_id) {
                     QJsonObject content = sRequest(
                         baseUrlStr(
-                            qst_api_def, tkn_execute,
+                            qst_api, tkn_execute,
                             {{ tkn_code, query_user_videos(user_id) }}
                         ),
                         call_type_json, 0, proc_json_extract
@@ -101,7 +101,7 @@ namespace Core {
                         case perm_api: {
 //                            block_content = saRequest(
 //                                baseUrlStr(
-//                                    qst_api_def, QStringLiteral("video.get"),
+//                                    qst_api, QStringLiteral("video.get"),
 //                                    {
 //                                        { QStringLiteral("album_id"), playlist_id },
 //                                        { QStringLiteral("count"), 200}
@@ -112,7 +112,7 @@ namespace Core {
 
                             block_content = saRequest(
                                 baseUrlStr(
-                                    qst_api_def, tkn_execute,
+                                    qst_api, tkn_execute,
                                     {
                                         {
                                             tkn_code, QString(

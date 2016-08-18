@@ -114,7 +114,7 @@ namespace Core {
 
                     QJsonObject track_obj;
 
-                    track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site_def, (*track) -> value(data_url)));
+                    track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site, (*track) -> value(data_url)));
                     track_obj.insert(tkn_grab_duration, Duration::fromSeconds((*track) -> value(QStringLiteral("data-duration")).toInt()));
                     track_obj.insert(tkn_skip_info, true);
 
@@ -242,7 +242,7 @@ namespace Core {
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site_def,
+                QString url_str = baseUrlStr(qst_site,
                     QStringLiteral("/search.html?query_search=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );

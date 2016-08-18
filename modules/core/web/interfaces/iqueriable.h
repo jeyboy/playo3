@@ -106,7 +106,7 @@ namespace Core {
                 qst_site_audio, qst_site_group, qst_site_user, // od
                 qst_api_base, qst_api_search, qst_site_base, qst_site_search, // fourshared
 
-                qst_api_def, qst_api_alt1, qst_api_alt2, qst_site_def, qst_site_alt1, qst_site_alt2
+                /*qst_api_def,*/ qst_api_alt1, qst_api_alt2/*, qst_site_def*/, qst_site_alt1, qst_site_alt2
             };
 
             bool request(QueriableArg * arg) {
@@ -238,7 +238,7 @@ namespace Core {
 
 
             virtual inline QString boolToStr(const bool & val) { return val ? QStringLiteral("true") : QStringLiteral("false"); }
-            virtual inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_def) { return QUrlQuery(); }
+            virtual inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api) { return QUrlQuery(); }
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }

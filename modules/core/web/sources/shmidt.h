@@ -14,7 +14,7 @@ namespace Core {
             inline DataSubType sourceType() const { return dt_site_shmidt; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);
 
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
@@ -34,7 +34,7 @@ namespace Core {
                         for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                             QJsonObject track_obj;
 
-                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site_def, (*track) -> link()));
+                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site, (*track) -> link()));
                             track_obj.insert(tkn_skip_info, true);
                             track_obj.insert(tkn_grab_title, (*track) -> text());
 
@@ -59,11 +59,11 @@ namespace Core {
                 if (tracks.isEmpty())
                     return QString();
                 else
-                    return baseUrlStr(qst_site_def, tracks.link());
+                    return baseUrlStr(qst_site, tracks.link());
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site_def, QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
+                QString url_str = baseUrlStr(qst_site, QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
                     encodeStr(limits.predicate),
                     (limits.by_artists() ? QStringLiteral("artistname") : limits.by_songs_name() ? QStringLiteral("songtitle") : QStringLiteral("entire"))
                 );

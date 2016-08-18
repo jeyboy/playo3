@@ -14,7 +14,7 @@ namespace Core {
             inline DataSubType sourceType() const { return dt_site_mp3cc; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
-                return saRequest(baseUrlStr(qst_site_def), call_type_html, 0, proc_tracks1);
+                return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);
 //                return sQuery(QUrl(baseUrlStr()), songs1);
             }
         protected:
@@ -82,7 +82,7 @@ namespace Core {
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site_def, QStringLiteral("/search/%1/%2/page/%3/")).arg(
+                QString url_str = baseUrlStr(qst_site, QStringLiteral("/search/%1/%2/page/%3/")).arg(
                     QString(limits.by_artists() ? 'a' : (limits.by_songs_name() ? 't' : 'f')),
                     encodeStr(limits.predicate),
                     OFFSET_TEMPLATE

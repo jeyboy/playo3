@@ -75,7 +75,7 @@ namespace Core {
                                 case set_popular: {
                                     response = pRequest(
                                         baseUrlStr(
-                                            qst_api_def, path_tracks,
+                                            qst_api, path_tracks,
                                             trackSearchQuery(QString(), limits.genre == SOUNDCLOUD_ALL_GENRES_PARAM ? QString() : limits.genre, true)
                                         ),
                                         call_type_json, rules(limits.start_offset, limits.items_limit), 0, proc_json_patch

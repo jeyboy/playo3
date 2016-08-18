@@ -35,8 +35,8 @@ namespace Core {
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
-                        case qst_api_def: return url_api_base % predicate % val_default_format;
-                        case qst_site_def: return url_api_base % predicate;
+                        case qst_api: return url_api_base % predicate % val_default_format;
+                        case qst_site: return url_api_base % predicate;
                         case qst_site_alt1: return url_api_base2 % predicate;
                         default: return QString();
                     }
@@ -95,11 +95,11 @@ namespace Core {
                 // curl 'https://api-v2.soundcloud.com/stream/users/53128020?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=20&offset=0&linked_partitioning=1&app_version=1467192015' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
 
 
-                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api_def) {
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api) {
                     switch(stype) {
-                        case qst_api_def:
+                        case qst_api:
                             return QUrlQuery(tkn_client_id % val_id_tkn);
-                        case qst_site_def:
+                        case qst_site:
                         case qst_site_alt1:
                             return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("&app_version=") % siteHash());
                         default: return QUrlQuery();

@@ -22,14 +22,14 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_users % '/' % user_id, {}),
+                                baseUrlStr(qst_api, path_users % '/' % user_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_def, path_users % '/' % user_id, {}),
+                                baseUrlStr(qst_site, path_users % '/' % user_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -55,7 +55,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_users, {{tkn_q, name}}),
+                                baseUrlStr(qst_api, path_users, {{tkn_q, name}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
@@ -95,7 +95,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_track_favorites.arg(track_id), {}),
+                                baseUrlStr(qst_api, path_track_favorites.arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
@@ -130,7 +130,7 @@ namespace Core {
                         case perm_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_def, QStringLiteral("e1/tracks/%1/reposters").arg(track_id), {}),
+                                    qst_site, QStringLiteral("e1/tracks/%1/reposters").arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -156,7 +156,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_user_followings.arg(user_id), {}),
+                                baseUrlStr(qst_api, path_user_followings.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch, COLLECTION_FIELDS
                             );
                         }
@@ -164,7 +164,7 @@ namespace Core {
                         case perm_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_def, QStringLiteral("users/%1/followings").arg(user_id), {}),
+                                    qst_site, QStringLiteral("users/%1/followings").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -189,7 +189,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_user_followers.arg(user_id), {}),
+                                baseUrlStr(qst_api, path_user_followers.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch, COLLECTION_FIELDS
                             );
                         }
@@ -197,7 +197,7 @@ namespace Core {
                         case perm_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_def, QStringLiteral("users/%1/followers").arg(user_id), {}),
+                                    qst_site, QStringLiteral("users/%1/followers").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );

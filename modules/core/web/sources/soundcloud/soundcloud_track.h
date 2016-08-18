@@ -20,7 +20,7 @@ namespace Core {
 
                         case perm_site: {
                             QJsonObject obj = sRequest(
-                                baseUrlStr(qst_site_def, QStringLiteral("i1/tracks/%1/streams").arg(track_id), {}),
+                                baseUrlStr(qst_site, QStringLiteral("i1/tracks/%1/streams").arg(track_id), {}),
                                 call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
 
@@ -40,7 +40,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             QString res = Manager::prepare() -> putFollowed(
-                                baseUrlStr(qst_api_def, path_user_favorites.arg(user_id) % '/' % track_id, {}),
+                                baseUrlStr(qst_api, path_user_favorites.arg(user_id) % '/' % track_id, {}),
                                 Headers()
                             ) -> toText();
                             qDebug() << "FAV" << res;
@@ -50,7 +50,7 @@ namespace Core {
                         case perm_site: {
                             // alt // https://api.soundcloud.com/e1/me/track_likes/265476609
                             QJsonObject obj = Manager::prepare() -> putFollowed(
-                                baseUrlStr(qst_site_def, path_user_favorites.arg(user_id) % '/' % track_id, {}),
+                                baseUrlStr(qst_site, path_user_favorites.arg(user_id) % '/' % track_id, {}),
                                 headers()
                             ) -> toJson();
 
@@ -69,7 +69,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             return sRequest(
-                                baseUrlStr(qst_api_def, path_tracks % '/' % track_id, {}),
+                                baseUrlStr(qst_api, path_tracks % '/' % track_id, {}),
                                 call_type_json
                             );
                         }
@@ -102,7 +102,7 @@ namespace Core {
                         switch(perm) {
                             case perm_api: {
                                 obj = sRequest(
-                                    baseUrlStr(qst_api_def, path_tracks, params),
+                                    baseUrlStr(qst_api, path_tracks, params),
                                     call_type_json, 0, proc_json_wrap
                                 );
                             break;}
@@ -137,7 +137,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_related_tracks.arg(track_id), {}),
+                                baseUrlStr(qst_api, path_related_tracks.arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
@@ -165,7 +165,7 @@ namespace Core {
                         case perm_api: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_api_def, path_tracks,
+                                    qst_api, path_tracks,
                                     trackSearchQuery(limits.predicate, limits.genre, limits.by_popularity())
                                 ),
                                 call_type_json,
@@ -210,7 +210,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: { // support a comma separated list of tags
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_tracks, {{ QStringLiteral("tags"), tag }}),
+                                baseUrlStr(qst_api, path_tracks, {{ QStringLiteral("tags"), tag }}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
@@ -218,7 +218,7 @@ namespace Core {
                         case perm_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_def, QStringLiteral("search/sounds"),
+                                    qst_site, QStringLiteral("search/sounds"),
                                     {
                                         { tkn_q, QStringLiteral("*") },
                                         { QStringLiteral("filter.genre"), tag } // its a genius !!! // try to use a comma separated list of tags
@@ -249,14 +249,14 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_group_tracks.arg(group_id), {{tkn_types, val_audio_types}}),
+                                baseUrlStr(qst_api, path_group_tracks.arg(group_id), {{tkn_types, val_audio_types}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
 
                         case perm_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_def, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
+                                baseUrlStr(qst_site, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -283,7 +283,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_user_tracks.arg(user_id), {}),
+                                baseUrlStr(qst_api, path_user_tracks.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }
@@ -319,7 +319,7 @@ namespace Core {
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api_def, path_user_favorites.arg(user_id), {}),
+                                baseUrlStr(qst_api, path_user_favorites.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         }

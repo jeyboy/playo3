@@ -25,7 +25,7 @@ namespace Core {
                         case perm_api: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_api_def, tkn_execute,
+                                    qst_api, tkn_execute,
                                     { { tkn_code, query_track_playlists(user_id) } }
                                 ).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE),
                                 call_type_json, rules(offset, count), arr, proc_json_extract,
@@ -48,7 +48,7 @@ namespace Core {
 //                        case perm_api: {
 //                            return pRequest(
 //                                baseUrlStr(
-//                                    qst_api_def, tkn_execute,
+//                                    qst_api, tkn_execute,
 //                                    { tkn_code, query_audio_albums.arg(user_id) }
 //                                ).replace(VK_DEFAULT_OFFSET_TEMPLATE, OFFSET_TEMPLATE),
 //                                call_type_json, rules(offset),

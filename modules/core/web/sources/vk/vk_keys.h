@@ -69,7 +69,8 @@ namespace Core {
 
 
             extern const QString url_redirect_uri;
-            extern const QString url_base;
+            extern const QString url_api_base;
+            extern const QString url_site_base;
             extern const QString url_auth;
 
 
