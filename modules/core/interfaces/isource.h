@@ -26,7 +26,10 @@ namespace Core {
         inline QString lastError() const { return error; }
 
         inline QString uidStr(const QString & tabId) const { return UID_HEAD % name() % tabId; }
-        static QString idToStr(const QJsonValue & id) { return QString::number((qint64)id.toDouble()); }
+        static QString idToStr(const QJsonValue & id) {
+            if (id.isString()) return id.toString();
+            return QString::number((qint64)id.toDouble());
+        }
 
         void toJson(QJsonObject & hash) {
             QJsonObject root;

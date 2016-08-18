@@ -20,6 +20,7 @@ namespace Core {
     class ItemState {
         public:
             enum ItemStateFlag {
+                flag_not_in_proc = 2097152,
                 flag_not_proccessing = 1048576,
                 flag_not_mark_on_removing = 524288,
                 flag_not_played = 262144,

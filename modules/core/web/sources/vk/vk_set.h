@@ -39,7 +39,7 @@ namespace Core {
                                                             "only_eng: " + boolToStr(limits.in_foreign())/*boolToStr(onlyEng)*/ + ", "
                                                             "count: 1000 " + (genre_id != -1 ? (", genre_id: " + QString::number(genre_id)) : "") + ""
                                                          "});"
-                                                       "return {" % block_items_audio % ": popular};"
+                                                       "return {\"" % block_items_audio % "\": popular};"
                                                     )
                                                 }
                                             }

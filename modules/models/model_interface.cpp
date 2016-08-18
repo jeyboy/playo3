@@ -365,8 +365,7 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const Dat
     for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++, pos++) {
         playlist = (*playlist_obj).toObject();
 
-        QString playlist_id =
-            dmt_type == dmt_audio ? playlist.value(Vk::tkn_id).toString() : ISource::idToStr(playlist.value(Vk::tkn_id));
+        QString playlist_id = ISource::idToStr(playlist.value(Vk::tkn_id));
 
         if (playlist.contains(tkn_loadable_cmd)) {
             parent -> createLoadablePlaylist(
@@ -1055,6 +1054,7 @@ void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
 //        playlist -> backPropagateItemsCountInBranch(added);
     } else {
         temp_item -> setTitle(QStringLiteral("Error!!"));
+        playlist -> setStates(IItem::flag_not_in_proc);
     }
 }
 

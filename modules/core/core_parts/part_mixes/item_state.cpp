@@ -33,6 +33,7 @@ void ItemState::setStates(const int & flags) {
     if (BITS_IS_SET(flags, flag_not_checked))               unset(flag_checked);
     if (BITS_IS_SET(flags, flag_not_expanded))              unset(flag_expanded);
     if (BITS_IS_SET(flags, flag_not_mark_on_removing))      unset(flag_mark_on_removing);
+    if (BITS_IS_SET(flags, flag_not_in_proc))               unset(flag_in_proc);
 
     if (BITS_IS_SET(flags, flag_new_item))                  set(flag_new_item);
     if (BITS_IS_SET(flags, flag_liked))                     set(flag_liked);

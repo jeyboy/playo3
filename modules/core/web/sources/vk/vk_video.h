@@ -56,7 +56,7 @@ namespace Core {
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < limit && items.length != 0;"
                                                 "} while(rule);"
-                                                "return {" % block_items_video % ": search};"
+                                                "return {\"" % block_items_video % "\": search};"
                                             )
                                         }
                                     }
@@ -86,9 +86,30 @@ namespace Core {
                         call_type_json, 0, proc_json_extract
                     );
 
+                    QJsonArray sets = content.value(block_sets_video).toArray();
+                    QJsonArray mod_sets;
+
+                    for(QJsonArray::Iterator set = sets.begin(); set != sets.end(); set++) {
+                        QJsonObject obj = (*set).toObject();
+
+                        QString id = idToStr(obj.value(tkn_id));
+                        QString owner_id = idToStr(obj.value(tkn_owner_id));
+
+                        obj.insert(
+                            tkn_loadable_cmd,
+                            Cmd::build(
+                                sourceType(), cmd_mtd_load_set_data,
+                                {{CMD_ID, QString(owner_id % '_' % id)}, {CMD_MEDIA_TYPE, dmt_video}}
+                            ).toString()
+                        );
+
+                        obj.insert(tkn_id, id);
+                        mod_sets << obj;
+                    }
+
                     return QJsonArray()
                         << prepareBlock(dmt_video, content.value(block_items_video))
-                        << prepareBlock(dmt_video_set, content.value(block_sets_video));
+                        << prepareBlock(dmt_video_set, mod_sets);
                 }
 
 
@@ -96,20 +117,11 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
+                    QStringList parts = playlist_id.split('_');
+
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-//                            block_content = saRequest(
-//                                baseUrlStr(
-//                                    qst_api, QStringLiteral("video.get"),
-//                                    {
-//                                        { QStringLiteral("album_id"), playlist_id },
-//                                        { QStringLiteral("count"), 200}
-//                                    }
-//                                ),
-//                                call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
-//                            );
-
                             block_content = saRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,
@@ -119,14 +131,15 @@ namespace Core {
                                                 "var search = []; var rule = true;"
                                                 "while(rule){"
                                                 "    var items = API.video.get({"
-                                                "        album_id: " % playlist_id % ","
+                                                "        owner_id: " % parts.first() % ","
+                                                "        album_id: " % parts.last() % ","
                                                 "        count: 200,"
                                                 "        offset: search.length"
                                                 "    }).items;"
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < 4000 && items.length != 0;"
                                                 "}"
-                                                "return {" % block_items_video % ": search};"
+                                                "return {\"" % block_items_video % "\": search};"
                                             )
                                         }
                                     }

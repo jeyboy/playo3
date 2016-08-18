@@ -95,7 +95,7 @@ namespace Core {
                                                "   count: 1000, "
                                                "   shuffle: " % boolToStr(randomize) % ""
                                                "});"
-                                               "return {" % block_items_audio % ": recomendations };"
+                                               "return {\"" % block_items_audio % "\": recomendations };"
                                           )
                                         }
                                     }
@@ -136,7 +136,7 @@ namespace Core {
                                                "   count: 1000, "
                                                "   shuffle: " % boolToStr(randomize) % ""
                                                "});"
-                                               "return {" % block_items_audio % ": recomendations };"
+                                               "return {\"" % block_items_audio % "\": recomendations };"
                                           )
                                         }
                                     }
@@ -205,7 +205,7 @@ namespace Core {
                                                 "    search = search %2b items;"
                                                 "    rule = search.length < limit && items.length != 0;"
                                                 "} while(rule);"
-                                                "return {" % block_items_audio % ": search};"
+                                                "return {\"" % block_items_audio % "\": search};"
                                             )
                                         }
                                     }
