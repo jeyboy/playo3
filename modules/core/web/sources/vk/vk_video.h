@@ -21,8 +21,28 @@ namespace Core {
                     QRegularExpressionMatch match;
                     if (resp.indexOf(QRegularExpression("vars = ([^;]+);"), 0, &match) != -1) {
                         QJsonObject obj = QJsonDocument::fromJson(match.captured(1).toUtf8()).object();
-                        int i = 0;
-                        // TODO: finish me
+
+                        QStringList available_keys = obj.keys();
+                        QMap<int, QHash<QString, QString> > pathes;
+                        QString cache_key = QStringLiteral("cache");
+                        QString url_key = QStringLiteral("url");
+
+                        QRegularExpression cache_reg(QStringLiteral("(%1|%2)(\\d+)").arg(cache_key, url_key));
+
+                        for(QStringList::Iterator key = available_keys.begin(); key != available_keys.end(); key++) {
+                            QRegularExpressionMatch res = cache_reg.match(*key);
+                            if (res.hasMatch())
+                                pathes[res.captured(2).toInt()].insert(res.captured(1), obj.value(*key).toString());
+                        }
+
+                        // INFO: take middle quality // need to add option in settings about preferable quality and take closest to chosen by user
+                        int quality_index = pathes.size() / 2;
+                        QHash<QString, QString> variants = pathes[pathes.keys()[quality_index]];
+
+                        if (variants.contains(cache_key))
+                            return variants[cache_key];
+                        else
+                            return variants[url_key];
                     }
 
                     return QString();
