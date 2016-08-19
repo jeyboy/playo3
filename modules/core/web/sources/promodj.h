@@ -13,7 +13,7 @@ namespace Core {
         class PromoDj : public ISource, public IQueriable, public Singleton<PromoDj> {
         public:
             inline QString name() const { return QStringLiteral("PromoDJ"); }
-            inline DataSubType sourceType() const { return dt_site_promodj; }
+            inline DataSubType sourceType() const { return dt_web_promodj; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);

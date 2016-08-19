@@ -39,9 +39,9 @@ Models::Params TabDialog::getSettings() {
     else if (ui -> isTreeRadio -> isChecked())
         settings.type = Core::dt_tree;
     else if (ui -> isVkRadio -> isChecked())
-        settings.type = Core::dt_site_vk;
+        settings.type = Core::dt_web_vk;
     else if (ui -> isSoundcloudRadio -> isChecked())
-        settings.type = Core::dt_site_sc;
+        settings.type = Core::dt_web_sc;
 
     return settings;
 }
@@ -54,8 +54,8 @@ void TabDialog::setSettings(const Models::Params & settings) {
   ui -> isListRadio -> setChecked(settings.type == Core::dt_level);
   ui -> isOneLevelTreeRadio -> setChecked(settings.type == Core::dt_level_tree);
   ui -> isTreeRadio -> setChecked(settings.type == Core::dt_tree);
-  ui -> isVkRadio -> setChecked(settings.type == Core::dt_site_vk);
-  ui -> isSoundcloudRadio -> setChecked(settings.type == Core::dt_site_sc);
+  ui -> isVkRadio -> setChecked(settings.type == Core::dt_web_vk);
+  ui -> isSoundcloudRadio -> setChecked(settings.type == Core::dt_web_sc);
 
   ui -> isListRadio -> setEnabled(false);
   ui -> isTreeRadio -> setEnabled(false);

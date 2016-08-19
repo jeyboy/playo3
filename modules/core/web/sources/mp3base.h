@@ -103,7 +103,7 @@ namespace Core {
         class Mp3Base : public ISource, public IQueriable, public Singleton<Mp3Base> {
         public:
             inline QString name() const { return QStringLiteral("Mp3Base"); }
-            inline DataSubType sourceType() const { return dt_site_mp3base; }
+            inline DataSubType sourceType() const { return dt_web_mp3base; }
 
             QJsonValue popular(const SearchLimit & /*limitations*/) {
                 return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);

@@ -11,7 +11,7 @@ namespace Core {
         class Shmidt : public ISource, public IQueriable, public Singleton<Shmidt> {
         public:
             inline QString name() const { return QStringLiteral("Shmidt"); }
-            inline DataSubType sourceType() const { return dt_site_shmidt; }
+            inline DataSubType sourceType() const { return dt_web_shmidt; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);

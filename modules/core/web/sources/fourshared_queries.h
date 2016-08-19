@@ -15,7 +15,7 @@ namespace Core {
                 inline Queries() { }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType sourceType() const { return dt_site_fourshared; }
+                inline DataSubType sourceType() const { return dt_web_fourshared; }
                 QString cookies() const { return Web::Manager::cookiesAsHeaderStr(url_html_site_base, QHash<QString, bool>({{QStringLiteral("Login"), true}, {QStringLiteral("Password"), true}})); }
 
                 inline void userInfo(const QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }

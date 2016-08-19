@@ -21,7 +21,7 @@ namespace Core {
                 }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType sourceType() const { return dt_site_yandex; }
+                inline DataSubType sourceType() const { return dt_web_yandex; }
                 inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api) { return QUrlQuery(); }
 
                 void fromJson(const QJsonObject & /*hash*/) {}

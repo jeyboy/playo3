@@ -11,7 +11,7 @@ namespace Core {
         class RedMp3 : public ISource, public IQueriable, public Singleton<RedMp3> {
         public:
             inline QString name() const { return QStringLiteral("RedMp3"); }
-            inline DataSubType sourceType() const { return dt_site_redmp3; }
+            inline DataSubType sourceType() const { return dt_web_redmp3; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);

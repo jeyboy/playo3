@@ -49,7 +49,7 @@ void OdModel::proceedJson(QJsonValue & jval) {
                         pid, name
                     );
 
-                    QJsonObject tracks = Od::Queries::obj().tracksByPlaylist(pid);
+                    QJsonObject tracks = Od::Queries::obj().tracksByPlaylist(pid).toObject();
                     int folder_items_amount = proceedOdList(tracks, folder, dmt_audio);
                     folder -> updateItemsCountInBranch(folder_items_amount);
                     items_amount += folder_items_amount;

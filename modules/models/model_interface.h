@@ -120,15 +120,15 @@ namespace Models {
 
         int proceedBlocks(const QJsonArray & blocks, Playlist * parent/*, const DataMediaType & dmtype = dmt_unknow*/);
 
-        int proceedVkList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
-        int proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_vk);
+        int proceedVkList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
+        int proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
 
-        int proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
-        int proceedScSet(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_sc);
+        int proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
+        int proceedScSet(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
 
-        int proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_od);
-        int proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_yandex);
-        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_site_youtube);
+        int proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
+        int proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_yandex);
+        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_youtube);
 
         int proceedGrabberList( const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & wType);
 

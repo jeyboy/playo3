@@ -172,7 +172,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonObject tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
+                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             tkn_my,

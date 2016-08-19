@@ -34,7 +34,7 @@ namespace Core {
             }
         public:
             inline QString name() const { return QStringLiteral("Zaycev"); }
-            inline DataSubType sourceType() const { return dt_site_zaycev; }
+            inline DataSubType sourceType() const { return dt_web_zaycev; }
 
             QJsonValue searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
                 QueriableResponse response = pRequest(

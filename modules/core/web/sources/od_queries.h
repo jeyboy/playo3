@@ -16,7 +16,7 @@ namespace Core {
                 inline Queries() { }
             public:
                 inline QString name() const { return val_name; }
-                inline DataSubType sourceType() const { return dt_site_od; }
+                inline DataSubType sourceType() const { return dt_web_od; }
 
                 void userInfoAsync(const QString & uid, Func * func) {
                     if (uid == userID())

@@ -114,7 +114,7 @@ namespace Core {
                     QString top_50_title = setTypeToStr(set_top_50);
                     QString popular_title = setTypeToStr(set_popular);
 
-                    Cmd cmd_tmpl(dt_site_sc, cmd_mtd_open_set, {});
+                    Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
 
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
                         res.insert(

@@ -141,7 +141,10 @@ namespace Core {
                         {setTypeToStr(set_popular_collections), QString::number(set_popular_collections)},
                         {setTypeToStr(set_popular_albums),      QString::number(set_popular_albums)},
                         {setTypeToStr(set_listened),            QString::number(set_listened)},
-                        {setTypeToStr(set_downloaded),          QString::number(set_downloaded)}
+                        {setTypeToStr(set_downloaded),          QString::number(set_downloaded)},
+
+                        {setTypeToStr(set_of_collections),      QString::number(set_of_collections)},
+                        {setTypeToStr(set_of_radio),            QString::number(set_of_radio)}
                     };
                 }
 

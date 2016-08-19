@@ -1,6 +1,8 @@
 #ifndef DATA_SUB_TYPES
 #define DATA_SUB_TYPES
 
+#include <qobject.h>
+
 namespace Core {
     enum RecType {
         rec_none = 0,
@@ -40,46 +42,48 @@ namespace Core {
     #define EXTRACT_MEDIA_TYPE(val) (DataMediaType)(val & 3)
 
     enum DataSubType : int {
-        dt_level = -199,
-        dt_level_tree,
-        dt_tree,
+        dt_level                    = -9000,
+        dt_level_tree               = -8000,
+        dt_tree                     = -7000,
+        dt_search                   = -6000,
 
-        dt_search = -159,
+        dt_none                     = 0,
 
-        dt_playlist = -99,
-        dt_playlist_local,
-        dt_playlist_cue,
+        dt_web                      = 1,
+        dt_local                    = 2,
+        dt_playlist                 = 4,
 
-        dt_playlist_sc = -59,
-        dt_playlist_vk,
-        dt_playlist_od,
+        dt_playlist_local           = dt_local | dt_playlist,
 
-        dt_none = 0,
+        dt_dummy                    = 10,
 
-        dt_local,
-        dt_local_cue,
+        dt_cue                      = 20,
+        dt_local_cue                = dt_cue | dt_local,
+        dt_web_cue                  = dt_cue | dt_web,
+        dt_playlist_cue             = dt_cue | dt_playlist,
 
-        dt_dummy,
+        dt_web_vk                   = 30 | dt_web,
+        dt_playlist_vk              = dt_web_vk | dt_playlist,
 
-        dt_web = 50,
+        dt_web_od                   = 40 | dt_web,
+        dt_playlist_od              = dt_web_od | dt_playlist,
 
-        dt_site_od,
-        dt_site_vk,
-        dt_site_sc,
+        dt_web_sc                   = 50 | dt_web,
+        dt_playlist_sc              = dt_web_sc | dt_playlist,
 
-        dt_site_myzuka = dt_web + 50,
-        dt_site_fourshared,
-        dt_site_zaycev,
-        dt_site_mp3base,
-        dt_site_promodj,
-        dt_site_mp3cc,
-        dt_site_mp3pm,
-        dt_site_shmidt,
-        dt_site_jetune,
-        dt_site_music_shara,
-        dt_site_redmp3,
-        dt_site_yandex,
-        dt_site_youtube
+        dt_web_myzuka               = 60 | dt_web,
+        dt_web_fourshared           = 70 | dt_web,
+        dt_web_zaycev               = 80 | dt_web,
+        dt_web_mp3base              = 90 | dt_web,
+        dt_web_promodj              = 100 | dt_web,
+        dt_web_mp3cc                = 110 | dt_web,
+        dt_web_mp3pm                = 120 | dt_web,
+        dt_web_shmidt               = 130 | dt_web,
+        dt_web_jetune               = 140 | dt_web,
+        dt_web_music_shara          = 150 | dt_web,
+        dt_web_redmp3               = 160 | dt_web,
+        dt_web_yandex               = 170 | dt_web,
+        dt_web_youtube              = 180 | dt_web
     };
 }
 

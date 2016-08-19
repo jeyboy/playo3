@@ -11,7 +11,7 @@ namespace Core {
         class Mp3cc : public ISource, public IQueriable, public Singleton<Mp3cc> {
         public:
             inline QString name() const { return QStringLiteral("Mp3cc"); }
-            inline DataSubType sourceType() const { return dt_site_mp3cc; }
+            inline DataSubType sourceType() const { return dt_web_mp3cc; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
                 return saRequest(baseUrlStr(qst_site), call_type_html, 0, proc_tracks1);

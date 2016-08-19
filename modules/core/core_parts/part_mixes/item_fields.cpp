@@ -1,5 +1,5 @@
 #include "item_fields.h"
-#include "modules/core/web/sources/soundcloud_queries.h"
+#include "modules/core/web/web_apis.h"
 
 #include <qdesktopservices.h>
 #include <qfile.h>
@@ -97,38 +97,18 @@ bool ItemFields::isExist() const {
 }
 
 bool ItemFields::isShareable() const                         {
-//            return attrs.value(JSON_TYPE_IS_SHAREABLE, false).toBool();
-    switch(dataType()) {
-        case dt_site_od:
-        case dt_site_vk:
-        case dt_site_sc:
-            return true;
-        default: return false;
-    }
+    ISource * source = Web::Apis::source(dataType());
+    return source && source -> isShareable();
 }
 
-bool ItemFields::isRemote() const                            {
-//            return attrs.value(JSON_TYPE_IS_REMOTE, false).toBool();
-    switch(dataType()) {
-        case dt_local:
-        case dt_local_cue:
-        case dt_playlist_local:
-        case dt_playlist_cue:
-            return false;
-        default: return true;
-    }
-}
+bool ItemFields::isRemote() const { return dataType() & dt_web; }
 
 QString ItemFields::toUid() {
     switch(dataType()) {
-        case dt_site_vk:
+        case dt_web_vk:
 //            case dt_playlist_vk:
             return toUid(owner(), id());
-        case dt_site_sc:
-        case dt_site_od:
-            return id().toString();
-
-        default: return QString();
+        default: id().toString();
     }
 }
 
@@ -144,11 +124,11 @@ QUrl ItemFields::toUrl() const {
     if (isRemote()) {
         QUrl url = QUrl(path().toString());
         switch(dataType()) {
-            case dt_site_sc: {
+            case dt_web_sc: {
                 if (url.query().isEmpty()) // links with hashed policy should not be attachable for additional fields - this action broke policy
                     url.setQuery(Web::Soundcloud::Queries::obj().genDefaultParams());
             break;}
-            default: ;
+            default:;
         }
         return url;
     } else
