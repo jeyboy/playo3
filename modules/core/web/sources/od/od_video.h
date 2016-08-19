@@ -8,7 +8,13 @@ namespace Core {
         namespace Od {
             class Video : public virtual Base {
             protected:
+                QJsonValue videoSearch(const SearchLimit & limits) {
+                    QueriableResponse response;
 
+                    //TODO: finish me
+
+                    return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits);
+                }
             };
         }
     }

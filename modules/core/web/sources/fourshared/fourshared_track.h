@@ -9,7 +9,6 @@ namespace Core {
             class Track : public Base {
             public:
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
-
                 QJsonValue tracksSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;

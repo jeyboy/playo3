@@ -24,7 +24,6 @@ namespace Core {
                         SearchLimit::fromICmdParams(attrs)
                     );
                 }
-
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;

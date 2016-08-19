@@ -18,82 +18,6 @@ namespace Core {
         namespace Od {
             class Requests : public Sociable, public Artist, public User, public Auth, public Group,
                     public Playlist, public Set, public Track, public Video, public VideoPlaylist {
-            protected:
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        sf_primary_source |
-                        /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
-                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-//                        sf_recomendable_by_item | sf_recomendable_by_user |
-                        /*sf_newable |*/ sf_populable |
-
-                        /*sf_content_lyrics_has |*/ sf_content_audio_has | sf_content_video_has |
-                        sf_content_photo_has | sf_content_news_has |
-
-                        sf_site_auth_mandatory
-                    );
-                }
-
-                void saveAdditionals(QJsonObject & obj) {
-                    setSiteHash(QString());
-                    setSiteToken(QString()); // drop old token
-                    setSiteAdditionalToken(QString()); // drop old add token
-
-                    Sociable::toJson(obj);
-                    Manager::saveCookies(obj, QUrl(url_root));
-                }
-                void loadAdditionals(QJsonObject & obj) {
-                    Sociable::fromJson(obj);
-                    Manager::loadCookies(obj);
-                }
-                void clearAdditionals() {
-                    clearFriends();
-                    clearGroups();
-                    Manager::removeCookies(QUrl(url_root));
-                }
-
-                inline Headers tknHeaders() {
-                    if (siteAdditionalToken().isEmpty()) setSiteAdditionalToken(Auth::grabAdditionalToken());
-
-                    return {{QStringLiteral("TKN"), siteAdditionalToken()}};
-                }
-
-                inline QUrlQuery genDefaultParams(const QuerySourceType & stype) {
-                    switch(stype) {
-                        case qst_site:
-                        case qst_site_audio: return QUrlQuery();
-                        default: {
-                            if (siteHash().isEmpty()) {
-                                QString add_token;
-                                setSiteHash(Auth::grabHash(add_token));
-                                setSiteAdditionalToken(add_token);
-                            }
-                            return QUrlQuery((QStringLiteral("gwt.requested=") % siteHash()));
-                        }
-                    }
-                }
-
-                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
-                    switch(stype) {
-                        case qst_site_audio: return url_base_audio % predicate;
-                        case qst_site: return url_root % predicate;
-                        default: return url_root % predicate;
-                    }
-                }
-
-                QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
-                    switch(stype) {
-                        case qst_site_audio: {
-                            if (siteToken().isEmpty())
-                                takeOnlineCredentials();
-
-                            return Auth::baseUrlStr(stype, predicate % regPart(), query);
-                        }
-
-                        default: return Auth::baseUrlStr(stype, predicate, query);
-                    }
-                }
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
 
@@ -243,7 +167,6 @@ namespace Core {
 
                     return result;
                 }
-
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
                     if (Auth::retryRequired(json, message)) {
                         QString predicate = regPart();
@@ -260,11 +183,85 @@ namespace Core {
 
                     return true;
                 }
-
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
                     QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
                     if (chunk_obj.isEmpty()) return false;
                     return chunk_obj.value(tkn_count).toInt() < arg -> per_request_limit/*OD_LIMIT_PER_REQUEST*/;
+                }
+            protected:
+                inline SourceFlags defaultFlags() {
+                    return (SourceFlags)(
+                        sf_primary_source |
+                        /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
+                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
+                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
+//                        sf_recomendable_by_item | sf_recomendable_by_user |
+                        /*sf_newable |*/ sf_populable |
+
+                        /*sf_content_lyrics_has |*/ sf_content_audio_has | sf_content_video_has |
+                        sf_content_photo_has | sf_content_news_has |
+
+                        sf_site_auth_mandatory
+                    );
+                }
+
+                void saveAdditionals(QJsonObject & obj) {
+                    setSiteHash(QString());
+                    setSiteToken(QString()); // drop old token
+                    setSiteAdditionalToken(QString()); // drop old add token
+
+                    Sociable::toJson(obj);
+                    Manager::saveCookies(obj, QUrl(url_root));
+                }
+                void loadAdditionals(QJsonObject & obj) {
+                    Sociable::fromJson(obj);
+                    Manager::loadCookies(obj);
+                }
+                void clearAdditionals() {
+                    clearFriends();
+                    clearGroups();
+                    Manager::removeCookies(QUrl(url_root));
+                }
+
+                inline Headers tknHeaders() {
+                    if (siteAdditionalToken().isEmpty()) setSiteAdditionalToken(Auth::grabAdditionalToken());
+
+                    return {{QStringLiteral("TKN"), siteAdditionalToken()}};
+                }
+
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype) {
+                    switch(stype) {
+                        case qst_site:
+                        case qst_site_audio: return QUrlQuery();
+                        default: {
+                            if (siteHash().isEmpty()) {
+                                QString add_token;
+                                setSiteHash(Auth::grabHash(add_token));
+                                setSiteAdditionalToken(add_token);
+                            }
+                            return QUrlQuery((QStringLiteral("gwt.requested=") % siteHash()));
+                        }
+                    }
+                }
+
+                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+                    switch(stype) {
+                        case qst_site_audio: return url_base_audio % predicate;
+                        case qst_site: return url_root % predicate;
+                        default: return url_root % predicate;
+                    }
+                }
+                QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
+                    switch(stype) {
+                        case qst_site_audio: {
+                            if (siteToken().isEmpty())
+                                takeOnlineCredentials();
+
+                            return Auth::baseUrlStr(stype, predicate % regPart(), query);
+                        }
+
+                        default: return Auth::baseUrlStr(stype, predicate, query);
+                    }
                 }
 
                 bool connectUserSite() {
@@ -297,41 +294,7 @@ namespace Core {
                     return tracksByPlaylist(QUrlQuery(attrs).queryItemValue(CMD_ID));
                 }
 
-                QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
-                    switch(item_media_type) {
-                        case dmt_audio: return trackUrl(item_id);
-                        case dmt_video: return QString();
-                        default:;
-                    }
 
-                    return QString();
-                }
-
-                QJsonValue popular(const SearchLimit & limits) {
-                    if (limits.include_audio())
-                        return setByType(set_popular_tracks, limits);
-
-                    return QJsonArray();
-                }
-
-                QJsonValue searchProc(const SearchLimit & limits) {
-                    QJsonObject res; // TODO: not logged in error
-
-                    if (limits.include_audio()) {
-                        QJsonValue val;
-                        if (limits.predicate.isEmpty() || limits.by_popularity())
-                            val = popular(limits);
-                        else val = tracksSearch(limits);
-
-                        res.insert(block_items_audio, val);
-                    }
-
-                    if (limits.include_video()) {
-
-                    }
-
-                    return res;
-                }
 
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
@@ -396,15 +359,40 @@ namespace Core {
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
 
+                QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
+                    switch(item_media_type) {
+                        case dmt_audio: return trackUrl(item_id);
+                        case dmt_video: return QString();
+                        default:;
+                    }
+
+                    return QString();
+                }
+
+                QJsonValue popular(const SearchLimit & limits) {
+                    QJsonArray blocks;
+
+                    if (limits.include_audio())
+                        blocks << setByType(set_popular_tracks, limits);
+
+                    return blocks;
+                }
+
+                // TODO: not logged in error
+                QJsonValue searchProc(const SearchLimit & limits) {
+                    QJsonArray blocks;
+
+                    if (limits.include_audio())
+                        blocks << tracksSearch(limits);
+
+                    if (limits.include_video())
+                        blocks << videoSearch(limits);
+
+                    return blocks;
+                }
+
                 QJsonValue userInfo() {
                     QJsonObject res = User::userInfo().toObject();
-
-                    QJsonArray tracks = res.value(tkn_tracks).toArray();
-                    if (tracks.isEmpty()) {
-                        int totalTracks = res.value(QStringLiteral("totalTracks")).toInt();
-                        if (totalTracks > 0)
-                            tracks = userMedia(idToStr(res.value(tkn_me))).toObject().value(tkn_tracks).toArray();
-                    }
 
                     clearFriends();
                     jsonToUsers(Friendable::linkables, res.value(tkn_friends).toArray());
@@ -412,47 +400,10 @@ namespace Core {
                     clearGroups();
                     jsonToGroups(Groupable::linkables, groupsByUser(userID()).toArray());
 
-                    return QJsonObject {
-                        {
-                            block_items_audio, QJsonObject {
-                                { tkn_content, tracks }
-                            }
-                        },
-                        {
-                            block_sets_audio, QJsonObject {
-                                { tkn_content, res.value(tkn_playlists) }
-                            }
-                        }
-                    };
+                    return QJsonArray()
+                        << prepareBlock(dmt_audio_set, res.value(tkn_playlists))
+                        << prepareBlock(dmt_audio, res.value(tkn_tracks));
                 }
-
-                inline QMap<QString, QString> setsList() {
-                    return {
-                        {setTypeToStr(set_popular_tracks),      QString::number(set_popular_tracks)},
-                        {setTypeToStr(set_popular_artists),     QString::number(set_popular_artists)},
-                        {setTypeToStr(set_popular_tuners),      QString::number(set_popular_tuners)},
-                        {setTypeToStr(set_popular_collections), QString::number(set_popular_collections)},
-                        {setTypeToStr(set_popular_albums),      QString::number(set_popular_albums)},
-                        {setTypeToStr(set_listened),            QString::number(set_listened)},
-                        {setTypeToStr(set_downloaded),          QString::number(set_downloaded)}
-                    };
-                }
-
-                inline QJsonValue openSet(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-
-                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
-//                inline QJsonValue openSet(const QString & set_params) {
-//                    QStringList params = set_params.split('|', QString::SkipEmptyParts);
-//                    SetType set_type = (SetType)params.first().toInt();
-//                    QString attrs = params.count() > 1 ? params.last() : QString();
-
-//                    return setByType(set_type, attrs);
-//                }
             };
         }
     }

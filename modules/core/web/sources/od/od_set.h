@@ -36,13 +36,6 @@ namespace Core {
                     }
                 }
 
-                QJsonValue setByType(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     QueriableResponse response;
                     DataMediaType dmt_val = dmt_unknow;
@@ -131,8 +124,35 @@ namespace Core {
                     }
 
                     return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                }   
+            public:
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
                 }
-            };
+
+                inline QMap<QString, QString> setsList() {
+                    return {
+                        {setTypeToStr(set_popular_tracks),      QString::number(set_popular_tracks)},
+                        {setTypeToStr(set_popular_artists),     QString::number(set_popular_artists)},
+                        {setTypeToStr(set_popular_tuners),      QString::number(set_popular_tuners)},
+                        {setTypeToStr(set_popular_collections), QString::number(set_popular_collections)},
+                        {setTypeToStr(set_popular_albums),      QString::number(set_popular_albums)},
+                        {setTypeToStr(set_listened),            QString::number(set_listened)},
+                        {setTypeToStr(set_downloaded),          QString::number(set_downloaded)}
+                    };
+                }
+
+                inline QJsonValue openSet(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
+                }
+                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
+            };                    
         }
     }
 }

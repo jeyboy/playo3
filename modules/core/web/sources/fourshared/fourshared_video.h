@@ -9,7 +9,6 @@ namespace Core {
             class Video : public Base {
             public:
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
-
                 QJsonValue videoSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;

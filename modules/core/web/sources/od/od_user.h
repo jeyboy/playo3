@@ -9,18 +9,26 @@ namespace Core {
             class User : public virtual Base {
             public:
                 QJsonValue userInfo() {
-                    return sRequest(
+                    QJsonObject res = sRequest(
                         audioUrlStr(path_audio_init),
                         call_type_json
                     );
+
+                    QJsonArray tracks = res.value(tkn_tracks).toArray();
+                    if (tracks.isEmpty()) {
+                        int totalTracks = res.value(QStringLiteral("totalTracks")).toInt();
+                        if (totalTracks > 0) {
+                            tracks = userMedia(idToStr(res.value(tkn_me))).toObject().value(tkn_tracks).toArray();
+                            res.insert(tkn_tracks, tracks);
+                        }
+                    }
+
+                    return res;
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
                     return sRequest(
-                        audioUrlStr(
-                            tkn_my,
-                            {{tkn_uid, user_id}}
-                        ),
+                        audioUrlStr(tkn_my, {{tkn_uid, user_id}}),
                         call_type_json
                     );
                 }

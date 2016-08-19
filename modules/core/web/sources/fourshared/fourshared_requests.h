@@ -74,7 +74,6 @@ namespace Core {
 
                     return res;
                 }
-
                 bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);
 
@@ -147,7 +146,6 @@ namespace Core {
 
                     return result;
                 }
-
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
             protected:
                 inline virtual ~Requests() {}
@@ -162,7 +160,6 @@ namespace Core {
                         sf_site_object_content_auth_only
                     );
                 }
-
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
                         case qst_api_base: return url_api_base % predicate % val_json_ext;
@@ -172,7 +169,6 @@ namespace Core {
                         default: return QString();
                     }
                 }
-
                 inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api_base) {
 //                    QString token = ptype == qpt_json ? apiToken() : siteToken();
                     return QUrlQuery(/*tkn_oauth_consumer % val_token*/);
@@ -185,22 +181,9 @@ namespace Core {
                 }
                 void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
 
-                QJsonValue searchProc(const SearchLimit & limits) {
-                    QJsonArray blocks;
-
-                    if (limits.include_audio())
-                        blocks << tracksSearch(limits);
-
-                    if (limits.include_video())
-                        blocks << videoSearch(limits);
-
-                    return blocks;
-                }
-
                 QJsonValue loadSetData(const QUrlQuery & attrs) {
                     return itemsByCollection(attrs.queryItemValue(CMD_ID));
                 }
-
                 QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
 
                 bool connectUserSite() {
@@ -213,9 +196,20 @@ namespace Core {
 
                     return false;
                 }
-
                 bool connectUserApi() { return connectApi(); }
             public:
+                QJsonValue searchProc(const SearchLimit & limits) {
+                    QJsonArray blocks;
+
+                    if (limits.include_audio())
+                        blocks << tracksSearch(limits);
+
+                    if (limits.include_video())
+                        blocks << videoSearch(limits);
+
+                    return blocks;
+                }
+
                 QJsonValue popular(const SearchLimit & limits) {
                     QJsonArray blocks;
 
