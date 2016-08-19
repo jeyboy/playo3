@@ -237,23 +237,23 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent/*, const 
         DataSubType wType = (DataSubType)block_obj.value(tkn_source_id).toInt();
 
         switch(wType) {
-            case dt_site_vk: {
+            case dt_web_vk: {
                 proc_func = &IModel::proceedVkList;
                 proc_set_func = &IModel::proceedVkSet;
             break;}
-            case dt_site_sc: {
+            case dt_web_sc: {
                 proc_func = &IModel::proceedScList;
                 proc_set_func = &IModel::proceedScSet;
             break;}
-            case dt_site_od: {
+            case dt_web_od: {
                 proc_func = &IModel::proceedOdList;
                 proc_set_func = 0;
             break;}
-            case dt_site_yandex: {
+            case dt_web_yandex: {
                 proc_func = &IModel::proceedYandexList;
                 proc_set_func = 0;
             break;}
-            case dt_site_youtube: {
+            case dt_web_youtube: {
                 proc_func = &IModel::proceedYoutubeList;
                 proc_set_func = 0;
             break;}

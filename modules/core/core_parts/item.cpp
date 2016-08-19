@@ -1,6 +1,7 @@
 #include "item.h"
 #include "playlist.h"
 #include "external_keys.h"
+#include "modules/core/web/web_apis.h"
 
 using namespace Core;
 
@@ -191,31 +192,22 @@ void IItem::setParent(Playlist * pNode, int pos) {
 }
 
 QString IItem::relationStr() const {
-    switch(dataType()) {
+    DataSubType dst = dataType();
+
+    switch(dst) {
         case dt_local:              return QStringLiteral("(Local) ");
         case dt_playlist_local:     return QStringLiteral("(Folder) ");
         case dt_playlist_cue:       return QStringLiteral("(Folder Cueta) ");
         case dt_local_cue:          return QStringLiteral("(Cueta) ");
-        case dt_site_myzuka:        return QStringLiteral("(Myzika) ");
-        case dt_site_fourshared:    return QStringLiteral("(4shared) ");
-        case dt_site_zaycev:        return QStringLiteral("(Zaycev) ");
-        case dt_site_mp3base:       return QStringLiteral("(Mp3base) ");
-        case dt_site_promodj:       return QStringLiteral("(PromoDj) ");
-        case dt_site_mp3cc:         return QStringLiteral("(Mp3cc) ");
-        case dt_site_mp3pm:         return QStringLiteral("(Mp3pm) ");
-        case dt_site_shmidt:        return QStringLiteral("(Shmidt) ");
-        case dt_site_jetune:        return QStringLiteral("(Jetune) ");
-        case dt_site_music_shara:   return QStringLiteral("(MShara) ");
-        case dt_site_redmp3:        return QStringLiteral("(Redmp3) ");
-        case dt_site_yandex:        return QStringLiteral("(Yandex) ");
-        case dt_site_youtube:       return QStringLiteral("(Youtube) ");
-        case dt_site_vk:            return QStringLiteral("(Vk) ");
-        case dt_playlist_vk:        return QStringLiteral("(Vk Folder) ");
-        case dt_site_sc:            return QStringLiteral("(Sc) ");
-        case dt_playlist_sc:        return QStringLiteral("(Sc Folder) ");
-        case dt_site_od:            return QStringLiteral("(Od) ");
-        case dt_playlist_od:        return QStringLiteral("(Od Folder) ");
-        default:                    return QStringLiteral("(Unknow) ");
+
+        default: {
+            if (dst & dt_web) {
+                return QStringLiteral("(%1%2) ").arg(
+                    Web::Apis::source_name(dst),
+                    (dst & dt_playlist) ? ' ' % QStringLiteral("Folder") : QString()
+                );
+            } else return QStringLiteral("(Unknow) ");
+        }
     }
 }
 

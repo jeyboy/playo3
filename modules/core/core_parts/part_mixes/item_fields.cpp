@@ -108,7 +108,7 @@ QString ItemFields::toUid() {
         case dt_web_vk:
 //            case dt_playlist_vk:
             return toUid(owner(), id());
-        default: id().toString();
+        default: return id().toString();
     }
 }
 

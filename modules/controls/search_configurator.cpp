@@ -265,15 +265,11 @@ void SearchConfigurator::initiateSources() {
             item -> setCheckState(Qt::Unchecked);
             item -> setData(Qt::UserRole + 1, it.key());
 
-            switch(it.key()) {
-                case dt_site_vk:
-                case dt_site_sc:
-                case dt_site_od:
-                case dt_site_fourshared: {
-                    sitesList -> insertItem(0, item);
-                break;}
-                default: sitesList -> addItem(item);
-            }
+            if (it.value() -> isPrimary())
+               sitesList -> insertItem(0, item);
+            else
+                sitesList -> addItem(item);
+
         } else has_not_connected = true;
     }
 

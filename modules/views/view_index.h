@@ -21,10 +21,10 @@ namespace Views {
                 case dt_level: return new ListView(parent, settings, attrs);
                 case dt_level_tree: return new LevelTreeView(parent, settings, attrs);
                 case dt_tree: return new TreeView(parent, settings, attrs);
-                case dt_site_vk: return new VkView(parent, settings, attrs);
-                case dt_site_sc: return new SoundcloudView(parent, settings, attrs);
-                case dt_site_od: return new OdView(parent, settings, attrs);
-                case dt_site_fourshared: return new FoursharedView(parent, settings, attrs);
+                case dt_web_vk: return new VkView(parent, settings, attrs);
+                case dt_web_sc: return new SoundcloudView(parent, settings, attrs);
+                case dt_web_od: return new OdView(parent, settings, attrs);
+                case dt_web_fourshared: return new FoursharedView(parent, settings, attrs);
                 case dt_search: return new SearchView(parent, settings, attrs);
 
                 default: return new ListView(parent, settings, attrs); //0;

@@ -3,6 +3,7 @@
 namespace Core {
     namespace Web {
         QMap<DataSubType, ISource *> Apis::sources = QMap<DataSubType, ISource *>();
+        QMap<DataSubType, QString> Apis::sources_name = QMap<DataSubType, QString>();
 
         void Apis::initiate(const QJsonObject & obj) {
             sources.insert(Youtube::Api::obj().sourceType(),      &Youtube::Api::obj());
@@ -22,8 +23,10 @@ namespace Core {
             sources.insert(MusicShara::obj().sourceType(),        &MusicShara::obj());
             sources.insert(RedMp3::obj().sourceType(),            &RedMp3::obj());
 
-            for(QMap<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++)
+            for(QMap<DataSubType, ISource *>::Iterator it = sources.begin(); it != sources.end(); it++) {
                 it.value() -> fromJson(obj);
+                sources_name.insert(it.key(), it.value() -> name());
+            }
         }
 
         void Apis::close(QJsonObject & obj) {

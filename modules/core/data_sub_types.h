@@ -1,8 +1,6 @@
 #ifndef DATA_SUB_TYPES
 #define DATA_SUB_TYPES
 
-#include <qobject.h>
-
 namespace Core {
     enum RecType {
         rec_none = 0,

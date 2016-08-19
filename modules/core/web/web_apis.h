@@ -7,11 +7,13 @@ namespace Core {
     namespace Web {
         class Apis {
             static QMap<DataSubType, ISource *> sources;
+            static QMap<DataSubType, QString> sources_name;
         public:
             static void initiate(const QJsonObject & obj);
 
             static QMap<DataSubType, ISource *> sourcesList() { return sources; }
             inline static ISource * source(const DataSubType & item_type) { return sources.value(item_type); }
+            inline static QString source_name(const DataSubType & item_type) { return sources_name.value(item_type); }
 
             static void close(QJsonObject & obj);
 
