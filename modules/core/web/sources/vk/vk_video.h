@@ -128,8 +128,8 @@ namespace Core {
                     }
 
                     return QJsonArray()
-                        << prepareBlock(dmt_video, content.value(block_items_video))
-                        << prepareBlock(dmt_video_set, mod_sets);
+                        << prepareBlock(dmt_video_set, mod_sets)
+                        << prepareBlock(dmt_video, content.value(block_items_video));
                 }
 
 

@@ -295,7 +295,8 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, const Da
     QHash<QString, IItem *> store; // need to move this on upper level
     parent -> accumulateUids(store);
 
-    int pos = parent -> playlistsAmount();
+//    int pos = parent -> playlistsAmount();
+//    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
@@ -332,7 +333,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, const Da
                 owner, uid,
                 Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)),
                 dm_type
-            ), pos);
+            )/*, pos*/);
 
             if (dm_type == dmt_video)
                 newItem -> setArtPath(itm.value(Vk::tkn_video_art).toString());
@@ -344,7 +345,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, const Da
                 (*it_it) -> setPath(uri);
         }
 
-        pos++;
+//        pos++;
     }
 
     return items_amount;

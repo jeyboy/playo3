@@ -128,21 +128,21 @@ QJsonObject Playlist::toJson() {
     return root;
 }
 
-Playlist * Playlist::createPlaylistPath(const DataSubType & subType, const QString & path) { // usable only for tree
+Playlist * Playlist::createPlaylistPath(const DataSubType & sub_type, const QString & path) { // usable only for tree
     QStringList list = path.split('/', QString::SkipEmptyParts);
     if (list.isEmpty())
         return this;
-    return createPlaylist(subType, list.takeFirst(), &list);
+    return createPlaylist((DataSubType)(sub_type | dt_playlist), list.takeFirst(), &list);
 }
 
-Playlist * Playlist::createPlaylist(const DataSubType & subType, const QString & name, QStringList * list, int pos) {
+Playlist * Playlist::createPlaylist(const DataSubType & sub_type, const QString & name, QStringList * list, int pos) {
     Playlist * curr = playlists.value(name, 0);
 
     if (!curr)
-        curr = new Playlist(CONTAINER_ATTRS(subType, name), this, pos);
+        curr = new Playlist(CONTAINER_ATTRS((DataSubType)(sub_type | dt_playlist), name), this, pos);
 
     if (list && !list -> isEmpty())
-        return curr -> createPlaylist(subType, list -> takeFirst(), list, pos);
+        return curr -> createPlaylist((DataSubType)(sub_type | dt_playlist), list -> takeFirst(), list, pos);
     else
         return curr;
 }
