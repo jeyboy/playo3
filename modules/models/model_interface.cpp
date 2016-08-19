@@ -247,7 +247,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent/*, const 
             break;}
             case dt_web_od: {
                 proc_func = &IModel::proceedOdList;
-                proc_set_func = 0;
+                proc_set_func = &IModel::proceedOdSet;
             break;}
             case dt_web_yandex: {
                 proc_func = &IModel::proceedYandexList;
@@ -350,39 +350,36 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, const Da
 
     return items_amount;
 }
-
-int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
 
     if (collection.isEmpty()) return 0;
     int items_amount = 0;
 
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+//    int pos = 0;
 
-    Playlist * folder;
-    QJsonObject playlist;
-
-    int pos = 0;
-    for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++, pos++) {
-        playlist = (*playlist_obj).toObject();
+    for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++/*, pos++*/) {
+        QJsonObject playlist = (*playlist_obj).toObject();
 
         QString playlist_id = ISource::idToStr(playlist.value(Vk::tkn_id));
+        QString title = playlist.value(Vk::tkn_title).toString();
 
         if (playlist.contains(tkn_loadable_cmd)) {
             parent -> createLoadablePlaylist(
                 playlist.value(tkn_loadable_cmd).toString(),
-                playlist.value(Vk::tkn_title).toString(),
+                title,
                 playlist_id
             );
         } else {
             QJsonArray playlist_items = playlist.value(Vk::tkn_items).toArray();
 
             if (playlist_items.size() > 0) {
-                folder = rootItem -> createPlaylist(
-                    dt_playlist_vk,
+                Playlist * folder = parent -> createPlaylist(
+                    wType,
                     playlist_id,
-                    playlist.value(Vk::tkn_title).toString(),
-                    pos
+                    title/*,
+                    pos*/
                 );
 
                 int amount = proceedVkList(
@@ -397,6 +394,187 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const Dat
 
     return items_amount;
 }
+
+int IModel::proceedScList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+    QJsonArray collection = EXTRACT_ITEMS(block);
+    if (collection.isEmpty()) return 0;
+
+    DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    int itemsAmount = 0;
+
+    QList<IItem *> items;
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
+
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
+        QJsonObject itm = (*it).toObject();
+        if (itm.isEmpty()) continue;
+
+        if (itm.contains(tkn_media_type))
+            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+
+        bool original = true;
+        QString id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
+        QString owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
+        QString uid = IItem::toUid(owner, id);
+        if (ignoreListContainUid(uid)) continue;
+
+        QString uri = itm.value(Soundcloud::tkn_download_url).toString();
+        if (uri.isEmpty()) {
+            uri = itm.value(Soundcloud::tkn_stream_url).toString();
+            original = false;
+        }
+
+        items = store.values(uid);
+
+        if (items.isEmpty()) {
+            itemsAmount++;
+            IItem * newItem = new IItem(
+                parent,
+                SC_ITEM_ATTRS(id, uri,
+                    itm.value(Soundcloud::tkn_title).toString(),
+                    owner,
+                    Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)),
+                    original ? itm.value(Soundcloud::tkn_original_format).toString() : val_def_extension,
+                    dm_type
+                )
+            );
+
+//            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
+
+//            if (itm.contains(Soundcloud::tkn_video_url))
+//                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
+
+            if (itm.contains(Soundcloud::tkn_genre_id))
+                newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
+        } else {
+            QList<IItem *>::Iterator it_it = items.begin();
+
+            for(; it_it != items.end(); it_it++)
+                (*it_it) -> setPath(uri);
+        }
+    }
+
+    return itemsAmount;
+}
+int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & wType) {
+    QJsonArray collection = EXTRACT_ITEMS(block);
+    if (collection.isEmpty()) return 0;
+    int items_amount = 0;
+
+    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        QJsonObject playlist = (*it).toObject();
+
+        QString playlist_id = playlist.value(Soundcloud::tkn_id).toString();
+        QString title = playlist.value(Soundcloud::tkn_title).toString();
+
+        if (playlist.contains(tkn_loadable_cmd)) {
+            parent -> createLoadablePlaylist(
+                playlist.value(tkn_loadable_cmd).toString(),
+                title,
+                playlist_id
+            );
+        } else {
+            QJsonArray playlist_items = playlist.value(Soundcloud::tkn_tracks).toArray();
+            if (!playlist_items.isEmpty()) {
+                Playlist * folder = parent -> createPlaylist(wType, playlist_id, title);
+
+                int amount = proceedScList(
+                    QJsonObject {{tkn_content, playlist_items}},
+                    folder, dmt_type
+                );
+                folder -> updateItemsCountInBranch(amount);
+                items_amount += amount;
+            }
+        }
+    }
+
+    return items_amount;
+}
+
+int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+    // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
+    // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
+
+    QJsonArray collection = EXTRACT_ITEMS(block);
+    if (collection.isEmpty()) return 0;
+
+    DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    int items_amount = 0;
+
+    QHash<QString, IItem *> store;
+    parent -> accumulateUids(store);
+
+    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
+        QJsonObject itm = (*it).toObject();
+        if (itm.isEmpty()) continue;
+
+        if (itm.contains(tkn_media_type))
+            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+
+        qint64 iid = ((qint64)itm.value(Od::tkn_id).toDouble());
+        QString id = QString::number(iid);
+        if (iid == 0 || ignoreListContainUid(id)) continue;
+
+        QList<IItem *> items = store.values(id);
+
+        if (items.isEmpty()) {
+            items_amount++;
+            new IItem(parent, OD_ITEM_ATTRS(
+                id,
+                QString(itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString()),
+                id,
+                Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)),
+                itm.value(Od::tkn_size).toInt(0),
+                dm_type
+            ));
+        } else {
+            for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
+                (*it_it) -> setRefreshPath(id);
+        }
+    }
+
+    return items_amount;
+}
+int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & wType) {
+    QJsonArray collection = EXTRACT_ITEMS(block);
+    if (collection.isEmpty()) return 0;
+    int items_amount = 0;
+
+    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        QJsonObject playlist = (*it).toObject();
+
+        int amount = playlist.value(Od::tkn_count).toInt();
+        if (amount > 0) {
+            QString pid = ISource::idToStr(playlist.value(Od::tkn_id));
+            QString name = playlist.value(Od::tkn_name).toString();
+            Playlist * folder;
+
+            if (playlist.contains(tkn_loadable_cmd)) {
+                folder = parent -> createLoadablePlaylist(
+                    playlist.value(tkn_loadable_cmd).toString(),
+                    name, pid
+                );
+            } else {
+                folder = parent -> createPlaylist(wType, pid, name);
+
+                QJsonObject items_block = Od::Queries::obj().tracksByPlaylist(pid).toObject();
+                int amount = proceedOdList(items_block, folder, dmt_type);
+                folder -> updateItemsCountInBranch(amount);
+                items_amount += amount;
+            }
+
+            folder -> setOwner(playlist.value(Od::tkn_owner).toString());
+        }
+    }
+
+    return items_amount;
+}
+
 
 int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
@@ -569,155 +747,6 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, con
                         itm.value(tkn_grab_channels).toString("?")
                     )
                 );
-        }
-    }
-
-    return items_amount;
-}
-
-int IModel::proceedScList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
-    QJsonArray collection = EXTRACT_ITEMS(block);
-    if (collection.isEmpty()) return 0;
-
-    DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
-    int itemsAmount = 0;
-
-    QList<IItem *> items;
-    QHash<QString, IItem *> store;
-    parent -> accumulateUids(store);
-
-    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        QJsonObject itm = (*it).toObject();
-        if (itm.isEmpty()) continue;
-
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
-
-        bool original = true;
-        QString id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
-        QString owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
-        QString uid = IItem::toUid(owner, id);
-        if (ignoreListContainUid(uid)) continue;
-
-        QString uri = itm.value(Soundcloud::tkn_download_url).toString();
-        if (uri.isEmpty()) {
-            uri = itm.value(Soundcloud::tkn_stream_url).toString();
-            original = false;
-        }
-
-        items = store.values(uid);
-
-        if (items.isEmpty()) {
-            itemsAmount++;
-            IItem * newItem = new IItem(
-                parent,
-                SC_ITEM_ATTRS(id, uri,
-                    itm.value(Soundcloud::tkn_title).toString(),
-                    owner,
-                    Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)),
-                    original ? itm.value(Soundcloud::tkn_original_format).toString() : val_def_extension,
-                    dm_type
-                )
-            );
-
-//            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
-
-//            if (itm.contains(Soundcloud::tkn_video_url))
-//                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
-
-            if (itm.contains(Soundcloud::tkn_genre_id))
-                newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
-        } else {
-            QList<IItem *>::Iterator it_it = items.begin();
-
-            for(; it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
-        }
-    }
-
-    return itemsAmount;
-}
-
-int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
-    QJsonArray collection = EXTRACT_ITEMS(block);
-    if (collection.isEmpty()) return 0;
-    int items_amount = 0;
-
-    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
-
-    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
-        QJsonObject playlist = (*it).toObject();
-
-        QString playlist_id = playlist.value(Soundcloud::tkn_id).toString();
-        QString title = playlist.value(Soundcloud::tkn_title).toString();
-
-        if (playlist.contains(tkn_loadable_cmd)) {
-            parent -> createLoadablePlaylist(
-                playlist.value(tkn_loadable_cmd).toString(),
-                title,
-                playlist_id
-            );
-        } else {
-            QJsonArray playlist_items = playlist.value(Soundcloud::tkn_tracks).toArray();
-            if (!playlist_items.isEmpty()) {
-                Playlist * playlist = parent -> createPlaylist(
-                    dt_playlist_sc,
-                    playlist_id,
-                    title
-                );
-
-                int amount = proceedScList(
-                    QJsonObject {{tkn_content, playlist_items}},
-                    playlist, dmt_type
-                );
-                playlist -> updateItemsCountInBranch(amount);
-                items_amount += amount;
-            }
-        }
-    }
-
-    return items_amount;
-}
-
-int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
-    // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
-    // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
-
-    QJsonArray collection = EXTRACT_ITEMS(block);
-    if (collection.isEmpty()) return 0;
-
-    DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
-    int items_amount = 0;
-
-    QHash<QString, IItem *> store;
-    parent -> accumulateUids(store);
-
-    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
-        QJsonObject itm = (*it).toObject();
-        if (itm.isEmpty()) continue;
-
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
-
-        qint64 iid = ((qint64)itm.value(Od::tkn_id).toDouble());
-        QString id = QString::number(iid);
-        if (iid == 0 || ignoreListContainUid(id)) continue;
-
-        QList<IItem *> items = store.values(id);
-
-        if (items.isEmpty()) {
-            items_amount++;
-            new IItem(parent, OD_ITEM_ATTRS(
-                id,
-                QString(itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString()),
-                id,
-                Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)),
-                itm.value(Od::tkn_size).toInt(0),
-                dm_type
-            ));
-        } else {
-            for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
-                (*it_it) -> setRefreshPath(id);
         }
     }
 
