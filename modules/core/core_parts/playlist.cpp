@@ -14,7 +14,7 @@ Playlist::Playlist(QJsonObject * hash, Playlist * parent, const QJsonValue & chi
             QJsonObject iterObj = (*it).toObject();
 
             DataSubType item_data_type = (DataSubType)iterObj.value(JSON_TYPE_ITEM_TYPE).toInt();
-            if (item_data_type < dt_none)
+            if (item_data_type & dt_playlist)
                 new Playlist(&iterObj, this, iterObj.take(JSON_TYPE_CHILDS));
             else
                 new IItem(this, &iterObj);
