@@ -360,7 +360,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
-    if (src -> hasUserRecomendations()) {
+    if (src && src -> hasUserRecomendations()) {
         menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
@@ -370,10 +370,10 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     if (ind.isValid()) {
         src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
 
-        if (src -> hasUserRecomendations())
+        if (src && src -> hasUserRecomendations())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
 
-        if (src -> hasItemRecomendations())
+        if (src && src -> hasItemRecomendations())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
         menu.addSeparator();
 
