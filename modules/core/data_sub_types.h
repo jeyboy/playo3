@@ -50,6 +50,7 @@ namespace Core {
         dt_web                      = 1,
         dt_local                    = 2,
         dt_playlist                 = 4,
+        //reserved 8
 
         dt_playlist_local           = dt_local | dt_playlist,
 
@@ -83,6 +84,17 @@ namespace Core {
         dt_web_yandex               = 170 | dt_web,
         dt_web_youtube              = 180 | dt_web
     };
+
+    #define DST_HAS_FLAG(dst, flag) ((dst % 10) & flag)
+    #define DST_EXTRACT_FLAGS(dst) (DataSubType)(dst - (dst % 10))
+    #define DST_EXTRACT_FLAG(dst, flag) (DataSubType)(dst - DST_HAS_FLAG(dst, flag))
+    #define DST_APPEND_FLAG(dst, flag) DST_HAS_FLAG(dst, flag) ? dst : (DataSubType)(dst + flag)
+
+    #define DST_SET_FOLDER(dst) DST_APPEND_FLAG(dst, dt_playlist)
+
+    #define DST_IS_WEB(dst) (dst % 10) & dt_web
+    #define DST_IS_LOCAL(dst) (dst % 10) & dt_local
+    #define DST_IS_PLAYLIST(dst) (dst % 10) & dt_playlist
 }
 
 #endif // DATA_SUB_TYPES

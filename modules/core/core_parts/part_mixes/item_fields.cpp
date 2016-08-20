@@ -101,7 +101,7 @@ bool ItemFields::isShareable() const                         {
     return source && source -> isShareable();
 }
 
-bool ItemFields::isRemote() const { return dataType() & dt_web; }
+bool ItemFields::isRemote() const { return DST_IS_WEB(dataType()); }
 
 QString ItemFields::toUid() {
     switch(dataType()) {

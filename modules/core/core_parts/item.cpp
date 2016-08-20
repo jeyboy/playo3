@@ -204,7 +204,7 @@ QString IItem::relationStr() const {
             if (dst & dt_web) {
                 return QStringLiteral("(%1%2) ").arg(
                     Web::Apis::source_name(dst),
-                    (dst & dt_playlist) ? ' ' % QStringLiteral("Folder") : QString()
+                    DST_IS_PLAYLIST(dst) ? ' ' % QStringLiteral("Folder") : QString()
                 );
             } else return QStringLiteral("(Unknow) ");
         }

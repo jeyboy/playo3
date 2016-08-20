@@ -80,7 +80,7 @@ namespace Core {
         Playlist * createPlaylist(const DataSubType & sub_type, const QString & uid, const QString & name, int pos = -1) {
             Playlist * curr = playlists.value(playlistUid(name, uid), 0);
             if (curr) return curr;
-            return new Playlist(REMOTE_CONTAINER_ATTRS((DataSubType)(sub_type | dt_playlist), name, uid), this, pos);
+            return new Playlist(REMOTE_CONTAINER_ATTRS(DST_SET_FOLDER(sub_type), name, uid), this, pos);
         }
         Playlist * createPlaylist(const DataSubType & subType, const QString & name, QStringList * list = 0, int pos = -1);
 //        void addPlaylist(Playlist * node);
