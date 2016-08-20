@@ -162,18 +162,12 @@ HEADERS += \
     modules/models/service/hotkey_types.h \
     modules/models/service/search_model.h \
     modules/models/web/ignore_list.h \
-    modules/models/web/od_model.h \
-    modules/models/web/soundcloud_model.h \
-    modules/models/web/vk_model.h \
     modules/models/web/web_model.h \
     modules/models/level_tree_model.h \
     modules/models/list_model.h \
     modules/models/model_interface.h \
     modules/models/model_item_delegate.h \
     modules/models/tree_model.h \
-    modules/views/web/od_view.h \
-    modules/views/web/soundcloud_view.h \
-    modules/views/web/vk_view.h \
     modules/views/level_tree_view.h \
     modules/views/list_view.h \
     modules/views/tree_view.h \
@@ -253,8 +247,6 @@ HEADERS += \
     modules/core/interfaces/isource_auth_perm.h \
     modules/core/interfaces/isource_feeds.h \
     modules/core/feeder/feed_item.h \
-    modules/views/web/fourshared_view.h \
-    modules/models/web/fourshared_model.h \
     modules/core/web/utils/web_headers.h \
     modules/core/interfaces/iuser_interaction.h \
     modules/core/interfaces/isource_perm_flags.h \
@@ -330,7 +322,8 @@ HEADERS += \
     modules/core/web/sources/fourshared/fourshared_keys.h \
     modules/core/web/interfaces/queriable_response.h \
     modules/core/web/interfaces/queriable_defines.h \
-    modules/core/web/sources/od/od_album.h
+    modules/core/web/sources/od/od_album.h \
+    modules/views/web/web_view.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -388,18 +381,12 @@ SOURCES += \
     modules/models/service/hotkey_model_item.cpp \
     modules/models/service/search_model.cpp \
     modules/models/web/ignore_list.cpp \
-    modules/models/web/od_model.cpp \
-    modules/models/web/soundcloud_model.cpp \
-    modules/models/web/vk_model.cpp \
     modules/models/web/web_model.cpp \
     modules/models/level_tree_model.cpp \
     modules/models/list_model.cpp \
     modules/models/model_interface.cpp \
     modules/models/model_item_delegate.cpp \
     modules/models/tree_model.cpp \
-    modules/views/web/od_view.cpp \
-    modules/views/web/soundcloud_view.cpp \
-    modules/views/web/vk_view.cpp \
     modules/views/level_tree_view.cpp \
     modules/views/list_view.cpp \
     modules/views/tree_view.cpp \
@@ -442,8 +429,6 @@ SOURCES += \
     modules/core/feeder/aspect_ratio_label.cpp \
     modules/core/interfaces/search_limits.cpp \
     modules/core/interfaces/isource_auth_perm.cpp \
-    modules/views/web/fourshared_view.cpp \
-    modules/models/web/fourshared_model.cpp \
     modules/core/interfaces/iuser_interaction.cpp \
     dialogs/packages_dialog.cpp \
     modules/core/web/utils/unicode_decoding.cpp \

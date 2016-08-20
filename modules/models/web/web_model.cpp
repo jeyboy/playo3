@@ -1,6 +1,102 @@
 #include "web_model.h"
 
 using namespace Models;
+
+void WebModel::refresh() {
+    emit moveInProcess();
+    QApplication::processEvents();
+
+    switch(sttngs.type) {
+        case dt_web_vk: {
+            switch(sttngs.rec_type) {
+                case rec_none: {
+                    Vk::Queries::obj().userInfoAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                default: {
+                    Vk::Queries::obj().trackRecommendationsAsync(
+                        sttngs.uid,
+                        sttngs.rec_type == Core::rec_user,
+                        true,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+            }
+        break;}
+
+        case dt_web_sc: {
+            switch(sttngs.rec_type) {
+                case rec_song: {
+                    Soundcloud::Queries::obj().trackRelationsAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                case rec_set: {
+                    Soundcloud::Queries::obj().openSetAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                default: {
+                    Soundcloud::Queries::obj().objectInfoAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+            }
+        break;}
+
+        case dt_web_od: {
+            switch(sttngs.rec_type) {
+                case rec_none: {
+                    Od::Queries::obj().userInfoAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                case rec_set: {
+
+                return;}
+
+                default: {
+
+                return;}
+            }
+        break;}
+
+        case dt_web_fourshared: {
+            switch(sttngs.rec_type) {
+                case rec_none: {
+                    Fourshared::Queries::obj().userInfoAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                default: {
+
+                return;}
+            }
+        break;}
+
+        default:;
+    }
+
+    emit moveOutProcess();
+}
+
+void WebModel::proceedJson(QJsonValue & hash) {
+    proceedBlocks(hash.toArray(), rootItem);
+    emit moveOutProcess();
+}
+
 ///////////////////////////////////////////////////////////
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     Playlist * parentItem = item<Playlist>(parent);

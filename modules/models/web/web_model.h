@@ -4,8 +4,6 @@
 #include "modules/models/list_model.h"
 #include "ignore_list.h"
 
-#define UPDATE_INTERVAL 10000
-
 namespace Models {
     using namespace Core::Web;
 
@@ -17,7 +15,7 @@ namespace Models {
         inline virtual ~WebModel() {}
 
         inline bool isRelative() const { return false; }
-        virtual ISource * api() const = 0;
+        ISource * api() const { return Web::Apis::source(sttngs.type); }
         inline Core::DataSubType playlistType() const { return api() -> sourceType(); }
 
         bool removeRows(int position, int rows, const QModelIndex & parent);
@@ -31,7 +29,10 @@ namespace Models {
     signals:
         void refreshNeeded();
 
+    public slots:
+        void refresh();
     protected slots:
+        void proceedJson(QJsonValue &);
         void errorReceived(int, QString);
     };
 }
