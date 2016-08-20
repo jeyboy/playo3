@@ -182,7 +182,7 @@ void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
                 // hack for view updating
                 beginInsertRows(QModelIndex(), offset, offset);
                 endInsertRows();
-                parent -> backPropagateItemsCountInBranch(propagate_count);
+//                parent -> backPropagateItemsCountInBranch(propagate_count);
     //            emit collapseNeeded(index(parent));
             }
             offset += 1;
