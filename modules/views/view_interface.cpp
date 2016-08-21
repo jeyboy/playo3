@@ -239,37 +239,35 @@ void IView::onFetchNeeded(const QModelIndex & node) {
     Playlist * item = mdl -> item<Playlist>(node);
     QScrollBar * scroll_bar = verticalScrollBar();
     bool has_scroll = scroll_bar -> isVisible();
+    QRect view_rect = rect();
 
-    if (has_scroll) {
+    QModelIndex top_index = indexAt(rect().topLeft());
+    QModelIndex bottom_index = indexAt(rect().bottomRight());
+
+    bool rejected = !(top_index.isValid() || bottom_index.isValid()); // block fetching on first drawing of tab
+
+    if (has_scroll && !rejected) {
         int slider_pos = scroll_bar -> sliderPosition();
         qDebug() << slider_pos << scroll_bar -> minimum() << scroll_bar -> maximum();
-        bool rejected = !node.isValid() && slider_pos == scroll_bar -> minimum();
+        rejected = !node.isValid() && slider_pos == scroll_bar -> minimum(); // block fetching if we on the top of scroll in root parent
 
-        if (!rejected) {
+        if (!rejected) { // if we not in root parent or not on the top of scroll
             rejected = !(!node.isValid() && slider_pos == scroll_bar -> maximum());
 
             if (rejected) {
                 QModelIndex last_child_index = index(item -> lastChild());
                 QRect child_rect = visualRect(last_child_index);
-                QRect view_rect = rect();
+
 
                 qDebug() << view_rect << child_rect << child_rect.intersects(view_rect);
-                rejected = !child_rect.intersects(view_rect);
-
-//                QModelIndex top_index = indexAt(view_rect.topLeft());
-//                QModelIndex bottom_index = indexAt(view_rect.bottomRight());
-
-                int i = 0;
+                rejected = !child_rect.intersects(view_rect); // reject if last child of fetchable container not on the screen
             }
-        }
-
-        if (rejected) { // if not required
-            item -> setStates(IItem::flag_not_in_proc);
-            return;
         }
     }
 
     item -> setStates(IItem::flag_not_in_proc);
+
+    if (rejected) return;
     mdl -> fetchMore(node);
 }
 
@@ -281,6 +279,8 @@ void IView::updateSelection(QModelIndex & node) {
         onSpoilNeeded(node);
     }
 }
+
+void IView::runItemCmd() { mdl -> fetchMore(currentIndex()); }
 
 void IView::openLocation() {
     IItem * item = mdl -> item(currentIndex());
@@ -389,6 +389,19 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();
 
+    QModelIndex ind = indexAt(event -> pos());
+    if (ind.isValid()) {
+        IItem * itm = mdl -> item(ind);
+        if (itm -> hasMoreItems()) {
+            menu.addAction(
+                QIcon(QStringLiteral(":/load_more")), QStringLiteral("Load more items"),
+                this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
+            );
+        }
+    }
+
+    menu.addSeparator();
+
     if (DataFactory::obj().playedIndex().isValid()) {
         menu.addAction(
             QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"),
@@ -403,8 +416,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
-
-    QModelIndex ind = indexAt(event -> pos());
 
     if (ind.isValid()) {
         src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());

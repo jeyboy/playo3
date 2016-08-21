@@ -108,6 +108,7 @@ namespace Views {
                 }
             }
         }
+        void runItemCmd();
         void openLocation();
         void copyToClipboard();
         void copyIdsToClipboard();

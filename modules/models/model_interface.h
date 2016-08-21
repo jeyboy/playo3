@@ -74,6 +74,7 @@ namespace Models {
             Playlist * playlist = item<Playlist>(parent);
 
             if (playlist -> hasMoreItems() && !playlist -> is(IItem::flag_in_proc)) {
+                emit moveInBackgroundProcess();
                 Func * func = new Func(
                     this,
                     SLOT(finishSetLoading(QJsonValue&, void*)),
@@ -128,7 +129,7 @@ namespace Models {
 
         QJsonValue proceedLoadable(const QString & cmd) { return Web::Apis::run(cmd); }
 
-        int proceedBlocks(const QJsonArray & blocks, Playlist * parent/*, const DataMediaType & dmtype = dmt_unknow*/);
+        int proceedBlocks(const QJsonArray & blocks, Playlist * parent);
 
         int proceedVkList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
         int proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);

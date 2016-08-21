@@ -221,7 +221,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent/*, const DataMediaType & dmtype*/) {
+int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
     int (IModel::*proc_func)(const QJsonObject &, Playlist *, const DataMediaType &, const DataSubType &);
     int (IModel::*proc_set_func)(const QJsonObject &, Playlist *, const DataMediaType &, const DataSubType &);
 
@@ -1066,27 +1066,19 @@ void IModel::finishingItemsAdding() {
 void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
-//    DataSubType data_type; // = (DataSubType)hash.value(JSON_TYPE_ITEM_TYPE).toInt();
-//    DataMediaType media_type; // = (DataMediaType)hash.value(tkn_media_type).toInt();
-
-//    Web::Apis::extractSourceTypeAndMediaType(
-//        playlist -> loadableCmd(),
-//        (int &)data_type,
-//        (int &)media_type
-//    );
-
-    playlist -> unset(IItem::flag_in_proc);
+    playlist -> setStates(IItem::flag_not_in_proc);
     playlist -> removeLoadability();
 
     IItem * temp_item = playlist -> child(0);
     int added = proceedBlocks(QJsonArray() << json.toObject(), playlist/*, media_type*/);
+    emit moveOutBackgroundProcess();
 
     if (added > 0) {
-        temp_item -> removeYouself();
-//        playlist -> backPropagateItemsCountInBranch(added);
+        if (temp_item -> dataType() == dt_dummy)
+            temp_item -> removeYouself();
     } else {
-        temp_item -> setTitle(QStringLiteral("Error!!"));
-        playlist -> setStates(IItem::flag_not_in_proc);
+        if (temp_item -> dataType() == dt_dummy)
+            temp_item -> setTitle(QStringLiteral("Error!!"));
     }
 }
 
