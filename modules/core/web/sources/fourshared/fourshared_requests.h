@@ -232,28 +232,25 @@ namespace Core {
                         case dmt_audio: {
                             QString res;
 
-                            if (is_uid) {
-                                url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % refresh_page);
-                                res = Manager::prepare() -> putFollowed(url, Auth::siteHeaders()) -> toText();
-                                Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
-                            } else {
-                                Html::Document doc = Web::Manager::prepare() -> getFollowed(refresh_page) -> toHtml();
-                                res = doc.find("input.jsD1PreviewUrl").value();
-                            }
+                            if (is_uid)
+                                res = trackUrlFromId(refresh_page);
+                            else
+                                res = trackUrlFromPath(refresh_page);
 
                             return res % QStringLiteral("\r\n") % cookies();
-                        }
+                        break;}
 
                         case dmt_video: {
-                            if (is_uid) {
-                                url = QUrl(QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % refresh_page);
-                                QString res = Manager::prepare() -> getFollowed(url, Auth::siteHeaders()) -> toText();
-                                res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
-                                return res;
-                            } else {
-                                //TODO: write me
-                            }
-                        }
+                            QString res;
+
+                            if (is_uid)
+                                res = videoUrlFromId(refresh_page);
+                            else
+                                res = videoUrlFromPath(refresh_page);
+
+                            return res % QStringLiteral("\r\n") % cookies();
+                        break;}
+
                         default: return QString();
                     }
                 }

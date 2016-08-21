@@ -8,6 +8,18 @@ namespace Core {
         namespace Fourshared {
             class Video : public Base {
             public:
+                QString videoUrlFromId(const QString & id) {
+                    return videoUrlFromPath(
+                        QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % id
+                    );
+                }
+
+                QString videoUrlFromPath(const QString & path) {
+                    QString res = Manager::prepare() -> getFollowed(path, siteHeaders()) -> toText();
+                    res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
+                    return res;
+                }
+
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);

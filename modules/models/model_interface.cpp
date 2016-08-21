@@ -521,9 +521,6 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, const Da
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
-
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
@@ -552,6 +549,9 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, const Da
                 (*it_it) -> setRefreshPath(id);
         }
     }
+
+    if (items_amount > 5 && block.contains(tkn_more_cmd)) // od returns to many duplicates - checking on new items amount is prevent from infinite looping
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
 
     return items_amount;
 }

@@ -8,6 +8,18 @@ namespace Core {
         namespace Fourshared {
             class Track : public Base {
             public:
+                QString trackUrlFromId(const QString & id) {
+                    QUrl url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % id);
+                    QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
+                    Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
+                    return res;
+                }
+
+                QString trackUrlFromPath(const QString & path) {
+                    Html::Document doc = Web::Manager::prepare() -> getFollowed(path) -> toHtml();
+                    return doc.find("input.jsD1PreviewUrl").value();
+                }
+
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
