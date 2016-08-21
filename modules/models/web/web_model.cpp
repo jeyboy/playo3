@@ -62,12 +62,15 @@ void WebModel::refresh() {
                 return;}
 
                 case rec_set: {
-
+                    Od::Queries::obj().openSetAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
                 return;}
 
                 default: {
 
-                return;}
+                /*return;*/}
             }
         break;}
 
@@ -80,9 +83,16 @@ void WebModel::refresh() {
                     );
                 return;}
 
+                case rec_set: {
+                    Fourshared::Queries::obj().openSetAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
                 default: {
 
-                return;}
+                /*return;*/}
             }
         break;}
 

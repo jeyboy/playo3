@@ -25,6 +25,8 @@ namespace Core {
         ItemFields(QJsonObject * hash);
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
+        inline bool hasMoreItems()                              { return isLoadable() || isFetchable(); }
+
         inline QVariantMap cueMap()                             { return attrs[JSON_TYPE_CUE_MAP].toMap(); }
         inline QVariantMap takeCueMap()                         { return attrs.take(JSON_TYPE_CUE_MAP).toMap(); }
 
@@ -73,6 +75,7 @@ namespace Core {
 
         inline void setCueMap(const QVariant & map)             { attrs[JSON_TYPE_CUE_MAP] = map; }
         inline void setLoadableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_LOADABLE] = data; }
+        inline void setFetchableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_FETCHABLE] = data; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
         inline void addArtistId(const QString & id)             { attrs[JSON_TYPE_ARTIST_IDS] = attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }

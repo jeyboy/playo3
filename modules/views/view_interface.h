@@ -92,6 +92,7 @@ namespace Views {
         void collapseAll();
         inline void shuffle() { mdl -> shuffle(); }
         void onSpoilNeeded(const QModelIndex &);
+        void onFetchNeeded(const QModelIndex &);
         void updateSelection(QModelIndex &);
 //        void setHeaderText(QString);
 //        void showMessage(QString);

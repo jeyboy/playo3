@@ -73,25 +73,35 @@ namespace Models {
         void fetchMore(const QModelIndex & parent) {
             Playlist * playlist = item<Playlist>(parent);
 
-            if (playlist -> isLoadable() && !playlist -> is(IItem::flag_in_proc)) {
-                playlist -> setStates(IItem::flag_in_proc);
-
+            if (playlist -> hasMoreItems() && !playlist -> is(IItem::flag_in_proc)) {
                 Func * func = new Func(
                     this,
                     SLOT(finishSetLoading(QJsonValue&, void*)),
                     playlist
                 );
+
+                QString cmd = playlist -> isLoadable() ?  playlist -> loadableCmd() :  playlist -> fetchableCmd();
+                playlist -> setStates(IItem::flag_in_proc);
+
                 ThreadUtils::obj().run(
                     (IModel *)this,
                     &IModel::proceedLoadable,
-                    playlist -> loadableCmd(), func
+                    cmd, func
                 );
             }
 
             QAbstractItemModel::fetchMore(parent);
         }
         bool canFetchMore(const QModelIndex & parent) const {
-            if (item(parent) -> isLoadable()) return true;
+            IItem * itm = item(parent);
+
+            if (itm -> isLoadable()) return true;
+
+            if (itm -> isFetchable()) {
+                itm -> setStates(IItem::flag_in_proc);
+                emit fetchNeeded(parent);
+            }
+
             return QAbstractItemModel::canFetchMore(parent);
         }
 
@@ -192,6 +202,7 @@ namespace Models {
         void spoilNeeded(const QModelIndex & index) const;
         void expandNeeded(const QModelIndex & index) const;
         void collapseNeeded(const QModelIndex & index) const;
+        void fetchNeeded(const QModelIndex & index) const;
         void itemsCountChanged(int change);
 
         void moveInBackgroundProcess();

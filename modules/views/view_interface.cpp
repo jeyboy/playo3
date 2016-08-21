@@ -75,6 +75,7 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(collapseNeeded(const QModelIndex &)), this, SLOT(collapse(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
+    connect(mdl, SIGNAL(fetchNeeded(const QModelIndex &)), this, SLOT(onFetchNeeded(const QModelIndex &)));
 
     registerParent(parent);
 
@@ -232,6 +233,44 @@ void IView::onSpoilNeeded(const QModelIndex & node) {
         setCurrentIndex(node);
         scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
     }
+}
+
+void IView::onFetchNeeded(const QModelIndex & node) {
+    Playlist * item = mdl -> item<Playlist>(node);
+    QScrollBar * scroll_bar = verticalScrollBar();
+    bool has_scroll = scroll_bar -> isVisible();
+
+    if (has_scroll) {
+        int slider_pos = scroll_bar -> sliderPosition();
+        qDebug() << slider_pos << scroll_bar -> minimum() << scroll_bar -> maximum();
+        bool rejected = !node.isValid() && slider_pos == scroll_bar -> minimum();
+
+        if (!rejected) {
+            rejected = !(!node.isValid() && slider_pos == scroll_bar -> maximum());
+
+            if (rejected) {
+                QModelIndex last_child_index = index(item -> lastChild());
+                QRect child_rect = visualRect(last_child_index);
+                QRect view_rect = rect();
+
+                qDebug() << view_rect << child_rect << child_rect.intersects(view_rect);
+                rejected = !child_rect.intersects(view_rect);
+
+//                QModelIndex top_index = indexAt(view_rect.topLeft());
+//                QModelIndex bottom_index = indexAt(view_rect.bottomRight());
+
+                int i = 0;
+            }
+        }
+
+        if (rejected) { // if not required
+            item -> setStates(IItem::flag_not_in_proc);
+            return;
+        }
+    }
+
+    item -> setStates(IItem::flag_not_in_proc);
+    mdl -> fetchMore(node);
 }
 
 void IView::updateSelection(QModelIndex & node) {

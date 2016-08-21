@@ -675,6 +675,9 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, con
     DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
     int items_amount = 0;
 
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
@@ -702,9 +705,8 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, con
                     playlist, EXTRACT_MEDIA_TYPE(dm_type), wType
                 );
 
-                if (itm.contains(tkn_more_cmd)) {
-                    // add more items btn
-                }
+                if (itm.contains(tkn_more_cmd))
+                    playlist -> setFetchableAttrs(itm.value(tkn_more_cmd).toString());
 
                 items_amount += taked_amount;
                 playlist -> updateItemsCountInBranch(taked_amount);

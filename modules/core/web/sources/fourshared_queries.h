@@ -21,6 +21,9 @@ namespace Core {
                 inline void userInfoAsync(const QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
                 QJsonValue userInfo(const QString & uid) { return QJsonArray() << loadSetData(CMD_ID % '=' % uid); }
 
+                inline void openSetAsync(const QString & cutomParams, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::openSet, Cmd::extractQuery(cutomParams), func);
+                }
 
 //                QString downloadLink(const QString & refresh_page) {
 //                    if (refresh_page.isEmpty()) return QString();

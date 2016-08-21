@@ -24,6 +24,10 @@ namespace Core {
                     else
                         ThreadUtils::obj().run((User *)this, &User::userMedia, uid, func);
                 }
+
+                inline void openSetAsync(const QString & cutomParams, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::openSet, Cmd::extractQuery(cutomParams), func);
+                }
             };
         }
     }

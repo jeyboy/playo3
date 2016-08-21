@@ -294,8 +294,6 @@ namespace Core {
                     return tracksByPlaylist(QUrlQuery(attrs).queryItemValue(CMD_ID));
                 }
 
-
-
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
@@ -403,6 +401,13 @@ namespace Core {
                     return QJsonArray()
                         << prepareBlock(dmt_audio_set, res.value(tkn_playlists))
                         << prepareBlock(dmt_audio, res.value(tkn_tracks));
+                }
+
+                QJsonValue openSet(const QUrlQuery & attrs) {
+                    return QJsonArray() << Set::setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
                 }
             };
         }

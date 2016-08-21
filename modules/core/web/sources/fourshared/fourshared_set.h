@@ -99,6 +99,13 @@ namespace Core {
 
                     return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                 }
+
+                inline QMap<QString, QString> setsList() {
+                    return {
+                        {setTypeToStr(set_popular_audio),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_audio))},
+                        {setTypeToStr(set_popular_video),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_video))}
+                    };
+                }
             };
         }
     }
