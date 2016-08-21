@@ -566,12 +566,14 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, const Dat
         QJsonObject playlist = (*it).toObject();
 
         int amount = playlist.value(Od::tkn_count).toInt();
-        if (amount > 0) {
+        bool is_loadable = playlist.contains(tkn_loadable_cmd);
+
+        if (is_loadable || amount > 0) {
             QString pid = ISource::idToStr(playlist.value(Od::tkn_id));
             QString name = playlist.value(Od::tkn_name).toString();
             Playlist * folder;
 
-            if (playlist.contains(tkn_loadable_cmd)) {
+            if (is_loadable) {
                 folder = parent -> createLoadablePlaylist(
                     playlist.value(tkn_loadable_cmd).toString(),
                     name, pid

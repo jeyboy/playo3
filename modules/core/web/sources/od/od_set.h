@@ -50,7 +50,7 @@ namespace Core {
                             dmt_val = dmt_audio;
                         break;}
 
-                        case set_popular_artists: {
+                        case set_popular_artists: { //TODO: not tested
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
@@ -62,7 +62,7 @@ namespace Core {
                             dmt_val = dmt_artist;
                         break;}
 
-                        case set_popular_tuners: {
+                        case set_popular_tuners: { //TODO: not tested
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
@@ -74,7 +74,7 @@ namespace Core {
                             dmt_val = dmt_set;
                         break;}
 
-                        case set_popular_collections: {
+                        case set_popular_collections: { //TODO: not tested
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
@@ -86,7 +86,7 @@ namespace Core {
                             dmt_val = dmt_set;
                         break;}
 
-                        case set_popular_albums: {
+                        case set_popular_albums: { //TODO: not tested
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
@@ -98,16 +98,16 @@ namespace Core {
                             dmt_val = dmt_set;
                         break;}
 
-                        case set_listened: { //TODO: not finished
+                        case set_listened: {
                             response = pRequest(
                                 audioUrlStr(path_audio_history),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
-                                proc_json_extract, QStringList() << tkn_albums
+                                proc_json_extract, QStringList() << tkn_tracks
                             );
                             dmt_val = dmt_audio;
                         break;}
 
-                        case set_downloaded: {//TODO: not finished
+                        case set_downloaded: { //TODO: not tested
                             response = pRequest(
                                 audioUrlStr(path_audio_downloaded),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,

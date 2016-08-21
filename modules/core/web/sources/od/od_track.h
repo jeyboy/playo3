@@ -3,6 +3,8 @@
 
 #include "od_defines.h"
 
+#define TRACKS_AMOUNT_LIMIT 100
+
 namespace Core {
     namespace Web {
         namespace Od {
@@ -51,7 +53,7 @@ namespace Core {
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits) {
-                    PolyQueryRules prules = rules(limits.start_offset, qMin(200, limits.items_limit), limits.requests_limit);
+                    PolyQueryRules prules = rules(limits.start_offset, qMax(TRACKS_AMOUNT_LIMIT, qMin(200, limits.items_limit)), limits.requests_limit);
                     QueriableResponse response;
 
                     if (limits.by_artists())
@@ -89,19 +91,20 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByArtist(const QString & artist_id, int offset = 0, int count = 100) { //TODO: not finished                   
+                QJsonValue tracksByArtist(const QString & artist_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: not finished
                     QueriableResponse response = pRequest(
                                 audioUrlStr(
                                     path_audio_by_artist_id,
                                     { {QStringLiteral("artistId"), artist_id} }
                                 ),
-                                call_type_json, rules(offset, count), 0,
+                                call_type_json, rules(offset, qMax(count, TRACKS_AMOUNT_LIMIT)), 0,
                                 proc_json_extract, QStringList() << tkn_artists
                             );
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_artist, response, {{CMD_ID, artist_id}});
                 }
 
+                // return error : ProtocolInvalidOperationError
                 QJsonValue tracksByCollection(const QUrlQuery & args) {
                     return tracksByCollection(
                         args.queryItemValue(CMD_ID),
@@ -109,13 +112,13 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = 100) { //TODO: not finished
+                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: not finished
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_collection,
                             { {QStringLiteral("collectionId"), collection_id} }
                         ),
-                        call_type_json, rules(offset, count), 0,
+                        call_type_json, rules(offset, qMax(count, TRACKS_AMOUNT_LIMIT)), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
@@ -129,7 +132,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByTuner(const QString & tuner_id, int offset = 0, int count = 100, const QString & locale = QStringLiteral("ru")) { //TODO: need to check
+                QJsonValue tracksByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = QStringLiteral("ru")) { //TODO: need to check
                     QueriableResponse response = pRequest( // artists // tracks //albums
                         audioUrlStr(
                             path_audio_radio,
@@ -138,7 +141,7 @@ namespace Core {
                                 { tkn_locale, locale }
                             }
                         ),
-                        call_type_json, rules(offset, count), 0,
+                        call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
@@ -152,13 +155,13 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //INFO: url is not worked
+                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //INFO: url is not worked
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_by_album_id,
                             { {QStringLiteral("albumId"), album_id} }
                         ),
-                        call_type_json, rules(offset, count), 0,
+                        call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
@@ -172,13 +175,13 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: need to check
+                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: need to check
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             tkn_my,
                             {{ tkn_pid, playlist_id }}
                         ),
-                        call_type_json, rules(offset, count),
+                        call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)),
                         0, proc_json_extract, QStringList() << tkn_tracks
                     );
 
@@ -192,10 +195,10 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = DEFAULT_ITEMS_LIMIT) { //TODO: not finished
+                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: not finished
                     QueriableResponse response = pRequest(
                         audioUrlStr(tkn_my, {{tkn_uid, user_id}}),
-                        call_type_json, rules(offset, count), 0,
+                        call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 

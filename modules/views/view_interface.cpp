@@ -344,6 +344,14 @@ void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, co
     if (node -> expandRequired()) // required for uncanonical delition and after loading state reconstruction
         emit mdl -> expandNeeded(index);
 
+
+//    Playlist parent_node = node -> parent();
+//    if (parent_node -> hasMoreItems() && !parent_node -> is(IItem::flag_in_proc)) { // check fetch for sibling folders
+//        QModelIndex parent_index = mdl -> index(parent_node);
+//        if (parent_index.isValid())
+//            mdl -> canFetchMore(parent_index);
+//    }
+
     if (!node -> is(IItem::flag_proceeded)) {
         node -> set(IItem::flag_proceeded);
         emit infoInvalidationAsync(index, node -> isRemote());
@@ -388,7 +396,9 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QModelIndex ind = indexAt(event -> pos());
     if (ind.isValid()) {
         IItem * itm = mdl -> item(ind);
-        if (itm -> hasMoreItems()) {
+        if (!itm -> isContainer()) itm = itm -> parent();
+
+        if (itm && itm -> hasMoreItems()) {
             menu.addAction(
                 QIcon(QStringLiteral(":/load_more")), QStringLiteral("Load more items"),
                 this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
