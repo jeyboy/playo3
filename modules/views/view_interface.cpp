@@ -31,9 +31,6 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(this, SIGNAL(infoInvalidationAsync(QModelIndex, bool)), &DataFactory::obj(), SLOT(proceedInfoAsync(QModelIndex, bool)));
     connect(this, SIGNAL(changeCadrSize(QAbstractItemModel*,int)), &DataFactory::obj(), SLOT(changeCadrSize(QAbstractItemModel*,int)));
 
-    setModel(mdl);
-    emit registerSync(mdl, mdl -> syncMutex());
-
     setIndentation(Settings::obj().treeIndentation());
     setStyle((tree_style = new TreeViewStyle()));
     setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -76,6 +73,9 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(mdl, SIGNAL(collapseNeeded(const QModelIndex &)), this, SLOT(collapse(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
     connect(mdl, SIGNAL(fetchNeeded(const QModelIndex &)), this, SLOT(onFetchNeeded(const QModelIndex &)));
+
+    setModel(mdl);
+    emit registerSync(mdl, mdl -> syncMutex());
 
     registerParent(parent);
 

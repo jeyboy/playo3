@@ -227,32 +227,27 @@ namespace Core {
 
                     QUrl url(refresh_page);
                     bool is_uid = url.host().isEmpty(); // get link from uid
+                    QString res;
 
                     switch(itemMediaType) {
                         case dmt_audio: {
-                            QString res;
-
                             if (is_uid)
                                 res = trackUrlFromId(refresh_page);
                             else
                                 res = trackUrlFromPath(refresh_page);
-
-                            return res % QStringLiteral("\r\n") % cookies();
                         break;}
 
                         case dmt_video: {
-                            QString res;
-
                             if (is_uid)
                                 res = videoUrlFromId(refresh_page);
                             else
                                 res = videoUrlFromPath(refresh_page);
-
-                            return res % QStringLiteral("\r\n") % cookies();
                         break;}
 
-                        default: return QString();
+                        default: ;
                     }
+
+                    return res.isEmpty() ? res : res % QStringLiteral("\r\n") % cookies();
                 }
 
                 QJsonValue openSet(const QUrlQuery & attrs) {
