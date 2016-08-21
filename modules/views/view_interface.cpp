@@ -248,7 +248,6 @@ void IView::onFetchNeeded(const QModelIndex & node) {
 
     if (has_scroll && !rejected) {
         int slider_pos = scroll_bar -> sliderPosition();
-        qDebug() << slider_pos << scroll_bar -> minimum() << scroll_bar -> maximum();
         rejected = !node.isValid() && slider_pos == scroll_bar -> minimum(); // block fetching if we on the top of scroll in root parent
 
         if (!rejected) { // if we not in root parent or not on the top of scroll
@@ -257,9 +256,6 @@ void IView::onFetchNeeded(const QModelIndex & node) {
             if (rejected) {
                 QModelIndex last_child_index = index(item -> lastChild());
                 QRect child_rect = visualRect(last_child_index);
-
-
-                qDebug() << view_rect << child_rect << child_rect.intersects(view_rect);
                 rejected = !child_rect.intersects(view_rect); // reject if last child of fetchable container not on the screen
             }
         }
