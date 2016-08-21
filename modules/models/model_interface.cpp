@@ -295,6 +295,9 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, const Da
     QHash<QString, IItem *> store; // need to move this on upper level
     parent -> accumulateUids(store);
 
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+
 //    int pos = parent -> playlistsAmount();
 //    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
@@ -361,12 +364,13 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const Dat
 
     for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++/*, pos++*/) {
         QJsonObject playlist = (*playlist_obj).toObject();
+        Playlist * folder;
 
         QString playlist_id = ISource::idToStr(playlist.value(Vk::tkn_id));
         QString title = playlist.value(Vk::tkn_title).toString();
 
         if (playlist.contains(tkn_loadable_cmd)) {
-            parent -> createLoadablePlaylist(
+            folder = parent -> createLoadablePlaylist(
                 playlist.value(tkn_loadable_cmd).toString(),
                 title,
                 playlist_id
@@ -375,7 +379,7 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const Dat
             QJsonArray playlist_items = playlist.value(Vk::tkn_items).toArray();
 
             if (playlist_items.size() > 0) {
-                Playlist * folder = parent -> createPlaylist(
+                folder = parent -> createPlaylist(
                     wType,
                     playlist_id,
                     title/*,
@@ -390,6 +394,9 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const Dat
                 items_amount += amount;
             }
         }
+
+        if (playlist.contains(tkn_more_cmd))
+            folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
     }
 
     return items_amount;
@@ -405,6 +412,9 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, const Da
     QList<IItem *> items;
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
+
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -466,12 +476,13 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const Dat
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject playlist = (*it).toObject();
+        Playlist * folder;
 
         QString playlist_id = playlist.value(Soundcloud::tkn_id).toString();
         QString title = playlist.value(Soundcloud::tkn_title).toString();
 
         if (playlist.contains(tkn_loadable_cmd)) {
-            parent -> createLoadablePlaylist(
+            folder = parent -> createLoadablePlaylist(
                 playlist.value(tkn_loadable_cmd).toString(),
                 title,
                 playlist_id
@@ -479,7 +490,7 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const Dat
         } else {
             QJsonArray playlist_items = playlist.value(Soundcloud::tkn_tracks).toArray();
             if (!playlist_items.isEmpty()) {
-                Playlist * folder = parent -> createPlaylist(wType, playlist_id, title);
+                folder = parent -> createPlaylist(wType, playlist_id, title);
 
                 int amount = proceedScList(
                     QJsonObject {{tkn_content, playlist_items}},
@@ -489,6 +500,9 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const Dat
                 items_amount += amount;
             }
         }
+
+        if (playlist.contains(tkn_more_cmd))
+            folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
     }
 
     return items_amount;
@@ -506,6 +520,9 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, const Da
 
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
+
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -568,6 +585,9 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, const Dat
                 items_amount += amount;
             }
 
+            if (playlist.contains(tkn_more_cmd))
+                folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
+
             folder -> setOwner(playlist.value(Od::tkn_owner).toString());
         }
     }
@@ -584,6 +604,9 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, cons
 
     DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
     int items_amount = 0;
+
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -627,6 +650,9 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, con
     if (collection.isEmpty()) return 0;
 
     int items_amount = 0;
+
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();

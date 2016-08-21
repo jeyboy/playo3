@@ -98,7 +98,7 @@ namespace Models {
 
             if (itm -> isLoadable()) return true;
 
-            if (itm -> isFetchable()) {
+            if (itm -> isFetchable() && !itm -> is(IItem::flag_in_proc)) {
                 itm -> setStates(IItem::flag_in_proc);
                 emit fetchNeeded(parent);
             }

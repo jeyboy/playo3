@@ -135,16 +135,16 @@ namespace Core {
 
                 inline QMap<QString, QString> setsList() {
                     return {
-                        {setTypeToStr(set_popular_tracks),      QString::number(set_popular_tracks)},
-                        {setTypeToStr(set_popular_artists),     QString::number(set_popular_artists)},
-                        {setTypeToStr(set_popular_tuners),      QString::number(set_popular_tuners)},
-                        {setTypeToStr(set_popular_collections), QString::number(set_popular_collections)},
-                        {setTypeToStr(set_popular_albums),      QString::number(set_popular_albums)},
-                        {setTypeToStr(set_listened),            QString::number(set_listened)},
-                        {setTypeToStr(set_downloaded),          QString::number(set_downloaded)},
+                        {setTypeToStr(set_popular_tracks),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_tracks))},
+                        {setTypeToStr(set_popular_artists),     QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_artists))},
+                        {setTypeToStr(set_popular_tuners),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_tuners))},
+                        {setTypeToStr(set_popular_collections), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_collections))},
+                        {setTypeToStr(set_popular_albums),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_albums))},
+                        {setTypeToStr(set_listened),            QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_listened))},
+                        {setTypeToStr(set_downloaded),          QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_downloaded))},
 
-                        {setTypeToStr(set_of_collections),      QString::number(set_of_collections)},
-                        {setTypeToStr(set_of_radio),            QString::number(set_of_radio)}
+                        {setTypeToStr(set_of_collections),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_of_collections))},
+                        {setTypeToStr(set_of_radio),            QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_of_radio))}
                     };
                 }
 
