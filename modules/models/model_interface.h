@@ -70,25 +70,30 @@ namespace Models {
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
-        void fetchMore(const QModelIndex & parent) {
+        void fetchMore(const QModelIndex & parent, bool in_background = true) {
             Playlist * playlist = item<Playlist>(parent);
 
             if (playlist -> hasMoreItems() && !playlist -> is(IItem::flag_in_proc)) {
                 emit moveInBackgroundProcess();
-                Func * func = new Func(
-                    this,
-                    SLOT(finishSetLoading(QJsonValue&, void*)),
-                    playlist
-                );
 
                 QString cmd = playlist -> isLoadable() ?  playlist -> loadableCmd() :  playlist -> fetchableCmd();
                 playlist -> setStates(IItem::flag_in_proc);
 
-                ThreadUtils::obj().run(
-                    (IModel *)this,
-                    &IModel::proceedLoadable,
-                    cmd, func
-                );
+                if (in_background) {
+                    Func * func = new Func(
+                        this,
+                        SLOT(finishSetLoading(const QJsonValue&, void*)),
+                        playlist
+                    );
+
+                    ThreadUtils::obj().run(
+                        (IModel *)this,
+                        &IModel::proceedLoadable,
+                        cmd, func
+                    );
+                }
+                else
+                    finishSetLoading(proceedLoadable(cmd), playlist);
             }
 
             QAbstractItemModel::fetchMore(parent);
@@ -196,7 +201,7 @@ namespace Models {
 
     protected slots:
         void finishingItemsAdding();
-        void finishSetLoading(QJsonValue&, void*);
+        void finishSetLoading(const QJsonValue&, void*);
 
     signals:
         void updateRemovingBlockation(bool isBlocked);

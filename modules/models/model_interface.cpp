@@ -1091,7 +1091,7 @@ void IModel::finishingItemsAdding() {
     delete res;
 }
 
-void IModel::finishSetLoading(QJsonValue & json, void * _playlist) {
+void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
     playlist -> setStates(IItem::flag_not_in_proc);

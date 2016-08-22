@@ -73,7 +73,7 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(mdl, SIGNAL(collapseNeeded(const QModelIndex &)), this, SLOT(collapse(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
     connect(mdl, SIGNAL(fetchNeeded(const QModelIndex &)), this, SLOT(onFetchNeeded(const QModelIndex &)));
-    connect(this -> verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
+//    connect(this -> verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
 
     setModel(mdl);
     emit registerSync(mdl, mdl -> syncMutex());
@@ -852,10 +852,26 @@ void IView::findExecutable(QModelIndex & curr) {
 
     expand(curr.parent());
 
-    if (direction & IModel::forward) {
+    if (direction & IModel::forward) { // need to block loadability and proc it manualy - background loading of items broke app
         while(true) {
-            if (model() -> hasChildren(curr))
-                expand(curr);
+            if (model() -> hasChildren(curr)) {
+                /////////// fetchable block logic ////////////
+                bool take_next = true;
+                QModelIndex temp = indexAbove(curr);
+                IItem * itm = mdl -> item(temp);
+                if (itm) {
+                    itm = itm -> parent();
+                    if (itm -> hasMoreItems()) {
+                        curr = temp;
+                        take_next = false;
+                        mdl -> fetchMore(index(itm), false);
+                    }
+                }
+
+                if (take_next)
+                ////////////////////////////////////////
+                    expand(curr);
+            }
 
             curr = indexBelow(curr);
 
