@@ -73,6 +73,7 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(mdl, SIGNAL(collapseNeeded(const QModelIndex &)), this, SLOT(collapse(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
     connect(mdl, SIGNAL(fetchNeeded(const QModelIndex &)), this, SLOT(onFetchNeeded(const QModelIndex &)));
+    connect(this -> verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
 
     setModel(mdl);
     emit registerSync(mdl, mdl -> syncMutex());
@@ -276,7 +277,13 @@ void IView::updateSelection(QModelIndex & node) {
     }
 }
 
-void IView::runItemCmd() { mdl -> fetchMore(currentIndex()); }
+void IView::runItemCmd() {
+    IItem * item = mdl -> item(currentIndex());
+    if (item -> isContainer())
+        mdl -> fetchMore(currentIndex());
+    else
+        mdl -> fetchMore(index(item -> parent()));
+}
 
 void IView::openLocation() {
     IItem * item = mdl -> item(currentIndex());
@@ -390,12 +397,11 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     menu.addAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), mdl, SLOT(refresh()));
     menu.addSeparator();
 
-    menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();
-
     QModelIndex ind = indexAt(event -> pos());
+    IItem * itm = mdl -> item(ind);
+
     if (ind.isValid()) {
-        IItem * itm = mdl -> item(ind);
         if (!itm -> isContainer()) itm = itm -> parent();
 
         if (itm && itm -> hasMoreItems()) {
@@ -406,6 +412,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         }
     }
 
+    menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();
 
     if (DataFactory::obj().playedIndex().isValid()) {
@@ -439,7 +446,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         if (!ind.data(IFULLPATH).toString().isEmpty())
             menu.addAction(QIcon(QStringLiteral(":/open")), QStringLiteral("Open location"), this, SLOT(openLocation()));
 
-        if (ind.data(IREMOTE).toBool()) {
+//        if (ind.data(IREMOTE).toBool()) {
             //    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
             //    connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refresh()));
             //    actions.append(openAct);
@@ -458,7 +465,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 //            sepAct = new QAction(this);
 //            sepAct -> setSeparator(true);
 //            actions.append(sepAct);
-        }
+//        }
 
         menu.addSeparator();
     }
@@ -476,7 +483,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
             );
             menu.addSeparator();
         }       
-
 
         if (Settings::obj().isCheckboxShow()) {
             menu.addSeparator();
@@ -500,6 +506,8 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         if (mdl -> playlistType() != dt_level) {
             menu.addSeparator();
 
+            if (itm -> parent())
+                menu.addAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse parent"), this, SLOT(collapseParent()));
             menu.addAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse all"), this, SLOT(collapseAll()));
             menu.addAction(QIcon(QStringLiteral(":/expand")), QStringLiteral("Expand all"), this, SLOT(expandAll()));
         }

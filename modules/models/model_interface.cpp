@@ -168,13 +168,13 @@ QModelIndex IModel::parent(const QModelIndex & index) const {
     if (!index.isValid())
         return QModelIndex();
 
-    IItem * childItem = item(index);
-    IItem * parentItem = childItem -> parent();
+    IItem * child_item = item(index);
+    IItem * parent_item = child_item -> parent();
 
-    if (parentItem == rootItem)
+    if (!parent_item || parent_item == rootItem)
         return QModelIndex();
 
-    return createIndex(parentItem -> row(), 0, parentItem);
+    return createIndex(parent_item -> row(), 0, parent_item);
 }
 
 bool IModel::removeColumns(int position, int columns, const QModelIndex &parent) {

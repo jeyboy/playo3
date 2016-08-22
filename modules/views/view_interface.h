@@ -90,6 +90,13 @@ namespace Views {
 
         void expandeAll();
         void collapseAll();
+        void collapseParent() {
+            IItem * item = mdl -> item(currentIndex());
+            IItem * itm_parent = item -> parent();
+
+            if (itm_parent)
+                collapse(index(itm_parent));
+        }
         inline void shuffle() { mdl -> shuffle(); }
         void onSpoilNeeded(const QModelIndex &);
         void onFetchNeeded(const QModelIndex &);
@@ -126,6 +133,10 @@ namespace Views {
         void markNewAsChecked();
         void markListenedAsChecked();
         void moveCheckedToNewTab(Playlist * root = 0);
+
+        void scrollValueChanged(int /*val*/)  {
+//            qDebug() << "SCROLL CHANGED" << val;
+        }
 
     protected:
         bool setData(QModelIndex ind, const QVariant & value, int role = ISTATE) { return mdl -> setData(ind, value, role); }
