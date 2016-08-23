@@ -397,7 +397,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     menu.addAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), mdl, SLOT(refresh()));
     menu.addSeparator();
 
-    menu.addSeparator();
     QModelIndex ind = indexAt(event -> pos());
     IItem * itm = mdl -> item(ind);
 
@@ -406,11 +405,12 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
         if (itm && itm -> hasMoreItems()) {
             menu.addAction(
-                QIcon(QStringLiteral(":/load_more")), QStringLiteral("Load more items"),
+                QIcon(QStringLiteral(":/more")), QStringLiteral("Load more items"),
                 this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
             );
         }
     }
+    menu.addSeparator();
 
     menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();

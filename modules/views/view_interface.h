@@ -134,9 +134,9 @@ namespace Views {
         void markListenedAsChecked();
         void moveCheckedToNewTab(Playlist * root = 0);
 
-        void scrollValueChanged(int /*val*/)  {
-//            qDebug() << "SCROLL CHANGED" << val;
-        }
+//        void scrollValueChanged(int /*val*/)  {
+////            qDebug() << "SCROLL CHANGED" << val;
+//        }
 
     protected:
         bool setData(QModelIndex ind, const QVariant & value, int role = ISTATE) { return mdl -> setData(ind, value, role); }
