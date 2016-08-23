@@ -1095,13 +1095,13 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
     playlist -> setStates(IItem::flag_not_in_proc);
-    playlist -> removeLoadability();
 
     IItem * temp_item = playlist -> child(0);
     int added = proceedBlocks(QJsonArray() << json.toObject(), playlist/*, media_type*/);
     emit moveOutBackgroundProcess();
 
     if (added > 0) {
+        playlist -> removeLoadability();
         if (temp_item -> dataType() == dt_dummy)
             temp_item -> removeYouself();
     } else {
