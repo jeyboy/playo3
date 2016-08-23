@@ -28,6 +28,7 @@ namespace Models {
     class IModel : public QAbstractItemModel {
         Q_OBJECT
 
+        bool block_fetching;
         QModelIndexList dndList;
         QFutureWatcher<DropData *> * addWatcher;
     public:
@@ -70,7 +71,8 @@ namespace Models {
         QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
         bool setHeaderData(int section, Qt::Orientation orientation, const QVariant & value, int role = Qt::EditRole);
 
-        void fetchMore(const QModelIndex & parent, bool in_background = true) {
+        void fetchMore(const QModelIndex & parent) { fetchMore(parent, true); }
+        void fetchMore(const QModelIndex & parent, bool in_background) {
             Playlist * playlist = item<Playlist>(parent);
 
             if (playlist -> hasMoreItems() && !playlist -> is(IItem::flag_in_proc)) {
@@ -99,11 +101,14 @@ namespace Models {
             QAbstractItemModel::fetchMore(parent);
         }
         bool canFetchMore(const QModelIndex & parent) const {
+            if (block_fetching) return false;
+
             IItem * itm = item(parent);
 
             if (itm -> isLoadable()) return true;
 
-            if (itm -> isFetchable() && !itm -> is(IItem::flag_in_proc)) {
+            //INFO: fetch only root items at this time
+            if (itm -> isFetchable() && itm == rootItem && !itm -> is(IItem::flag_in_proc)) {
                 itm -> setStates(IItem::flag_in_proc);
                 emit fetchNeeded(parent);
             }
@@ -164,6 +169,8 @@ namespace Models {
             return rootItem;
         }
         template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(index.isValid() ? item(index) : rootItem); }
+
+        void blockFetching(bool blocked = false) { block_fetching = blocked; }
 
         void shuffle();
         virtual inline QJsonObject toJson() { return rootItem -> toJson(); }

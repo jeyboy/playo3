@@ -22,7 +22,7 @@ void IView::registerParent(QWidget * newParent) {
 }
 
 IView::IView(IModel * newModel, QWidget * parent)
-    : QTreeView(parent), blockRepaint(false), blockDeletion(false), mdl(newModel), direction(IModel::forward) {
+    : QTreeView(parent), block_repaint(false), block_deletion(false), mdl(newModel), direction(IModel::forward) {
 
     connect(this, SIGNAL(registerSync(QAbstractItemModel*,QMutex*)), &DataFactory::obj(), SLOT(registerSync(QAbstractItemModel*,QMutex*)), Qt::DirectConnection);
     connect(this, SIGNAL(unregisterSync(QAbstractItemModel*)), &DataFactory::obj(), SLOT(unregisterSync(QAbstractItemModel*)), Qt::DirectConnection);
@@ -368,7 +368,7 @@ void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, co
 }
 
 void IView::paintEvent(QPaintEvent * event) {
-    if (!blockRepaint)
+    if (!block_repaint)
         QTreeView::paintEvent(event);
 }
 
@@ -673,7 +673,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
         //////
 //    }
 
-    blockRepaint = true; // list type sometimes trying redraw yourself in process :(
+    block_repaint = true; // list type sometimes trying redraw yourself in process :(
     QModelIndexList::Iterator eit = --index_list.end();
     total /= 100.0;
 
@@ -693,7 +693,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
             emit mdl -> setProgress(--temp / total);
         }
     }
-    blockRepaint = false;
+    block_repaint = false;
 
     if (inProcess)
         // in thread item selected in view, but not added to selected model :(
@@ -709,7 +709,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
 }
 
 void IView::removeSelectedItems(bool remove, int flags) {
-    if (blockDeletion) return;
+    if (block_deletion) return;
 
     QModelIndexList list = selectedIndexes();
     selectionModel() -> clearSelection();
@@ -850,6 +850,7 @@ void IView::findExecutable(QModelIndex & curr) {
     if (DataFactory::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
+    mdl -> blockFetching(true);
     expand(curr.parent());
 
     if (direction & IModel::forward) { // need to block loadability and proc it manualy - background loading of items broke app
@@ -861,28 +862,38 @@ void IView::findExecutable(QModelIndex & curr) {
                 IItem * itm = mdl -> item(temp);
                 if (itm) {
                     itm = itm -> parent();
-                    if (itm -> hasMoreItems()) {
+                    if (itm && itm -> hasMoreItems()) {
                         curr = temp;
                         take_next = false;
                         mdl -> fetchMore(index(itm), false);
                     }
                 }
 
-                if (take_next)
-                ////////////////////////////////////////
+                if (take_next) {
+                    ////////////////////////////////////////
+                    itm = mdl -> item(curr);
+                    if (itm && itm -> hasMoreItems())
+                        mdl -> fetchMore(curr, false);
                     expand(curr);
+                }
             }
 
             curr = indexBelow(curr);
 
-            if (!curr.isValid() || curr.data(IPLAYABLE).toBool())
+            if (!curr.isValid() || curr.data(IPLAYABLE).toBool()) {
+                mdl -> blockFetching(false);
                 return;
+            }
         }
     } else {
         QModelIndex temp = curr;
 
         while(true) {
             if (model() -> hasChildren(curr) && temp.parent() != curr) {
+                IItem * itm = mdl -> item(curr);
+                if (itm -> hasMoreItems())
+                    mdl -> fetchMore(curr, false);
+
                 expand(curr);
                 curr = temp;
             }
@@ -890,8 +901,10 @@ void IView::findExecutable(QModelIndex & curr) {
 
             curr = indexAbove(curr);
 
-            if (!curr.isValid() || curr.data(IPLAYABLE).toBool())
+            if (!curr.isValid() || curr.data(IPLAYABLE).toBool()) {
+                mdl -> blockFetching(false);
                 return;
+            }
         }
     }
 }

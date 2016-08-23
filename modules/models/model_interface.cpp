@@ -21,7 +21,7 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(const Params & settings, QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), addWatcher(0), sttngs(settings) {
+IModel::IModel(const Params & settings, QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), block_fetching(false), addWatcher(0), sttngs(settings) {
     sync = new QMutex(QMutex::NonRecursive);
     rootItem = hash ? new Playlist(hash, 0, hash -> take(JSON_TYPE_CHILDS)) : new Playlist();
     qDebug() << this << " " << rootItem -> itemsCountInBranch(); // REMOVE ME

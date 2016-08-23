@@ -36,8 +36,8 @@ namespace Views {
 
         TreeViewStyle * tree_style;
         ModelItemDelegate * item_delegate;
-        bool blockRepaint;
-        bool blockDeletion;
+        bool block_repaint;
+        bool block_deletion;
     public:
         inline void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
         void registerParent(QWidget * newParent);
@@ -105,7 +105,7 @@ namespace Views {
 //        void showMessage(QString);
 
     protected slots:
-        void updateRemovingBlockation(bool isBlocked) { blockDeletion = isBlocked; }
+        void updateRemovingBlockation(bool isBlocked) { block_deletion = isBlocked; }
         inline void onDoubleClick(const QModelIndex node) {
             if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
                 if (Settings::obj().isCheckboxShow()) {
