@@ -119,7 +119,6 @@ public:
                     packet_limiters[ind]++;
                     packet_requests.insertMulti(*url, ind);
                     orders.append(*url);
-//                    Core::Web::Manager::prepare() -> getFollowedAsync(u, Func(this, SLOT(pixmapDownloaded(Response*,void*))));
                 }
             }
         }

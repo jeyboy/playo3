@@ -257,7 +257,7 @@ namespace Core { // requests and response has memory leaks
                 if (!new_url.isEmpty()) {
                     source -> appendHeaders(new_url);
                     getFollowedAsync(new_url, func);
-                } else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(Response *, source), Q_ARG(void *, func.user_data));
+                } else QMetaObject::invokeMethod(func.obj, func.slot, Q_ARG(QIODevice *, source), Q_ARG(void *, func.user_data));
             }
 
             inline void pixmapRequestFinished() {
