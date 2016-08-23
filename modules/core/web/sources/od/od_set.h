@@ -3,11 +3,13 @@
 
 #include "od_collection.h"
 #include "od_tuner.h"
+#include "od_album.h"
+#include "od_artist.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Set : public Collection, public Tuner {
+            class Set : public Collection, public Tuner, public Album, public Artist {
             protected:
                 enum SetType {
                     set_popular_tracks = 1, set_popular_artists, set_popular_tuners, set_of_collections,
@@ -95,6 +97,8 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums
                             );
+
+                            prepareAlbums(response.content);
                             dmt_val = dmt_set;
                         break;}
 

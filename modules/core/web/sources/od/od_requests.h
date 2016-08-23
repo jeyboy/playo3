@@ -3,7 +3,6 @@
 
 #include "od_user.h"
 #include "od_group.h"
-#include "od_artist.h"
 #include "od_auth.h"
 #include "od_playlist.h"
 #include "od_set.h"
@@ -16,7 +15,7 @@
 namespace Core {
     namespace Web {
         namespace Od {
-            class Requests : public Sociable, public Artist, public User, public Auth, public Group,
+            class Requests : public Sociable, public User, public Auth, public Group,
                     public Playlist, public Set, public Track, public Video, public VideoPlaylist {
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }

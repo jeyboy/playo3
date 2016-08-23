@@ -383,8 +383,10 @@ BassPlayer::~BassPlayer() {
 QHash<QString, QVariant> BassPlayer::deviceList() {
     QHash<QString, QVariant> res;
 
+//    res.insert(QStringLiteral("System Default"), -1);
+
     BASS_DEVICEINFO info;
-    for (int a = 1; BASS_GetDeviceInfo(a, &info); a++)
+    for (int a = 1; BASS_GetDeviceInfo(a, &info); a++) // 0 - no sound
         if (info.flags & BASS_DEVICE_ENABLED)
             res.insert(QString(info.name), a);
 

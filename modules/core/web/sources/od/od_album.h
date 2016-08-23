@@ -8,7 +8,7 @@ namespace Core {
         namespace Od {
             class Album : public virtual Base {
             protected:
-                QJsonValue albumsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }
 
                 QJsonValue albumsSearch(const SearchLimit & limits) { // need to check
                     QueriableResponse response = pRequest(
@@ -22,6 +22,25 @@ namespace Core {
                     );
 
                     return prepareBlock(dmt_set, cmd_mtd_albums_search, response, limits);
+                }
+
+                void prepareAlbums(QJsonArray & albums) {
+                    QJsonArray res;
+                    for(QJsonArray::Iterator album = albums.begin(); album != albums.end(); album++) {
+                        QJsonObject album_obj = (*album).toObject();
+                        QString uid = idToStr(album_obj.value(tkn_id));
+
+                        album_obj.insert(
+                            tkn_loadable_cmd,
+                             Cmd::build(
+                                sourceType(), cmd_mtd_tracks_by_album,
+                                {{CMD_ID, uid}}
+                             ).toString()
+                        );
+                        res << album_obj;
+                    }
+
+                    albums = res;
                 }
             };
         }
