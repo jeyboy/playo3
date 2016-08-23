@@ -64,10 +64,16 @@ namespace Core {
         void openRelationTab();
         void openPackageTab();
     protected:
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content) {
-            return QJsonObject {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
+            QJsonObject res = QJsonObject {
                 {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()}
             };
+
+            if (params.size() > 0)
+                for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = params.begin(); it != params.end(); ++it)
+                    res.insert(it -> first, it -> second);
+
+            return res;
         }
         QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
             QJsonObject block;

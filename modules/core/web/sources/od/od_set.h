@@ -52,7 +52,7 @@ namespace Core {
                             dmt_val = dmt_audio;
                         break;}
 
-                        case set_popular_artists: { //TODO: not tested
+                        case set_popular_artists: {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
