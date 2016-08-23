@@ -18,7 +18,6 @@ namespace Core {
                 }
 
                 QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
-
                 QJsonValue artistsSearch(const SearchLimit & limits) { // need to check
                     QueriableResponse response = pRequest(
                         audioUrlStr(
@@ -31,6 +30,25 @@ namespace Core {
                     );
 
                     return prepareBlock(dmt_artist, cmd_mtd_artists_search, response, limits);
+                }
+
+                void prepareArtists(QJsonArray & artists) {
+                    QJsonArray res;
+                    for(QJsonArray::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                        QJsonObject artist_obj = (*artist).toObject();
+                        QString uid = idToStr(artist_obj.value(tkn_id));
+
+                        artist_obj.insert(
+                            tkn_loadable_cmd,
+                             Cmd::build(
+                                sourceType(), cmd_mtd_tracks_by_artist,
+                                {{CMD_ID, uid}}
+                             ).toString()
+                        );
+                        res << artist_obj;
+                    }
+
+                    artists = res;
                 }
             };
         }

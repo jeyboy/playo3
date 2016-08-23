@@ -61,10 +61,12 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_artists
                             );
-                            dmt_val = dmt_artist;
+
+                            prepareArtists(response.content);
+                            dmt_val = dmt_set;
                         break;}
 
-                        case set_popular_tuners: { //TODO: not tested
+                        case set_popular_tuners: {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
@@ -73,6 +75,8 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << QStringLiteral("tuners")
                             );
+
+                            prepareTuners(response.content);
                             dmt_val = dmt_set;
                         break;}
 
@@ -83,12 +87,12 @@ namespace Core {
                                     {{ QStringLiteral("locale"), QStringLiteral("ru") }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
-                                proc_json_extract, QStringList() << QStringLiteral("collections")
+                                proc_json_extract, QStringList() << tkn_collections
                             );
                             dmt_val = dmt_set;
                         break;}
 
-                        case set_popular_albums: { //TODO: not tested
+                        case set_popular_albums: {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,

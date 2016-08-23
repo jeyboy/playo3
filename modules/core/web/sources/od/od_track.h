@@ -98,7 +98,7 @@ namespace Core {
                                     { {QStringLiteral("artistId"), artist_id} }
                                 ),
                                 call_type_json, rules(offset, qMax(count, TRACKS_AMOUNT_LIMIT)), 0,
-                                proc_json_extract, QStringList() << tkn_artists
+                                proc_json_extract, QStringList() << tkn_tracks // similarArtists
                             );
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_artist, response, {{CMD_ID, artist_id}});
