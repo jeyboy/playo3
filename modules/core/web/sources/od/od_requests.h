@@ -395,7 +395,8 @@ namespace Core {
                     jsonToUsers(Friendable::linkables, res.value(tkn_friends).toArray());
 
                     clearGroups();
-                    jsonToGroups(Groupable::linkables, groupsByUser(userID()).toArray());
+                    QJsonObject groups_res = groupsByUser(userID()).toObject();
+                    jsonToGroups(Groupable::linkables, EXTRACT_ITEMS(groups_res));
 
                     return QJsonArray()
                         << prepareBlock(dmt_audio_set, res.value(tkn_playlists))

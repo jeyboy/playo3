@@ -41,7 +41,7 @@ namespace Core {
 
             source_type = parts[0].toInt();
             mtd = parts[1].toInt();
-            attrs = QUrlQuery(parts[2]);
+            attrs = QUrlQuery(parts.length() > 2 ? parts[2] : QString());
         }
 
         Cmd(const int source_type, const int & mtd, const QUrlQuery & attrs)

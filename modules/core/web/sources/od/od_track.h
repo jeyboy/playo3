@@ -251,6 +251,18 @@ namespace Core {
 
                     QJsonArray blocks;
 
+                    QJsonArray similar_artists = response.value(tkn_artists).toArray();
+                    if (!similar_artists.isEmpty()) {
+                        prepareArtists(similar_artists);
+                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, QStringLiteral("Artists")}});
+                    }
+
+                    QJsonArray albums = response.value(tkn_albums).toArray();
+                    if (!albums.isEmpty()) {
+                        prepareAlbums(albums);
+                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Albums")}});
+                    }
+
                     blocks << prepareBlock(
                         dmt_audio, response.value(tkn_tracks),
                         {{
@@ -259,18 +271,6 @@ namespace Core {
                             ).toString()
                         }}
                     );
-
-                    QJsonArray similar_artists = response.value(tkn_artists).toArray();
-                    if (!similar_artists.isEmpty()) {
-                        prepareArtists(similar_artists);
-                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, QStringLiteral("Similar Artists")}});
-                    }
-
-                    QJsonArray albums = response.value(tkn_albums).toArray();
-                    if (!albums.isEmpty()) {
-                        prepareAlbums(albums);
-                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Similar Albums")}});
-                    }
 
                     return blocks;
                 }
