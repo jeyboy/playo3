@@ -54,6 +54,25 @@ namespace Core {
                 inline QString audioSearchUrl(const QString & predicate) { return audioUrlStr(path_audio_search, {{ tkn_q, predicate }}); } // params : (q: predicate) and pagination attrs
 
 
+                void prepareCollections(QJsonArray & collections) {
+                    QJsonArray res;
+                    for(QJsonArray::Iterator collection = collections.begin(); collection != collections.end(); collection++) {
+                        QJsonObject collection_obj = (*collection).toObject();
+                        QString uid = idToStr(collection_obj.value(tkn_id));
+
+                        collection_obj.insert(
+                            tkn_loadable_cmd,
+                             Cmd::build(
+                                sourceType(), cmd_mtd_tracks_by_collection,
+                                {{CMD_ID, uid}}
+                             ).toString()
+                        );
+                        res << collection_obj;
+                    }
+
+                    collections = res;
+                }
+
                 void prepareAlbums(QJsonArray & albums) {
                     QJsonArray res;
                     for(QJsonArray::Iterator album = albums.begin(); album != albums.end(); album++) {

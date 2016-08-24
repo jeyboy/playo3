@@ -89,6 +89,8 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_collections
                             );
+
+                            prepareCollections(response.content);
                             dmt_val = dmt_set;
                         break;}
 
