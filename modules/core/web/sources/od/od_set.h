@@ -80,7 +80,7 @@ namespace Core {
                             dmt_val = dmt_set;
                         break;}
 
-                        case set_popular_collections: { //TODO: not tested
+                        case set_popular_collections: {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,

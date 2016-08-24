@@ -15,6 +15,7 @@ namespace Core {
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_collections
                     );
 
+                    prepareCollections(block_content);
                     return prepareBlock(dmt_audio_set, block_content);
                 }
             };
