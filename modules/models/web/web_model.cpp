@@ -68,6 +68,13 @@ void WebModel::refresh() {
                     );
                 return;}
 
+                case rec_user: {
+                    Od::Queries::obj().userRecommendationsAsync(
+//                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
                 default: {
 
                 /*return;*/}

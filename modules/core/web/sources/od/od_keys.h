@@ -41,6 +41,7 @@ namespace Core {
             extern const QString path_audio_playlists;
             extern const QString path_audio_to_playlist;
             extern const QString path_audio_del_from_playlist;
+            extern const QString path_audio_similar_by_playlist;
 
 
             extern const QString tkn_ids;

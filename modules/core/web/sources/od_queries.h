@@ -18,6 +18,10 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType sourceType() const { return dt_web_od; }
 
+                inline void userRecommendationsAsync(Func * func) {
+                    ThreadUtils::obj().run((Track *)this, &Track::userRecommendations, func);
+                }
+
                 void userInfoAsync(const QString & uid, Func * func) {
                     if (uid == userID())
                         ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, func);

@@ -68,6 +68,8 @@ QToolButton * ISource::initButton(QWidget * parent) {
     return button;
 }
 
+
+// TODO: update open tab for using icmd as params str
 void ISource::openTab() {
     if (connectUser()) {
         QString user_id = userID();

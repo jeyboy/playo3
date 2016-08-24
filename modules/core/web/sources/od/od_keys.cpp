@@ -36,6 +36,7 @@ namespace Core {
             extern const QString path_audio_playlists =             QStringLiteral("playlistsGet");
             extern const QString path_audio_to_playlist =           QStringLiteral("like");
             extern const QString path_audio_del_from_playlist =     QStringLiteral("dislike");
+            extern const QString path_audio_similar_by_playlist =   QStringLiteral("similarTracksForPlaylist");
 
 
             extern const QString tkn_ids =                          QStringLiteral("ids");

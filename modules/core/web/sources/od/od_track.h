@@ -133,7 +133,6 @@ namespace Core {
                     return blocks;
                 }
 
-                // return error : ProtocolInvalidOperationError
                 QJsonValue tracksByCollection(const QUrlQuery & args) {
                     return tracksByCollection(
                         args.queryItemValue(CMD_ID),
@@ -141,7 +140,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: not finished
+                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_collection,
@@ -184,7 +183,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //INFO: url is not worked
+                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_by_album_id,
@@ -204,7 +203,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: need to check
+                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             tkn_my,
@@ -224,7 +223,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) { //TODO: not finished
+                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(tkn_my, {{tkn_uid, user_id}}),
                         call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,
@@ -232,6 +231,48 @@ namespace Core {
                     );
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {{CMD_ID, user_id}});
+                }
+
+                QJsonValue userRecommendations(const QUrlQuery & /*args*/) {
+                    return userRecommendations(
+//                        args.queryItemValue(CMD_ID)
+//                        args.queryItemValue(CMD_OFFSET).toInt(),
+//                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue userRecommendations() {
+                    QJsonObject response = sRequest(
+                                audioUrlStr(
+                                    path_audio_similar_by_playlist,
+                                    { {tkn_count, 30} }
+                                ),
+                                call_type_json
+                            );
+
+                    QJsonArray blocks;
+
+                    blocks << prepareBlock(
+                        dmt_audio, response.value(tkn_tracks),
+                        {{
+                            tkn_more_cmd, Cmd::build(
+                              sourceType(), cmd_mtd_user_recommendations, {}
+                            ).toString()
+                        }}
+                    );
+
+                    QJsonArray similar_artists = response.value(tkn_artists).toArray();
+                    if (!similar_artists.isEmpty()) {
+                        prepareArtists(similar_artists);
+                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, QStringLiteral("Similar Artists")}});
+                    }
+
+                    QJsonArray albums = response.value(tkn_albums).toArray();
+                    if (!albums.isEmpty()) {
+                        prepareAlbums(albums);
+                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Similar Albums")}});
+                    }
+
+                    return blocks;
                 }
             };
         }

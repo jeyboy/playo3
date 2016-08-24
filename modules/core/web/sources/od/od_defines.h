@@ -42,9 +42,6 @@ namespace Core {
 
                 inline QString audioUrlStr(const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
                     return baseUrlStr(qst_site_audio, predicate, params);
-
-//                    return url_base_audio % predicate % tkn_coma_dot % genDefaultParams(qst_site).toString() %
-//                            (query.isEmpty() ? QString() : '?' % query.toString());
                 }
 
                 // info request per ids for items (track / album / artist)
