@@ -183,6 +183,22 @@ namespace Core {
                             result = !video.isEmpty();
                         break;}
 
+                        case proc_video2: {
+                            Html::Tag * video_box = doc.findFirst(".vp_video .vid-card_cnt");
+
+                            if ((result = !!video_box)) {
+                                QString options = video_box -> data(QStringLiteral("options"));
+                                QJsonObject opts_json = QJsonDocument::fromJson(options.toUtf8()).object();
+                                QString metadata =
+                                    opts_json.value(QStringLiteral("flashvars")).toObject()
+                                        .value(QStringLiteral("metadata")).toString();
+
+                                QJsonObject metadata_json = QJsonDocument::fromJson(metadata.toUtf8()).object();
+                                QJsonArray videos = metadata_json.value(QStringLiteral("videos")).toArray();
+                                arg -> append(videos);
+                            }
+                        break;}
+
                         default: ;
                     }
 
@@ -245,7 +261,10 @@ namespace Core {
                 }
 
                 inline Headers tknHeaders() {
-                    if (siteAdditionalToken().isEmpty()) setSiteAdditionalToken(Auth::grabAdditionalToken());
+                    if (siteAdditionalToken().isEmpty()) {
+                        initSession();
+                        setSiteAdditionalToken(Auth::grabAdditionalToken());
+                    }
 
                     return {{QStringLiteral("TKN"), siteAdditionalToken()}};
                 }
@@ -381,7 +400,7 @@ namespace Core {
                 QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
                     switch(item_media_type) {
                         case dmt_audio: return trackUrl(item_id);
-                        case dmt_video: return QString();
+                        case dmt_video: return videoUrl(item_id);
                         default:;
                     }
 

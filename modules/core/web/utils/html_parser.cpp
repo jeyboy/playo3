@@ -289,6 +289,7 @@ namespace Core {
                     while(true) {
                         if (device -> getChar(ch)) {
                             if (*ch > 0 && *ch < 32) continue; // skip not printable trash
+                            text.push_back(*ch);
 
                             switch (state) {
                                 case val:

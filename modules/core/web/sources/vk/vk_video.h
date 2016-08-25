@@ -36,7 +36,8 @@ namespace Core {
                         }
 
                         // INFO: take middle quality // need to add option in settings about preferable quality and take closest to chosen by user
-                        int quality_index = pathes.size() / 2;
+                        int size = pathes.size();
+                        int quality_index = size / 2 + size % 2;
                         QHash<QString, QString> variants = pathes[pathes.keys()[quality_index]];
 
                         if (variants.contains(cache_key))

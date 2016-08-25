@@ -77,7 +77,6 @@ namespace Core {
             extern const QString tkn_chunk;
             extern const QString tkn_jsessionid;
 
-            extern const QString tkn_dash;
             extern const QString tkn_full_name;
             extern const QString tkn_id;
             extern const QString tkn_owner;

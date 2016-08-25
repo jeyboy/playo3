@@ -42,9 +42,9 @@ namespace Core {
         extern const QString tkn_grab_album             = QStringLiteral("galbum");
         extern const QString tkn_grab_art_url           = QStringLiteral("gart");
 
-//        extern const QString tkn_grab_is_set            = QStringLiteral("gset");
-
         extern const QString tkn_skip_info              = QStringLiteral("gskip");
+        extern const QString tkn_dash                   = QStringLiteral(" - ");
+
         extern const QString val_def_extension          = QStringLiteral("mp3");
 
     //    extern const QString page_offset_key        = QStringLiteral("%1");

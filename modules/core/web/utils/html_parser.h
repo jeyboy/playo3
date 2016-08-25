@@ -268,6 +268,7 @@ namespace Core {
                     return name.contains(tag_xml, Qt::CaseInsensitive);
                 }
                 inline bool has(const char * predicate) const { return root -> has(predicate); }
+                inline bool hasStr(const QString & str) { return text.contains(str, Qt::CaseInsensitive); }
                 inline Set find(const Selector * selector, bool findFirst = false) const { return root -> children().find(selector, findFirst); }
                 inline Set find(const char * predicate) const {
                     Selector selector(predicate);
@@ -351,6 +352,7 @@ namespace Core {
                 Flags flags;
                 CharsetType charset;
                 bool charset_finded, using_default_charset;
+                QString text;
 
                 static QHash<QString, bool> solo;
             };

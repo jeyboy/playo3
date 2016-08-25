@@ -529,12 +529,12 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, const Da
             dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
 
         QString id = ISource::idToStr(itm.value(Od::tkn_id));
-        if (id.length() == 1 /*id is eql to 0*/ || ignoreListContainUid(id)) continue;
+        if ((id.length() == 1 && id[0] == '0') || ignoreListContainUid(id)) continue;
 
         QList<IItem *> items = store.values(id);
 
         if (items.isEmpty()) {
-            QString title = dm_type == dmt_audio ? QString(itm.value(Od::tkn_ensemble).toString() % Od::tkn_dash % itm.value(Od::tkn_name).toString()) : itm.value(Od::tkn_name).toString();
+            QString title = dm_type == dmt_audio ? QString(itm.value(Od::tkn_ensemble).toString() % tkn_dash % itm.value(Od::tkn_name).toString()) : itm.value(Od::tkn_name).toString();
 
             items_amount++;
             new IItem(parent, OD_ITEM_ATTRS(

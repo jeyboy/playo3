@@ -72,7 +72,6 @@ namespace Core {
             extern const QString tkn_chunk =                        QStringLiteral("chunk");
             extern const QString tkn_jsessionid =                   QStringLiteral("jsessionid=");
 
-            extern const QString tkn_dash =                         QStringLiteral(" - ");
             extern const QString tkn_full_name =                    QStringLiteral("fullName");
             extern const QString tkn_id =                           QStringLiteral("id");
             extern const QString tkn_owner =                        QStringLiteral("owner");

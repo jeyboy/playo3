@@ -71,7 +71,7 @@ namespace Core {
                     // st.vv_aux_page=1
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_group, QStringLiteral("video/%1").arg(vpl),
+                            qst_site_video, QStringLiteral("video/%1").arg(vpl),
                             {
                                 { QStringLiteral("cmd"), QStringLiteral("VideoVitrinaMain") },
                                 { QStringLiteral("st.cmd"), QStringLiteral("userMain") },

@@ -32,6 +32,22 @@ namespace Core {
                         return message == QStringLiteral("error.notloggedin");
                     }
 
+                    void initSession() {
+                        Manager::prepare() -> postFollowed(
+                            baseUrlStr(
+                                qst_site, QStringLiteral("push"),
+                                {
+                                    { QStringLiteral("cmd"), QStringLiteral("PeriodicManager") },
+                                    { QStringLiteral("sse"), QStringLiteral("true") },
+                                    { QStringLiteral("cpLCT"), 0 },
+                                    { QStringLiteral("tlb.act"), QStringLiteral("news") },
+                                    { QStringLiteral("blocks"), QStringLiteral("TD,MPC,NTF") },
+                                    { QStringLiteral("p_NLP"), 0 }
+                                }
+                            )
+                        );
+                    }
+
                     virtual Headers tknHeaders() = 0;
                     inline Headers initHeaders() { return {{USER_AGENT_HEADER_NAME, DEFAULT_AGENT}}; }
 
