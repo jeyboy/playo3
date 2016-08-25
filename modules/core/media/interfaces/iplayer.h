@@ -9,6 +9,7 @@
 
 #include "player_statuses.h"
 #include "modules/core/media/interfaces/imediainfo.h"
+#include "modules/core/web/utils/web_manager.h"
 
 #define VOLUME_MULTIPLIER 10000.0
 #define POSITION_MULTIPLIER 1000.0

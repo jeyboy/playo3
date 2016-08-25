@@ -48,11 +48,17 @@ namespace Core {
         }
     }
 
-    void DataFactory::restoreOrNext() { // need to prevent form loop
+    void DataFactory::restoreOrNext() { // need to prevent from loop
         if (!current_playlist) {
             qDebug() << "RESTORE: PLAYLIST IS UNDEFINED";
             return;
         }
+
+        if (++attempts > MAX_ATTEMPTS) {
+            attempts = 0;
+            proceedStalledState();
+        }
+
         if (!current_playlist -> restoreItem(current_item)) {
             qDebug() << "RESTORE: FAILED";
             proceedStalledState();

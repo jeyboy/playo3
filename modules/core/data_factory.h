@@ -11,7 +11,7 @@
 #include "modules/core/interfaces/iplaylistable.h"
 #include "modules/core/core_parts/item.h"
 
-#define MAX_ATTEMPTS 1
+#define MAX_ATTEMPTS 2
 
 namespace Core {
     class DataFactory : public QObject, public Singleton<DataFactory> {
