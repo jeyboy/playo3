@@ -20,6 +20,9 @@ namespace Core {
             if (limits.by_newest())
                 return newest(limits);
 
+            if (limits.by_albums())
+                return searchInAlbums(limits);
+
             if (limits.by_sets())
                 return searchInSets(limits);
 
@@ -47,6 +50,8 @@ namespace Core {
         virtual QJsonValue searchInLyrics(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonValue searchInSets(const SearchLimit & /*limits*/) { return QJsonArray(); }
+
+        virtual QJsonValue searchInAlbums(const SearchLimit & /*limits*/) { return QJsonArray(); }
 
         virtual QJsonValue newest(const SearchLimit & /*limits*/) { return QJsonArray(); }
 

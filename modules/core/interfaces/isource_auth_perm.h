@@ -40,34 +40,34 @@ namespace Core {
 
         ///////////////////////////// info flags ///////////////////////
 
-        sf_items_serachable                 = (quint64(1)) << 5, // search by item names
-        sf_sets_serachable                  = (quint64(1)) << 6, // search by sets
+        sf_users_serachable                 = (quint64(1)) << 5,
+        sf_groups_serachable                = (quint64(1)) << 6,
 
-        sf_users_serachable                 = (quint64(1)) << 7, // search by users
-        sf_groups_serachable                = (quint64(1)) << 8, // search by groups
+        sf_titles_serachable                = (quint64(1)) << 7,
+        sf_artists_serachable               = (quint64(1)) << 8,
+        sf_songs_serachable                 = (quint64(1)) << 9,
+        sf_sets_serachable                  = (quint64(1)) << 10,
+        sf_albums_serachable                = (quint64(1)) << 11,
 
-        sf_by_abc_serachable                = (quint64(1)) << 9,
-        sf_by_lyrics_serachable             = (quint64(1)) << 10,
-        sf_by_tags_serachable               = (quint64(1)) << 11,
-        sf_by_genres_serachable             = (quint64(1)) << 12,
-        sf_by_moods_serachable              = (quint64(1)) << 13,
+        sf_by_abc_serachable                = (quint64(1)) << 12,
+        sf_by_lyrics_serachable             = (quint64(1)) << 13,
+        sf_by_tags_serachable               = (quint64(1)) << 14,
+        sf_by_genres_serachable             = (quint64(1)) << 15,
+        sf_by_moods_serachable              = (quint64(1)) << 16,
 
-        sf_sociable_users                   = (quint64(1)) << 14, // user content
-        sf_sociable_groups                  = (quint64(1)) << 15, // user content
-        sf_shareable                        = (quint64(1)) << 16, // restore item by id
-        sf_packable                         = (quint64(1)) << 17, // has charts / tops / etc
-        sf_recomendable_by_item             = (quint64(1)) << 18, // give recomendations by item
-//        sf_recomendable_by_playlist         = (quint64(1)) << 19, // give recomendations by playlist
-        sf_recomendable_by_user             = (quint64(1)) << 20, // give recomendations by user
-        sf_newable                          = (quint64(1)) << 21, // has section with new items
-        sf_populable                        = (quint64(1)) << 22, // has section with popular items
-        sf_taggable                         = (quint64(1)) << 23, // has grouping by tags
-        sf_genreable                        = (quint64(1)) << 24, // has grouping by genres
-        sf_moodable                         = (quint64(1)) << 25, // has grouping by moods
-//        sf_streamable                       = (quint64(1)) << 26,
-//                             = (quint64(1)) << 27,
-//                             = (quint64(1)) << 28,
-//                             = (quint64(1)) << 29,
+        sf_sociable_users                   = (quint64(1)) << 17, // user content
+        sf_sociable_groups                  = (quint64(1)) << 18, // user content
+        sf_shareable                        = (quint64(1)) << 19, // restore item by id
+        sf_packable                         = (quint64(1)) << 20, // has charts / tops / etc
+        sf_recomendable_by_item             = (quint64(1)) << 21, // give recomendations by item
+//        sf_recomendable_by_playlist         = (quint64(1)) << 22, // give recomendations by playlist
+        sf_recomendable_by_user             = (quint64(1)) << 23, // give recomendations by user
+        sf_newable                          = (quint64(1)) << 24, // has section with new items
+        sf_populable                        = (quint64(1)) << 25, // has section with popular items
+        sf_taggable                         = (quint64(1)) << 26, // has grouping by tags
+        sf_genreable                        = (quint64(1)) << 27, // has grouping by genres
+        sf_moodable                         = (quint64(1)) << 28, // has grouping by moods
+//        sf_streamable                       = (quint64(1)) << 29,
 
 
         sf_content_lyrics_has               = (quint64(1)) << 30,

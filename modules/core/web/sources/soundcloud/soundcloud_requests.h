@@ -24,7 +24,7 @@ namespace Core {
                     return (SourceFlags)(
                         sf_auth_api_has | /*sf_auth_site_has |*/ sf_site_offline_credentials_req |
                         sf_content_audio_has |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
+                        sf_titles_serachable | sf_sets_serachable | sf_users_serachable |
                         sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
                         sf_recomendable_by_item | sf_newable | sf_taggable | sf_genreable |

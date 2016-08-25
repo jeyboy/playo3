@@ -40,6 +40,7 @@ namespace Controls {
         QRadioButton * byArtist;
         QRadioButton * bySongName;
         QRadioButton * bySet;
+        QRadioButton * byAlbum;
         QRadioButton * byLyric;
         QRadioButton * byAbc;
 

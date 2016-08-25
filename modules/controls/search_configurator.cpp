@@ -150,13 +150,13 @@ QWidget * SearchConfigurator::initLimitations() {
     byArtist = new QRadioButton(searchByGroup);
     byArtist -> setObjectName(QStringLiteral("byArtist"));
     byArtist -> setChecked(false);
-    byArtist -> setText(QApplication::translate("SearchDialog", "by artist if possible", 0));
+    byArtist -> setText(QApplication::translate("SearchDialog", "Artist", 0));
     gl1 -> addWidget(byArtist, 1, 0);
 
     bySongName = new QRadioButton(searchByGroup);
     bySongName -> setObjectName(QStringLiteral("bySong"));
     bySongName -> setChecked(false);
-    bySongName -> setText(QApplication::translate("SearchDialog", "by song title if possible", 0));
+    bySongName -> setText(QApplication::translate("SearchDialog", "Song", 0));
     gl1 -> addWidget(bySongName, 2, 0);
 
     byTag = new QRadioButton(searchByGroup);
@@ -168,6 +168,11 @@ QWidget * SearchConfigurator::initLimitations() {
     bySet -> setObjectName(QStringLiteral("bySet"));
     bySet -> setText(QApplication::translate("SearchDialog", "Set", 0));
     gl1 -> addWidget(bySet, 1, 1);
+
+    byAlbum = new QRadioButton(searchByGroup);
+    byAlbum -> setObjectName(QStringLiteral("byAlbum"));
+    byAlbum -> setText(QApplication::translate("SearchDialog", "Album", 0));
+    gl1 -> addWidget(byAlbum, 2, 1);
 
 
     byLyric = new QRadioButton(searchByGroup);
@@ -181,14 +186,12 @@ QWidget * SearchConfigurator::initLimitations() {
     gl1 -> addWidget(byAbc, 1, 2);
 
 
-
     QGroupBox * searchInGroup = new QGroupBox(limitationsAreaBody);
     searchInGroup -> setObjectName(QStringLiteral("searchInGroup"));
     searchInGroup -> setTitle(QApplication::translate("SearchDialog", "Search In", 0));
 
     l -> addWidget(searchInGroup, 1);
     QGridLayout * gl2 = new QGridLayout(searchInGroup);
-
 
 
     byNew = new QCheckBox(searchInGroup);
@@ -346,6 +349,8 @@ Core::SearchLimitLayers SearchConfigurator::params() {
         predicate_types = Core::sp_artist;
     else if (bySongName -> isChecked())
         predicate_types = Core::sp_song_name;
+    else if (byAlbum -> isChecked())
+        predicate_types = Core::sp_album;
     else if (bySet -> isChecked())
         predicate_types = Core::sp_sets;
     else if (byLyric -> isChecked())

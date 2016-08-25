@@ -154,7 +154,7 @@ namespace Core {
                     return (SourceFlags)(
                         /*sf_auth_api_has | */ sf_auth_site_has |
                         sf_content_audio_has | sf_content_video_has |
-                        sf_items_serachable |
+                        sf_titles_serachable |
                         sf_populable | sf_shareable | sf_packable |
                         sf_api_object_content_auth_only | sf_api_search_media_auth_only |
                         sf_site_object_content_auth_only

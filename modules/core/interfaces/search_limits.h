@@ -27,29 +27,24 @@
 namespace Core {
     enum SearchRequestType { sr_local, sr_inner, sr_remote };
 
-//    enum SearchContentType { // TODO: use DataMediaType
-//        sc_audio = 1,
-//        sc_video = 2,
-//        sc_all = sc_audio | sc_video
-//    };
     enum SearchPredicateType {
         sp_none = 0,
         sp_abc = 1,
         sp_title = 2,
         sp_artist = 4,
         sp_song_name = 8,
-        sp_tag = 16,
-        sp_owns = 32,
-        sp_originals = 64,
-        sp_mixes = 128,
-        sp_foreign = 256,
-        sp_cyrillic = 512,
-        sp_popular = 1024,
-        sp_relative = 2048,
-        sp_lyrics = 4096,
-        sp_sets = 8192,
-        sp_new = 16384
-//        sp_fresh = 32768
+        sp_album = 16,
+        sp_tag = 32,
+        sp_owns = 64,
+        sp_originals = 128,
+        sp_mixes = 256,
+        sp_foreign = 512,
+        sp_cyrillic = 1024,
+        sp_popular = 2048,
+        sp_relative = 4096,
+        sp_lyrics = 8192,
+        sp_sets = 16384,
+        sp_new = 32768
     };
 
     struct SearchLimitBase {
@@ -71,6 +66,7 @@ namespace Core {
         inline bool by_abc() const { return predicate_type & sp_abc; }
         inline bool by_lyrics() const { return predicate_type & sp_lyrics; }
         inline bool by_sets() const { return predicate_type & sp_sets; }
+        inline bool by_albums() const { return predicate_type & sp_album; }
         inline bool by_artists() const { return predicate_type & sp_artist; }
         inline bool by_titles() const { return predicate_type & sp_title; }
         inline bool by_songs_name() const { return predicate_type & sp_song_name; }
