@@ -172,7 +172,7 @@ public slots:
                                     Core::Web::Html::Set images = tag -> find(image_selector.toStdString().c_str());
                                     for(Core::Web::Html::Set::Iterator image_tag = images.begin(); image_tag != images.end(); image_tag++) {
 
-                                        QString src = (*image_tag) -> value("src");
+                                        QString src = (*image_tag) -> src();
                                         QString gallery_template = settings.attrs.value(FEED_SETTINGS_IMAGE_GALLERY_TEMPLATE).toString();
                                         bool ignore_src = !gallery_template.isEmpty();
 

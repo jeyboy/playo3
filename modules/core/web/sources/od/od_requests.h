@@ -8,7 +8,6 @@
 #include "od_set.h"
 #include "od_track.h"
 #include "od_video.h"
-#include "od_video_playlist.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
 
@@ -16,7 +15,7 @@ namespace Core {
     namespace Web {
         namespace Od {
             class Requests : public Sociable, public User, public Auth, public Group,
-                    public Playlist, public Set, public Track, public Video, public VideoPlaylist {
+                    public Playlist, public Set, public Track, public Video {
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
 
@@ -39,7 +38,7 @@ namespace Core {
                                 group_obj.insert(tkn_name, (*group) -> findFirst(".caption a") -> text());
                                 Html::Tag * img = (*group) -> findFirst(".section img");
                                 if (img) {
-                                    QString img_url = img -> value(QStringLiteral("src"));
+                                    QString img_url = img -> src();
 
                                     if (img_url.startsWith(QStringLiteral("//")))
                                         img_url = QStringLiteral("http:") % img_url;
@@ -69,7 +68,7 @@ namespace Core {
 
                                 Html::Tag * img = (*group) -> findFirst(".ucard-b_img img");
                                 if (img) {
-                                    QString img_url = img -> value(QStringLiteral("src"));
+                                    QString img_url = img -> src();
 
                                     if (img_url.startsWith(QStringLiteral("//")))
                                         img_url = QStringLiteral("http:") % img_url;
@@ -96,7 +95,7 @@ namespace Core {
                                 group_obj.insert(tkn_name, doc.findFirst(".mctc_name_tx") -> text());
                                 Html::Tag * img = doc.findFirst(".add-happening_poster_img");
                                 if (img) {
-                                    QString img_url = img -> value(QStringLiteral("src"));
+                                    QString img_url = img -> src();
 
                                     if (img_url.startsWith(QStringLiteral("//")))
                                         img_url = QStringLiteral("http:") % img_url;
@@ -123,7 +122,7 @@ namespace Core {
 
                                 Html::Tag * img = (*user) -> findFirst(".section img");
                                 if (img) {
-                                    QString img_url = img -> value(QStringLiteral("src"));
+                                    QString img_url = img -> src();
 
                                     if (img_url.startsWith(QStringLiteral("//")))
                                         img_url = QStringLiteral("http:") % img_url;
@@ -149,7 +148,7 @@ namespace Core {
                                 user_obj.insert(tkn_full_name, doc.findFirst(".mctc_name_tx") -> text());
                                 Html::Tag * img = doc.findFirst("#viewImageLinkId");
                                 if (img) {
-                                    QString img_url = img -> value(QStringLiteral("src"));
+                                    QString img_url = img -> src();
 
                                     if (img_url.startsWith(QStringLiteral("//")))
                                         img_url = QStringLiteral("http:") % img_url;
@@ -159,6 +158,29 @@ namespace Core {
 
                                 arg -> append(user_obj, true);
                             }
+                        break;}
+
+                        case proc_video1: {
+                            Html::Set video = doc.find(".vid-card");
+
+                            for(Html::Set::Iterator vid = video.begin(); vid != video.end(); vid++) {
+                                QJsonObject vid_obj;
+
+                                vid_obj.insert(tkn_id, (*vid) -> data(QStringLiteral("id")));
+
+                                QString img_url = (*vid) -> findFirst("img") -> src();
+                                if (img_url.startsWith(QStringLiteral("//")))
+                                    img_url = QStringLiteral("http:") % img_url;
+                                vid_obj.insert(tkn_art_url, img_url);
+
+                                vid_obj.insert(tkn_name, (*vid) -> findFirst(".vid-card_n") -> text());
+
+                                vid_obj.insert(tkn_duration, Duration::toSecs((*vid) -> findFirst(".vid-card_duration") -> text()));
+
+                                arg -> append(vid_obj, vid + 1 == video.end());
+                            }
+
+                            result = !video.isEmpty();
                         break;}
 
                         default: ;

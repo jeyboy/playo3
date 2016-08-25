@@ -31,6 +31,7 @@ namespace Core {
             extern const QString attr_name              = QStringLiteral("name");
             extern const QString attr_action            = QStringLiteral("action");
             extern const QString attr_href              = QStringLiteral("href");
+            extern const QString attr_src               = QStringLiteral("src");
             extern const QString attr_id                = QStringLiteral("id");
             extern const QString attr_class             = QStringLiteral("class");
             extern const QString attr_type              = QStringLiteral("type");

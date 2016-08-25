@@ -142,6 +142,23 @@ qint64 Duration::ISO8601StrtoMillis(const QString & str) {
     return summ;
 }
 
+qint64 Duration::toSecs(const QString & str) {
+    QStringList parts = str.split(':', QString::SkipEmptyParts);
+
+    int res = 0;
+
+    if (parts.size() > 2)
+        res += parts.takeFirst().toInt() * 3600;
+
+    if (parts.size() > 1)
+        res += parts.takeFirst().toInt() * 60;
+
+    if (parts.size() > 0)
+        res += parts.takeFirst().toInt();
+
+    return res;
+}
+
 qint64 Duration::toMillis(const QString & str) {
     QStringList parts = str.split(':', QString::SkipEmptyParts);
 

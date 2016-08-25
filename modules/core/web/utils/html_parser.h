@@ -108,7 +108,8 @@ namespace Core {
                 inline int level() const { return _level; }
                 inline QHash<QString, QString> attributes() const { return attrs; }
                 inline Set children() const { return tags; }
-                inline QString value(const QString & name = attr_default) {
+                inline QString data(const QString & name) const { return value(QStringLiteral("data-") % name); }
+                inline QString value(const QString & name = attr_default) const {
                     if (name != attr_default || (name == attr_default && _name != tag_select))
                         return attrs.value(name);
                     else {
@@ -120,6 +121,8 @@ namespace Core {
                     const Tag * text = (_name == tkn_text_block ? this : childTag(tkn_text_block));
                     return text ? text -> attrs.value(tkn_text_block) : QString();
                 }
+                inline QString src() const { return value(attr_src); }
+
 
                 QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false);
                 QString toText() const;

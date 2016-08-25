@@ -34,6 +34,7 @@ namespace Core {
             extern const QString attr_name;
             extern const QString attr_action;
             extern const QString attr_href;
+            extern const QString attr_src;
             extern const QString attr_id;
             extern const QString attr_class;
             extern const QString attr_type;

@@ -61,7 +61,7 @@ namespace Core {
                         for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                             QJsonObject track_obj;
 
-                            track_obj.insert(tkn_grab_url, (*track) -> value(QStringLiteral("data-src")));
+                            track_obj.insert(tkn_grab_url, (*track) -> data(QStringLiteral("src")));
 
                             QString artist = (*track) -> find(&artistSelector).text();
                             QString title = (*track) -> find(&titleSelector).text();

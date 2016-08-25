@@ -22,7 +22,7 @@ namespace Core {
                     inline QUrl authSidUrl() { return QUrl(baseUrlStr(qst_site, path_sid)); }
 
                     inline QString dataPageUrl() {
-                        return baseUrlStr(qst_site, QStringLiteral("search?st.mode=Movie&st.posted=set"));
+                        return baseUrlStr(qst_site, QString()/*QStringLiteral("search?st.mode=Movie&st.posted=set")*/);
                     }
 
                     inline bool hasError(const QJsonObject & obj) { return obj.contains(tkn_error); }

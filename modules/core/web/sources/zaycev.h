@@ -189,7 +189,7 @@ namespace Core {
 
                             set_obj.insert(
                                 tkn_grab_art_url,
-                                base_url.resolved(QUrl(link_tag -> findFirst("img") -> value(QStringLiteral("src")))).toString()
+                                base_url.resolved(QUrl(link_tag -> findFirst("img") -> src())).toString()
                             );
 
 //                            if (Info::extractNumber((*set) -> findFirst(&tracks_amount) -> text(), digit))

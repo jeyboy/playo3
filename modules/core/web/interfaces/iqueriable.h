@@ -23,6 +23,7 @@ namespace Core {
                 QString message;
                 qDebug() << "REQUEST" << arg -> request_url;
                 qDebug() << "HEADERS" << arg -> headers;
+                qDebug() << "COOKIES" << Manager::cookiesAsHeaderStr(arg -> request_url);
 
                 switch(arg -> call_type) {
                     case call_type_json: {

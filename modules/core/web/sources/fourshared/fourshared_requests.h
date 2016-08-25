@@ -98,7 +98,7 @@ namespace Core {
                                 Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
 
                                 if (img)
-                                    track_obj.insert(tkn_grab_art_url, img -> value(QStringLiteral("src")));
+                                    track_obj.insert(tkn_grab_art_url, img -> src());
 
                                 track_obj.insert(tkn_grab_url, url);
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
@@ -127,7 +127,7 @@ namespace Core {
                                 Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
 
                                 if (img)
-                                    track_obj.insert(tkn_grab_art_url, img -> value(QStringLiteral("src")));
+                                    track_obj.insert(tkn_grab_art_url, img -> src());
 
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
                                 track_obj.insert(tkn_skip_info, true);

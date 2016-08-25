@@ -28,6 +28,7 @@ public:
 
     static bool hasHours(qint64 millis);
     static qint64 ISO8601StrtoMillis(const QString & str);
+    static qint64 toSecs(const QString & str);
     static qint64 toMillis(const QString & str);
 };
 
