@@ -152,7 +152,7 @@ namespace Core {
 
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        /*sf_auth_api_has | */ sf_auth_site_has |
+                        /*sf_api_auth_has | */ sf_site_auth_has |
                         sf_content_audio_has | sf_content_video_has |
                         sf_titles_serachable |
                         sf_populable | sf_shareable | sf_packable |

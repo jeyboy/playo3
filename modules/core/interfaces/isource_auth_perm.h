@@ -28,19 +28,21 @@
 #define REJECT_FLAG(flags, flag) flags &= (~(flag))
 
 namespace Core {
-    enum SourceFlags : quint64 {
+    enum SourceFlags : quint64 { // refactor me
         sf_none = 0,
 
         sf_primary_source                   = 1,
 
-        sf_auth_api_has                     = (quint64(1)) << 1,
-        sf_auth_site_has                    = (quint64(1)) << 2,
+        sf_api_auth_has                     = (quint64(1)) << 1,
+        sf_site_auth_has                    = (quint64(1)) << 2,
         sf_site_offline_credentials_req     = (quint64(1)) << 3,
         sf_site_online_credentials_req      = (quint64(1)) << 4,
 
         ///////////////////////////// info flags ///////////////////////
 
+        sf_users_sociable                   = (quint64(1)) << 17, // have access to user content
         sf_users_serachable                 = (quint64(1)) << 5,
+        sf_groups_sociable                  = (quint64(1)) << 18, // have access to group content
         sf_groups_serachable                = (quint64(1)) << 6,
 
         sf_titles_serachable                = (quint64(1)) << 7,
@@ -55,8 +57,6 @@ namespace Core {
         sf_by_genres_serachable             = (quint64(1)) << 15,
         sf_by_moods_serachable              = (quint64(1)) << 16,
 
-        sf_sociable_users                   = (quint64(1)) << 17, // user content
-        sf_sociable_groups                  = (quint64(1)) << 18, // user content
         sf_shareable                        = (quint64(1)) << 19, // restore item by id
         sf_packable                         = (quint64(1)) << 20, // has charts / tops / etc
         sf_recomendable_by_item             = (quint64(1)) << 21, // give recomendations by item
@@ -191,24 +191,24 @@ namespace Core {
         inline bool isPrimary()             { return HAS_FLAG(defaultFlags(), sf_primary_source); }
         inline bool isSociable()            {
             SourceFlags flags = defaultFlags();
-            return HAS_FLAG(flags, sf_sociable_users) || HAS_FLAG(flags, sf_sociable_groups);
+            return HAS_FLAG(flags, sf_users_sociable) || HAS_FLAG(flags, sf_groups_sociable);
         }
 
-        inline bool isUsersSociable()       { return HAS_FLAG(defaultFlags(), sf_sociable_users); }
-        inline bool isGroupsSociable()       { return HAS_FLAG(defaultFlags(), sf_sociable_groups); }
+        inline bool isUsersSociable()       { return HAS_FLAG(defaultFlags(), sf_users_sociable); }
+        inline bool isGroupsSociable()       { return HAS_FLAG(defaultFlags(), sf_groups_sociable); }
 
         inline bool hasOfflineSociable()    {
             SourceFlags flags = defaultFlags();
-            return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_object_content_auth_only)) ||
-                    (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_object_content_auth_only));
+            return (HAS_FLAG(flags, sf_site_auth_has) && NOT_HAS_FLAG(flags, sf_site_object_content_auth_only)) ||
+                    (HAS_FLAG(flags, sf_api_auth_has) && NOT_HAS_FLAG(flags, sf_api_object_content_auth_only));
         }
         inline bool isShareable()           { return HAS_FLAG(defaultFlags(), sf_shareable); }
 
         inline bool hasPacks()              { return HAS_FLAG(defaultFlags(), sf_packable); }
         inline bool hasOfflinePacks()    {
             SourceFlags flags = defaultFlags();
-            return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_packs_auth_only)) ||
-                    (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_packs_auth_only));
+            return (HAS_FLAG(flags, sf_site_auth_has) && NOT_HAS_FLAG(flags, sf_site_packs_auth_only)) ||
+                    (HAS_FLAG(flags, sf_api_auth_has) && NOT_HAS_FLAG(flags, sf_api_packs_auth_only));
         }
 
         inline bool hasItemRecomendations() { return HAS_FLAG(defaultFlags(), sf_recomendable_by_item); }
@@ -220,8 +220,8 @@ namespace Core {
         inline bool hasMoods()              { return HAS_FLAG(defaultFlags(), sf_moodable); }
 
 
-        inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_auth_api_has); }
-        inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_auth_site_has); }
+        inline bool hasApiConnection()      { return HAS_FLAG(defaultFlags(), sf_api_auth_has); }
+        inline bool hasSiteConnection()     { return HAS_FLAG(defaultFlags(), sf_site_auth_has); }
 
         inline bool requireOfflineCredentials()
                                             { return HAS_FLAG(defaultFlags(), sf_site_offline_credentials_req); }
