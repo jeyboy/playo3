@@ -20,17 +20,20 @@ namespace Core {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
-                        sf_primary_source |
-                        sf_api_auth_has | sf_site_auth_has |
-                        sf_titles_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
-                        sf_users_sociable | sf_groups_sociable | sf_shareable | sf_packable |
-                        sf_recomendable_by_item | sf_recomendable_by_user |
-                        /*sf_newable |*/ sf_populable |
+                        sf_is_primary | sf_api_has | sf_site_has | sf_content_shareable |
+                        sf_users_sociable | sf_users_serachable | sf_groups_sociable | sf_groups_serachable |
+                        sf_content_tracks_search_by_title | sf_content_section_packs |
+                        sf_content_track_recomendable | sf_user_recomendable |
+                        /*sf_content_section_new |*/ sf_content_section_popular |
 
-                        sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
-                        sf_content_photo_has | sf_content_news_has |
+                        sf_content_lyrics_has | sf_content_tracks_has | sf_content_videos_has |
+                        sf_content_photo_has | sf_content_section_feeds |
+                    );
+                }
 
-                        sf_auth_mandatory | sf_prefer_site_object_content
+                inline SourceFlagControls defaultControls() {
+                    return (SourceFlagControls)(
+                        sfc_auth_mandatory | sfc_site_objects_prefer
                     );
                 }
 
