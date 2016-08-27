@@ -31,6 +31,8 @@ namespace Core {
     class ISourceAuthPerm : public QObject {
         Q_OBJECT
     protected:
+        QMap<SourceFlags, bool> flags;
+
         virtual QToolButton * initButton(QWidget * parent = 0) = 0;
 
         inline void setApiExpiration(const QString & expiration)                { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
@@ -73,9 +75,6 @@ namespace Core {
     public:
         ISourceAuthPerm() : button(0), menu(0) {}
         virtual ~ISourceAuthPerm() {}
-
-        virtual inline SourceFlags defaultFlags() { return sf_none; }
-        virtual inline SourceFlagControls defaultControls() { return sfc_none; }
 
         QString userID(const PermitRequest & req_perm = pr_object_content) {
             Permissions perm = permissions(req_perm);
