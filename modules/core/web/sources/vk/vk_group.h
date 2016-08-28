@@ -20,7 +20,7 @@ namespace Core {
                     return groupsByIdOrPerma(ids.join(QStringLiteral(",")));
                 }
                 QJsonValue groupsByIdOrPerma(const QString & id, int offset = 0, int count = 100) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_group_search_by_id);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -57,7 +57,7 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsByName(const QString & name, int offset = 0, int count = 100) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_group_search_by_title);
                     QueriableResponse response;
 
                     switch(perm) {

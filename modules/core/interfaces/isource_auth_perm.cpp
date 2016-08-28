@@ -2,61 +2,63 @@
 
 using namespace Core;
 
-Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
-    SourceFlags api_flag, site_flag, site_prefer;
+//SourcePerms ISourceAuthPerm::permissions(const SourceFlags & req_flags) {
 
-    switch(req_perm) {
-        case pr_search_media: {
-            api_flag = sf_api_search_media_auth_only;
-            site_flag = sf_site_search_media_auth_only;
-            site_prefer = sf_prefer_site_search_media;
-        break;}
-        case pr_media_content: {
-            api_flag = sf_api_media_content_auth_only;
-            site_flag = sf_site_media_content_auth_only;
-            site_prefer = sf_prefer_site_media_content;
-        break;}
 
-        case pr_search_objects: {
-            api_flag = sf_api_search_objects_auth_only;
-            site_flag = sf_site_search_objects_auth_only;
-            site_prefer = sf_prefer_site_search_objects;
-        break;}
-        case pr_object_content: {
-            api_flag = sf_api_object_content_auth_only;
-            site_flag = sf_site_object_content_auth_only;
-            site_prefer = sf_prefer_site_object_content;
-        break;}
-//        case pr_feed: {
-//            api_flag = sf_api_feeds_auth_only;
-//            site_flag = sf_site_feeds_auth_only;
-//            site_prefer = sf_prefer_site_feeds;
-//        break;}
-        case pr_recommendations: {
-            api_flag = sf_api_recomendations_auth_only;
-            site_flag = sf_site_recomendations_auth_only;
-            site_prefer = sf_prefer_site_recomendations;
-        break;}
-        default: return perm_none;
-    }
+////    SourceFlags api_flag, site_flag, site_prefer;
 
-    SourceFlags flags = defaultFlags();
-    bool api_flag_permit = HAS_FLAG(flags, api_flag);
-    bool site_flag_permit = HAS_FLAG(flags, site_flag);
+////    switch(req_perm) {
+////        case pr_search_media: {
+////            api_flag = sf_api_search_media_auth_only;
+////            site_flag = sf_site_search_media_auth_only;
+////            site_prefer = sf_prefer_site_search_media;
+////        break;}
+////        case pr_media_content: {
+////            api_flag = sf_api_media_content_auth_only;
+////            site_flag = sf_site_media_content_auth_only;
+////            site_prefer = sf_prefer_site_media_content;
+////        break;}
 
-    Permissions res = perm_none;
+////        case pr_search_objects: {
+////            api_flag = sf_api_search_objects_auth_only;
+////            site_flag = sf_site_search_objects_auth_only;
+////            site_prefer = sf_prefer_site_search_objects;
+////        break;}
+////        case pr_object_content: {
+////            api_flag = sf_api_object_content_auth_only;
+////            site_flag = sf_site_object_content_auth_only;
+////            site_prefer = sf_prefer_site_object_content;
+////        break;}
+//////        case pr_feed: {
+//////            api_flag = sf_api_feeds_auth_only;
+//////            site_flag = sf_site_feeds_auth_only;
+//////            site_prefer = sf_prefer_site_feeds;
+//////        break;}
+////        case pr_recommendations: {
+////            api_flag = sf_api_recomendations_auth_only;
+////            site_flag = sf_site_recomendations_auth_only;
+////            site_prefer = sf_prefer_site_recomendations;
+////        break;}
+////        default: return perm_none;
+////    }
 
-    // if respondable to api and did not has limitation by auth or has limitation and we are connected
-    if (HAS_FLAG(flags, sf_api_auth_has) && (!api_flag_permit || api_flag_permit == apiConnected()))
-        res = perm_api;
+////    SourceFlags flags = defaultFlags();
+////    bool api_flag_permit = HAS_FLAG(flags, api_flag);
+////    bool site_flag_permit = HAS_FLAG(flags, site_flag);
 
-    if (HAS_FLAG(flags, sf_site_auth_has) && (!site_flag_permit || site_flag_permit == siteConnected())) {
-        if (!res || (res > 0 && HAS_FLAG(flags, site_prefer)))
-            res = perm_site;
-    }
+////    Permissions res = perm_none;
 
-    return res;
-}
+////    // if respondable to api and did not has limitation by auth or has limitation and we are connected
+////    if (HAS_FLAG(flags, sf_api_auth_has) && (!api_flag_permit || api_flag_permit == apiConnected()))
+////        res = perm_api;
+
+////    if (HAS_FLAG(flags, sf_site_auth_has) && (!site_flag_permit || site_flag_permit == siteConnected())) {
+////        if (!res || (res > 0 && HAS_FLAG(flags, site_prefer)))
+////            res = perm_site;
+////    }
+
+////    return res;
+//}
 
 bool ISourceAuthPerm::connectUser() {
     bool res = true;

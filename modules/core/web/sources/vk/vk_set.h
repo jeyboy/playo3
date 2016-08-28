@@ -18,7 +18,7 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(pr_media_content);
                     QJsonArray block_content;
                     DataMediaType dmt_val = dmt_unknow;
 

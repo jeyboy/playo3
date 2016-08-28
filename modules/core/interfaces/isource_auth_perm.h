@@ -21,18 +21,10 @@
 #define SOURCE_SITE_ADDITIONAL_TOKEN_JSON QStringLiteral("_sat")
 #define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
 
-
-#define NOT_HAS_FLAG(flags, flag) (flags & flag) != flag
-#define HAS_FLAG(flags, flag) (flags & flag) == flag
-#define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag)
-#define REJECT_FLAG(flags, flag) flags &= (~(flag))
-
 namespace Core {
     class ISourceAuthPerm : public QObject {
         Q_OBJECT
     protected:
-        QMap<SourceFlags, bool> flags;
-
         virtual QToolButton * initButton(QWidget * parent = 0) = 0;
 
         inline void setApiExpiration(const QString & expiration)                { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
@@ -70,61 +62,104 @@ namespace Core {
         QToolButton * button;
         QMenu * menu;
 
+        QMap<SourceFlags, SourcePerms> flags;
         QVariantHash attrs;
         QString error;
     public:
-        ISourceAuthPerm() : button(0), menu(0) {}
+        ISourceAuthPerm() : button(0), menu(0) { }
         virtual ~ISourceAuthPerm() {}
 
-        QString userID(const PermitRequest & req_perm = pr_object_content) {
-            Permissions perm = permissions(req_perm);
-            return perm == perm_site ? siteUserID() : apiUserID();
+        QString userID() {
+            QString user_id = siteUserID();
+            return user_id.isEmpty() ? user_id : apiUserID();
         }
 
-        bool respondableTo(const PermitRequest & req_perm = pr_search_media) { return permissions(req_perm) > 0; }
-        Permissions permissions(const PermitRequest & req_perm = pr_search_media);
+        bool respondableTo(const SourceFlags & req_flags) { return IS_AUTH_EQ_FLAG(flags, req_flags, siteConnected(), apiConnected()); }
+        SourcePerms permissions(const SourceFlags & req_flag) {
+            SourcePerms perm = flags.value(req_flag);
 
-        inline bool isPrimary()             { return HAS_FLAG(defaultFlags(), sf_is_primary); }
-        inline bool isSociable()            {
-            SourceFlags flags = defaultFlags();
-            return HAS_FLAG(flags, sf_users_sociable) || HAS_FLAG(flags, sf_groups_sociable);
+            if (HAS_FLAG(perm, perm_prefer_site)) {
+                site_perms:
+                    if (HAS_FLAG(perm, perm_site)) return perm_site;
+                    if (HAS_FLAG(perm, perm_site_auth_only) == siteConnected()) return perm_site;
+            } else {
+                if (HAS_FLAG(perm, perm_api)) return perm_api;
+                if (HAS_FLAG(perm, perm_api_auth_only) == apiConnected()) return perm_api;
+
+                goto site_perms;
+            }
+
+            return perm_none;
         }
 
-        inline bool isUsersSociable()       { return HAS_FLAG(defaultFlags(), sf_users_sociable); }
-        inline bool isGroupsSociable()       { return HAS_FLAG(defaultFlags(), sf_groups_sociable); }
+        inline bool isPrimary()             { return flags.contains(sf_is_primary); }
+        inline bool isSociable()            { return isUsersSociable() || isGroupsSociable(); }
+        inline bool isUsersSociable()       { return flags.contains(sf_users_sociable); }
+        inline bool isGroupsSociable()      { return flags.contains(sf_groups_sociable); }
 
-        inline bool hasOfflineSociable()    {
-            SourceFlags flags = defaultFlags();
-            SourceFlagControls controls = defaultControls();
-            return (HAS_FLAG(flags, sf_site_has) && NOT_HAS_FLAG(controls, sfc_site_objects_auth)) ||
-                    (HAS_FLAG(flags, sf_api_has) && NOT_HAS_FLAG(controls, sfc_api_objects_auth));
+        inline bool hasOfflineSociable()    { return IS_OFFLINE_FLAG(flags, sf_users_sociable) || IS_OFFLINE_FLAG(flags, sf_groups_sociable); }
+        inline bool isShareable()           { return flags.contains(sf_is_content_shareable); }
+        inline bool hasPacks()              {
+            bool api_auth = apiConnected();
+            bool site_auth = siteConnected();
+
+            bool has_packs =
+                    IS_AUTH_EQ_FLAG(flags, sf_new_tracks, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_popular_tracks, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_tracks_by_genre, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_tracks_by_mood, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_tracks_by_tag, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_tracks_by_artist, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_tracks_by_album, site_auth, api_auth) ||
+
+                    IS_AUTH_EQ_FLAG(flags, sf_new_videos, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_popular_videos, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_videos_by_genre, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_videos_by_mood, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_videos_by_tag, site_auth, api_auth)
+                    ;
+
+            return has_packs;
         }
-        inline bool isShareable()           { return HAS_FLAG(defaultFlags(), sf_content_shareable); }
-        inline bool hasPacks()              { return HAS_FLAG(defaultFlags(), sf_content_section_packs); }
-        inline bool hasOfflinePacks()    {
-            SourceFlags flags = defaultFlags();
-            SourceFlagControls controls = defaultControls();
-            return (HAS_FLAG(flags, sf_site_has) && NOT_HAS_FLAG(controls, sfc_site_section_packs_auth)) ||
-                    (HAS_FLAG(flags, sf_api_has) && NOT_HAS_FLAG(controls, sfc_api_section_packs_auth));
+//        inline bool hasOfflinePacks()    {
+//            SourceFlags flags = defaultFlags();
+//            SourceFlagControls controls = defaultControls();
+//            return (HAS_FLAG(flags, sf_site_has) && NOT_HAS_FLAG(controls, sfc_site_section_packs_auth)) ||
+//                    (HAS_FLAG(flags, sf_api_has) && NOT_HAS_FLAG(controls, sfc_api_section_packs_auth));
+//        }
+
+        inline bool hasTrackRecomendations()    {
+            bool api_auth = apiConnected();
+            bool site_auth = siteConnected();
+
+            return IS_AUTH_EQ_FLAG(flags, sf_tracks_recs_by_track_id, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_tracks_recs_by_tracks_ids, site_auth, api_auth);
         }
+        inline bool hasVideoRecomendations()    {
+            bool api_auth = apiConnected();
+            bool site_auth = siteConnected();
 
-        inline bool hasTrackRecomendations()    { return HAS_FLAG(defaultFlags(), sf_content_track_recomendable); }
-        inline bool hasVideoRecomendations()    { return HAS_FLAG(defaultFlags(), sf_content_videos_recomendable); }
-        inline bool hasSetRecomendations()      { return HAS_FLAG(defaultFlags(), sf_content_set_recomendable); }
-        inline bool hasUserRecomendations()     { return HAS_FLAG(defaultFlags(), sf_user_recomendable); }
+            return IS_AUTH_EQ_FLAG(flags, sf_videos_recs_by_video_id, site_auth, api_auth) ||
+                    IS_AUTH_EQ_FLAG(flags, sf_videos_recs_by_videos_ids, site_auth, api_auth);
+        }
+        inline bool hasTracksSetRecomendations(){ return respondableTo(sf_tracks_recs_by_set_id); }
+        inline bool hasVideosSetRecomendations(){ return respondableTo(sf_videos_recs_by_set_id); }
 
-        inline bool hasNewItemsBlock()          { return HAS_FLAG(defaultFlags(), sf_content_section_new); }
-        inline bool hasPopularItemsBlock()      { return HAS_FLAG(defaultFlags(), sf_content_section_popular); }
+        inline bool hasOwnerTracksRecomendations()     { return respondableTo(sf_owner_tracks_recs); }
+        inline bool hasOnwerVideosRecomendations()     { return respondableTo(sf_owner_videos_recs); }
+
+//        inline bool hasNewItemsBlock()          { return HAS_FLAG(defaultFlags(), sf_content_section_new); }
+//        inline bool hasPopularItemsBlock()      { return HAS_FLAG(defaultFlags(), sf_content_section_popular); }
 //        inline bool hasGenres()             { return HAS_FLAG(defaultFlags(), sf_genreable); }
 //        inline bool hasTags()               { return HAS_FLAG(defaultFlags(), sf_taggable); }
 //        inline bool hasMoods()              { return HAS_FLAG(defaultFlags(), sf_moodable); }
 
 
-        inline bool hasApiConnection()          { return HAS_FLAG(defaultFlags(), sf_api_has); }
-        inline bool hasSiteConnection()         { return HAS_FLAG(defaultFlags(), sf_site_has); }
+        inline bool hasApiConnection()          { return HAS_FLAG(flags.value(sf_endpoint), perm_api); }
+        inline bool hasSiteConnection()         { return HAS_FLAG(flags.value(sf_endpoint), perm_site); }
 
-        inline bool requireOfflineCredentials() { return HAS_FLAG(defaultFlags(), sf_site_offline_credentials_req); }
-        inline bool requireOnlineCredentials()  { return HAS_FLAG(defaultFlags(), sf_site_online_credentials_req); }
+        inline bool requireOfflineCredentials() { return HAS_FLAG(flags.value(sf_endpoint), perm_offline_credentials_req); }
+        inline bool requireOnlineCredentials()  { return HAS_FLAG(flags.value(sf_endpoint), perm_online_credentials_req); }
 
 
         inline bool isConnectable()             { return hasApiConnection() || hasSiteConnection(); }

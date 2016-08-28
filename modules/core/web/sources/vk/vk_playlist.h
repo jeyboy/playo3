@@ -17,7 +17,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0, int count = 10) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_user_track_sets);
                     QueriableResponse response;
 
                     switch(perm) {
