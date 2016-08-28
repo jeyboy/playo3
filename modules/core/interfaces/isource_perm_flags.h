@@ -86,12 +86,6 @@ namespace Core {
 
         //////////// combinations //////////////////////////
 
-//        sf_api_auth_only                    = sf_api | sf_auth_only,
-//        sf_site_auth_only                   = sf_site | sf_auth_only,
-
-//        sf_site_offline_credentials_req     = sf_site | sf_offline_credentials_req,
-//        sf_site_online_credentials_req      = sf_site | sf_online_credentials_req,
-
         sf_track_sets                       = sf_set | sf_track,
         sf_video_sets                       = sf_set | sf_video,
         sf_feeds                            = sf_set | sf_feed,
@@ -103,6 +97,8 @@ namespace Core {
 
         sf_new_tracks                       = sf_track | sf_section_new,
         sf_popular_tracks                   = sf_track | sf_section_popular,
+        sf_tracks_by_id                     = sf_track | sf_by_id,
+        sf_tracks_by_title                  = sf_track | sf_by_title,
         sf_tracks_by_genre                  = sf_track | sf_by_genre,
         sf_tracks_by_mood                   = sf_track | sf_by_mood,
         sf_tracks_by_tag                    = sf_track | sf_by_tag,
@@ -118,6 +114,8 @@ namespace Core {
         sf_new_lyrics                       = sf_lyric | sf_section_new,
         sf_popular_lyrics                   = sf_lyric | sf_section_popular,
         sf_lyrics_search_by_title           = sf_lyric | sf_search | sf_by_title, // rule including search by text part
+        sf_lyrics_search_by_track           = sf_lyric | sf_search | sf_track, // rule including search by track id
+        sf_lyrics_search_by_video           = sf_lyric | sf_search | sf_video, // rule including search by video id
 
         sf_tracks_recs_by_track_id          = sf_track | sf_by_id | sf_recommendation, // tracks recs by one track
         sf_tracks_recs_by_tracks_ids        = sf_track_sets | sf_tracks_recs_by_track_id, // recs by a bunch of tracks
@@ -159,9 +157,9 @@ namespace Core {
         sf_group_track_albums               = sf_group_tracks | sf_album,
         sf_group_photo_albums               = sf_group_photos | sf_album,
 
-        sf_owner_tracks_recs                = sf_user_tracks | sf_by_id | sf_recommendation, // tracks recs for user by id
+        sf_owner_tracks_recs                = sf_user_tracks | sf_by_id | sf_recommendation, // tracks recs for user or group by id
         sf_my_user_tracks_recs              = sf_my | sf_owner_tracks_recs, // tracks recs only for current user
-        sf_owner_videos_recs                = sf_user_videos | sf_by_id | sf_recommendation, // videos recs for user by id
+        sf_owner_videos_recs                = sf_user_videos | sf_by_id | sf_recommendation, // videos recs for user or group by id
         sf_my_user_videos_recs              = sf_my | sf_owner_videos_recs, // videos recs only for current user
     };
 

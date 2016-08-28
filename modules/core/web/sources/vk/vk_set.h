@@ -18,17 +18,18 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
-                    SourcePerms perm = permissions(pr_media_content);
                     QJsonArray block_content;
                     DataMediaType dmt_val = dmt_unknow;
 
-                    switch(perm) {
-                        case perm_site:
-                        case perm_api: {
-                            switch(set_type) {
-                                case set_popular_tracks: {
-                                    int genre_id = -1; //limits.genre; //genres.toInt(attrs);
+                    switch(set_type) {
+                        case set_popular_tracks: {
+                            SourcePerms perm = permissions(sf_popular_tracks);
 
+                            int genre_id = -1; //limits.genre; //genres.toInt(attrs);
+
+                            switch(perm) {
+                                case perm_site:
+                                case perm_api: {
                                     block_content = saRequest(
                                         baseUrlStr(
                                             qst_api, tkn_execute,
@@ -48,14 +49,22 @@ namespace Core {
                                         IQUERY_DEF_FIELDS << block_items_audio
                                     );
                                 break;}
-
-                                case set_popular_video: {
-
-                                break;}
+                                default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
                             }
-                        }
+                        break;}
 
-                        default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
+                        case set_popular_video: {
+                            SourcePerms perm = permissions(sf_popular_videos);
+
+                            switch(perm) {
+                                case perm_site:
+                                case perm_api: {
+
+                                }
+
+                                default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
+                            }
+                        break;}
                     }
 
                     return prepareBlock(dmt_val, block_content/*cmd_mtd_groups_by_id, response, {{CMD_ID, group_id}}*/);

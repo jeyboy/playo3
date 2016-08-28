@@ -16,7 +16,7 @@ namespace Core {
                 }
 
                 QString trackLyric(const QString & lyrics_id) { //TODO: finish me // not tested
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_lyrics_search_by_track);
 
                     switch(perm) {
                         case perm_site:
@@ -43,7 +43,7 @@ namespace Core {
                 }
 
                 QJsonValue tracksInfo(const QStringList & track_ids) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_tracks_by_id);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -79,7 +79,7 @@ namespace Core {
                     );
                 }
                 QJsonValue userRecommendations(const QString & user_id, bool randomize) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_owner_tracks_recs);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -120,7 +120,7 @@ namespace Core {
                     );
                 }
                 QJsonValue trackRecommendations(const QString & track_id, bool randomize) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_tracks_recs_by_track_id);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -178,7 +178,7 @@ namespace Core {
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits, QJsonArray * arr = 0, bool autoFix = false) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourcePerms perm = permissions(sf_tracks_by_title);
                     QJsonArray block_content;
 
                     switch(perm) {
