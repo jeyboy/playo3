@@ -21,7 +21,7 @@ namespace Core {
         pr_recommendations      = 32
     };
 
-    enum SourceFlags : quint32 {
+    enum SourceFlags : quint64 {
         sf_none = 0,
 
         sf_is_primary                       = 1,
@@ -31,41 +31,46 @@ namespace Core {
         sf_site                             = (quint64(1)) << 3,
 
         sf_auth_only                        = (quint64(1)) << 4,
-        sf_connectable                      = (quint64(1)) << 5,
-        sf_searchable                       = (quint64(1)) << 6,
+        sf_link                             = (quint64(1)) << 5,
+        sf_search                           = (quint64(1)) << 6,
+        sf_prefer                           = (quint64(1)) << 7,
+        sf_recommendation                   = (quint64(1)) << 8,
+        sf_my                               = (quint64(1)) << 9,
 
-        sf_offline_credentials_req          = (quint64(1)) << 6,
-        sf_online_credentials_req           = (quint64(1)) << 7,
+        sf_offline_credentials_req          = (quint64(1)) << 10,
+        sf_online_credentials_req           = (quint64(1)) << 11,
 
-        sf_user                             = (quint64(1)) << 8,
-        sf_group                            = (quint64(1)) << 9,
+        sf_user                             = (quint64(1)) << 12,
+        sf_group                            = (quint64(1)) << 13,
 
-        sf_track                            = (quint64(1)) << 10,
-        sf_video                            = (quint64(1)) << 11,
-        sf_set                              = (quint64(1)) << 12, // include charts and etc
-        sf_album                            = (quint64(1)) << 13,
-        sf_stream                           = (quint64(1)) << 14, // radio and etc
-        sf_photo                            = (quint64(1)) << 15,
-        sf_post                             = (quint64(1)) << 16,
-        sf_feed                             = (quint64(1)) << 17,
-        //reserved                             = (quint64(1)) << 18,
-        //reserved                             = (quint64(1)) << 19,
+        sf_track                            = (quint64(1)) << 14,
+        sf_video                            = (quint64(1)) << 15,
+        sf_set                              = (quint64(1)) << 16, // include charts and etc
+        sf_album                            = (quint64(1)) << 17,
+        sf_stream                           = (quint64(1)) << 18, // radio and etc
+        sf_photo                            = (quint64(1)) << 19,
+        sf_post                             = (quint64(1)) << 20,
+        sf_feed                             = (quint64(1)) << 21,
+        sf_lyric                            = (quint64(1)) << 22,
+        //reserved                             = (quint64(1)) << 23,
 
-        sf_by_perma                         = (quint64(1)) << 20,
-        sf_by_id                            = (quint64(1)) << 21,
-        sf_by_title                         = (quint64(1)) << 22,
-        sf_by_artist                        = (quint64(1)) << 23,
-        sf_by_abc                           = (quint64(1)) << 24,
-        sf_by_tag                           = (quint64(1)) << 25,
-        sf_by_mood                          = (quint64(1)) << 26,
-        sf_by_genre                         = (quint64(1)) << 27,
-        sf_by_lyric                         = (quint64(1)) << 28,
+        sf_by_perma                         = (quint64(1)) << 24,
+        sf_by_id                            = (quint64(1)) << 25,
+        sf_by_title                         = (quint64(1)) << 26,
+        sf_by_artist                        = (quint64(1)) << 27,
+        sf_by_album                         = (quint64(1)) << 28,
+        sf_by_set                           = (quint64(1)) << 29,
+        sf_by_abc                           = (quint64(1)) << 30,
+        sf_by_tag                           = (quint64(1)) << 31,
+        sf_by_mood                          = (quint64(1)) << 32,
+        sf_by_genre                         = (quint64(1)) << 33,
+        sf_by_lyric                         = (quint64(1)) << 34,
 
-        sf_section_new                      = (quint64(1)) << 29,
-        sf_section_popular                  = (quint64(1)) << 30,
-//        sf_section_chart                    = (quint64(1)) << 31,
+        sf_section_new                      = (quint64(1)) << 35,
+        sf_section_popular                  = (quint64(1)) << 36,
+//        sf_section_chart                    = (quint64(1)) << 37,
 
-        //////////// combinations //////////////////////////
+        //////////// main combinations //////////////////////////
 
         sf_api_auth_only                    = sf_api & sf_auth_only,
         sf_site_auth_only                   = sf_site & sf_auth_only,
@@ -77,12 +82,18 @@ namespace Core {
         sf_video_sets                       = sf_set & sf_video,
         sf_feeds                            = sf_set & sf_feed,
         sf_posts                            = sf_set & sf_post,
+        sf_lyrics                           = sf_set & sf_lyric,
+
+        sf_tracks_stream                    = sf_stream & sf_track,
+        sf_videos_stream                    = sf_stream & sf_video,
 
         sf_new_tracks                       = sf_track & sf_section_new,
         sf_popular_tracks                   = sf_track & sf_section_popular,
         sf_tracks_by_genre                  = sf_track & sf_by_genre,
         sf_tracks_by_mood                   = sf_track & sf_by_mood,
         sf_tracks_by_tag                    = sf_track & sf_by_tag,
+        sf_tracks_by_artist                 = sf_track & sf_by_artist,
+        sf_tracks_by_album                  = sf_track & sf_by_album,
 
         sf_new_videos                       = sf_video & sf_section_new,
         sf_popular_videos                   = sf_video & sf_section_popular,
@@ -90,68 +101,61 @@ namespace Core {
         sf_videos_by_mood                   = sf_video & sf_by_mood,
         sf_videos_by_tag                    = sf_video & sf_by_tag,
 
-        sf_users_sociable                   = sf_user & sf_connectable,
+        sf_new_lyrics                       = sf_lyric & sf_section_new,
+        sf_popular_lyrics                   = sf_lyric & sf_section_popular,
+        sf_lyrics_search_by_title           = sf_lyric & sf_search & sf_by_title, // rule including search by text part
+
+
+        sf_tracks_recs_by_track_id          = sf_track & sf_by_id & sf_recommendation, // tracks recs by one track
+        sf_tracks_recs_by_tracks_ids        = sf_track_sets & sf_by_id & sf_recommendation, // recs by a bunch of tracks
+        sf_tracks_recs_by_set_id            = sf_track & sf_set & sf_by_id & sf_recommendation, //recs by playlist or set
+
+        sf_videos_recs_by_video_id          = sf_video & sf_by_id & sf_recommendation, // videos recs by one video
+        sf_videos_recs_by_videos_ids        = sf_video_sets & sf_by_id & sf_recommendation, // recs by a bunch of videos
+        sf_videos_recs_by_set_id            = sf_video & sf_set & sf_by_id & sf_recommendation, //recs by playlist or set
+
+
+        sf_users_sociable                   = sf_user & sf_link,
+        sf_user_search_by_title             = sf_user & sf_search & sf_by_title,
+        sf_user_search_by_perma             = sf_user & sf_search & sf_by_perma,
+        sf_user_search_by_id                = sf_user & sf_search & sf_by_id,
         sf_user_track_sets                  = sf_user & sf_track_sets,
         sf_user_video_sets                  = sf_user & sf_video_sets,
         sf_user_feeds                       = sf_user & sf_feeds,
         sf_user_tracks                      = sf_user & sf_track,
         sf_user_videos                      = sf_user & sf_video,
-        sf_user_search_by_title             = sf_user & sf_searchable & sf_by_title,
-        sf_user_search_by_perma             = sf_user & sf_searchable & sf_by_perma,
-        sf_user_search_by_id                = sf_user & sf_searchable & sf_by_id,
+        sf_user_photos                      = sf_user & sf_photo,
+        sf_user_posts                       = sf_user & sf_post,
+        sf_user_streams                     = sf_user & sf_stream,
+        sf_user_track_albums                = sf_user_tracks & sf_album,
+        sf_user_photo_albums                = sf_user_photos & sf_album,
+        sf_user_tracks_recs                 = sf_user_tracks & sf_by_id & sf_recommendation, // tracks recs for user by id
+        sf_my_user_tracks_recs              = sf_my & sf_user_tracks_recs, // tracks recs only for current user
+        sf_user_videos_recs                 = sf_user_videos & sf_by_id & sf_recommendation, // videos recs for user by id
+        sf_my_user_videos_recs              = sf_my & sf_user_videos_recs, // videos recs only for current user
 
-        sf_groups_sociable                  = sf_group & sf_connectable,
+
+        sf_groups_sociable                  = sf_group & sf_link,
+        sf_group_search_by_title            = sf_group & sf_search & sf_by_title,
+        sf_group_search_by_perma            = sf_group & sf_search & sf_by_perma,
+        sf_group_search_by_id               = sf_group & sf_search & sf_by_id,
         sf_group_track_sets                 = sf_group & sf_track_sets,
         sf_group_video_sets                 = sf_group & sf_video_sets,
         sf_group_feeds                      = sf_group & sf_feeds,
         sf_group_tracks                     = sf_group & sf_track,
         sf_group_videos                     = sf_group & sf_video,
-        sf_group_search_by_title            = sf_group & sf_searchable & sf_by_title,
-        sf_group_search_by_perma            = sf_group & sf_searchable & sf_by_perma,
-        sf_group_search_by_id               = sf_group & sf_searchable & sf_by_id,
+        sf_group_photos                     = sf_group & sf_photo,
+        sf_group_posts                      = sf_group & sf_post,
+        sf_group_streams                    = sf_group & sf_stream,
+        sf_group_track_albums               = sf_group_tracks & sf_album,
+        sf_group_photo_albums               = sf_group_photos & sf_album,
+        sf_group_tracks_recs                = sf_group_tracks & sf_by_id & sf_recommendation, // tracks recs for group by id
+        sf_group_videos_recs                = sf_group_videos & sf_by_id & sf_recommendation, // videos recs for group by id
+
+        //////////// control combinations //////////////////////////
+
+
     };
-
-//    enum SourceAccessFlags : quint64 {
-//        sf_none = 0,
-
-//        sf_section_tracks_new               = 1,
-//        sf_section_tracks_popular           = (quint64(1)) << 1,
-//        sf_section_tracks_packs             = (quint64(1)) << 2,
-//        sf_section_track_streams            = (quint64(1)) << 3,
-
-//        sf_section_videos_new               = (quint64(1)) << 4,
-//        sf_section_videos_popular           = (quint64(1)) << 5,
-//        sf_section_videos_packs             = (quint64(1)) << 6,
-//        sf_section_video_streams            = (quint64(1)) << 7,
-
-
-//        //        sf_taggable                         = (quint64(1)) << 26, // has grouping by tags
-//        //        sf_genreable                        = (quint64(1)) << 27, // has grouping by genres
-//        //        sf_moodable                         = (quint64(1)) << 28, // has grouping by moods
-//        //        sf_content_lyrics_has               = (quint64(1)) << 25,
-
-//        sf_users_sociable                   = (quint64(1)) << 9, // have access to user content
-//        sf_users_searchable                 = (quint64(1)) << 10,
-//        sf_user_my_recomendations           = (quint64(1)) << 11, // give recomendations only for current user
-//        sf_user_recomendable                = (quint64(1)) << 12, // give recomendations by user
-//        sf_user_tracks_has                  = (quint64(1)) << 13,
-//        sf_user_videos_has                  = (quint64(1)) << 14,
-//        sf_user_sets_has                    = (quint64(1)) << 15,
-//        sf_user_albums_has                  = (quint64(1)) << 16,
-//        sf_user_streams_has                 = (quint64(1)) << 17, // also includes radios and etc
-//        sf_user_photo_has                   = (quint64(1)) << 18,
-//        sf_user_posts_has                   = (quint64(1)) << 19,
-
-//        sf_groups_sociable                  = (quint64(1)) << 20, // have access to group content
-//        sf_groups_serachable                = (quint64(1)) << 21,
-//        sf_group_tracks_has                 = (quint64(1)) << 22,
-//        sf_group_videos_has                 = (quint64(1)) << 23,
-//        sf_group_sets_has                   = (quint64(1)) << 24,
-//        sf_group_albums_has                 = (quint64(1)) << 25,
-//        sf_group_streams_has                = (quint64(1)) << 26, // also includes radios and etc
-//        sf_group_photo_has                  = (quint64(1)) << 27,
-//        sf_group_posts_has                  = (quint64(1)) << 28,
-//    };
 
 //    enum SourceContentFlags : quint64 {
 //        scf_none                            = 0,
