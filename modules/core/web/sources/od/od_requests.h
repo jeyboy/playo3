@@ -161,12 +161,21 @@ namespace Core {
                         break;}
 
                         case proc_video1: {
+                            doc.output();
+
                             Html::Set video = doc.find(".vid-card");
 
                             for(Html::Set::Iterator vid = video.begin(); vid != video.end(); vid++) {
                                 QJsonObject vid_obj;
 
-                                vid_obj.insert(tkn_id, (*vid) -> data(QStringLiteral("id")));
+                                QString oid = (*vid) -> data(QStringLiteral("id"));
+
+                                if (oid.isEmpty()) { // if id is missed - then obj is set
+                                    //curl 'https://ok.ru/video/c1076896?cmd=VideoVitrinaMain&st.cmd=userMain&st.vv_page=1&st.vv_ft=album&st.vv_aux_page=1&st.vv_albumId=c1076896&st._aid=VideoVitrina_section_serial&st.vpl.mini=false&gwt.requested=469d4b95&p_sId=759701095286275022' -X POST -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Content-Length: 0' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Cookie: bci=-586190216227621157; _flashVersion=20; AUTHCODE=X__rkHgxkeJ9R2RmnUvCj0hOZpZw387QMWJNUAWTxolDNomlt1npw8XCzczTYCU0wXbDxrPNXnqqYl-kUVxHUVp3ekIZVqmvFa53iLrXegc_2; cudr=0; nbp=1; JSESSIONID=ba4cadeb4aca5223af6ed140835c4bdd4484195b738c9978.58bcb30c; LASTSRV=ok.ru; BANNER_LANG=ru; viewport=1040; TZD=6.-2578; TZ=6; TD=-2578; _fo4cl=1; CDN=' -H 'DNT: 1' -H 'Host: ok.ru' -H 'Referer: https://ok.ru/' -H 'TKN: FDCcpTGhX2zyj01Af3lHaslHAXbtIWF3' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0'
+                                } else {
+                                    vid_obj.insert(tkn_id, oid);
+                                    vid_obj.insert(tkn_duration, Duration::toSecs((*vid) -> findFirst(".vid-card_duration") -> text()));
+                                }
 
                                 QString img_url = (*vid) -> findFirst("img") -> src();
                                 if (img_url.startsWith(QStringLiteral("//")))
@@ -174,8 +183,6 @@ namespace Core {
                                 vid_obj.insert(tkn_art_url, img_url);
 
                                 vid_obj.insert(tkn_name, (*vid) -> findFirst(".vid-card_n") -> text());
-
-                                vid_obj.insert(tkn_duration, Duration::toSecs((*vid) -> findFirst(".vid-card_duration") -> text()));
 
                                 arg -> append(vid_obj, vid + 1 == video.end());
                             }
