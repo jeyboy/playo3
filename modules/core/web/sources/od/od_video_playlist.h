@@ -65,8 +65,14 @@ namespace Core {
                     }
                 }
 
-                //curl 'https://ok.ru/video/top?cmd=VideoVitrinaMain&st.cmd=userMain&st.vv_page=1&st.vv_ft=top&st.vpl.mini=false&gwt.requested=469d4b95' -X POST -H 'Host: ok.ru' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'DNT: 1' -H 'Content-Type: application/x-www-form-urlencoded' -H 'TKN: 7XLOcU6mrT-14FjdPoHVJCXvCuM8nkoX' -H 'Cookie: CDN=; bci=-586190216227621157; _flashVersion=20; AUTHCODE=X__rkHgxkeJ9R2RmnUvCj1piJRbA2L9LdISO_sp4xPjcjrhdHK8dw6oPfofjJWhuIWzEoDbTWVbijyND_blQppx58sTJ-9B3CAqh5UtzVJc_2; cudr=0; viewport=1040; TZD=6.-3756; TZ=6; TD=-3756; _fo4cl=1; CDN=; BANNER_LANG=ru; nbp=1; JSESSIONID=b8a6a422ceed30959655a87399b54f00c955feed4d905963.a674207f; LASTSRV=ok.ru'
-                QJsonValue videoPlaylistByCategory(const VideoPlaylistType & pl_type, int offset = 1, int pages_limit = 5) {
+                QJsonValue videoByCategory(const QUrlQuery & args) {
+                    return videoByCategory(
+                        (VideoPlaylistType)args.queryItemValue(CMD_ID).toInt(),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue videoByCategory(const VideoPlaylistType & pl_type, int offset = 1, int pages_limit = 2) {
                     QString vpl = vplToParam(pl_type);
                     // st.vv_aux_page=1
                     QueriableResponse response = pRequest(
@@ -84,7 +90,43 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_video, cmd_mtd_groups_by_user, response, {{CMD_ID, QString::number(pl_type)}});
+                    QJsonObject obj = response.content.first().toObject();
+                    return prepareBlock(
+                        obj.contains(tkn_duration) ? dmt_video : dmt_video_set,
+                        cmd_mtd_groups_by_user, response, {{CMD_ID, QString::number(pl_type)}}
+                    );
+                }
+
+                QJsonValue videoByPlaylist(const QUrlQuery & args) {
+                    return videoByPlaylist(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
+                    );
+                }
+                //curl 'https://ok.ru/video/c872569?cmd=VideoVitrinaMain&st.cmd=userMain&st.vv_page=1&st.vv_ft=album&st.vv_aux_page=1&st.vv_albumId=c872569&st._aid=VideoVitrina_section_kino&st.vpl.mini=false&gwt.requested=469d4b95&p_sId=-4564355032148548588' -X POST -H 'Host: ok.ru' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Content-Type: application/x-www-form-urlencoded' -H 'TKN: S6LCw5rORjcRPXJdring9O6pYSeRfdPc' -H 'Referer: https://ok.ru/' -H 'Content-Length: 0' -H 'Cookie: CDN=; bci=-586190216227621157; _flashVersion=20; AUTHCODE=X__rkHgxkeJ9R2RmnUvCj9_WaMavx7ApsAHPti2CfQzp91KHwJR7kUiGOAXDzMrlP5R0bvHvgg_ibeTB3aa-im5ugR3yoWJksGf-LqKUT_Y_2; cudr=0; nbp=1; BANNER_LANG=ru; viewport=1040; TZD=6.-55; TZ=6; TD=-55; _fo4cl=1; CDN=; JSESSIONID=b44526891ddfab02445a8cb6a775431b9f125f229e72a567.d2bfb0e4; LASTSRV=ok.ru' -H 'Connection: keep-alive'
+                QJsonValue videoByPlaylist(const QString & album_id, int offset = 1, int pages_limit = 2) {
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(
+                            qst_site_video, QStringLiteral("video/%1").arg(album_id),
+                            {
+                                { QStringLiteral("cmd"), QStringLiteral("VideoVitrinaMain") },
+                                { QStringLiteral("st.cmd"), QStringLiteral("userMain") },
+                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
+                                { QStringLiteral("st.vv_albumId"), album_id },
+                                { QStringLiteral("st.vv_ft"), QStringLiteral("album") }
+                            }
+                        ),
+                        call_type_html, pageRules(QStringLiteral("st.vv_page"), offset, pages_limit), 0, proc_video1, QStringList(),
+                        call_method_post, tknHeaders().unite(dntHeader())
+
+                    );
+
+                    QJsonObject obj = response.content.first().toObject();
+                    return prepareBlock(
+                        obj.contains(tkn_duration) ? dmt_video : dmt_video_set,
+                        cmd_mtd_groups_by_user, response, {{CMD_ID, album_id}}
+                    );
                 }
             };
         }

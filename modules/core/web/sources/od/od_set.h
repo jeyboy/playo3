@@ -142,7 +142,7 @@ namespace Core {
 
                         default:
                             if (set_type >= set_video_my)
-                                return videoPlaylistByCategory((VideoPlaylistType)set_type);
+                                return videoByCategory((VideoPlaylistType)set_type);
                     }
 
                     return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
