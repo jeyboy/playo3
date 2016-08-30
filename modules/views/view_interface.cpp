@@ -183,8 +183,9 @@ bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint
 //////////////////////////////////////////////////////
 /// SLOTS
 //////////////////////////////////////////////////////
-bool IView::startInnerSearch(QString predicate, QModelIndex ind) {
+bool IView::startInnerSearch(const QString & predicate, const QModelIndex & ind) {
     bool empty = predicate.isEmpty(), has_item = false;
+    mdl -> blockFetching();
 
     QModelIndex it;
 
@@ -212,6 +213,7 @@ bool IView::startInnerSearch(QString predicate, QModelIndex ind) {
 }
 
 void IView::endInnerSearch() {
+    mdl -> blockFetching(false);
     onSpoilNeeded(activeIndex());
 }
 
@@ -853,7 +855,7 @@ void IView::findExecutable(QModelIndex & curr) {
     if (DataFactory::obj().playedIndex() != curr && curr.data(IPLAYABLE).toBool())
         return;
 
-    mdl -> blockFetching(true);
+    mdl -> blockFetching();
     expand(curr.parent());
 
     if (direction & IModel::forward) { // need to block loadability and proc it manualy - background loading of items broke app

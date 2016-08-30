@@ -141,19 +141,19 @@ namespace Models {
 
         int proceedBlocks(const QJsonArray & blocks, Playlist * parent);
 
-        int proceedVkList(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
-        int proceedVkSet(const QJsonObject & block, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
+        int proceedVkList(const QJsonObject & block, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
+        int proceedVkSet(const QJsonObject & block, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
 
-        int proceedScList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
-        int proceedScSet(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
+        int proceedScList(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
+        int proceedScSet(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
 
-        int proceedOdList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
-        int proceedOdSet(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
+        int proceedOdList(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
+        int proceedOdSet(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
 
-        int proceedYandexList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_yandex);
-        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_youtube);
+        int proceedYandexList(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_yandex);
+        int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_youtube);
 
-        int proceedGrabberList( const QJsonObject & collection, Playlist * parent, const DataMediaType & fdmtype, const DataSubType & wType);
+        int proceedGrabberList( const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype, const DataSubType & wType);
 
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
@@ -170,7 +170,7 @@ namespace Models {
         }
         template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(index.isValid() ? item(index) : rootItem); }
 
-        void blockFetching(bool blocked = false) { block_fetching = blocked; }
+        void blockFetching(bool blocked = true) { block_fetching = blocked; }
 
         void shuffle();
         virtual inline QJsonObject toJson() { return rootItem -> toJson(); }

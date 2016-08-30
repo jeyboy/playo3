@@ -61,10 +61,11 @@ namespace Core {
         bool updateCheckedStateByPredicate(ItemStateFlag pred_state);
 
         Playlist * createPlaylistPath(const DataSubType & subType, const QString & path);
-        Playlist * createLoadablePlaylist(const QString & attrs, const QString & name, const QString & uid = QString(), int pos = -1) {
-            Playlist * curr = playlists.value(playlistUid(name, uid), 0);
+        bool createLoadablePlaylist(Playlist *& curr, const QString & attrs, const QString & name, const QString & uid = QString(), int pos = -1) {
+            curr = playlists.value(playlistUid(name, uid), 0);
             if (curr) {
                 curr -> setLoadableAttrs(attrs);
+                return false;
             } else {
                 curr = new Playlist(LOADABLE_CONTAINER_ATTRS(name, attrs), this, pos);
                 if (!uid.isEmpty())
@@ -74,14 +75,14 @@ namespace Core {
                 IItem * dummy = new IItem(dt_dummy, curr, DEFAULT_ITEM_STATE | IItem::flag_proceeded);
                 dummy -> setTitle(QStringLiteral("Loading..."));
                 curr -> updateItemsCountInBranch(1);
+                return true;
             }
-
-            return curr;
         }
-        Playlist * createPlaylist(const DataSubType & sub_type, const QString & uid, const QString & name, int pos = -1) {
-            Playlist * curr = playlists.value(playlistUid(name, uid), 0);
-            if (curr) return curr;
-            return new Playlist(REMOTE_CONTAINER_ATTRS(DST_SET_FOLDER(sub_type), name, uid), this, pos);
+        bool createPlaylist(Playlist *& curr, const DataSubType & sub_type, const QString & uid, const QString & name, int pos = -1) {
+            curr = playlists.value(playlistUid(name, uid), 0);
+            if (curr) return false;
+            curr = new Playlist(REMOTE_CONTAINER_ATTRS(DST_SET_FOLDER(sub_type), name, uid), this, pos);
+            return true;
         }
         Playlist * createPlaylist(const DataSubType & subType, const QString & name, QStringList * list = 0, int pos = -1);
 //        void addPlaylist(Playlist * node);

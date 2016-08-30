@@ -71,7 +71,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoByCategory(const VideoPlaylistType & pl_type, int pages_limit = 2, const QString & offset_token = QString()) {
+                QJsonValue videoByCategory(const VideoPlaylistType & pl_type, int pages_limit = 1, const QString & offset_token = QString()) {
                     QString vpl = vplToParam(pl_type);
                     QueriableResponse response = pRequest(
                         baseUrlStr(
@@ -102,7 +102,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoByPlaylist(const QString & album_id, int pages_limit = 2, const QString & offset_token = QString()) {
+                QJsonValue videoByPlaylist(const QString & album_id, int pages_limit = 1, const QString & offset_token = QString()) {
                     QueriableResponse response = pRequest(
                         baseUrlStr(
                             qst_site_video, QStringLiteral("video/%1").arg(album_id),
