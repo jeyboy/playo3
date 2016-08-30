@@ -1128,25 +1128,28 @@ void IModel::finishingItemsAdding() {
 void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
     Playlist * playlist = (Playlist *)_playlist;
 
-    playlist -> setStates(IItem::flag_not_in_proc);
-
     IItem * temp_item = playlist -> child(0);
-    int added = proceedBlocks(
-        json.isArray() ? json.toArray() : QJsonArray() << json.toObject(),
-        playlist
-    );
-    emit moveOutBackgroundProcess();
+    QJsonArray blocks = json.isArray() ? json.toArray() : QJsonArray() << json.toObject();
+    QString err_str = blocks.first().toObject().value(tkn_error).toString();
+    bool no_errors = err_str.isEmpty();
 
-    if (added > 0) {
-        playlist -> removeLoadability();
+    if (no_errors) {
+        playlist -> removeLoader();
+
+        proceedBlocks(blocks, playlist);
+
         if (temp_item -> dataType() == dt_dummy)
             temp_item -> removeYouself();
+
         if (!playlist -> is(IItem::flag_expanded))
             emit expandNeeded(index(playlist));
     } else {
         if (temp_item -> dataType() == dt_dummy)
-            temp_item -> setTitle(QStringLiteral("Error!!"));
+            temp_item -> setTitle(QStringLiteral("Error: %1").arg(err_str));
     }
+
+    emit moveOutBackgroundProcess();
+    playlist -> setStates(IItem::flag_not_in_proc);
 }
 
 /////////////////////////////////////////////////////////

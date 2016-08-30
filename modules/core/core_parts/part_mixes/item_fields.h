@@ -26,6 +26,13 @@ namespace Core {
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
         inline bool hasMoreItems()                              { return isLoadable() || isFetchable(); }
+        // remove first valid loader
+        inline void removeLoader()                              {
+            if (isLoadable())
+                removeLoadability();
+            else if (isFetchable())
+                removeFetchability();
+        }
 
         inline QVariantMap cueMap()                             { return attrs[JSON_TYPE_CUE_MAP].toMap(); }
         inline QVariantMap takeCueMap()                         { return attrs.take(JSON_TYPE_CUE_MAP).toMap(); }

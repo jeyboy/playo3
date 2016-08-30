@@ -16,6 +16,7 @@ namespace Core {
         extern const QString block_followers            = QStringLiteral("blk_followers");
         extern const QString block_groups               = QStringLiteral("blk_groups");
 
+        extern const QString tkn_error                  = QStringLiteral("err");
         extern const QString tkn_content                = QStringLiteral("cnt");
         extern const QString tkn_source_id              = QStringLiteral("sid");
         extern const QString tkn_media_type             = QStringLiteral("mtype");

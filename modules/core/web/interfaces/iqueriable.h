@@ -8,7 +8,7 @@
 #include "modules/core/misc/logger.h"
 #include "queriable_arg.h"
 
-//#include "modules/core/web/grabber_keys.h"
+#include "modules/core/web/grabber_keys.h"
 
 #define IQUERY_DEF_FIELDS QStringList() << DEF_JSON_FIELD
 #define QUERY_RETRY_AMOUNT 3
@@ -20,7 +20,6 @@ namespace Core {
                 Logger::obj().startMark();
                 bool status = true;
                 int code = -1;
-                QString message;
                 qDebug() << "REQUEST" << arg -> request_url;
                 qDebug() << "HEADERS" << arg -> headers;
                 qDebug() << "COOKIES" << Manager::cookiesAsHeaderStr(arg -> request_url);
@@ -40,14 +39,15 @@ namespace Core {
 
                             if (
                                 manager -> statusCode() < 300 &&
-                                (status = extractStatus(arg, json, code, message)) // check on retry requiring
+                                (status = extractStatus(arg, json, code, arg -> error)) // check on retry requiring
                             ) break;
                             else qDebug() << "RETRY" << retries;
                         }
 
                         if (!status) {
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, message, true);
-                            sendError(arg -> error_receiver, message, code);
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, arg -> error, true);
+                            sendError(arg -> error_receiver, arg -> error, code);
+                            arg -> append(QJsonObject {{tkn_error, arg -> error}}, false);
                         } else {
                             QJsonValue val = json;
 
@@ -75,11 +75,12 @@ namespace Core {
                             case call_method_post: { response = Manager::prepare() -> postFollowed(arg -> request_url, arg -> headers); break; }
                             default: response = Manager::prepare() -> getFollowed(arg -> request_url, arg -> headers);
                         }
-                        status = htmlToJson(arg, response, message, true);
+                        status = htmlToJson(arg, response, arg -> error, true);
 
                         if (!status) {
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, message, true);
-                            sendError(arg -> error_receiver, message, code);
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, arg -> error, true);
+                            arg -> append(QJsonObject {{tkn_error, arg -> error}}, false);
+                            sendError(arg -> error_receiver, arg -> error, code);
                         }
                     break;}
 
@@ -205,8 +206,8 @@ namespace Core {
                     arg.items_total_limit,
                     arg.requests_limit,
                     arr -> isEmpty() || (is_iter_token && arg.offset_token.isEmpty()) ||
-                        poly_rules.call_iter == call_iter_type_page ?
-                            arg.requests_fact_count < arg.requests_limit : arg.items_fact_count < arg.items_total_limit
+                        (poly_rules.call_iter == call_iter_type_page ?
+                            arg.requests_fact_count < arg.requests_limit : arg.items_fact_count < arg.items_total_limit)
                 );
             }
 

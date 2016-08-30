@@ -27,6 +27,7 @@ namespace Core {
         extern const QString block_followers;
         extern const QString block_groups;
 
+        extern const QString tkn_error;
         extern const QString tkn_content;
         extern const QString tkn_source_id;
         extern const QString tkn_media_type;

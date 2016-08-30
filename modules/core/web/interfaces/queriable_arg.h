@@ -221,7 +221,7 @@ namespace Core {
             Headers headers;
 
             QStringList fields;
-            QString offset_token, offset_token_field;
+            QString offset_token, offset_token_field, error;
             int items_total_limit, requests_limit, per_request_limit;
             int start_offset, counter;
             int items_fact_count, requests_fact_count;
