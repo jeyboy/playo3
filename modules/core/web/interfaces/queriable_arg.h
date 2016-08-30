@@ -25,7 +25,7 @@ namespace Core {
         };
 
         struct PolyQueryRules {
-            PolyQueryRules(
+            PolyQueryRules( // full version
                ApiCallIterType _call_iter, ApiCallIterMethod _call_item_method = call_iter_method_offset,
                int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
                QString _limit_field = QString(), int _per_request_limit = 25,
@@ -42,7 +42,22 @@ namespace Core {
                 offset_token = _start_offset_token;
             }
 
-            PolyQueryRules(
+            PolyQueryRules( // only for token based
+                int _requests_limit = DEFAULT_REQUESTS_LIMIT, QString _offset_field = QString(),
+                const QString _start_offset_token = QString(), int _items_total_limit = DEFAULT_ITEMS_LIMIT
+            ) {
+                call_iter = call_iter_type_page;
+                call_item_method = call_iter_method_token;
+                items_total_limit = _items_total_limit;
+                requests_limit = _requests_limit;
+                start_offset = 0;
+                per_request_limit = 1000; // random val for per token requests
+                offset_field = _offset_field;
+                limit_field = QString();
+                offset_token = _start_offset_token;
+            }
+
+            PolyQueryRules( // only for offset based
                ApiCallIterType _call_iter, int _start_offset = 0, int _items_total_limit = DEFAULT_ITEMS_LIMIT,
                 int _requests_limit = DEFAULT_REQUESTS_LIMIT, const QString & _offset_field = QString()
             ) {
@@ -88,7 +103,8 @@ namespace Core {
             void setRequestHeaders(const Headers & new_headers) { headers = new_headers; }
 
             void setOffsetPolyLimitations(
-                ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
+                ApiCallIterType _call_iter, int _items_total_limit = DEFAULT_ITEMS_LIMIT,
+                int _requests_limit = DEFAULT_REQUESTS_LIMIT,
                 const QString & _offset_field = QString(), int _start_offset = 0,
                 const QString & _limit_field = QString(), int _per_request_limit = 1)
             {
@@ -109,11 +125,11 @@ namespace Core {
             }
 
             void setTokenPolyLimitations(
-                int _items_total_limit = DEFAULT_ITEMS_LIMIT, int _requests_limit = DEFAULT_REQUESTS_LIMIT,
-                const QString & _token_field = QString(), const QString & _start_token = QString(),
+                const QString & _token_field, int _items_total_limit = DEFAULT_ITEMS_LIMIT,
+                int _requests_limit = DEFAULT_REQUESTS_LIMIT, const QString & _start_token = QString(),
                 const QString & _limit_field = QString(), int _per_request_limit = 1)
             {
-                if (!_limit_field.isEmpty())
+                if (!_limit_field.isEmpty()) // ?limit in token requests?
                     url_template = _attachField(url_template, _limit_field, QString::number(_per_request_limit));
 
                 call_amount = call_poly;
@@ -122,18 +138,19 @@ namespace Core {
                 items_total_limit = _items_total_limit;
                 call_item_method = call_iter_method_token;
                 per_request_limit = _per_request_limit;
+                offset_token_field = _token_field;
 
                 if (!_start_token.isEmpty())
-                    prepareRequestUrlByToken(_token_field, _start_token);
+                    prepareRequestUrlByToken((offset_token = _start_token));
             }
 
             void setPolyLimitations(const PolyQueryRules & rules) {
                 switch(rules.call_item_method) {
                     case call_iter_method_token: {
                         setTokenPolyLimitations(
+                            rules.offset_field,
                             rules.items_total_limit,
                             rules.requests_limit,
-                            rules.offset_field,
                             rules.offset_token,
                             rules.limit_field,
                             rules.per_request_limit
@@ -168,9 +185,14 @@ namespace Core {
                 }
             }
 
-            void prepareRequestUrlByToken(const QString & field, const QString & token) {
-                if (call_item_method == call_iter_method_token)
-                    request_url = _attachField(url_template, field, token);
+            void prepareRequestUrlByToken(const QString & token) {
+                if (call_item_method == call_iter_method_token) {
+                    request_url = _attachField(url_template, offset_token_field, token);
+                    if (offset_token == token) // clear start token
+                        offset_token = QString();
+                    else
+                        offset_token = token;
+                }
             }
 
             QString _attachField(QString & url, const QString & field, const QString & token) {
@@ -199,6 +221,7 @@ namespace Core {
             Headers headers;
 
             QStringList fields;
+            QString offset_token, offset_token_field;
             int items_total_limit, requests_limit, per_request_limit;
             int start_offset, counter;
             int items_fact_count, requests_fact_count;

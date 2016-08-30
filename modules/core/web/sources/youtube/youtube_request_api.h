@@ -69,19 +69,13 @@ namespace Core {
 
             protected:
                 PolyQueryRules rules(
-                    QString start_token = QString(), int items_limit = YOUTUBE_ITEMS_LIMIT, int pages_limit = YOUTUBE_PAGES_LIMIT,
-                    int per_request = YOUTUBE_INFO_ITEMS_LIMIT)
+                    QString start_token = QString(), int items_limit = YOUTUBE_ITEMS_LIMIT,
+                        int pages_limit = YOUTUBE_PAGES_LIMIT)
                 {
                     return PolyQueryRules(
-                        call_iter_type_page,
-                        call_iter_method_token,
-                        qMin(items_limit, YOUTUBE_ITEMS_LIMIT),
                         qMin(pages_limit, YOUTUBE_PAGES_LIMIT),
-                        QString(),
-                        qMin(qMin(per_request, items_limit), YOUTUBE_INFO_ITEMS_LIMIT),
-                        QString(),
-                        0,
-                        start_token
+                        QStringLiteral("pageToken"), start_token,
+                        qMin(items_limit, YOUTUBE_ITEMS_LIMIT)
                     );
                 }
 

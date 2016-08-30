@@ -362,6 +362,9 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, const Dat
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
 //    int pos = 0;
 
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+
     for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++/*, pos++*/) {
         QJsonObject playlist = (*playlist_obj).toObject();
         Playlist * folder;
@@ -474,6 +477,9 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, const Dat
 
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
 
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject playlist = (*it).toObject();
         Playlist * folder;
@@ -562,6 +568,9 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, const Dat
     int items_amount = 0;
 
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+
+    if (block.contains(tkn_more_cmd))
+        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject playlist = (*it).toObject();
@@ -1108,6 +1117,8 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
         playlist -> removeLoadability();
         if (temp_item -> dataType() == dt_dummy)
             temp_item -> removeYouself();
+        if (!playlist -> is(IItem::flag_expanded))
+            emit expandNeeded(index(playlist));
     } else {
         if (temp_item -> dataType() == dt_dummy)
             temp_item -> setTitle(QStringLiteral("Error!!"));

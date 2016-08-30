@@ -161,7 +161,18 @@ namespace Core {
                         break;}
 
                         case proc_video1: {
-                            doc.output();
+                            ///////// extract and apply token ///////////
+                            Html::Tag * container = doc.findFirst(".loader-container");
+
+                            if (container) {
+                                QString id = container -> data(QStringLiteral("last-element"));
+
+                                if (id.isEmpty())
+                                   qDebug() << "OD: token is missed for token based requests";
+                                else
+                                    arg -> prepareRequestUrlByToken(id);
+                            }
+                            ////////////////////////////////////////////
 
                             Html::Set video = doc.find(".vid-card");
 

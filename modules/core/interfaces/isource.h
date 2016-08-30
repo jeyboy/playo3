@@ -85,11 +85,11 @@ namespace Core {
             block.insert(Web::tkn_source_id, source_id);
 
             QUrlQuery query = Cmd::paramsToQuery(params);
-            query.addQueryItem(CMD_OFFSET, QString::number(response.next_offset));
+            query.addQueryItem(CMD_OFFSET, response.next_offset);
             query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(response.items_limit));
             query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(response.requests_limit));
 
-            if (!response.isFinished())
+            if (!response.finished)
                 block.insert(
                     Web::tkn_more_cmd,
                     Cmd::build(source_id, mtd, query).toString()
@@ -109,7 +109,7 @@ namespace Core {
             QUrlQuery query = limits.toICmdParams(response.next_offset);
             Cmd::paramsToQuery(query, params);
 
-            if (!response.isFinished())
+            if (!response.finished)
                 block.insert(
                     Web::tkn_more_cmd,
                     Cmd::build(

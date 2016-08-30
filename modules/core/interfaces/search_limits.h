@@ -100,12 +100,12 @@ namespace Core {
 
         inline QChar charPredicate() { return predicate.isEmpty() ? QChar('_') : predicate[0]; }
 
-        QUrlQuery toICmdParams(int offset = 0) const {
+        QUrlQuery toICmdParams(const QString & offset = QString()) const { // by default is eql to 0
             QUrlQuery query;
 
             query.addQueryItem(CMD_MEDIA_TYPE, QString::number(sc_type));
             query.addQueryItem(CMD_PREDICATE_TYPE, QString::number(predicate_type));
-            query.addQueryItem(CMD_OFFSET, QString::number(offset));
+            query.addQueryItem(CMD_OFFSET, offset);
             query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(items_limit));
             query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(requests_limit));
 

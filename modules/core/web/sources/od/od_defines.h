@@ -40,6 +40,16 @@ namespace Core {
                     );
                 }
 
+                PolyQueryRules tokenRules(
+                    const QString & offset_field, const QString & offset_token = QString(),
+                    int pages_count = 2, int items_limit = DEFAULT_ITEMS_LIMIT)
+                {
+                    return PolyQueryRules(
+                        qMin(pages_count, DEFAULT_REQUESTS_LIMIT), offset_field,
+                        offset_token, qMin(items_limit, DEFAULT_ITEMS_LIMIT)
+                    );
+                }
+
                 inline QString audioUrlStr(const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
                     return baseUrlStr(qst_site_audio, predicate, params);
                 }

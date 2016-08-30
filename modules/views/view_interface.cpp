@@ -279,6 +279,7 @@ void IView::updateSelection(QModelIndex & node) {
 
 void IView::runItemCmd() {
     IItem * item = mdl -> item(currentIndex());
+
     if (item -> isContainer())
         mdl -> fetchMore(currentIndex());
     else
@@ -398,9 +399,10 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     menu.addSeparator();
 
     QModelIndex ind = indexAt(event -> pos());
-    IItem * itm = mdl -> item(ind);
+    IItem * itm = mdl -> item(ind);   
 
-    if (ind.isValid()) {
+    // if clicked not at the item and root container has more items script or clicked on item
+    if (ind.isValid() || itm -> hasMoreItems()) {
         if (!itm -> isContainer()) itm = itm -> parent();
 
         if (itm && itm -> hasMoreItems()) {
@@ -410,6 +412,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
             );
         }
     }
+
     menu.addSeparator();
 
     menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));

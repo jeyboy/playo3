@@ -80,7 +80,6 @@ namespace Core {
                     QJsonObject error = json.value(QStringLiteral("error")).toObject();
                     if (error.isEmpty()) {
                         arg -> prepareRequestUrlByToken(
-                            QStringLiteral("pageToken"),
                             json.value(QStringLiteral("nextPageToken")).toString()
                         );
                         return true;
