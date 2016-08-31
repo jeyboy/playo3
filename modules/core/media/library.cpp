@@ -84,7 +84,7 @@ void Library::cancelActiveRestorations() {
 }
 
 
-bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) { // need to think about priority for current visible lists
+bool Library::nextProcItem(const ItemsListType & iType, QModelIndex & ind) { // need to think about priority for current visible lists
     if (!waitOnProc.isEmpty()) {
 
         QList<const QAbstractItemModel *> keys = waitOnProc.keys();
@@ -94,9 +94,13 @@ bool Library::nextProcItem(ItemsListType iType, QModelIndex & ind) { // need to 
 
             if (cell.isEmpty())
                 waitOnProc.remove(*it);
-            else if (!list.isEmpty() && listSyncs[*it] -> tryLock()) {
-                ind = list.takeLast();
-                return true;
+            else if (!list.isEmpty()) {
+                Models::IModel * mdl = (Models::IModel *)*it;
+
+                if (mdl -> indexNotRemoved(list.last()) && listSyncs[*it] -> tryLock()) {
+                    ind = list.takeLast();
+                    return true;
+                }
             }
         }
     }

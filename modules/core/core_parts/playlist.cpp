@@ -1,5 +1,6 @@
 #include "playlist.h"
-#include <qdatetime.h>
+
+#include "modules/models/service/removed_items.h"
 
 using namespace Core;
 
@@ -179,7 +180,7 @@ Playlist * Playlist::findCompatblePlaylist(QStringList * list) { // find last ex
 //    return true;
 //}
 
-int Playlist::removeChildren(int position, int count) {
+int Playlist::removeChildren(int position, int count, RemovedItems * deleted_items) {
     if (position < 0 || position + count > children.size())
         return 1;
 
@@ -189,6 +190,7 @@ int Playlist::removeChildren(int position, int count) {
     for (int row = 0; row < count; ++row) {
         it = children.takeAt(position);
         totalItems -= it -> itemsCountInBranch();
+        if (deleted_items) deleted_items -> registerItem(it);
         delete it;
     }
 

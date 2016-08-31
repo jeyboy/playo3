@@ -75,7 +75,7 @@ namespace Core {
                 remoteProcTimer -> start(Settings::obj().remoteItemsProcDelay());
             }
 
-            bool nextProcItem(ItemsListType iType, QModelIndex & ind);
+            bool nextProcItem(const ItemsListType & iType, QModelIndex & ind);
 
             void cancelActiveRestorations();
 

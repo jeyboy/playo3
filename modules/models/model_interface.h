@@ -14,6 +14,7 @@
 #include "modules/core/misc/file_utils/extensions.h"
 #include "modules/core/misc/file_utils/filesystem_watcher.h"
 #include "modules/core/interfaces/search_limits.h"
+#include "modules/models/service/removed_items.h"
 
 #include "modules/core/core_parts/item_drop_formats.h"
 #include "modules/core/media/library.h"
@@ -31,6 +32,7 @@ namespace Models {
         bool block_fetching;
         QModelIndexList dndList;
         QFutureWatcher<DropData *> * addWatcher;
+        RemovedItems deleted_items;
     public:
         enum Direction {
             none = 0,
@@ -116,6 +118,9 @@ namespace Models {
             return QAbstractItemModel::canFetchMore(parent);
         }
 
+        inline bool indexNotRemoved(const QModelIndex & ind) {
+            return !deleted_items.containsItem(ind.internalPointer());
+        }
         inline QModelIndex index(IItem * item) const {
             if (item == rootItem)
                 return QModelIndex();
@@ -186,7 +191,7 @@ namespace Models {
         bool dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent);
         inline QMutex * syncMutex() { return sync; }
 
-        int search(SearchLimit & params, Playlist * destination, Playlist * search_source = 0);
+        int search(const SearchLimit & params, Playlist * destination, Playlist * search_source = 0);
         int search(const QString & predicate, Playlist * destination, Playlist * search_source = 0, int count = 9999999);
 
         inline virtual bool ignoreListContainUid(const QString & /*uid*/) { return false; }

@@ -4,6 +4,8 @@
 #include "item.h"
 #include <qdir.h>
 
+class RemovedItems;
+
 namespace Core {
     class Playlist : public IItem {
     public:
@@ -50,7 +52,7 @@ namespace Core {
             if (children.removeOne(child) > 0)
                 backPropagateItemsCountInBranch(-((child -> isContainer()) ? ((Playlist *)child) -> childCount() : 1));
         }
-        int removeChildren(int position, int count = 1);
+        int removeChildren(int position, int count = 1, RemovedItems * deleted_items = 0);
 
 
         void shuffle();
