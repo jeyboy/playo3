@@ -37,12 +37,7 @@ namespace Core {
                             baseUrlStr(
                                 qst_site, QStringLiteral("push"),
                                 {
-                                    { QStringLiteral("cmd"), QStringLiteral("PeriodicManager") },
-                                    { QStringLiteral("sse"), QStringLiteral("true") },
-                                    { QStringLiteral("cpLCT"), 0 },
-                                    { QStringLiteral("tlb.act"), QStringLiteral("news") },
-                                    { QStringLiteral("blocks"), QStringLiteral("TD,MPC,NTF") },
-                                    { QStringLiteral("p_NLP"), 0 }
+                                    { QStringLiteral("cmd"), QStringLiteral("PeriodicManager") }
                                 }
                             )
                         ) -> deleteLater();

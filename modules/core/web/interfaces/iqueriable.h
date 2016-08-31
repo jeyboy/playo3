@@ -45,9 +45,12 @@ namespace Core {
                         }
 
                         if (!status) {
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, arg -> error, true);
-                            sendError(arg -> error_receiver, arg -> error, code);
-                            arg -> append(QJsonObject {{tkn_error, arg -> error}}, false);
+                            QString err = arg -> error;
+                            if( err.isEmpty()) err = QStringLiteral("Some shit happened");
+
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, true);
+                            sendError(arg -> error_receiver, err, code);
+                            arg -> append(QJsonObject {{tkn_error, err}}, false);
                         } else {
                             QJsonValue val = json;
 
@@ -78,9 +81,12 @@ namespace Core {
                         status = htmlToJson(arg, response, arg -> error, true);
 
                         if (!status) {
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, arg -> error, true);
-                            arg -> append(QJsonObject {{tkn_error, arg -> error}}, false);
-                            sendError(arg -> error_receiver, arg -> error, code);
+                            QString err = arg -> error;
+                            if( err.isEmpty()) err = QStringLiteral("Some shit happened");
+
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, true);
+                            arg -> append(QJsonObject {{tkn_error, err}}, false);
+                            sendError(arg -> error_receiver, err, code);
                         }
                     break;}
 

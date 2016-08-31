@@ -105,7 +105,6 @@ Qt::ItemFlags IModel::flags(const QModelIndex & index) const {
 
     Qt::ItemFlags fl = Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 
-
     if (Settings::obj().isCheckboxShow())
         fl |= Qt::ItemIsUserCheckable;
 
@@ -841,14 +840,14 @@ bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & p
     return true;
 }
 
-bool IModel::removeRows(int position, int rows, const QModelIndex & parent) {
+bool IModel::removeRows(int position, int amount, const QModelIndex & parent) {
     Playlist * parentItem = item<Playlist>(parent);
     bool success = parentItem != 0;
     int deleted;
 
     if (success) {
-        if (parentItem -> parent() && position == 0 && parentItem -> childCount() == rows) { // remove empty parents for current deletion
-            rows = 1;
+        if (parentItem -> parent() && position == 0 && parentItem -> childCount() == amount) { // remove empty parents for current deletion
+            amount = 1;
 
             while(true) {
                 position = parentItem -> parent() -> childRow(parentItem);
@@ -860,10 +859,10 @@ bool IModel::removeRows(int position, int rows, const QModelIndex & parent) {
             (const_cast<QModelIndex &>(parent)) = index(parentItem);
         }
 
-        beginRemoveRows(parent, position, position + rows - 1);
+        beginRemoveRows(parent, position, position + amount - 1);
         bool blockSignal = signalsBlocked();
         blockSignals(true);
-        deleted = parentItem -> removeChildren(position, rows, &deleted_items);
+        deleted = parentItem -> removeChildren(position, amount, &deleted_items);
         blockSignals(blockSignal);
         endRemoveRows();
 
@@ -1131,23 +1130,29 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
 
         IItem * temp_item = playlist -> child(0);
         QJsonArray blocks = json.isArray() ? json.toArray() : QJsonArray() << json.toObject();
-        QString err_str = blocks.first().toObject().value(tkn_error).toString();
+        QString err_str = EXTRACT_ITEMS(blocks.first().toObject()).first().toObject().value(tkn_error).toString();
         bool no_errors = err_str.isEmpty();
 
         if (no_errors) {
-            playlist -> removeLoader();
+            playlist -> removeLoader(); // remove old loader before blocks proc
 
             proceedBlocks(blocks, playlist);
 
-            if (temp_item -> dataType() == dt_dummy)
-                temp_item -> removeYouself();
+            if (temp_item -> dataType() == dt_dummy) {
+                removeRows(temp_item -> row(), 1, index(playlist));
+//                temp_item -> removeYouself();
+            }
 
             if (!playlist -> is(IItem::flag_expanded))
                 emit expandNeeded(index(playlist));
         } else {
-            if (temp_item -> dataType() == dt_dummy)
+            if (temp_item -> dataType() == dt_dummy) {
+                QModelIndex model_index = index(playlist);
                 temp_item -> setTitle(QStringLiteral("Error: %1").arg(err_str));
+                emit dataChanged(model_index, model_index);
+            }
         }
+
 
         playlist -> setStates(IItem::flag_not_in_proc);
     }

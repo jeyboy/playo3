@@ -19,7 +19,7 @@ namespace Core {
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
 
-                bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply) {
+                bool htmlToJson(QueriableArg * arg, Response * reply, QString & message, bool removeReply) {
                     Html::Document doc = reply -> toHtml(removeReply);
 
                     bool result = false;
@@ -171,6 +171,11 @@ namespace Core {
                                    qDebug() << "OD: token is missed for token based requests";
                                 else
                                     arg -> prepareRequestUrlByToken(id);
+                            } else {
+                                if (!doc.findFirst("#vv_main_content"))
+                                    message = QStringLiteral("OD: video loader is missed");
+                                else
+                                    message = QStringLiteral("OD: do not have any content");
                             }
                             ////////////////////////////////////////////
 
@@ -287,7 +292,7 @@ namespace Core {
                     if (siteAdditionalToken().isEmpty())
                         initSession();
 
-                    setSiteAdditionalToken(Auth::grabNewAdditionalToken()); //FIXME need to update token after 1 minet interval only - not each request
+                    setSiteAdditionalToken(Auth::grabNewAdditionalToken()); //FIXME need to update token after 1 minute interval only - not each request
 
                     return {{tkn_header, siteAdditionalToken()}};
                 }

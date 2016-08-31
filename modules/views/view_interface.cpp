@@ -560,8 +560,9 @@ QModelIndex IView::candidateOnSelection(QModelIndex node, bool reverseOrder) {
             expand(node);
 
         node = (!reverseOrder) ? indexBelow(node) : indexAbove(node);
+        bool is_valid = node.isValid();
 
-        if (!node.isValid() || !node.data(IFOLDER).toBool())
+        if (!is_valid || (is_valid && !node.data(IFOLDER).toBool()))
             return node;
     }
 }
