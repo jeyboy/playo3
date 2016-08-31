@@ -588,6 +588,10 @@ void IView::findAndExecIndex(bool deleteCurrent) {
 bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate, int flags) {
     bool isFolder = false;
 
+    // did not allow manuall removing of dummies
+    if (node.data(ITYPE) == dt_dummy)
+        return false;
+
     if (Settings::obj().isAlertOnFolderDeletion()) {
         if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
             bool usePrevAction = flags & use_prev_action;
@@ -665,9 +669,12 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
 
         while(i.hasNext()) {
             ind = i.next();
-            elem_path = ind.data(ITREEPATH).toString();
+            IItem * itm = mdl -> item(ind);
+//            if (itm -> dataType() == dt_dummy) continue; //INFO: not tested
+
+            elem_path = itm -> buildTreePath(); // ind.data(ITREEPATH).toString();
             if (!elem_path.startsWith(path)) {
-                if (ind.data(IFOLDER).toBool())
+                if (itm -> isContainer()) //ind.data(IFOLDER).toBool())
                     path = elem_path;
             }
             else i.remove();

@@ -31,7 +31,7 @@ namespace Core {
 
                     if (!videos.isEmpty()) {
                         int size = videos.size();
-                        int video_index = size / 2 + size % 2;
+                        int video_index = size / 2 + (size > 1 ? size % 2 : 0);
                         return videos[video_index].toObject().value(QStringLiteral("url")).toString();
                     }
 

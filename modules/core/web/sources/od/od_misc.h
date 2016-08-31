@@ -60,9 +60,9 @@ namespace Core {
                         else return results.link().section('/', 2).section('?', 0, 0);
                     }
 
-                    inline QString grabAdditionalToken() {
-                        return grabAdditionalToken(Manager::prepare() -> getFollowed(dataPageUrl()) -> toText());
-                    }
+//                    inline QString grabAdditionalToken() {
+//                        return grabAdditionalToken(Manager::prepare() -> getFollowed(dataPageUrl()) -> toText());
+//                    }
 
                     inline QString grabAdditionalToken(const QString & html) {
                         QRegularExpressionMatch match;
