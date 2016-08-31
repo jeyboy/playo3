@@ -284,12 +284,12 @@ namespace Core {
                 }
 
                 inline Headers tknHeaders() {
-                    if (siteAdditionalToken().isEmpty()) {
+                    if (siteAdditionalToken().isEmpty())
                         initSession();
-                        setSiteAdditionalToken(Auth::grabAdditionalToken());
-                    }
 
-                    return {{QStringLiteral("TKN"), siteAdditionalToken()}};
+                    setSiteAdditionalToken(Auth::grabNewAdditionalToken()); //FIXME need to update token after 1 minet interval only - not each request
+
+                    return {{tkn_header, siteAdditionalToken()}};
                 }
 
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype) {

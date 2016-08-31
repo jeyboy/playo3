@@ -85,6 +85,15 @@ namespace Core { // requests and response has memory leaks
             QPixmap toPixmap(bool destroy = true);
             QUrl toUrl(bool destroy = true);
             QUrl toRedirectUrl(bool destroy = true);
+            QString toHeader(const QString & header_field, bool destroy = true) {
+                QByteArray field_name = header_field.toUtf8();
+                if (destroy) deleteLater();
+
+                if (hasRawHeader(field_name))
+                    return QString(rawHeader(field_name));
+
+                return QString();
+            }
         };
 
         class Manager;

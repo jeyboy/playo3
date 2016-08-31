@@ -76,6 +76,8 @@ namespace Core {
             extern const QString tkn_count; // separate key for json vakue
             extern const QString tkn_chunk;
             extern const QString tkn_jsessionid;
+            extern const QString tkn_header;
+
 
             extern const QString tkn_full_name;
             extern const QString tkn_id;

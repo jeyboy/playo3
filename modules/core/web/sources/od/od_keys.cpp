@@ -71,6 +71,7 @@ namespace Core {
             extern const QString tkn_count =                        QStringLiteral("count"); // separate key for json value
             extern const QString tkn_chunk =                        QStringLiteral("chunk");
             extern const QString tkn_jsessionid =                   QStringLiteral("jsessionid=");
+            extern const QString tkn_header =                       QStringLiteral("TKN");
 
             extern const QString tkn_full_name =                    QStringLiteral("fullName");
             extern const QString tkn_id =                           QStringLiteral("id");

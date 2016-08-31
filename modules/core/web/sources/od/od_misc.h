@@ -45,7 +45,7 @@ namespace Core {
                                     { QStringLiteral("p_NLP"), 0 }
                                 }
                             )
-                        );
+                        ) -> deleteLater();
                     }
 
                     virtual Headers tknHeaders() = 0;
@@ -69,6 +69,12 @@ namespace Core {
                         if (html.indexOf(QRegularExpression(QStringLiteral("OK.tkn.set\\('([\\w-]+)'\\);")), 0, &match) > -1) {
                             return match.captured(1);
                         } else return QString();
+                    }
+
+                    inline QString grabNewAdditionalToken() {
+                        return Manager::prepare() -> postFollowed(
+                            baseUrlStr(qst_site, QStringLiteral("gwtlog"), {})
+                        ) -> toHeader(tkn_header);
                     }
 
                     inline QString grabHash(QString & add_token) {
