@@ -1132,6 +1132,7 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
         QJsonArray blocks = json.isArray() ? json.toArray() : QJsonArray() << json.toObject();
         QString err_str = EXTRACT_ITEMS(blocks.first().toObject()).first().toObject().value(tkn_error).toString();
         bool no_errors = err_str.isEmpty();
+        QModelIndex pind = index(playlist);
 
         if (no_errors) {
             playlist -> removeLoader(); // remove old loader before blocks proc
@@ -1139,22 +1140,26 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
             proceedBlocks(blocks, playlist);
 
             if (temp_item -> dataType() == dt_dummy) {
-                removeRows(temp_item -> row(), 1, index(playlist));
+
+                QModelIndex res_pind = pind;
+                removeRows(temp_item -> row(), 1, res_pind);
 //                temp_item -> removeYouself();
+                if (pind != res_pind)
+                    playlist = 0;
             }
 
-            if (!playlist -> is(IItem::flag_expanded))
-                emit expandNeeded(index(playlist));
+            if (playlist && !playlist -> is(IItem::flag_expanded))
+                emit expandNeeded(pind);
         } else {
             if (temp_item -> dataType() == dt_dummy) {
-                QModelIndex model_index = index(playlist);
                 temp_item -> setTitle(QStringLiteral("Error: %1").arg(err_str));
-                emit dataChanged(model_index, model_index);
+                emit dataChanged(pind, pind);
             }
         }
 
 
-        playlist -> setStates(IItem::flag_not_in_proc);
+        if (playlist)
+            playlist -> setStates(IItem::flag_not_in_proc);
     }
 
     emit moveOutBackgroundProcess();
