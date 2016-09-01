@@ -56,7 +56,17 @@ namespace Core {
 
                             if (arg -> post_proc & proc_json_extract) {
                                 for(QStringList::Iterator field = arg -> fields.begin(); field != arg -> fields.end(); field++)
-                                    val = val.toObject().value(*field);
+                                    if (val.isObject())
+                                        val = val.toObject().value(*field);
+                                    else {
+                                        QJsonArray val_arr = val.toArray();
+                                        QJsonArray new_val;
+                                        for(QJsonArray::Iterator item = val_arr.begin(); item != val_arr.end(); item++) {
+                                            new_val << (*item).toObject().value(*field);
+                                        }
+
+                                        val = new_val;
+                                    }
                             }
 
                             if (arg -> post_proc & proc_json_proc)

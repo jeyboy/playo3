@@ -1143,7 +1143,6 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
 
                 QModelIndex res_pind = pind;
                 removeRows(temp_item -> row(), 1, res_pind);
-//                temp_item -> removeYouself();
                 if (pind != res_pind)
                     playlist = 0;
             }

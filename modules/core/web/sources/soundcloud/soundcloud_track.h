@@ -328,7 +328,8 @@ namespace Core {
                             response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/likes").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0,
-                                proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
+                                proc_json_patch, IQUERY_DEF_FIELDS << QStringLiteral("collection") <<
+                                QStringLiteral("track"), call_method_get, headers()
                             );
                         }
 

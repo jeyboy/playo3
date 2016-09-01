@@ -33,6 +33,7 @@ namespace Core {
                     return QJsonObject();
                 }
 
+
                 QJsonValue groupsById(const QUrlQuery & args) {
                     return groupsById(
                         args.queryItemValue(CMD_ID),

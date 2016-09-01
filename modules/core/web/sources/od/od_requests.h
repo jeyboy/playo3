@@ -259,7 +259,7 @@ namespace Core {
                         sf_primary_source |
                         /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
                         sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
-                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
+                        sf_sociable_users /*| sf_sociable_groups*/ | sf_shareable | sf_packable |
                         /*sf_recomendable_by_item |*/ sf_recomendable_by_user |
                         /*sf_newable |*/ sf_populable |
 
@@ -390,8 +390,8 @@ namespace Core {
                 QList<Linkable> findFriendsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersById(uid).toArray();
-                    jsonToUsers(linkables, arr);
+                    QJsonObject friends_res = usersById(uid).toObject();
+                    jsonToUsers(linkables, EXTRACT_ITEMS(friends_res));
 
                     return linkables;
                 }
@@ -399,8 +399,8 @@ namespace Core {
                 QList<Linkable> findGroupsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByIdOrPerma(uid).toArray();
-                    jsonToGroups(linkables, arr);
+                    QJsonObject groups_res = groupsByIdOrPerma(uid).toObject();
+                    jsonToGroups(linkables, EXTRACT_ITEMS(groups_res));
 
                     return linkables;
                 }
@@ -408,8 +408,8 @@ namespace Core {
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByName(name).toArray();
-                    jsonToUsers(linkables, arr);
+                    QJsonObject friends_res = usersByName(name).toObject();
+                    jsonToUsers(linkables, EXTRACT_ITEMS(friends_res));
 
                     return linkables;
                 }
@@ -417,8 +417,8 @@ namespace Core {
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name).toArray();
-                    jsonToGroups(linkables, arr);
+                    QJsonObject groups_res = groupsByName(name).toObject();
+                    jsonToGroups(linkables, EXTRACT_ITEMS(groups_res));
 
                     return linkables;
                 }

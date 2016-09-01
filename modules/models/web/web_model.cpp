@@ -30,7 +30,7 @@ void WebModel::refresh() {
         case dt_web_sc: {
             switch(sttngs.rec_type) {
                 case rec_song: {
-                    Soundcloud::Queries::obj().trackRelationsAsync(
+                    Soundcloud::Queries::obj().trackRecommendationsAsync(
                         sttngs.uid,
                         new Func(this, SLOT(proceedJson(QJsonValue &)))
                     );

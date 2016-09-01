@@ -101,7 +101,7 @@ namespace Core {
                                     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++)
                                         block_content.append((*it).toObject().value(QStringLiteral("track")));
 
-                                    return prepareBlock(dmt_set, block_content);
+                                    return prepareBlock(dmt_audio_set, block_content);
                                 break;}
                             }
                         }
@@ -109,7 +109,92 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "SET BY TYPE is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_set, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(dmt_audio_set, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                }
+
+                QMap<QString, QString> setsList() {
+                    QMap<QString, QString> res;
+                    QMap<QString, QString> opts = siteOptions();
+
+                    QString new_hot_title = setTypeToStr(set_new_hot);
+                    QString top_50_title = setTypeToStr(set_top_50);
+                    QString popular_title = setTypeToStr(set_popular);
+
+                    Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
+
+                    for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
+                        res.insert(
+                            new_hot_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_new_hot) },
+                                    { CMD_GENRE, opt.value() }
+                                }
+                            ) -> toString()
+                        );
+                        res.insert(
+                            top_50_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_top_50) },
+                                    { CMD_GENRE, opt.value() }
+                                }
+                            ) -> toString()
+                        );
+
+                        QStringList parts = opt.key().split('&', QString::SkipEmptyParts);
+
+                        if (parts.size() == 1)
+                            res.insert(
+                                popular_title % opt.key(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_GENRE, opt.value() }
+                                    }
+                                ) -> toString()
+                            );
+                        else {
+                            res.insert(
+                                popular_title % parts.first(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_GENRE, parts.first() }
+                                    }
+                                ) -> toString()
+                            );
+                            res.insert(
+                                popular_title % parts.last(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_GENRE, parts.last() }
+                                    }
+                                ) -> toString()
+                            );
+                        }
+                    }
+
+                    res.insert(
+                        popular_title % PACKAGE_REPLACE_FRAGMENT,
+                        cmd_tmpl.setAttrs(
+                            {
+                                { CMD_SET_TYPE, QString::number(set_popular) },
+                                { CMD_GENRE, QStringLiteral("%") }
+                            }
+                        ) -> toString()
+                    );
+
+                    return res;
+                }
+
+                //inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
+                QJsonValue openSet(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
                 }
             };
         }

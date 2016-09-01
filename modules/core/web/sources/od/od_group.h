@@ -21,7 +21,7 @@ namespace Core {
                                     qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
                                     {
                                         { QStringLiteral("st.cmd"), QStringLiteral("userGroups") },
-                                        { QStringLiteral("st._aid"), QStringLiteral("GroupsSubMenu_User_MyGroupsNav_All") },
+//                                        { QStringLiteral("st._aid"), QStringLiteral("GroupsSubMenu_User_MyGroupsNav_All") },
                                         { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
                                     }
                                 ),
@@ -96,6 +96,9 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {{CMD_PREDICATE, name}});
                 }
 
+                QJsonValue groupsById(const QUrlQuery & args) {
+                    return groupsByIdOrPerma(args.queryItemValue(CMD_PREDICATE));
+                }
                 QJsonValue groupsByIdOrPerma(const QString & group_id) {
                     QString url = Info::isNumber(group_id) ?
                         baseUrlStr(qst_site, QStringLiteral("group/") % group_id, {}) :

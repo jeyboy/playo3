@@ -65,7 +65,6 @@ namespace Core {
 
                     return res;
                 }
-
                 bool connectUserSite() { return connectSite(); } // not realized yet
 
                 bool hasOfflineCredentials()     { return !siteToken().isEmpty(); }
@@ -82,6 +81,39 @@ namespace Core {
                     takeOfflineCredentials();
                 }
 
+                QList<Linkable> findFriendsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+                    QJsonObject friends_res = usersById(uid).toObject();
+                    jsonToUsers(linkables, EXTRACT_ITEMS(friends_res));
+
+                    return linkables;
+                }
+                QList<Linkable> findFriendsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonObject friends_res = usersByName(name, 0, 400).toObject();
+                    jsonToUsers(linkables, EXTRACT_ITEMS(friends_res));
+
+                    return linkables;
+                }
+
+                QList<Linkable> findGroupsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+                    QJsonObject groups_res = groupsById(uid).toObject();
+                    jsonToGroups(linkables, EXTRACT_ITEMS(groups_res));
+
+                    return linkables;
+                }
+                QList<Linkable> findGroupsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonObject groups_res = groupsByName(name, 0, 400).toObject();
+                    jsonToGroups(linkables, EXTRACT_ITEMS(groups_res));
+
+                    return linkables;
+                }
             public:
                 // standart step for all search requests is 10
 
@@ -93,7 +125,9 @@ namespace Core {
 
                 // users streams // wtf?
                 // curl 'https://api-v2.soundcloud.com/stream/users/53128020?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=20&offset=0&linked_partitioning=1&app_version=1467192015' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
-
+                QString refresh(const QString & track_id, const DataMediaType & /*itemMediaType*/) {
+                    return trackUrl(track_id);
+                }
 
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api) {
                     switch(stype) {
@@ -106,91 +140,52 @@ namespace Core {
                     }
                 }
 
-                inline QMap<QString, QString> setsList() {
-                    QMap<QString, QString> res;
-                    QMap<QString, QString> opts = siteOptions();
-
-                    QString new_hot_title = setTypeToStr(set_new_hot);
-                    QString top_50_title = setTypeToStr(set_top_50);
-                    QString popular_title = setTypeToStr(set_popular);
-
-                    Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
-
-                    for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
-                        res.insert(
-                            new_hot_title % opt.key(),
-                            cmd_tmpl.setAttrs(
-                                {
-                                    { CMD_SET_TYPE, QString::number(set_new_hot) },
-                                    { CMD_GENRE, opt.value() }
-                                }
-                            ) -> toString()
-                        );
-                        res.insert(
-                            top_50_title % opt.key(),
-                            cmd_tmpl.setAttrs(
-                                {
-                                    { CMD_SET_TYPE, QString::number(set_top_50) },
-                                    { CMD_GENRE, opt.value() }
-                                }
-                            ) -> toString()
-                        );
-
-                        QStringList parts = opt.key().split('&', QString::SkipEmptyParts);
-
-                        if (parts.size() == 1)
-                            res.insert(
-                                popular_title % opt.key(),
-                                cmd_tmpl.setAttrs(
-                                    {
-                                        { CMD_SET_TYPE, QString::number(set_popular) },
-                                        { CMD_GENRE, opt.value() }
-                                    }
-                                ) -> toString()
-                            );
-                        else {
-                            res.insert(
-                                popular_title % parts.first(),
-                                cmd_tmpl.setAttrs(
-                                    {
-                                        { CMD_SET_TYPE, QString::number(set_popular) },
-                                        { CMD_GENRE, parts.first() }
-                                    }
-                                ) -> toString()
-                            );
-                            res.insert(
-                                popular_title % parts.last(),
-                                cmd_tmpl.setAttrs(
-                                    {
-                                        { CMD_SET_TYPE, QString::number(set_popular) },
-                                        { CMD_GENRE, parts.last() }
-                                    }
-                                ) -> toString()
-                            );
-                        }
-                    }
-
-                    res.insert(
-                        popular_title % PACKAGE_REPLACE_FRAGMENT,
-                        cmd_tmpl.setAttrs(
-                            {
-                                { CMD_SET_TYPE, QString::number(set_popular) },
-                                { CMD_GENRE, QStringLiteral("%") }
-                            }
-                        ) -> toString()
-                    );
-
-                    return res;
-                }
-
-                inline QJsonValue openSet(const QUrlQuery & attrs) {
-                    return setByType(
+                QJsonValue openSet(const QUrlQuery & attrs) {
+                    return QJsonArray() << Set::setByType(
                         (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
                         SearchLimit::fromICmdParams(attrs)
                     );
                 }
 
-//                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
+                QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
+                    QJsonObject res = Track::trackRecommendations(track_id, offset, amount).toObject();
+                    return QJsonArray() << res;
+                }
+
+                QJsonValue objectInfo(const QString & oid) {
+                    if (oid[0] == '-')
+                        return QJsonArray() << groupInfo(oid.mid(1));
+                    else
+                        return userInfo(oid);
+                }
+
+                QJsonValue groupInfo(const QString & group_id) {
+                    return tracksByGroup(group_id);
+                }
+
+                QJsonValue userInfo(const QString & user_id) {
+                    QJsonArray blocks;
+
+                    blocks << playlistsByUser(user_id);
+
+                    QJsonObject json = tracksByUserLikes(user_id).toObject();
+                    json.insert(tkn_dir_name, QStringLiteral("Liked"));
+                    blocks << json;
+
+                    blocks << tracksByUser(user_id);
+
+                    if (user_id == userID()) { // ignore socials for not current user
+                        clearFriends();
+                        QThread::msleep(REQUEST_DELAY);
+                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowings(user_id).toObject()));
+                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowers(user_id).toObject()));
+                        clearGroups();
+                        QThread::msleep(REQUEST_DELAY);
+                        jsonToGroups(Groupable::linkables, EXTRACT_ITEMS(groupsByUser(user_id).toObject()));
+                    }
+
+                    return blocks;
+                }
             };
         }
     }
