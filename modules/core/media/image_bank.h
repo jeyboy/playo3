@@ -14,6 +14,7 @@
 
 #define BANK_IMG_MAX_SIZE QSize(640, 480)
 #define BANK_IMG_SLOTS_AMOUNT 8
+#define BANK_DEFAULT_FORMAT "PNG"
 
 using namespace Core::Web;
 
@@ -69,7 +70,7 @@ public:
     QPixmap pixmap(const QString & url) {
         if (locale_pathes.contains(url)) {
             QString path = locale_pathes.value(url);
-            return QPixmap(path);
+            return QPixmap(path, BANK_DEFAULT_FORMAT);
         } else
             return QPixmap();
     }
@@ -157,7 +158,7 @@ public slots:
             if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
                 pix = pix.scaled(BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
-            if (pix.save(filename, "PNG", 100)) // without compression
+            if (pix.save(filename, BANK_DEFAULT_FORMAT, 100)) // without compression
                 locale_pathes.insert(url_str, filename);
             else {
                 qDebug() << "File is not saved" << filename << url_str;

@@ -166,7 +166,7 @@ namespace Core {
                                 baseUrlStr(
                                     qst_site, QStringLiteral("users/%1/followings").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
-                                IQUERY_DEF_FIELDS, call_method_get, headers()
+                                IQUERY_DEF_FIELDS << QStringLiteral("collection"), call_method_get, headers()
                             );
                         }
 
@@ -199,7 +199,7 @@ namespace Core {
                                 baseUrlStr(
                                     qst_site, QStringLiteral("users/%1/followers").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
-                                IQUERY_DEF_FIELDS, call_method_get, headers()
+                                IQUERY_DEF_FIELDS << QStringLiteral("collection"), call_method_get, headers()
                             );
                         }
 
