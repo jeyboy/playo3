@@ -26,7 +26,7 @@ namespace Core {
                     if (uid == userID())
                         ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, func);
                     else
-                        ThreadUtils::obj().run((User *)this, &User::userMedia, uid, func);
+                        ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, uid, func);
                 }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {

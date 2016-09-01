@@ -472,6 +472,28 @@ namespace Core {
                         << prepareBlock(dmt_audio, res.value(tkn_tracks));
                 }
 
+                QJsonValue userMedia(const QString & user_id) {
+                    QJsonObject response = User::userMedia(user_id).toObject();
+                    QJsonArray blocks;
+
+                    QJsonArray artists = response.value(tkn_artists).toArray();
+                    if (!artists.isEmpty()) {
+                        Artist::prepareArtists(artists);
+                        blocks << prepareBlock(dmt_audio_set, artists, {{tkn_dir_name, QStringLiteral("Artists")}});
+                    }
+
+                    QJsonArray albums = response.value(tkn_albums).toArray();
+                    if (!albums.isEmpty()) {
+                        Album::prepareAlbums(albums);
+                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Albums")}});
+                    }
+
+                    blocks << prepareBlock(dmt_audio_set, response.value(tkn_playlists));
+                    blocks << prepareBlock(dmt_audio, response.value(tkn_tracks));
+
+                    return blocks;
+                }
+
                 QJsonValue openSet(const QUrlQuery & attrs) {
                     return QJsonArray() << Set::setByType(
                         (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
