@@ -81,6 +81,22 @@ namespace Core {
                         offset
                     );
                 }
+
+                void prepareStreams(QJsonArray & collections) {
+                    QJsonArray res;
+                    for(QJsonArray::Iterator collection = collections.begin(); collection != collections.end(); collection++) {
+                        QJsonObject collection_obj = (*collection).toObject();
+                        QString uid = idToStr(collection_obj.value(tkn_id));
+
+                        collection_obj.insert(
+                            tkn_loadable_cmd,
+                            Cmd::build(sourceType(), cmd_mtd_tracks_by_tuner, {{CMD_ID, uid}}).toString()
+                        );
+                        res << collection_obj;
+                    }
+
+                    collections = res;
+                }
             };
         }
     }

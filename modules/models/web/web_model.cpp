@@ -43,6 +43,13 @@ void WebModel::refresh() {
                     );
                 return;}
 
+                case rec_user: {
+                    Soundcloud::Queries::obj().userRecommendationsAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
                 default: {
                     Soundcloud::Queries::obj().objectInfoAsync(
                         sttngs.uid,

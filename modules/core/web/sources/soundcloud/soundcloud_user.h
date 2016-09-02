@@ -207,6 +207,32 @@ namespace Core {
                     }
                     return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {{CMD_ID, user_id}});
                 }
+
+                QJsonValue userRecommendations(const QUrlQuery & args) {
+                    return userRecommendations(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt(),
+                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                    );
+                }
+                QJsonValue userRecommendations(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                    Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
+
+                    switch(perm) {
+                        case perm_api:
+                        case perm_site: {
+                            response = pRequest(
+                                baseUrlStr(qst_site_alt1, QStringLiteral("stations/soundcloud:artist-stations:%1/tracks").arg(user_id), {}),
+                                call_type_json, rules(offset, count), 0,
+                                proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
+                            );
+                        }
+
+                        default: Logger::obj().write("Soundcloud", "USER RECOMMENDATIONS is not accessable", true);
+                    }
+                    return prepareBlock(dmt_user, cmd_mtd_user_recommendations, response, {{CMD_ID, user_id}});
+                }
             };
         }
     }

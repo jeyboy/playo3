@@ -128,6 +128,10 @@ namespace Core {
             cmd_mtd_tracks_playlists_by_user,
             cmd_mtd_tracks_playlists_by_group,
 
+            cmd_mtd_video_playlists_by_user,
+
+            cmd_mtd_streams_recommendations,
+
             cmd_mtd_artists_search,
             cmd_mtd_albums_search
         };
@@ -178,6 +182,10 @@ namespace Core {
 
                 case cmd_mtd_tracks_playlists_by_user: return tracksPlaylistsByUser(params);
                 case cmd_mtd_tracks_playlists_by_group: return tracksPlaylistsByGroup(params);
+
+                case cmd_mtd_video_playlists_by_user: return videoPlaylistsByUser(params);
+
+                case cmd_mtd_streams_recommendations: return streamsRecommendations(params);
 
                 case cmd_mtd_artists_search: return artistsSearch(params);
                 case cmd_mtd_albums_search: return albumsSearch(params);
@@ -236,8 +244,11 @@ namespace Core {
         virtual QJsonValue tracksPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue tracksPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
+        virtual QJsonValue streamsRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
+
+        virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue albumsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }

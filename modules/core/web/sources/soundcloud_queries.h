@@ -27,6 +27,12 @@ namespace Core {
                 inline void trackRecommendationsAsync(const QString & track_id, Func * func) {
                     ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, track_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
                 }
+
+                inline void userRecommendationsAsync(const QString & user_id, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendationsAsync, user_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
+                }
+
+
             protected:
                 QJsonValue searchInSets(const SearchLimit & limits) {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;

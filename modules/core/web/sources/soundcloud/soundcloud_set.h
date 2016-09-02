@@ -12,6 +12,18 @@ namespace Core {
             public:
                 enum SetType { set_new_hot = 1, set_top_50, set_popular };
 
+                // liked and owned playlists
+                //curl 'https://api-v2.soundcloud.com/users/99021496/playlists/liked_and_owned?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=12&offset=0&linked_partitioning=1&app_version=1472742050' -H 'Host: api-v2.soundcloud.com' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Referer: https://soundcloud.com/' -H 'Origin: https://soundcloud.com' -H 'Connection: keep-alive'
+
+                // liked stations
+                //curl 'https://api-v2.soundcloud.com/stations/liked?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1472742050' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0'
+
+                // played tracks
+                //curl 'https://api-v2.soundcloud.com/me/play-history/tracks?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1472742050' -H 'Host: api-v2.soundcloud.com' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Referer: https://soundcloud.com/' -H 'Origin: https://soundcloud.com' -H 'Connection: keep-alive'
+
+                // played stations
+                // curl 'https://api-v2.soundcloud.com/me/play-history/contexts?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1472742050' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0'
+
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
                         case set_new_hot: return QStringLiteral("New & Hot: ");

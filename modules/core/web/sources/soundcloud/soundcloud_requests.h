@@ -7,13 +7,14 @@
 #include "soundcloud_set.h"
 #include "soundcloud_track.h"
 #include "soundcloud_user.h"
+#include "soundcloud_stream.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Requests : public Sociable, public Auth, public Group,
+            class Requests : public Sociable, public Auth, public Group, public Stream,
                      public Playlist, public Set, public Track, public User
             {
             protected:
@@ -28,7 +29,7 @@ namespace Core {
                         sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
                         sf_recomendable_by_item | sf_newable | sf_taggable | sf_genreable |
-                        sf_api_auth_mandatory |
+                        sf_recomendable_by_user | sf_api_auth_mandatory |
                         sf_site_recomendations_auth_only | sf_site_object_content_auth_only
                     );
                 }
@@ -123,13 +124,6 @@ namespace Core {
                 // mixed search - users / groups/ tracks
                 // curl 'https://api-v2.soundcloud.com/search?q=dubstep&sc_a_id=184de48a-5c8d-4ef7-908a-b4602d2a667d&facet=model&user_id=301086-912545-767108-258358&client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1466770454' -H 'Host: api-v2.soundcloud.com' -H 'DNT: 1' -H 'Referer: https://soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache'
 
-                // users streams // wtf?
-                // curl 'https://api-v2.soundcloud.com/stream/users/53128020?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=20&offset=0&linked_partitioning=1&app_version=1467192015' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:47.0) Gecko/20100101 Firefox/47.0'
-
-                // artist based station
-                //curl 'https://api-v2.soundcloud.com/stations/soundcloud:artist-stations:2485074/tracks?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1472654786' -H 'Host: api-v2.soundcloud.com' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Referer: https://soundcloud.com/' -H 'origin: https://soundcloud.com' -H 'Connection: keep-alive'
-                //curl 'https://api-v2.soundcloud.com/stations/artist_recommended?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1472654786' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'origin: https://soundcloud.com'
-                //
                 QString refresh(const QString & track_id, const DataMediaType & /*itemMediaType*/) {
                     return trackUrl(track_id);
                 }
@@ -153,8 +147,11 @@ namespace Core {
                 }
 
                 QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
-                    QJsonObject res = Track::trackRecommendations(track_id, offset, amount).toObject();
-                    return QJsonArray() << res;
+                    return QJsonArray() << Track::trackRecommendations(track_id, offset, amount);
+                }
+
+                QJsonValue userRecommendationsAsync(const QString & user_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
+                    return QJsonArray() << User::userRecommendations(user_id, offset, amount);
                 }
 
                 QJsonValue objectInfo(const QString & oid) {
