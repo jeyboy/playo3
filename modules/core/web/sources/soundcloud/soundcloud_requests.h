@@ -7,14 +7,13 @@
 #include "soundcloud_set.h"
 #include "soundcloud_track.h"
 #include "soundcloud_user.h"
-#include "soundcloud_stream.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Requests : public Sociable, public Auth, public Group, public Stream,
+            class Requests : public Sociable, public Auth, public Group,
                      public Playlist, public Set, public Track, public User
             {
             protected:

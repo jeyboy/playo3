@@ -34,9 +34,9 @@ namespace Core {
                                 call_type_json, rules(offset, qMin(limit, 50)), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
-                         break;}
 
-                        prepareStreams(response.content);
+                            prepareStreams(response.content);
+                         break;}
 
                         default: Logger::obj().write("Soundcloud", "STREAMS RECOMMENDATIONS is not accessable", true);
                     }

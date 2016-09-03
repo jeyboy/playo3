@@ -90,7 +90,7 @@ namespace Core {
 
                         collection_obj.insert(
                             tkn_loadable_cmd,
-                            Cmd::build(sourceType(), cmd_mtd_tracks_by_tuner, {{CMD_ID, uid}}).toString()
+                            Cmd::build(sourceType(), cmd_mtd_user_recommendations, {{CMD_ID, uid}}).toString()
                         );
                         res << collection_obj;
                     }
