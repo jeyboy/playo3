@@ -18,21 +18,20 @@ namespace Core {
                                 baseUrlStr(qst_api, path_groups % '/' % group_id, {}),
                                 call_type_json, 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             return sRequest(
                                 baseUrlStr(qst_site, path_groups % '/' % group_id, {}),
                                 call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "GROUP INFO is not accessable", true);
                     }
 
                     return QJsonObject();
                 }
-
 
                 QJsonValue groupsById(const QUrlQuery & args) {
                     return groupsById(
@@ -55,7 +54,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_groups % '/' % group_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -63,7 +62,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "GROUP BY ID is not accessable", true);
                     }
@@ -89,7 +88,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "GROUP BY TRACK is not accessable", true);
                     }
@@ -114,7 +113,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_user_groups.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -125,7 +124,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "GROUP BY USER is not accessable", true);
                     }
@@ -150,7 +149,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_groups, {{tkn_q, name}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -166,7 +165,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "GROUP BY NAME is not accessable", true);
                     }

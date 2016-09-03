@@ -117,7 +117,7 @@ namespace Core {
                                     return streamsRecommendations(limits.start_offset, qMax(50, limits.items_limit));
                                 break;}
                             }
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "SET BY TYPE is not accessable", true);
                     }

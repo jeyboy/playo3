@@ -25,7 +25,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_users % '/' % user_id, {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -33,7 +33,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER BY ID is not accessable", true);
                     }
@@ -58,7 +58,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_users, {{tkn_q, name}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -74,7 +74,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER BY NAME is not accessable", true);
                     }
@@ -98,7 +98,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_track_favorites.arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -107,7 +107,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER BY TRACK LIKES is not accessable", true);
                     }
@@ -134,7 +134,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER BY TRACK REPOST is not accessable", true);
                     }
@@ -159,7 +159,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_user_followings.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch, COLLECTION_FIELDS
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -168,7 +168,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS << QStringLiteral("collection"), call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER FOLLOWINGS is not accessable", true);
                     }
@@ -192,7 +192,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_user_followers.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch, COLLECTION_FIELDS
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -201,7 +201,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS << QStringLiteral("collection"), call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER FOLLOWERS is not accessable", true);
                     }
@@ -227,7 +227,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "USER RECOMMENDATIONS is not accessable", true);
                     }

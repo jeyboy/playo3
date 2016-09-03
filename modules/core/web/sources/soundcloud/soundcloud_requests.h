@@ -167,13 +167,13 @@ namespace Core {
                 QJsonValue userInfo(const QString & user_id) {
                     QJsonArray blocks;
 
-                    blocks << playlistsByUser(user_id);
+                    blocks << tracksByUser(user_id);
 
                     QJsonObject json = tracksByUserLikes(user_id).toObject();
                     json.insert(tkn_dir_name, QStringLiteral("Liked"));
                     blocks << json;
 
-                    blocks << tracksByUser(user_id);
+                    blocks << playlistsByUser(user_id);
 
                     if (user_id == userID()) { // ignore socials for not current user
                         clearFriends();

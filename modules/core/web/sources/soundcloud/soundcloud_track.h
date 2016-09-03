@@ -25,7 +25,7 @@ namespace Core {
                             QJsonObject obj = trackInfo(track_id);
                             QString url = obj.value(QStringLiteral("stream_url")).toString();
                             if (!url.isEmpty()) return url;
-                        }
+                        break;}
 
                         case perm_site: {
                             QJsonObject obj = sRequest(
@@ -35,10 +35,9 @@ namespace Core {
 
                             QString res = obj.value(QStringLiteral("http_mp3_128_url")).toString();
                             return res;
-                        }
+                        break;}
 
-                        default:
-                            Logger::obj().write("Soundcloud", "TRACK URL is not accessable", true);
+                        default: Logger::obj().write("Soundcloud", "TRACK URL is not accessable", true);
                     }
 
                     return QString();
@@ -54,7 +53,7 @@ namespace Core {
                             ) -> toText();
                             qDebug() << "FAV" << res;
                             return false; // TODO: update me
-                        }
+                        break;}
 
                         case perm_site: {
                             // alt // https://api.soundcloud.com/e1/me/track_likes/265476609
@@ -64,7 +63,7 @@ namespace Core {
                             ) -> toJson();
 
                             return obj.value(QStringLiteral("status")).toString().startsWith(QStringLiteral("201"));
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "LIKE TRACK is not accessable", true);
                     }
@@ -81,17 +80,16 @@ namespace Core {
                                 baseUrlStr(qst_api, path_tracks % '/' % track_id, {}),
                                 call_type_json
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             return sRequest(
                                 baseUrlStr(qst_site_alt1, path_tracks, {{ tkn_ids, track_id }}),
                                 call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
-                        default:
-                            Logger::obj().write("Soundcloud", "TRACK INFO is not accessable", true);
+                        default: Logger::obj().write("Soundcloud", "TRACK INFO is not accessable", true);
                     }
 
                     return QJsonObject();
@@ -149,7 +147,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_related_tracks.arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -157,7 +155,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "TRACK RELATIONS is not accessable", true);
                     }
@@ -180,7 +178,7 @@ namespace Core {
                                 call_type_json,
                                 rules(limits.start_offset, limits.items_limit, limits.requests_limit), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -197,7 +195,7 @@ namespace Core {
                                 call_type_json, rules(limits.start_offset, limits.items_limit, limits.requests_limit), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "TRACK SEARCH is not accessable", true);
                     }
@@ -261,7 +259,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_group_tracks.arg(group_id), {{tkn_types, val_audio_types}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -269,7 +267,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default:
                             Logger::obj().write("Soundcloud", "TRACK BY GROUP is not accessable", true);
@@ -295,7 +293,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_user_tracks.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -306,7 +304,7 @@ namespace Core {
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "TRACK BY USER is not accessable", true);
                     }
@@ -331,7 +329,7 @@ namespace Core {
                                 baseUrlStr(qst_api, path_user_favorites.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
-                        }
+                        break;}
 
                         case perm_site: {
                             response = pRequest(
@@ -340,7 +338,7 @@ namespace Core {
                                 proc_json_patch, IQUERY_DEF_FIELDS << QStringLiteral("collection") <<
                                 QStringLiteral("track"), call_method_get, headers()
                             );
-                        }
+                        break;}
 
                         default: Logger::obj().write("Soundcloud", "TRACK BY USER LIKES is not accessable", true);
                     }

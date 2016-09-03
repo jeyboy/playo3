@@ -9,7 +9,6 @@ namespace Core {
             class Album : public virtual Base {
             protected:
                 QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }
-
                 QJsonValue albumsSearch(const SearchLimit & limits) { // need to check
                     QueriableResponse response = pRequest(
                         audioUrlStr(
