@@ -93,7 +93,7 @@ namespace Core {
             const QString & predicate, const QString & genre, int items_limit = DEFAULT_ITEMS_LIMIT,
             int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimitBase(sc_type, predicate_type, items_limit, start_offset, requests_limit),
-            predicate(predicate), genre(genre) {}
+            predicate(predicate.trimmed()), genre(genre.trimmed()) {}
 
         QString predicate;
         QString genre;

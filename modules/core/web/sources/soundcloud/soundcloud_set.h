@@ -92,13 +92,13 @@ namespace Core {
                                             qst_api, path_tracks,
                                             trackSearchQuery(QString(), limits.genre == SOUNDCLOUD_ALL_GENRES_PARAM ? QString() : limits.genre, true)
                                         ),
-                                        call_type_json, rules(limits.start_offset, limits.items_limit), 0, proc_json_patch
+                                        call_type_json, rules(limits.start_offset, qMax(50, limits.items_limit)), 0, proc_json_patch
                                     );
                                 break;}
 
                                 case set_new_hot:
                                 case set_top_50: {
-                                    QJsonObject obj = sRequest(
+                                    QJsonArray block_content = saRequest(
                                         baseUrlStr(
                                             qst_site_alt1, QStringLiteral("charts"),
                                             {
@@ -107,19 +107,14 @@ namespace Core {
                                                 { QStringLiteral("kind"), set_type == set_new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
                                             }
                                         ),
-                                        call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
+                                        call_type_json, 0, proc_json_patch, COLLECTION_FIELDS << QStringLiteral("track"), call_method_get, headers()
                                     );
-                                    QJsonArray block_content; // "last_updated":"2016-07-01T05:27:38Z"
 
-                                    QJsonArray collection = obj.value(QStringLiteral("collection")).toArray();
-                                    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++)
-                                        block_content.append((*it).toObject().value(QStringLiteral("track")));
-
-                                    return prepareBlock(dmt_audio_set, block_content);
+                                    return prepareBlock(dmt_audio, block_content);
                                 break;}
 
                                 case set_recommended_artists: {
-                                    return streamsRecommendations(limits.start_offset, limits.items_limit);
+                                    return streamsRecommendations(limits.start_offset, qMax(50, limits.items_limit));
                                 break;}
                             }
                         }
@@ -127,7 +122,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "SET BY TYPE is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_audio_set, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                 }
 
                 QMap<QString, QString> setsList() {
