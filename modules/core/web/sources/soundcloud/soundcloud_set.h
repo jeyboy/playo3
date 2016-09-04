@@ -190,11 +190,11 @@ namespace Core {
                     }
 
                     res.insert(
-                        popular_title % PACKAGE_REPLACE_FRAGMENT,
+                        popular_title % PACKAGE_REPLACE_FRAGMENT_TITLE,
                         cmd_tmpl.setAttrs(
                             {
                                 { CMD_SET_TYPE, QString::number(set_popular) },
-                                { CMD_GENRE, QStringLiteral("%") }
+                                { CMD_GENRE, PACKAGE_REPLACE_FRAGMENT }
                             }
                         ) -> toString()
                     );

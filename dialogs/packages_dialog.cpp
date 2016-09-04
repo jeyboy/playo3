@@ -46,13 +46,13 @@ void PackagesDialog::on_packagesList_itemActivated(QListWidgetItem * item) {
     name = item -> text();
     params = item -> data(Qt::UserRole).toString();
 
-    if (params.endsWith('%')) {
+    if (params.endsWith(QUrl::toPercentEncoding(PACKAGE_REPLACE_FRAGMENT))) {
         QString manual_genre;
 
         if (!takeGenre(manual_genre) || manual_genre.isEmpty()) return;
 
-        params.replace('%', manual_genre);
-        name.replace(PACKAGE_REPLACE_FRAGMENT, manual_genre);
+        params.replace(QUrl::toPercentEncoding(PACKAGE_REPLACE_FRAGMENT), manual_genre.toLower());
+        name.replace(PACKAGE_REPLACE_FRAGMENT_TITLE, manual_genre);
     }
 
     accept();
