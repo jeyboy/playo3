@@ -10,7 +10,7 @@ void TreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModel
         if (path.isEmpty()) path = Extensions::folderName(file);
 
         QStringList list = path.split('/', QString::SkipEmptyParts);
-        Playlist * nearestNode = rootItem -> findCompatblePlaylist(&list);
+        Playlist * nearestNode = root_item -> findCompatblePlaylist(&list);
         Playlist * node = list.isEmpty() ? nearestNode : nearestNode -> createPlaylist(dt_playlist, list.takeFirst(), &list);
         exIndex = index(nearestNode);
 

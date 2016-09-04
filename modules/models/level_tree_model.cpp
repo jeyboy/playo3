@@ -12,12 +12,12 @@ void LevelTreeModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, Q
         else
             fName = Extensions::folderName(file);
 
-        Playlist * nearestNode = rootItem -> playlist(fName);
+        Playlist * nearestNode = root_item -> playlist(fName);
         Playlist * node;
         if (!nearestNode) {
-            exIndex = index(rootItem);
-            exRow = rootItem -> childCount();
-            node = rootItem -> createPlaylist(dt_playlist, fName);
+            exIndex = index(root_item);
+            exRow = root_item -> childCount();
+            node = root_item -> createPlaylist(dt_playlist, fName);
         } else {
             node = nearestNode;
             exIndex = index(nearestNode);
@@ -37,7 +37,7 @@ void LevelTreeModel::dropProcession(const QModelIndex & ind, int row, const QLis
     int count = filesRoutine(list, node, row);
 
     if (count > 0) {
-        rootItem -> updateItemsCountInBranch(count);
+        root_item -> updateItemsCountInBranch(count);
         emit itemsCountChanged(count);
     }
     else node -> removeYouself();
@@ -52,7 +52,7 @@ int LevelTreeModel::filesRoutine(const QString & filePath, Playlist * node, QHas
         QDirIterator dir_it(filePath, (QDir::Filter)(FOLDER_FILTERS));
         while(dir_it.hasNext()) {
             QString path = dir_it.next();
-            res += filesRoutine(path, rootItem -> createPlaylist(dt_playlist, dir_it.fileName()), rels, unproc_files, items);
+            res += filesRoutine(path, root_item -> createPlaylist(dt_playlist, dir_it.fileName()), rels, unproc_files, items);
         }
     }
 
@@ -98,7 +98,7 @@ int LevelTreeModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int 
         QString name = file.fileName();
 
         if (file.isDir())
-            res += filesRoutine(path, rootItem -> createPlaylist(dt_playlist, Extensions::folderName(file)), relations, unproc_files, items);
+            res += filesRoutine(path, root_item -> createPlaylist(dt_playlist, Extensions::folderName(file)), relations, unproc_files, items);
         else { 
             if (unproc_files.contains(path)) continue;
             if (Extensions::obj().respondToExtension(file.suffix())) {

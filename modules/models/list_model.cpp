@@ -4,9 +4,9 @@ using namespace Models;
 
 void ListModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url) {
     if (!url.isEmpty()) {
-        exIndex = (const_cast<QModelIndex &>(dIndex)) = index(rootItem);
+        exIndex = (const_cast<QModelIndex &>(dIndex)) = index(root_item);
         if (dRow == -1)
-            exRow = rootItem -> childCount();
+            exRow = root_item -> childCount();
         else
             exRow = dRow;
     }

@@ -107,7 +107,7 @@ void SearchModel::searchFinished() {
 }
 
 void SearchModel::searchRoutine(QFutureWatcher<void> * watcher) {
-    Playlist * res = rootItem;
+    Playlist * res = root_item;
 
     emit moveInBackgroundProcess();
     if (requests.isEmpty())

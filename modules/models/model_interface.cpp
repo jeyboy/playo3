@@ -21,15 +21,15 @@ bool IModel::restoreUrl(IItem * itm) {
     return false;
 }
 
-IModel::IModel(const Params & settings, QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), block_fetching(false), addWatcher(0), sttngs(settings) {
+IModel::IModel(const Params & settings, QJsonObject * hash, QObject * parent) : QAbstractItemModel(parent), block_fetching(false), add_watcher(0), sttngs(settings) {
     sync = new QMutex(QMutex::NonRecursive);
-    rootItem = hash ? new Playlist(hash, 0, hash -> take(JSON_TYPE_CHILDS)) : new Playlist();
-    qDebug() << this << " " << rootItem -> itemsCountInBranch(); // REMOVE ME
+    root_item = hash ? new Playlist(hash, 0, hash -> take(JSON_TYPE_CHILDS)) : new Playlist();
+    qDebug() << this << " " << root_item -> itemsCountInBranch(); // REMOVE ME
 }
 
 IModel::~IModel() {
-    delete rootItem;
-    delete addWatcher;
+    delete root_item;
+    delete add_watcher;
     delete sync;
 }
 
@@ -82,7 +82,7 @@ bool IModel::setData(const QModelIndex & model_index, const QVariant & value, in
 
 QVariant IModel::headerData(int section, Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
-        return rootItem -> data(section);
+        return root_item -> data(section);
 
     return QVariant();
 }
@@ -91,7 +91,7 @@ bool IModel::setHeaderData(int section, Qt::Orientation orientation, const QVari
     if (role != Qt::EditRole || orientation != Qt::Horizontal)
         return false;
 
-    bool result = rootItem -> setData(section, value);
+    bool result = root_item -> setData(section, value);
 
     if (result)
         emit headerDataChanged(orientation, section, section);
@@ -170,7 +170,7 @@ QModelIndex IModel::parent(const QModelIndex & index) const {
     IItem * child_item = item(index);
     IItem * parent_item = child_item -> parent();
 
-    if (!parent_item || parent_item == rootItem)
+    if (!parent_item || parent_item == root_item)
         return QModelIndex();
 
     return createIndex(parent_item -> row(), 0, parent_item);
@@ -184,7 +184,7 @@ bool IModel::removeColumns(int position, int columns, const QModelIndex &parent)
     success = true;
     endRemoveColumns();
 
-    if (rootItem -> columnCount() == 0)
+    if (root_item -> columnCount() == 0)
         removeRows(0, rowCount());
 
     return success;
@@ -214,9 +214,9 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
 }
 
 bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
-    addWatcher = new QFutureWatcher<DropData *>();
-    connect(addWatcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
-    addWatcher -> setFuture(QtConcurrent::run(this, &IModel::threadlyProcessingRowsInsertion, list, pos, parent));
+    add_watcher = new QFutureWatcher<DropData *>();
+    connect(add_watcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
+    add_watcher -> setFuture(QtConcurrent::run(this, &IModel::threadlyProcessingRowsInsertion, list, pos, parent));
     return true;
 }
 
@@ -283,7 +283,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
     }
 
     if (update_amount > 0) {
-        beginInsertRows(parent == rootItem ? QModelIndex() : index(parent), start_index, start_index + (update_amount - 1));
+        beginInsertRows(parent == root_item ? QModelIndex() : index(parent), start_index, start_index + (update_amount - 1));
         parent -> updateItemsCountInBranch(items_amount);
         endInsertRows();
     }
@@ -366,6 +366,7 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & upd
     int items_amount = 0;
 
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    bool is_collapsed = parent != root_item;
 //    int pos = 0;
 
     if (block.contains(tkn_more_cmd))
@@ -411,6 +412,9 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & upd
 
         if (playlist.contains(tkn_more_cmd))
             folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
+
+        if (is_collapsed)
+            folder -> setStates(IItem::flag_not_expanded);
     }
 
     return items_amount;
@@ -487,6 +491,7 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, int & upd
     int items_amount = 0;
 
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    bool is_collapsed = parent != root_item;
 
     if (block.contains(tkn_more_cmd))
         parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
@@ -524,6 +529,9 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, int & upd
 
         if (playlist.contains(tkn_more_cmd))
             folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
+
+        if (is_collapsed)
+            folder -> setStates(IItem::flag_not_expanded);
     }
 
     return items_amount;
@@ -583,6 +591,7 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
     int items_amount = 0;
 
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    bool is_collapsed = parent != root_item;
 
     if (block.contains(tkn_more_cmd))
         parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
@@ -620,6 +629,9 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
                 folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
 
             folder -> setOwner(playlist.value(Od::tkn_owner).toString());
+
+            if (is_collapsed)
+                folder -> setStates(IItem::flag_not_expanded);
         }
     }
 
@@ -730,6 +742,7 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
     if (collection.isEmpty()) return 0;
 
     DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    bool is_collapsed = parent != root_item;
     int items_amount = 0;
 
     if (block.contains(tkn_more_cmd))
@@ -772,6 +785,9 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
                 items_amount += taked_amount;
                 folder -> updateItemsCountInBranch(taked_amount);
             }
+
+            if (is_collapsed)
+                folder -> setStates(IItem::flag_not_expanded);
         } else {
             QString id = QString::number(itm.value(tkn_grab_id).toInt());
             QString uri = itm.value(tkn_grab_url).toString();
@@ -885,7 +901,7 @@ int IModel::rowCount(const QModelIndex & parent) const {
 
 void IModel::shuffle() {
     beginResetModel();
-    rootItem -> shuffle();
+    root_item -> shuffle();
     endResetModel();
 }
 
@@ -1011,16 +1027,16 @@ void IModel::importIds(const QStringList & ids) {
         uidsMap[parts.first().toInt()].append(parts.last());
     }
 
-    Playlist * parentNode = rootItem;
+    Playlist * parentNode = root_item;
     bool is_new = false;
 
     if (!hasFreeMoving()) {
         QFileInfo file = QFileInfo(REMOTE_DND_URL.toLocalFile());
         QString path = file.path();
         if (path.isEmpty()) path = Extensions::folderName(file);
-        parentNode = rootItem -> playlist(path);
+        parentNode = root_item -> playlist(path);
         is_new = !parentNode;
-        if (is_new) parentNode = rootItem -> createPlaylist(dt_playlist, path);
+        if (is_new) parentNode = root_item -> createPlaylist(dt_playlist, path);
     }
 
 //    switch(playlistType()) {
@@ -1075,12 +1091,12 @@ void IModel::importIds(const QStringList & ids) {
 }
 
 void IModel::markAllAsChecked() {
-    rootItem -> updateCheckedState(true);
-    emit dataChanged(QModelIndex(), index(rootItem -> child(rootItem -> childCount() - 1)));
+    root_item -> updateCheckedState(true);
+    emit dataChanged(QModelIndex(), index(root_item -> lastChild()));
 }
 void IModel::markAllAsUnchecked() {
-    rootItem -> updateCheckedState(false);
-    emit dataChanged(QModelIndex(), index(rootItem -> child(rootItem -> childCount() - 1)));
+    root_item -> updateCheckedState(false);
+    emit dataChanged(QModelIndex(), index(root_item -> lastChild()));
 }
 
 //void IModel::removeChecked() {
@@ -1092,7 +1108,7 @@ void IModel::markAllAsUnchecked() {
 
 
 void IModel::expandeAll() {
-    rootItem -> propagatePlaylistSetFlag(IItem::flag_expanded);
+    root_item -> propagatePlaylistSetFlag(IItem::flag_expanded);
 }
 
 void IModel::expanded(const QModelIndex & index) {
@@ -1101,7 +1117,7 @@ void IModel::expanded(const QModelIndex & index) {
 }
 
 void IModel::collapseAll() {
-    rootItem -> propagatePlaylistUnsetFlag(IItem::flag_expanded);
+    root_item -> propagatePlaylistUnsetFlag(IItem::flag_expanded);
 }
 
 void IModel::collapsed(const QModelIndex & index) {
@@ -1110,9 +1126,9 @@ void IModel::collapsed(const QModelIndex & index) {
 }
 
 void IModel::finishingItemsAdding() {
-    DropData * res = addWatcher -> result();
-    delete addWatcher;
-    addWatcher = 0;
+    DropData * res = add_watcher -> result();
+    delete add_watcher;
+    add_watcher = 0;
     if (!res) return;
 
 
@@ -1177,7 +1193,7 @@ QModelIndex IModel::fromPath(QString path, Direction direction) {
     if (parts.isEmpty())
         return QModelIndex();
 
-    Playlist * curr = rootItem;
+    Playlist * curr = root_item;
 
     while(parts.length() > 1) {
         curr = dynamic_cast<Playlist *>(curr -> child(parts.takeFirst().toInt()));
@@ -1233,7 +1249,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
     QHash<Playlist *, Playlist * > links;
     QHash<IItem *, int> insertPos;
 
-    for(QModelIndex ind : dndList) {
+    for(QModelIndex ind : dnd_list) {
         if (ind == dropIndex)
             continue;
 
@@ -1285,7 +1301,7 @@ bool IModel::proceedSelfDnd(int row, int /*column*/, const QModelIndex & parent)
 
     if (totalAdded > 0) emit itemsCountChanged(totalAdded);
 
-    dndList.clear();
+    dnd_list.clear();
     return true;
 }
 
@@ -1388,11 +1404,11 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
     int row_count = rowCount(parentIndex);
     if (row > row_count) row = -1;
 
-    if (dropKeyModifiers & Qt::ControlModifier)
+    if (drop_key_modifiers & Qt::ControlModifier)
         Dialogs::ExtensionDialog(QApplication::activeWindow()).exec();
 
     if (data -> hasFormat(DROP_INNER_FORMAT)) {
-        if (!dndList.isEmpty()) {
+        if (!dnd_list.isEmpty()) {
             return proceedSelfDnd(row, column, parentIndex);
         } else {
             QByteArray encoded = data -> data(DROP_INNER_FORMAT);
@@ -1409,7 +1425,7 @@ int IModel::search(const SearchLimit & params, Playlist * destination, Playlist 
     int amount = 0;
 
     if (search_source == 0)
-        search_source = rootItem;
+        search_source = root_item;
 
     QList<IItem *> child = search_source -> childrenList();
     bool has_empty_predicate = params.predicate.isEmpty();
@@ -1446,7 +1462,7 @@ int IModel::search(const QString & predicate, Playlist * destination, Playlist *
     int amount = 0;
 
     if (search_source == 0)
-        search_source = rootItem;
+        search_source = root_item;
 
     QList<IItem *> child = search_source -> childrenList();
 

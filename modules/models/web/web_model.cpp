@@ -117,7 +117,7 @@ void WebModel::refresh() {
 }
 
 void WebModel::proceedJson(QJsonValue & hash) {
-    proceedBlocks(hash.toArray(), rootItem);
+    proceedBlocks(hash.toArray(), root_item);
     emit moveOutProcess();
 }
 

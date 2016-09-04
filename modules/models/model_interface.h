@@ -30,8 +30,8 @@ namespace Models {
         Q_OBJECT
 
         bool block_fetching;
-        QModelIndexList dndList;
-        QFutureWatcher<DropData *> * addWatcher;
+        QModelIndexList dnd_list;
+        QFutureWatcher<DropData *> * add_watcher;
         RemovedItems deleted_items;
     public:
         enum Direction {
@@ -45,7 +45,7 @@ namespace Models {
         IModel(const Params & settings, QJsonObject * hash, QObject * parent);
         virtual ~IModel();
 
-        inline Playlist * root() { return rootItem; }
+        inline Playlist * root() { return root_item; }
 
         inline QString name() {
             QString subject = objectName();
@@ -65,7 +65,7 @@ namespace Models {
             }
         }
 
-        void setDNDList(QModelIndexList newDndList) { dndList = newDndList; }
+        void setDNDList(QModelIndexList new_dnd_list) { dnd_list = new_dnd_list; }
 
         QVariant data(const QModelIndex & index, int role) const;
         bool setData(const QModelIndex & index, const QVariant & value, int role = Qt::EditRole);
@@ -110,7 +110,7 @@ namespace Models {
             if (itm -> isLoadable()) return true;
 
             //INFO: fetch only root items at this time
-            if (itm -> isFetchable() && itm == rootItem && !itm -> is(IItem::flag_in_proc)) {
+            if (itm -> isFetchable() && itm == root_item && !itm -> is(IItem::flag_in_proc)) {
                 itm -> setStates(IItem::flag_in_proc);
                 emit fetchNeeded(parent);
             }
@@ -122,7 +122,7 @@ namespace Models {
             return !deleted_items.containsItem(ind.internalPointer());
         }
         inline QModelIndex index(IItem * item) const {
-            if (item == rootItem)
+            if (item == root_item)
                 return QModelIndex();
             else
                 return createIndex(item -> row(), item -> column(), item);
@@ -132,7 +132,7 @@ namespace Models {
         QModelIndex parent(const QModelIndex & index) const;
 
         int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        inline int columnCount(const QModelIndex & /*parent*/ = QModelIndex()) const { return rootItem -> columnCount(); }
+        inline int columnCount(const QModelIndex & /*parent*/ = QModelIndex()) const { return root_item -> columnCount(); }
 
         Qt::ItemFlags flags(const QModelIndex & index) const;
 
@@ -171,18 +171,18 @@ namespace Models {
                 if (item)
                     return item;
             }
-            return rootItem;
+            return root_item;
         }
-        template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(index.isValid() ? item(index) : rootItem); }
+        template<class T> inline T * item(const QModelIndex & index) const { return dynamic_cast<T *>(index.isValid() ? item(index) : root_item); }
 
         void blockFetching(bool blocked = true) { block_fetching = blocked; }
 
         void shuffle();
-        virtual inline QJsonObject toJson() { return rootItem -> toJson(); }
+        virtual inline QJsonObject toJson() { return root_item -> toJson(); }
 
         QModelIndex fromPath(QString path, Direction direction = none);
 
-        inline void setDropKeyboardModifiers(Qt::KeyboardModifiers keyModifiers) { dropKeyModifiers = keyModifiers; }
+        inline void setDropKeyboardModifiers(Qt::KeyboardModifiers key_modifiers) { drop_key_modifiers = key_modifiers; }
         Qt::DropActions supportedDropActions() const;
         QStringList mimeTypes() const;
         bool proceedSelfDnd(int row, int column, const QModelIndex & parent);
@@ -235,9 +235,9 @@ namespace Models {
         virtual void recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelIndex & exIndex, int & exRow, const QUrl & url);
         virtual void dropProcession(const QModelIndex & parent, int row, const QList<QUrl> & list) = 0;
 
-        Qt::KeyboardModifiers dropKeyModifiers;
+        Qt::KeyboardModifiers drop_key_modifiers;
         QMutex * sync;
-        Playlist * rootItem;
+        Playlist * root_item;
         Params sttngs;
     };
 
