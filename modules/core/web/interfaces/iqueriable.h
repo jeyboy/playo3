@@ -222,8 +222,8 @@ namespace Core {
                     arg.items_total_limit,
                     arg.requests_limit,
                     arr -> isEmpty() || (is_iter_token && arg.offset_token.isEmpty()) ||
-                        (poly_rules.call_iter == call_iter_type_page ?
-                            arg.requests_fact_count < arg.requests_limit : arg.items_fact_count < arg.items_total_limit)
+                        (arg.requests_fact_count < arg.requests_limit &&
+                         arg.items_fact_count < arg.items_total_limit)
                 );
             }
 

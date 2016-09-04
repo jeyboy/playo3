@@ -17,8 +17,6 @@ namespace Core {
             int items_limit;
             int requests_limit;
             bool finished;
-
-//            bool isFinished() const { return content.size() < items_limit; }
         };
     }
 }
