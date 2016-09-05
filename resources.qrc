@@ -8,7 +8,7 @@
         <file alias="add_vk">images/elements/add_vk.png</file>
         <file alias="add_vk_on">images/elements/add_vk_on.png</file>
         <file>images/elements/collapse.png</file>
-        <file>images/elements/download.png</file>
+        <file alias="download">images/elements/download.png</file>
         <file alias="drop_add">images/elements/drop-add.png</file>
         <file alias="drop_remove">images/elements/drop-remove.png</file>
         <file>images/elements/error.png</file>

@@ -48,6 +48,8 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
 
     int size = icon_size - state_width * 2;
 
+    icons.insert(-1000,                                                 PIXMAP(QStringLiteral(":/download"), size));
+
     icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));
     icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
     icons.insert(-200 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/process_on"), size));
@@ -102,6 +104,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
 
     QVariantHash attrs = index.data(IATTRS).toHash();
     QVariant checkable = attrs.value(Keys::checkable);
+    QVariant loadable = attrs.value(Keys::loadable);
 
     QString ext;
     int angle = bodyRect.height() / 2.2, ico_offset = 0, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 10;
@@ -144,6 +147,10 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         int rectOffset = (checkable.isValid() ? 18 : 2);
         bodyRect.moveLeft(bodyRect.left() + rectOffset);
         bodyRect.setWidth(bodyRect.width() - rectOffset);
+    } else {
+        if (loadable.isValid()) {
+            left_offset += icon_size;
+        }
     }
 
 //    painter -> setClipRect(bodyRect);
@@ -229,6 +236,17 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                     }
                 }
             }
+        }
+    } else {
+        if (loadable.isValid()) {
+            QRect rect = QRect(
+                        bodyRect.left(),
+                        option.rect.top() + 1,
+                        icon_size + (ico_offset + 4),
+                        bodyRect.height()
+                    );
+
+            painter -> drawPixmap(rect, icons[-1000]);
         }
     }
 
@@ -321,6 +339,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 
     QVariantHash attrs = index.data(IATTRS).toHash();
     QVariant checkable = attrs.value(Keys::checkable);
+    QVariant loadable = attrs.value(Keys::loadable);
 
     int background_state = attrs.value(Keys::state).toInt();
     int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 6;
@@ -470,6 +489,13 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                 painter -> drawText(rectText, Qt::AlignLeft, s);
                 painter -> drawLine(rectText.topLeft(), rectText.topRight());
             }
+        }
+    } else {
+        if (loadable.isValid()) {
+            QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
+            QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
+            painter -> drawPixmap(rect, icons[-1000]);
+            left_offset += rect.width() + 6;
         }
     }
 

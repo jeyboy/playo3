@@ -23,4 +23,5 @@ namespace Keys {
 
     const QString asterix       = QStringLiteral("*");
     const QString shareable     = QStringLiteral("shareable");
+    const QString loadable      = QStringLiteral("loadable");
 }

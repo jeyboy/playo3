@@ -122,14 +122,13 @@ namespace Core {
                                         }
                                     }
                                 ),
-                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_audio
+                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_audio << tkn_items
                             );
                         break;}
 
                         default: Logger::obj().write("VK", "userRecommendations is not accessable", true);
                     }
 
-//                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {{CMD_ID, user_id}, {CMD_PREDICATE, (int)randomize}});
                     return prepareBlock(dmt_audio, block_content);
                 }
 
@@ -163,7 +162,7 @@ namespace Core {
                                         }
                                     }
                                 ),
-                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_audio
+                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS << block_items_audio << tkn_items
                             );
                         break;}
 

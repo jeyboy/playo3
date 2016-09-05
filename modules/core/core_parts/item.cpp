@@ -106,6 +106,9 @@ QVariant IItem::data(int column) const {
                     params.insert(Keys::unsupported, err_code > 999 && err_code < 2000);
                 }
                 params.insert(Keys::type, dataType());
+            } else {
+                if (hasMoreItems())
+                    params.insert(Keys::loadable, true);
             }
             return params;
         }

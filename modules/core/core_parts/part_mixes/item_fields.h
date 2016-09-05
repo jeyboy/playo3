@@ -25,7 +25,7 @@ namespace Core {
         ItemFields(QJsonObject * hash);
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
-        inline bool hasMoreItems()                              { return isLoadable() || isFetchable(); }
+        inline bool hasMoreItems() const                        { return isLoadable() || isFetchable(); }
         // remove first valid loader
         inline void removeLoader()                              {
             if (isLoadable())
@@ -37,11 +37,11 @@ namespace Core {
         inline QVariantMap cueMap()                             { return attrs[JSON_TYPE_CUE_MAP].toMap(); }
         inline QVariantMap takeCueMap()                         { return attrs.take(JSON_TYPE_CUE_MAP).toMap(); }
 
-        inline bool isLoadable()                                { return attrs.contains(JSON_TYPE_CONTAINER_LOADABLE); }
+        inline bool isLoadable() const                          { return attrs.contains(JSON_TYPE_CONTAINER_LOADABLE); }
         inline bool removeLoadability()                         { return attrs.remove(JSON_TYPE_CONTAINER_LOADABLE); }
         inline QString loadableCmd()                            { return attrs[JSON_TYPE_CONTAINER_LOADABLE].toString(); }
 
-        inline bool isFetchable()                               { return attrs.contains(JSON_TYPE_CONTAINER_FETCHABLE); }
+        inline bool isFetchable() const                         { return attrs.contains(JSON_TYPE_CONTAINER_FETCHABLE); }
         inline bool removeFetchability()                        { return attrs.remove(JSON_TYPE_CONTAINER_FETCHABLE); }
         inline QString fetchableCmd()                           { return attrs[JSON_TYPE_CONTAINER_FETCHABLE].toString(); }
 
