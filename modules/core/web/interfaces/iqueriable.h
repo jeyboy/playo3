@@ -4,6 +4,7 @@
 #include <qstring.h>
 #include <qurl.h>
 
+#include "modules/core/defines.h"
 #include "modules/core/web/utils/web_manager.h"
 #include "modules/core/misc/logger.h"
 #include "queriable_arg.h"

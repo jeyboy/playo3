@@ -26,6 +26,7 @@ namespace Core {
         extern const QString tkn_loadable_cmd           = QStringLiteral("ld_cmd");
         extern const QString tkn_more_cmd               = QStringLiteral("mr_cmd");
         extern const QString tkn_cmd_parser             = QStringLiteral("cmd_prsr");
+        extern const QString tkn_is_empty               = QStringLiteral("is_empty");
 
         extern const QString tkn_grab_title             = QStringLiteral("gtitle");
         extern const QString tkn_grab_duration          = QStringLiteral("gduration");

@@ -9,8 +9,8 @@ bool Info::isNumber(const QString & str) {
     return !r.match(str).hasMatch();
 }
 
-bool Info::extractNumber(const QString & info, QString & res, int index) {
-    QStringList digits = info.split(QRegularExpression("\\D+"), QString::SkipEmptyParts);
+bool Info::extractNumber(const QString & text, QString & res, int index) {
+    QStringList digits = text.split(QRegularExpression("\\D+"), QString::SkipEmptyParts);
 
     if (digits.length() < index) return false;
 
@@ -18,19 +18,43 @@ bool Info::extractNumber(const QString & info, QString & res, int index) {
     return true;
 }
 
-QString Info::extractLimitedBy(const QString & info, const QString & before_predicate, const QString & after_predicate) {
-    return info.section(before_predicate, 1).section(after_predicate, 0, 0);
-}
-
-bool Info::extract(const QString & info, const QString & start_predicate, const QString & end_predicate, QString & res) {
-    int part_index = info.indexOf(start_predicate);
+bool Info::extract(const QString & text, const QString & start_predicate, const QString & end_predicate, QString & res) {
+    int part_index = text.indexOf(start_predicate);
 
     if (part_index != -1) {
-        int end_part_index = info.indexOf(end_predicate, part_index);
-        res = info.mid(part_index, end_part_index - part_index);
+        int end_part_index = text.indexOf(end_predicate, part_index);
+        if (end_part_index == -1)
+            res = text.mid(part_index);
+        else
+            res = text.mid(part_index, end_part_index - part_index);
         return true;
     }
     else return false;
+}
+
+QString Info::extractLimitedBy(const QString & text, const QString & before_predicate, const QString & after_predicate) {
+    return text.section(before_predicate, 1).section(after_predicate, 0, 0);
+}
+QStringList Info::extractPartsLimitedBy(const QString & text, const QString & start_predicate, const QString & end_predicate) {
+    int start_index = 0, slen = start_predicate.size();
+    QStringList res;
+
+    while(true) {
+        int part_index = text.indexOf(start_predicate, start_index);
+
+        if (part_index != -1) {
+            part_index += slen;
+
+            int end_part_index = text.indexOf(end_predicate, part_index);
+            if (end_part_index == -1)
+                res << text.mid(part_index);
+            else
+                res << text.mid(part_index, end_part_index - part_index);
+
+            start_index = part_index;
+        }
+        else return res;
+    }
 }
 
 QString Info::str(const QString & size, const QString & ext, const QString & bitrate, const QString & freq, const QString & channelsCount) {

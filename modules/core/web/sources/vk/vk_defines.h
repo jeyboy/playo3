@@ -10,6 +10,18 @@
 #define RESPONSE_TO_JSON(response) \
     Info::extractLimitedBy(response -> toText(), QStringLiteral("<!json>"), QStringLiteral("<!>"))
 
+#define RESPONSE_TO_JSON_PARTS(response) \
+    QStringList parts = Info::extractPartsLimitedBy(response -> toText(), QStringLiteral("<!json>"), QStringLiteral("<!>")); \
+    QJsonArray json_parts; \
+    for(QStringList::Iterator part = parts.begin(); part != parts.end(); part++) {\
+        QJsonDocument doc = QJsonDocument::fromJson((*part).toUtf8()); \
+        if (doc.isArray())\
+            json_parts << doc.array();\
+        else \
+            json_parts << doc.object();\
+    } \
+
+
 #define RESPONSE_TO_JSON_OBJECT(response) \
     QJsonDocument::fromJson(RESPONSE_TO_JSON(response).toUtf8()).object()
 
@@ -90,6 +102,40 @@ namespace Core {
                         // 11 -
                         // 12 -
                         // 13 - some token
+                    }
+                }
+
+                void prepareVideo(const QJsonArray & items, QJsonArray & videos/*, QHash<QString, QJsonArray> * albums = 0*/) {
+                    for(QJsonArray::ConstIterator item = items.constBegin(); item != items.constEnd(); item++) {
+                        QJsonArray video = (*item).toArray();
+                        QJsonObject video_obj;
+
+                        video_obj.insert(tkn_owner_id, idToStr(video[0]));
+                        video_obj.insert(tkn_id, idToStr(video[1]));
+
+                        video_obj.insert(tkn_video_art, video[2].toString());
+
+                        video_obj.insert(tkn_title, UnicodeDecoding::decodeHtmlEntites(video[3].toString()));
+                        video_obj.insert(tkn_duration, Duration::toSecs(video[5].toString()));
+
+
+//                        QString album_id = ISource::idToStr(video[6]);
+//                        if (albums && album_id.toInt() > 0)// album_id // '0' if empty
+//                            albums -> operator [](album_id) << video_obj;
+
+                        videos << video_obj;
+
+                        // 0 - owner_id
+                        // 1 - id
+                        // 2 - art_url
+                        // 3 - title
+                        // 4 - ? (73)
+                        // 5 - duration ("5:43")
+                        // 6 - some token
+                        // 7 - ? ("")
+                        // 8 - link to owner
+                        // 9 - creation date
+                        // 10 - views amount
                     }
                 }
             };

@@ -5,6 +5,8 @@
 #include "isearchable.h"
 #include "isource_auth_perm.h"
 #include "isource_feeds.h"
+
+#include "modules/core/defines.h"
 #include "modules/core/misc/thread_utils.h"
 #include "modules/core/web/grabber_keys.h"
 #include "modules/core/web/interfaces/queriable_response.h"
@@ -66,7 +68,8 @@ namespace Core {
     protected:
         QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
             QJsonObject res = QJsonObject {
-                {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()}
+                {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()},
+                {Web::tkn_is_empty, block_content.isArray() ? block_content.toArray().isEmpty() : block_content.toObject().isEmpty()}
             };
 
             if (params.size() > 0)
@@ -83,6 +86,7 @@ namespace Core {
             block.insert(Web::tkn_content, response.content);
             block.insert(Web::tkn_media_type, dmt_val);
             block.insert(Web::tkn_source_id, source_id);
+            block.insert(Web::tkn_is_empty, response.content.isEmpty());
 
             QUrlQuery query = Cmd::paramsToQuery(params);
             query.addQueryItem(CMD_OFFSET, response.next_offset);
@@ -105,6 +109,7 @@ namespace Core {
             block.insert(Web::tkn_content, response.content);
             block.insert(Web::tkn_media_type, dmt_val);
             block.insert(Web::tkn_source_id, source_id);
+            block.insert(Web::tkn_is_empty, response.content.isEmpty());
 
             QUrlQuery query = limits.toICmdParams(response.next_offset);
             Cmd::paramsToQuery(query, params);

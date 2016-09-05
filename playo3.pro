@@ -325,7 +325,8 @@ HEADERS += \
     modules/core/web/sources/od/od_album.h \
     modules/views/web/web_view.h \
     modules/models/service/removed_items.h \
-    modules/core/web/sources/soundcloud/soundcloud_stream.h
+    modules/core/web/sources/soundcloud/soundcloud_stream.h \
+    modules/core/defines.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
