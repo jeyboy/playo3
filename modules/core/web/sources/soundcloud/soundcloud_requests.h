@@ -138,13 +138,6 @@ namespace Core {
                     }
                 }
 
-                QJsonValue openSet(const QUrlQuery & attrs) {
-                    return QJsonArray() << Set::setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-
                 QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
                     return QJsonArray() << Track::trackRecommendations(track_id, offset, amount);
                 }

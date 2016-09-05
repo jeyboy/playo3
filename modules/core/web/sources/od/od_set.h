@@ -184,13 +184,8 @@ namespace Core {
                     };
                 }
 
-                inline QJsonValue openSet(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
+                inline QJsonValue openSet(const QUrlQuery & attrs) { return QJsonArray() << setByType(attrs); }
+//                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
             };                    
         }
     }

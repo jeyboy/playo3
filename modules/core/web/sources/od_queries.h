@@ -30,7 +30,7 @@ namespace Core {
                 }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::openSet, Cmd::extractQuery(cutomParams), func);
+                    ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
             };
         }

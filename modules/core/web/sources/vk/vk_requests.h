@@ -30,7 +30,7 @@ namespace Core {
                         sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
                         sf_content_photo_has | sf_content_news_has |
 
-                        sf_auth_mandatory | sf_prefer_site_object_content | sf_prefer_site_recomendations
+                        sf_auth_mandatory | sf_prefer_site_object_content | sf_prefer_site_recomendations | sf_prefer_site_packs
                     );
                 }
 
@@ -181,10 +181,54 @@ namespace Core {
                     clearGroups();
                     jsonToGroups(Groupable::linkables, json.value(block_groups).toArray());
                 }
+
+                QList<Linkable> findFriendsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = usersByIdOrPerma(uid).toArray();
+                    jsonToUsers(linkables, arr);
+
+                    return linkables;
+                }
+                QList<Linkable> findFriendsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = usersByName(name).toArray();
+                    jsonToUsers(linkables, arr);
+
+                    return linkables;
+                }
+
+                QList<Linkable> findGroupsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = groupsByIdOrPerma(uid).toArray();
+                    jsonToGroups(linkables, arr);
+
+                    return linkables;
+                }
+                QList<Linkable> findGroupsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    QJsonArray arr = groupsByName(name).toArray();
+                    jsonToGroups(linkables, arr);
+
+                    return linkables;
+                }
             public:
                 Requests() { setSociableLimitations(true, true, true, true); }
 
                 static QString cleanUrl(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
+
+                QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {
+                    switch(itemMediaType) {
+                        case dmt_audio: return cleanUrl(trackUrl(item_uid));
+                        case dmt_video: return videoUrl(item_uid);
+                        default:;
+                    }
+
+                    return QString();
+                }
 
 //                QJsonValue userTracksGroupsFriends(const QString & user_id) {
 //                    return User::sRequest(

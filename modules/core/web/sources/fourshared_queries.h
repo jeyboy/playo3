@@ -22,7 +22,7 @@ namespace Core {
                 QJsonValue userInfo(const QString & uid) { return QJsonArray() << loadSetData(CMD_ID % '=' % uid); }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::openSet, Cmd::extractQuery(cutomParams), func);
+                    ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
 
 //                QString downloadLink(const QString & refresh_page) {

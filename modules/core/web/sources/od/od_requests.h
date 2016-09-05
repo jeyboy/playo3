@@ -493,13 +493,6 @@ namespace Core {
 
                     return blocks;
                 }
-
-                QJsonValue openSet(const QUrlQuery & attrs) {
-                    return QJsonArray() << Set::setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
             };
         }
     }

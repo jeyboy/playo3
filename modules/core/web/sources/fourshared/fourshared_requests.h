@@ -249,13 +249,6 @@ namespace Core {
 
                     return res.isEmpty() ? res : res % QStringLiteral("\r\n") % cookies();
                 }
-
-                QJsonValue openSet(const QUrlQuery & attrs) {
-                    return QJsonArray() << Set::setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
             };
         }
     }

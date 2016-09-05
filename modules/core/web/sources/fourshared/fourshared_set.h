@@ -7,7 +7,7 @@ namespace Core {
     namespace Web {
         namespace Fourshared {
             class Set : public Base {
-            public:
+            protected:
                 enum SetType { set_popular_audio, set_popular_video };
 
                 QString setTypeToStr(const SetType & stype) {
@@ -18,12 +18,6 @@ namespace Core {
                     }
                 }
 
-                QJsonValue setByType(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;
@@ -99,12 +93,22 @@ namespace Core {
 
                     return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                 }
+            public:
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
+                }
 
                 inline QMap<QString, QString> setsList() {
                     return {
                         {setTypeToStr(set_popular_audio),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_audio))},
                         {setTypeToStr(set_popular_video),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_video))}
                     };
+                }
+                QJsonValue openSet(const QUrlQuery & attrs) {
+                    return QJsonArray() << Set::setByType(attrs);
                 }
             };
         }

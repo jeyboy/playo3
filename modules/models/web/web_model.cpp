@@ -16,19 +16,42 @@ void WebModel::refresh() {
                     );
                 return;}
 
-                default: {
-                    Vk::Queries::obj().trackRecommendationsAsync(
+                case rec_set: {
+                    Vk::Queries::obj().openSetAsync(
                         sttngs.uid,
-                        sttngs.rec_type == Core::rec_user,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                case rec_user: {
+                    Vk::Queries::obj().userRecommendationsAsync(
+                        sttngs.uid,
                         true,
                         new Func(this, SLOT(proceedJson(QJsonValue &)))
                     );
                 return;}
+
+                case rec_song: {
+                    Vk::Queries::obj().trackRecommendationsAsync(
+                        sttngs.uid,
+                        true,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+                default: {}
             }
         break;}
 
         case dt_web_sc: {
             switch(sttngs.rec_type) {
+                case rec_none: {
+                    Soundcloud::Queries::obj().objectInfoAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
                 case rec_song: {
                     Soundcloud::Queries::obj().trackRecommendationsAsync(
                         sttngs.uid,
@@ -50,12 +73,7 @@ void WebModel::refresh() {
                     );
                 return;}
 
-                default: {
-                    Soundcloud::Queries::obj().objectInfoAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
+                default: {}
             }
         break;}
 
@@ -82,9 +100,7 @@ void WebModel::refresh() {
                     );
                 return;}
 
-                default: {
-
-                /*return;*/}
+                default: {}
             }
         break;}
 
@@ -104,9 +120,7 @@ void WebModel::refresh() {
                     );
                 return;}
 
-                default: {
-
-                /*return;*/}
+                default: {}
             }
         break;}
 

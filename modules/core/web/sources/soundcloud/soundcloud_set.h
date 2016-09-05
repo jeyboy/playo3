@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class Set : public Stream {
-            public:
+            protected:
                 enum SetType { set_new_hot = 1, set_top_50, set_popular, set_recommended_artists };
 
                 // liked and owned playlists
@@ -71,13 +71,6 @@ namespace Core {
                     };
                 }
 
-                QJsonValue setByType(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
@@ -123,6 +116,14 @@ namespace Core {
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                }
+
+            public:
+                QJsonValue setByType(const QUrlQuery & attrs) {
+                    return setByType(
+                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
+                        SearchLimit::fromICmdParams(attrs)
+                    );
                 }
 
                 QMap<QString, QString> setsList() {
@@ -208,12 +209,7 @@ namespace Core {
                 }
 
                 //inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
-                QJsonValue openSet(const QUrlQuery & attrs) {
-                    return QJsonArray() << setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
+                QJsonValue openSet(const QUrlQuery & attrs) { return QJsonArray() << setByType(attrs); }
             };
         }
     }

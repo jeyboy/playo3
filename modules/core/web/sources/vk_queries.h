@@ -24,55 +24,16 @@ namespace Core {
                         ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, user_id, func);
                 }
 
-                void trackRecommendationsAsync(const QString & uid, bool by_user, bool randomize, Func * func) {
-                    if (by_user)
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendations, uid, randomize, func);
-                    else
-                        ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, uid, randomize, func);
+                void trackRecommendationsAsync(const QString & uid, bool randomize, Func * func) {
+                   ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, uid, randomize, func);
                 }
 
-                QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {
-                    switch(itemMediaType) {
-                        case dmt_audio: return cleanUrl(trackUrl(item_uid));
-                        case dmt_video: return videoUrl(item_uid);
-                        default:;
-                    }
-
-                    return QString();
+                void userRecommendationsAsync(const QString & uid, bool randomize, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendations, uid, randomize, func);
                 }
 
-                QList<Linkable> findFriendsById(const QString & uid) {
-                    QList<Linkable> linkables;
-
-                    QJsonArray arr = usersByIdOrPerma(uid).toArray();
-                    jsonToUsers(linkables, arr);
-
-                    return linkables;
-                }
-                QList<Linkable> findFriendsByName(const QString & name) {
-                    QList<Linkable> linkables;
-
-                    QJsonArray arr = usersByName(name).toArray();
-                    jsonToUsers(linkables, arr);
-
-                    return linkables;
-                }
-
-                QList<Linkable> findGroupsById(const QString & uid) {
-                    QList<Linkable> linkables;
-
-                    QJsonArray arr = groupsByIdOrPerma(uid).toArray();
-                    jsonToGroups(linkables, arr);
-
-                    return linkables;
-                }
-                QList<Linkable> findGroupsByName(const QString & name) {
-                    QList<Linkable> linkables;
-
-                    QJsonArray arr = groupsByName(name).toArray();
-                    jsonToGroups(linkables, arr);
-
-                    return linkables;
+                inline void openSetAsync(const QString & cutomParams, Func * func) {
+                    ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
             };
         }
