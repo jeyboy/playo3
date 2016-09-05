@@ -60,15 +60,18 @@ namespace Core {
                                 ), dntHeader()
                             );
 
-                            QString data = response -> toText();
-                            data = Info::extractLimitedBy(data, QStringLiteral("<!json>"), QStringLiteral("<!>"));
+                            QJsonArray items = RESPONSE_TO_JSON_ARRAY(response);
+                            prepareTracks(items, block_content);
 
-                            if (data.isEmpty()) {
-                                Logger::obj().write("VK", "LOAD AUDIO", true);
-                            } else {
-                                QJsonArray items = QJsonDocument::fromJson(data.toUtf8()).array();
-                                prepareTracks(items, block_content);
-                            }
+//                            QString data = response -> toText();
+//                            data = Info::extractLimitedBy(data, QStringLiteral("<!json>"), QStringLiteral("<!>"));
+
+//                            if (data.isEmpty()) {
+//                                Logger::obj().write("VK", "LOAD AUDIO", true);
+//                            } else {
+//                                QJsonArray items = QJsonDocument::fromJson(data.toUtf8()).array();
+//                                prepareTracks(items, block_content);
+//                            }
                         break;}
 
                         case perm_api: {
@@ -95,17 +98,38 @@ namespace Core {
                 QJsonValue userRecommendations(const QUrlQuery & args) {
                     return userRecommendations(
                         args.queryItemValue(CMD_ID),
-                        (bool)args.queryItemValue(CMD_PREDICATE).toInt()//,
-//                        args.queryItemValue(CMD_OFFSET).toInt(),
-//                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        (bool)args.queryItemValue(CMD_PREDICATE).toInt(),
+                        args.queryItemValue(CMD_OFFSET).toInt()
                     );
                 }
-                QJsonValue userRecommendations(const QString & user_id, bool randomize) {
-                    Permissions perm = permissions(pr_media_content);
+                QJsonValue userRecommendations(const QString & user_id, bool randomize, int offset = 0) { // ~50 per request
+                    Permissions perm = permissions(pr_recommendations);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
+                        case perm_site: {
+                            Response * req_response = Manager::prepare() -> postFollowed(
+                                IQueriable::baseUrlStr(
+                                    qst_site, QStringLiteral("al_audio.php"),
+                                    {
+                                        { QStringLiteral("act"), QStringLiteral("a_load_section") },
+                                        { QStringLiteral("al"), QStringLiteral("1") },
+                                        { QStringLiteral("album_id"), QStringLiteral("-2") },
+                                        { QStringLiteral("offset"), offset },
+                                        { QStringLiteral("owner_id"), user_id },
+                                        { QStringLiteral("type"), QStringLiteral("recoms") }
+                                    }
+                                ),
+                                dntHeader()
+                            );
+
+                            QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
+                            prepareTracks(items, block_content);
+
+                            QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
+                            return prepareBlock(dmt_audio, cmd_mtd_user_recommendations, response, {{CMD_ID, user_id}, {CMD_PREDICATE, (int)randomize}});
+                        break;}
+
                         case perm_api: {
                             block_content = saRequest(
                                 baseUrlStr(
@@ -135,17 +159,38 @@ namespace Core {
                 QJsonValue trackRecommendations(const QUrlQuery & args) {
                     return trackRecommendations(
                         args.queryItemValue(CMD_ID),
-                        (bool)args.queryItemValue(CMD_PREDICATE).toInt()//,
-//                        args.queryItemValue(CMD_OFFSET).toInt(),
-//                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        (bool)args.queryItemValue(CMD_PREDICATE).toInt(),
+                        args.queryItemValue(CMD_OFFSET).toInt()
                     );
                 }
-                QJsonValue trackRecommendations(const QString & track_id, bool randomize) {
-                    Permissions perm = permissions(pr_media_content);
+                QJsonValue trackRecommendations(const QString & track_id, bool randomize, int offset = 0) {
+                    Permissions perm = permissions(pr_recommendations);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
+                        case perm_site: {
+                            Response * req_response = Manager::prepare() -> postFollowed(
+                                IQueriable::baseUrlStr(
+                                    qst_site, QStringLiteral("al_audio.php"),
+                                    {
+                                        { QStringLiteral("act"), QStringLiteral("a_load_section") },
+                                        { QStringLiteral("al"), QStringLiteral("1") },
+                                        { QStringLiteral("album_id"), QString(QStringLiteral("audio") % track_id) },
+                                        { QStringLiteral("offset"), offset },
+                                        { QStringLiteral("owner_id"), userID(pr_recommendations) },
+                                        { QStringLiteral("type"), QStringLiteral("recoms") }
+                                    }
+                                ),
+                                dntHeader()
+                            );
+
+                            QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
+                            prepareTracks(items, block_content);
+
+                            QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
+                            return prepareBlock(dmt_audio, cmd_mtd_track_recommendations, response, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
+                        break;}
+
                         case perm_api: {
                             block_content = saRequest(
                                 baseUrlStr(

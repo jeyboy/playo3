@@ -30,7 +30,7 @@ namespace Core {
                         sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
                         sf_content_photo_has | sf_content_news_has |
 
-                        sf_auth_mandatory | sf_prefer_site_object_content
+                        sf_auth_mandatory | sf_prefer_site_object_content | sf_prefer_site_recomendations
                     );
                 }
 
@@ -231,46 +231,32 @@ namespace Core {
                                         { QStringLiteral("owner_id"), user_id }
                                     }
                                 ),
-                                Auth::dntHeader().unite({{ QStringLiteral("Referer"), QStringLiteral("http://vk.com/audios") % user_id }})
+                                Auth::dntHeader()
                             );
 
-                            QString data = response -> toText();
+                            QJsonArray tracks_res, items = RESPONSE_TO_JSON_OBJECT(response).value(QStringLiteral("list")).toArray();
+                            QHash<QString, QJsonArray> albums;
 
-                            QStringList parts = data.split(QStringLiteral("<!json>"));
+                            Track::prepareTracks(items, tracks_res, &albums);
+                            /////////////////////////////////////
 
-                            if (parts.length() == 1) {
-                                Logger::obj().write("VK", "LOAD AUDIO", true);
-                                return QJsonObject();
-                            } else {
-                                QJsonObject info_obj = QJsonDocument::fromJson(parts.last().toUtf8()).object();
+                            QJsonArray playlists_res;
 
-                                if (!info_obj.value(QStringLiteral("isComplete")).toBool())
-                                    qDebug() << "VK HAS MORE RECORDS";
-
-                                QHash<QString, QJsonArray> albums;
-                                QJsonArray tracks_res, items = info_obj.value(QStringLiteral("list")).toArray();
-
-                                Track::prepareTracks(items, tracks_res, &albums);
-                                /////////////////////////////////////
-
-                                QJsonArray playlists_res;
-
-                                for(QHash<QString, QJsonArray>::Iterator album = albums.begin(); album != albums.end(); album++) {
-                                    playlists_res << QJsonObject {
-                                        {tkn_items, album.value()},
-                                        {tkn_id, album.key()},
-                                        {tkn_title, QString::number(playlists_res.size())} // for real names need send request to get user playlists
-                                    };
-                                }
-
-                                /////////////////////////////////////
-                                QJsonArray res = videoByUser(user_id).toArray();
-
-                                res.prepend(prepareBlock(dmt_audio, tracks_res, {{tkn_dir_name, QStringLiteral("Tracks")}}));
-                                res.prepend(prepareBlock(dmt_audio_set, playlists_res,  {{tkn_dir_name, QStringLiteral("Tracks")}}));
-
-                                return res;
+                            for(QHash<QString, QJsonArray>::Iterator album = albums.begin(); album != albums.end(); album++) {
+                                playlists_res << QJsonObject {
+                                    {tkn_items, album.value()},
+                                    {tkn_id, album.key()},
+                                    {tkn_title, QString::number(playlists_res.size())} // for real names need send request to get user playlists
+                                };
                             }
+
+                            /////////////////////////////////////
+                            QJsonArray res = videoByUser(user_id).toArray();
+
+                            res.prepend(prepareBlock(dmt_audio, tracks_res, {{tkn_dir_name, QStringLiteral("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio_set, playlists_res,  {{tkn_dir_name, QStringLiteral("Tracks")}}));
+
+                            return res;
                         break;}
 
                         case perm_api: {

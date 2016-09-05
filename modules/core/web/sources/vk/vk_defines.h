@@ -7,6 +7,15 @@
 
 #include "vk_keys.h"
 
+#define RESPONSE_TO_JSON(response) \
+    Info::extractLimitedBy(response -> toText(), QStringLiteral("<!json>"), QStringLiteral("<!>"))
+
+#define RESPONSE_TO_JSON_OBJECT(response) \
+    QJsonDocument::fromJson(RESPONSE_TO_JSON(response).toUtf8()).object()
+
+#define RESPONSE_TO_JSON_ARRAY(response) \
+    QJsonDocument::fromJson(RESPONSE_TO_JSON(response).toUtf8()).array()
+
 namespace Core {
     namespace Web {
         namespace Vk {
