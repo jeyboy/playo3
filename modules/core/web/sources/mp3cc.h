@@ -41,7 +41,7 @@ namespace Core {
                             track_obj.insert(tkn_skip_info, true);
 
                             Html::Set titles = (*track) -> find(&titles_selector);
-                            QString title = titles.first() -> text() % QStringLiteral(" - ") % titles.last() -> text();
+                            QString title = titles.first() -> text() % tkn_dash % titles.last() -> text();
                             track_obj.insert(tkn_grab_title, title);
 
                             arg -> append(track_obj, track + 1 == tracks.end());

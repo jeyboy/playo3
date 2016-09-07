@@ -43,7 +43,7 @@ namespace Core {
 
                             QString author = (*track) -> find(&author_selector).text();
                             QString title = (*track) -> find(&title_selector).text();
-                            title = author % QStringLiteral(" - ") % title;
+                            title = author % tkn_dash % title;
                             track_obj.insert(tkn_grab_title, title);
 
                             arg -> append(track_obj, track + 1 == tracks.end());

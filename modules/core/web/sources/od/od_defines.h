@@ -65,7 +65,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator collection = collections.begin(); collection != collections.end(); collection++) {
                         QJsonObject collection_obj = (*collection).toObject();
-                        QString uid = idToStr(collection_obj.value(tkn_id));
+                        QString uid = JSON_STR(collection_obj, tkn_id);
 
                         collection_obj.insert(
                             tkn_loadable_cmd,
@@ -84,7 +84,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator album = albums.begin(); album != albums.end(); album++) {
                         QJsonObject album_obj = (*album).toObject();
-                        QString uid = idToStr(album_obj.value(tkn_id));
+                        QString uid = JSON_STR(album_obj, tkn_id);
 
                         album_obj.insert(
                             tkn_loadable_cmd,
@@ -103,7 +103,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
                         QJsonObject artist_obj = (*artist).toObject();
-                        QString uid = idToStr(artist_obj.value(tkn_id));
+                        QString uid = JSON_STR(artist_obj, tkn_id);
 
                         artist_obj.insert(
                             tkn_loadable_cmd,
@@ -133,9 +133,9 @@ namespace Core {
                             artists_str = artists_str % ',' % ' ' %  artist_obj.value(tkn_name).toString();
                         }
 
-                        name = QStringLiteral("%1 (%2)").arg(name, artists_str.mid(2));
+                        name = LSTR("%1 (%2)").arg(name, artists_str.mid(2));
                         int source_id = sourceType();
-                        QString uid = idToStr(tuner_obj.value(QStringLiteral("data")));
+                        QString uid = JSON_STR(tuner_obj, LSTR("data"));
 
                         block_content << QJsonObject {
                             {tkn_id, uid },

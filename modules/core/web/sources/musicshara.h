@@ -65,7 +65,7 @@ namespace Core {
 
                             QString artist = (*track) -> find(&artistSelector).text();
                             QString title = (*track) -> find(&titleSelector).text();
-                            title = artist % QStringLiteral(" - ") % title;
+                            title = artist % tkn_dash % title;
                             track_obj.insert(tkn_grab_title, title);
 
                             track_obj.insert(tkn_grab_duration, (*track) -> find(&durationSelector).text());

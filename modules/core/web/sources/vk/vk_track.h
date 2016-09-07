@@ -62,16 +62,6 @@ namespace Core {
 
                             QJsonArray items = RESPONSE_TO_JSON_ARRAY(response);
                             prepareTracks(items, block_content);
-
-//                            QString data = response -> toText();
-//                            data = Info::extractLimitedBy(data, QStringLiteral("<!json>"), QStringLiteral("<!>"));
-
-//                            if (data.isEmpty()) {
-//                                Logger::obj().write("VK", "LOAD AUDIO", true);
-//                            } else {
-//                                QJsonArray items = QJsonDocument::fromJson(data.toUtf8()).array();
-//                                prepareTracks(items, block_content);
-//                            }
                         break;}
 
                         case perm_api: {
@@ -163,6 +153,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET).toInt()
                     );
                 }
+
                 QJsonValue trackRecommendations(const QString & track_id, bool randomize, int offset = 0) {
                     Permissions perm = permissions(pr_recommendations);
                     QJsonArray block_content;

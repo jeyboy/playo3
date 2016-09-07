@@ -7,7 +7,6 @@
 #include "vk_playlist.h"
 #include "vk_set.h"
 #include "vk_track.h"
-#include "vk_video.h"
 #include "vk_user.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -16,7 +15,7 @@ namespace Core {
     namespace Web {
         namespace Vk {
             class Requests : public Sociable, public Auth, public Feed, public Group,
-                    public Playlist, public Set, public Track, public Video, public User {
+                    public Playlist, public Set, public Track, public User {
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(
@@ -117,15 +116,15 @@ namespace Core {
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
-                        QString title = obj.value(tkn_title).toString();
+                        QString title = JSON_STR(obj, tkn_title);
                         if (title.isEmpty())
-                            title = QString(obj.value(QStringLiteral("first_name")).toString() % ' ' % obj.value(QStringLiteral("last_name")).toString());
+                            title = JSON_STR_CAT(obj, LSTR("first_name"), ' ', LSTR("last_name"));
 
                         linkables << Linkable(
-                            idToStr(obj.value(tkn_id)),
+                            JSON_STR(obj, tkn_id),
                             title,
-                            obj.value(tkn_screen_name).toString(),
-                            obj.value(tkn_photo).toString()
+                            JSON_STR(obj, tkn_screen_name),
+                            JSON_STR(obj, tkn_photo)
                         );
                     }
                 }
@@ -139,10 +138,10 @@ namespace Core {
                             title = obj.value(QStringLiteral("name")).toString();
 
                         linkables << Linkable(
-                            idToStr(obj.value(tkn_id)),
+                            JSON_STR(obj, tkn_id),
                             title,
-                            obj.value(tkn_screen_name).toString(),
-                            obj.value(tkn_photo).toString()
+                            JSON_STR(obj, tkn_screen_name),
+                            JSON_STR(obj, tkn_photo)
                         );
                     }
                 }

@@ -129,6 +129,7 @@ namespace Core {
             cmd_mtd_tracks_playlists_by_group,
 
             cmd_mtd_video_playlists_by_user,
+            cmd_mtd_video_categories,
 
             cmd_mtd_streams_recommendations,
 
@@ -184,6 +185,7 @@ namespace Core {
                 case cmd_mtd_tracks_playlists_by_group: return tracksPlaylistsByGroup(params);
 
                 case cmd_mtd_video_playlists_by_user: return videoPlaylistsByUser(params);
+                case cmd_mtd_video_categories: return videoCategories(params);
 
                 case cmd_mtd_streams_recommendations: return streamsRecommendations(params);
 
@@ -245,6 +247,7 @@ namespace Core {
         virtual QJsonValue tracksPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue videoPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoCategories(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue streamsRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
 

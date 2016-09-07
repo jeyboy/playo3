@@ -42,7 +42,7 @@ namespace Core {
                                 track_obj.insert(tkn_skip_info, true);
 
                                 Html::Set links = (*track) -> childTag("td", 0) -> find("a");
-                                QString title = links[1] -> text() % QStringLiteral(" - ") % links[0] -> text();
+                                QString title = links[1] -> text() % tkn_dash % links[0] -> text();
                                 track_obj.insert(tkn_grab_title, title);
 
                                 arg -> append(track_obj, track + 1 == tracks.end());

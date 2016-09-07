@@ -124,7 +124,7 @@ namespace Core {
                             );
 
                             RESPONSE_TO_JSON_PARTS(req_response);
-                            QJsonArray items = JSON_ARR2(json_parts[0].toObject(), STR("all"), STR("list"));
+                            QJsonArray items = JSON_ARR2(json_parts[0].toObject(), LSTR("all"), LSTR("list"));
                             prepareVideo(items, block_content);
                             QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
 
@@ -137,7 +137,7 @@ namespace Core {
                                 QJsonObject obj;
                                 QJsonArray fields = (*set).toArray();
 
-                                QString id = idToStr(fields[6]);
+                                QString id = JSON_CONV_STR(fields[6]);
 
                                 // 1 - items amount in set
                                 // 2 - art url
@@ -173,8 +173,8 @@ namespace Core {
                             for(QJsonArray::Iterator set = sets.begin(); set != sets.end(); set++) {
                                 QJsonObject obj = (*set).toObject();
 
-                                QString id = idToStr(obj.value(tkn_id));
-                                QString owner_id = idToStr(obj.value(tkn_owner_id));
+                                QString id = JSON_STR(obj, tkn_id);
+                                QString owner_id = JSON_STR(obj, tkn_owner_id);
 
                                 obj.insert(
                                     tkn_loadable_cmd,
@@ -236,6 +236,130 @@ namespace Core {
                         break;}
 
                         default: Logger::obj().write("VK", "tracksByPlaylist is not accessable", true);
+                    }
+
+                    return prepareBlock(dmt_video, block_content);
+                }
+
+                QJsonValue videoByCategory(const QUrlQuery & args) {
+                    return videoByCategory(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET)
+                    );
+                }
+                QJsonValue videoByCategory(const QString & category_id) {
+                    QJsonArray cats = EXTRACT_ITEMS(videoCategories().toObject());
+
+                    for(QJsonArray::Iterator cat = cats.begin(); cat != cats.end(); cat++) {
+                        QJsonObject cat_obj = (*cat).toObject();
+
+                        if (JSON_STR(cat_obj, tkn_id) == category_id) {
+                            int i = 0;
+                        }
+                    }
+
+                    return QJsonObject();
+                }
+                QJsonValue videoByCategory(const QString & category_id, const QString & offset_token) {
+                    Permissions perm = permissions(pr_media_content);
+                    QJsonObject response;
+
+                    switch(perm) {
+                        case perm_site:
+                        case perm_api: {
+                            response = sRequest(
+                                baseUrlStr(
+                                    qst_api, tkn_execute,
+                                    {
+                                        {
+                                            tkn_code, QString(
+                                                "var offset = " % offset_token % ";"
+                                                "    var response = API.video.getCatalogSection({"
+                                                "        section_id: \"" % category_id % "\","
+                                                "        from: offset, count: 16"
+                                                "    });"
+                                                "    offset = response.next;"
+                                                "return {\"" % block_sets % "\": response.items, \"offset_token\": offset};"
+                                            )
+                                        }
+                                    }
+                                ),
+                                call_type_json, 0, proc_json_extract, IQUERY_DEF_FIELDS
+                            );
+                        break;}
+
+                        default: Logger::obj().write("VK", "video by category is not accessable", true);
+                    }
+
+                    QString offset = JSON_STR(response, LSTR("offset_token"));
+                    QJsonArray block_content = JSON_ARR(response, block_sets);
+                    if (offset.isEmpty())
+                        return prepareBlock(dmt_video, block_content);
+                    else {
+                        QueriableResponse response(block_content, offset, 0, 1, block_content.isEmpty());
+                        return prepareBlock(dmt_video, cmd_mtd_video_by_category, response, {{CMD_ID, category_id}});
+                    }
+                }
+
+                QJsonValue videoCategories(const QUrlQuery & args) {
+                    return videoCategories(args.queryItemValue(CMD_OFFSET));
+                }
+                QJsonValue videoCategories(const QString & offset_token = QString()) {
+                    Permissions perm = permissions(pr_media_content);
+                    QJsonArray block_content;
+
+                    switch(perm) {
+                        case perm_site:
+                        case perm_api: {
+                            saRequest(
+                                baseUrlStr(
+                                    qst_api, tkn_execute,
+                                    {
+                                        {
+                                            tkn_code, QString(
+                                                "var search = []; var rule = true; var offset = " % offset_token % "; var counter = 0; var limit = 20;"
+                                                "do {"
+                                                "    var response = API.video.getCatalog({"
+                                                "        filters: \"feed,top,ugc,series,other\", count: 0, " // count - affect only on other cats amount - max eq to 16
+                                                "        from: offset, items_count: 16"
+                                                "    });"
+                                                "    offset = response.next;"
+                                                "    search = search %2b response.items;"
+                                                "    counter = counter %2b 1;"
+                                                "    rule = counter <= limit && response.items.length != 0;"
+                                                "} while(rule);"
+                                                "if ()"
+                                                "return {\"" % block_sets % "\": search, \"offset_token\": offset};"
+                                            )
+                                        }
+                                    }
+                                ),
+                                call_type_json, &block_content, proc_json_extract, IQUERY_DEF_FIELDS << block_sets
+                            );
+
+                            QJsonArray temp;
+                            for(QJsonArray::Iterator cat = block_content.begin(); cat != block_content.end(); cat++) {
+                                QJsonObject cat_obj = (*cat).toObject();
+
+                                cat_obj.insert(tkn_title, JSON_STR(cat_obj, LSTR("name")));
+
+                                cat_obj.insert(tkn_more_cmd,
+                                    Cmd::build(
+                                        sourceType(), cmd_mtd_video_by_category,
+                                        {
+                                            {CMD_ID, JSON_STR(cat_obj, tkn_id)},
+                                            {CMD_OFFSET, JSON_STR(cat_obj, LSTR("next"))}
+                                        }
+                                    ).toString()
+                                );
+
+                                temp << cat_obj;
+                            }
+
+                            block_content = temp;
+                        break;}
+
+                        default: Logger::obj().write("VK", "video categories is not accessable", true);
                     }
 
                     return prepareBlock(dmt_video, block_content);

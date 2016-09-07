@@ -2,14 +2,14 @@
 #define VK_SET
 
 #include "vk_defines.h"
+#include "vk_video.h"
 
 namespace Core {
     namespace Web {
         namespace Vk {
-            class Set : public Base {
+            class Set : public Video {
             protected:
-                enum SetType { set_popular_tracks = 1, set_popular_video };
-
+                enum SetType { set_popular_tracks = 1, set_popular_video, set_feed_video, set_top_video, set_series_video, set_other_video };
                 QMap<QString, QString> siteOptions() {
                     return {
                         { QStringLiteral("All Genres"),                 QStringLiteral("0") },
@@ -37,13 +37,11 @@ namespace Core {
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
                     Permissions perm = permissions(pr_pack);
                     QJsonArray block_content;
-                    QueriableResponse response;
-                    DataMediaType dmt_val = dmt_unknow;
 
-                    switch(perm) {
-                        case perm_site: {
-                            switch(set_type) {
-                                case set_popular_tracks: {
+                    switch(set_type) {
+                        case set_popular_tracks: {
+                            switch(perm) {
+                                case perm_site: {
                                     QString genre_id = (limits.in_foreign() ? QStringLiteral("foreign") : QString())
                                             % QString::number(0); // 0 is eql to all genres // limits.genre; // genres.toInt(attrs);
 
@@ -64,21 +62,11 @@ namespace Core {
 
                                     QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
                                     prepareTracks(items, block_content);
-                                    response = QueriableResponse(block_content, QString::number(limits.start_offset + block_content.size()), 0, 1, block_content.isEmpty());
-                                    dmt_val = dmt_audio;
+                                    QueriableResponse response = QueriableResponse(block_content, QString::number(limits.start_offset + block_content.size()), 0, 1, block_content.isEmpty());
+                                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
                                 break;}
 
-                                case set_popular_video: {
-                                    dmt_val = dmt_video;
-                                break;}
-                            }
-
-                            return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
-                        break;}
-
-                        case perm_api: {
-                            switch(set_type) {
-                                case set_popular_tracks: {
+                                case perm_api: {
                                     int genre_id = -1; //limits.genre; //genres.toInt(attrs);
 
                                     block_content = saRequest(
@@ -99,25 +87,37 @@ namespace Core {
                                         call_type_json, 0, proc_json_extract,
                                         IQUERY_DEF_FIELDS << block_items_audio
                                     );
-                                    dmt_val = dmt_audio;
+
+                                    prepareBlock(dmt_audio, block_content/*,cmd_mtd_set_by_type, response, {{CMD_SET_TYPE, set_type}}*/);
                                 break;}
 
-                                case set_popular_video: {
-                                    dmt_val = dmt_video;
-                                break;}
+                                default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
                             }
                         break;}
 
-                        default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
+                        case set_popular_video: { return videoByCategory(LSTR("ugc")); break;}
+
+                        case set_top_video: { return videoByCategory(LSTR("top")); break;}
+
+                        case set_feed_video: { return videoByCategory(LSTR("feed")); break;}
+
+                        case set_series_video: { return videoByCategory(LSTR("series")); break;}
+
+                        case set_other_video: { return videoByCategory(LSTR("other")); break;}
                     }
 
-                    return prepareBlock(dmt_val, block_content/*cmd_mtd_set_by_type, response, {{CMD_SET_TYPE, set_type}}*/);
+                    return QJsonObject();
                 }
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
                         case set_popular_tracks: return QStringLiteral("Popular Tracks: ");
                         case set_popular_video: return QStringLiteral("Popular Video");
+                        case set_feed_video: return QStringLiteral("Video from user feeds");
+                        case set_top_video: return QStringLiteral("Redaction choose Video");
+                        case set_series_video: return QStringLiteral("Serial Video");
+                        case set_other_video: return QStringLiteral("Some Video");
+
                         default: return QStringLiteral("Unknown: ");
                     }
                 }
@@ -147,6 +147,13 @@ namespace Core {
                             ) -> toString()
                         );
                     }
+
+                    //FIXME: move template to macro
+                    res.insert(setTypeToStr(set_popular_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_video)));
+                    res.insert(setTypeToStr(set_feed_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_feed_video)));
+                    res.insert(setTypeToStr(set_top_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_top_video)));
+                    res.insert(setTypeToStr(set_series_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_series_video)));
+                    res.insert(setTypeToStr(set_other_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_other_video)));
 
                     return res;
                 }

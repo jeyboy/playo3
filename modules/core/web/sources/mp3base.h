@@ -134,7 +134,7 @@ namespace Core {
 
                             QString artist = (*track) -> childTag(QStringLiteral("td"), 2) -> toText();
                             QString title = (*track) -> childTag(QStringLiteral("td"), 1) -> toText();
-                            title = artist % QStringLiteral(" - ") % title;
+                            title = artist % tkn_dash % title;
                             track_obj.insert(tkn_grab_title, title);
 
                             Html::Tag * duration_tag = (*track) -> childTag("td", 5);

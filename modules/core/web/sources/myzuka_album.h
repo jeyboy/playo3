@@ -154,7 +154,7 @@ namespace Core {
                             return arr;
                         }
 
-                        QString title = artist_tag -> text() % QStringLiteral(" - ") % track_tag -> text();
+                        QString title = artist_tag -> text() % tkn_dash % track_tag -> text();
                         track_obj.insert(tkn_grab_title, title);
                         track_obj.insert(tkn_skip_info, true);
                         track_obj.insert(tkn_grab_size, prepareSize(size_tag -> text()));

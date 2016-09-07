@@ -124,7 +124,7 @@ namespace Core {
                     if (artist_tag && title_tag) {
                         QString artist = artist_tag -> text();
                         QString title = title_tag -> text();
-                        title = artist % QStringLiteral(" - ") % title;
+                        title = artist % tkn_dash % title;
                         track_obj.insert(tkn_grab_title, title);
                     } else {
                         qDebug() << (*(*track));

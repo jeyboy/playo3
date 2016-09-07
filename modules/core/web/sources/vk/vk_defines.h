@@ -68,10 +68,10 @@ namespace Core {
                         QJsonArray track = (*item).toArray();
                         QJsonObject track_obj;
 
-                        track_obj.insert(tkn_owner_id, track[1].toString().toInt());
-                        track_obj.insert(tkn_id, track[0].toString().toInt());
+                        track_obj.insert(tkn_owner_id, JSON_CONV_STR(track[1]));
+                        track_obj.insert(tkn_id, JSON_CONV_STR(track[0]));
 
-                        QString url = track[2].toString();
+                        QString url = JSON_CONV_STR(track[2]);
                         if (!url.isEmpty())
                             track_obj.insert(tkn_url, url);
 
@@ -82,7 +82,7 @@ namespace Core {
                         track_obj.insert(tkn_duration, track[5].toInt());
 ////                                    track_obj.insert(tkn_genre_id, ); // not presented
 
-                        QString album_id = ISource::idToStr(track[6]);
+                        QString album_id = JSON_CONV_STR(track[6]);
                         if (albums && album_id.toInt() > 0)// album_id // '0' if empty
                             albums -> operator [](album_id) << track_obj;
 
@@ -110,8 +110,8 @@ namespace Core {
                         QJsonArray video = (*item).toArray();
                         QJsonObject video_obj;
 
-                        video_obj.insert(tkn_owner_id, idToStr(video[0]));
-                        video_obj.insert(tkn_id, idToStr(video[1]));
+                        video_obj.insert(tkn_owner_id, JSON_CONV_STR(video[0]));
+                        video_obj.insert(tkn_id, JSON_CONV_STR(video[1]));
 
                         video_obj.insert(tkn_video_art, video[2].toString());
 

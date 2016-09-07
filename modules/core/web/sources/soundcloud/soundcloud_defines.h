@@ -86,7 +86,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator collection = collections.begin(); collection != collections.end(); collection++) {
                         QJsonObject collection_obj = (*collection).toObject();
-                        QString uid = idToStr(collection_obj.value(tkn_id));
+                        QString uid = JSON_STR(collection_obj, tkn_id);
 
                         collection_obj.insert(
                             tkn_loadable_cmd,

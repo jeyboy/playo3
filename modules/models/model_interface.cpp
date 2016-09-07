@@ -301,8 +301,8 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
     QHash<QString, IItem *> store; // need to move this on upper level
     parent -> accumulateUids(store);
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
 //    int pos = parent -> playlistsAmount();
 //    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
@@ -311,25 +311,25 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
 
         if (itm.isEmpty()) continue;
 
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+        if (JSON_HAS_KEY(itm, tkn_media_type))
+            dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
-        QString id = ISource::idToStr(itm.value(Vk::tkn_id));
-        QString owner = ISource::idToStr(itm.value(Vk::tkn_owner_id));
+        QString id = JSON_STR(itm, Vk::tkn_id);
+        QString owner = JSON_STR(itm, Vk::tkn_owner_id);
         QString uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
         QVariant uri;
 
         if (dm_type == dmt_video) {
-            QString player_url = itm.value(Vk::tkn_player).toString();
+            QString player_url = JSON_STR(itm, Vk::tkn_player);
 
             if (QUrl(player_url).host() != QStringLiteral("vk.com")) // https://new.vk.com
                 uri = player_url;
             else
                 uri = QString(); // store only embeded videos // not playable at this time
         } else {
-            uri = Vk::Queries::cleanUrl(itm.value(Vk::tkn_url).toString()); // remove extra info from url
+            uri = Vk::Queries::cleanUrl(JSON_STR(itm, Vk::tkn_url)); // remove extra info from url
         }
 
         QList<IItem *> items = store.values(uid);
@@ -338,14 +338,14 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
             items_amount++;
             IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
-                QString(itm.value(Vk::tkn_artist).toString() % QStringLiteral(" - ") % itm.value(Vk::tkn_title).toString()),
+                JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title),
                 owner, uid,
-                Duration::fromSeconds(itm.value(Vk::tkn_duration).toInt(0)),
+                Duration::fromSeconds(JSON_INT(itm, Vk::tkn_duration)),
                 dm_type
             )/*, pos*/);
 
             if (dm_type == dmt_video)
-                newItem -> setArtPath(itm.value(Vk::tkn_video_art).toString());
+                newItem -> setArtPath(JSON_STR(itm, Vk::tkn_video_art));
 
 //                if (itm.contains(Vk::genre_id_key))
 //                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
@@ -369,26 +369,26 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & upd
     bool is_collapsed = parent != root_item;
 //    int pos = 0;
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++/*, pos++*/) {
         QJsonObject playlist = (*playlist_obj).toObject();
         Playlist * folder;
 
-        QString playlist_id = ISource::idToStr(playlist.value(Vk::tkn_id));
-        QString title = playlist.value(Vk::tkn_title).toString();
+        QString playlist_id = JSON_STR(playlist, Vk::tkn_id);
+        QString title = JSON_STR(playlist, Vk::tkn_title);
 
-        if (playlist.contains(tkn_loadable_cmd)) {
+        if (JSON_HAS_KEY(playlist, tkn_loadable_cmd)) {
             if (parent -> createLoadablePlaylist(
                 folder,
-                playlist.value(tkn_loadable_cmd).toString(),
+                JSON_STR(playlist, tkn_loadable_cmd),
                 title,
                 playlist_id
             ))
                 update_amount++;
         } else {
-            QJsonArray playlist_items = playlist.value(Vk::tkn_items).toArray();
+            QJsonArray playlist_items = JSON_ARR(playlist, Vk::tkn_items);
 
             if (playlist_items.size() > 0) {
                 if (parent -> createPlaylist(
@@ -410,8 +410,8 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & upd
             }
         }
 
-        if (playlist.contains(tkn_more_cmd))
-            folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
+        if (JSON_HAS_KEY(playlist, tkn_more_cmd))
+            folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
 
         if (is_collapsed)
             folder -> setStates(IItem::flag_not_expanded);
@@ -431,25 +431,25 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
     QHash<QString, IItem *> store;
     parent -> accumulateUids(store);
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+        if (JSON_HAS_KEY(itm, tkn_media_type))
+            dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
         bool original = true;
-        QString id = QString::number(itm.value(Soundcloud::tkn_id).toInt());
-        QString owner = QString::number(itm.value(Soundcloud::tkn_user_id).toInt());
+        QString id = JSON_STR(itm, Soundcloud::tkn_id);
+        QString owner = JSON_STR(itm, Soundcloud::tkn_user_id);
         QString uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
-        QString uri = itm.value(Soundcloud::tkn_download_url).toString();
+        QString uri = JSON_STR(itm, Soundcloud::tkn_download_url);
         if (uri.isEmpty()) {
-            uri = itm.value(Soundcloud::tkn_stream_url).toString();
+            uri = JSON_STR(itm, Soundcloud::tkn_stream_url);
             original = false;
         }
 
@@ -460,10 +460,10 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
             IItem * newItem = new IItem(
                 parent,
                 SC_ITEM_ATTRS(id, uri,
-                    itm.value(Soundcloud::tkn_title).toString(),
+                    JSON_STR(itm, Soundcloud::tkn_title),
                     owner,
-                    Duration::fromMillis(itm.value(Soundcloud::tkn_duration).toInt(0)),
-                    original ? itm.value(Soundcloud::tkn_original_format).toString() : val_def_extension,
+                    Duration::fromMillis(JSON_INT(itm, Soundcloud::tkn_duration)),
+                    original ? JSON_STR(itm, Soundcloud::tkn_original_format) : val_def_extension,
                     dm_type
                 )
             );
@@ -473,8 +473,8 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
 //            if (itm.contains(Soundcloud::tkn_video_url))
 //                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
 
-            if (itm.contains(Soundcloud::tkn_genre_id))
-                newItem -> setGenre(itm.value(Soundcloud::tkn_genre_id).toInt());
+            if (JSON_HAS_KEY(itm, Soundcloud::tkn_genre_id))
+                newItem -> setGenre(JSON_INT(itm, Soundcloud::tkn_genre_id));
         } else {
             QList<IItem *>::Iterator it_it = items.begin();
 
@@ -493,26 +493,26 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, int & upd
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
     bool is_collapsed = parent != root_item;
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject playlist = (*it).toObject();
         Playlist * folder;
 
-        QString playlist_id = playlist.value(Soundcloud::tkn_id).toString();
-        QString title = playlist.value(Soundcloud::tkn_title).toString();
+        QString playlist_id = JSON_STR(playlist, Soundcloud::tkn_id);
+        QString title = JSON_STR(playlist, Soundcloud::tkn_title);
 
         if (playlist.contains(tkn_loadable_cmd)) {
              if (parent -> createLoadablePlaylist(
                 folder,
-                playlist.value(tkn_loadable_cmd).toString(),
+                JSON_STR(playlist, tkn_loadable_cmd),
                 title,
                 playlist_id
              ))
                 update_amount++;
         } else {
-            QJsonArray playlist_items = playlist.value(Soundcloud::tkn_tracks).toArray();
+            QJsonArray playlist_items = JSON_ARR(playlist, Soundcloud::tkn_tracks);
             if (!playlist_items.isEmpty()) {
                 if (parent -> createPlaylist(folder, wType, playlist_id, title))
                     update_amount++;
@@ -527,8 +527,8 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, int & upd
             }
         }
 
-        if (playlist.contains(tkn_more_cmd))
-            folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
+        if (JSON_HAS_KEY(playlist, tkn_more_cmd))
+            folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
 
         if (is_collapsed)
             folder -> setStates(IItem::flag_not_expanded);
@@ -554,24 +554,27 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+        if (JSON_HAS_KEY(itm, tkn_media_type))
+            dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
-        QString id = ISource::idToStr(itm.value(Od::tkn_id));
+        QString id = JSON_STR(itm, Od::tkn_id);
         if ((id.length() == 1 && id[0] == '0') || ignoreListContainUid(id)) continue;
 
         QList<IItem *> items = store.values(id);
 
         if (items.isEmpty()) {
-            QString title = dm_type == dmt_audio ? QString(itm.value(Od::tkn_ensemble).toString() % tkn_dash % itm.value(Od::tkn_name).toString()) : itm.value(Od::tkn_name).toString();
+            QString title =
+                dm_type == dmt_audio ?
+                    JSON_STR_CAT(itm, Od::tkn_ensemble, tkn_dash, Od::tkn_name) :
+                    JSON_STR(itm, Od::tkn_name);
 
             items_amount++;
             new IItem(parent, OD_ITEM_ATTRS(
                 id,
                 title,
                 id,
-                Duration::fromSeconds(itm.value(Od::tkn_duration).toInt(0)),
-                itm.value(Od::tkn_size).toInt(0),
+                Duration::fromSeconds(JSON_INT(itm, Od::tkn_duration)),
+                JSON_INT(itm, Od::tkn_size),
                 dm_type
             ));
         } else {
@@ -580,8 +583,8 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
         }
     }
 
-    if (items_amount > 5 && block.contains(tkn_more_cmd)) // od returns to many duplicates - checking on new items amount is prevent from infinite looping
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (items_amount > 5 && JSON_HAS_KEY(block, tkn_more_cmd)) // od returns to many duplicates - checking on new items amount is prevent from infinite looping
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     return items_amount;
 }
@@ -593,24 +596,24 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
     DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
     bool is_collapsed = parent != root_item;
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
         QJsonObject playlist = (*it).toObject();
 
-        int amount = playlist.value(Od::tkn_count).toInt();
-        bool is_loadable = playlist.contains(tkn_loadable_cmd);
+        int amount = JSON_INT(playlist, Od::tkn_count);
+        bool is_loadable = JSON_HAS_KEY(playlist, tkn_loadable_cmd);
 
         if (is_loadable || amount > 0) {
-            QString pid = ISource::idToStr(playlist.value(Od::tkn_id));
-            QString name = playlist.value(Od::tkn_name).toString();
+            QString pid = JSON_STR(playlist, Od::tkn_id);
+            QString name = JSON_STR(playlist, Od::tkn_name);
             Playlist * folder;
 
             if (is_loadable) {
                 if (parent -> createLoadablePlaylist(
                     folder,
-                    playlist.value(tkn_loadable_cmd).toString(),
+                    JSON_STR(playlist, tkn_loadable_cmd),
                     name, pid
                 ))
                     update_amount++;
@@ -625,10 +628,10 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
                 items_amount += amount;
             }
 
-            if (playlist.contains(tkn_more_cmd))
-                folder -> setFetchableAttrs(playlist.value(tkn_more_cmd).toString());
+            if (JSON_HAS_KEY(playlist, tkn_more_cmd))
+                folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
 
-            folder -> setOwner(playlist.value(Od::tkn_owner).toString());
+            folder -> setOwner(JSON_STR(playlist, Od::tkn_owner));
 
             if (is_collapsed)
                 folder -> setStates(IItem::flag_not_expanded);
@@ -648,41 +651,41 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
     DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
     int items_amount = 0;
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
 
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+        if (JSON_HAS_KEY(itm, tkn_media_type))
+            dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
         QStringList artistUids;
         QString artistStr;
-        QJsonArray artistsAr = itm.value(Yandex::tkn_artists).toArray();
+        QJsonArray artistsAr = JSON_ARR(itm, Yandex::tkn_artists);
         for(QJsonArray::Iterator artist = artistsAr.begin(); artist != artistsAr.end(); artist++) {
             QJsonObject obj = (*artist).toObject();
-            artistUids << QString::number(obj.value(Yandex::tkn_id).toInt());
-            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % obj.value(Yandex::tkn_name).toString();
+            artistUids << JSON_STR(obj, Yandex::tkn_id);
+            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % JSON_STR(obj, Yandex::tkn_name);
         };
 
-        QJsonObject album = itm.value(Yandex::tkn_album).toObject();
+        QJsonObject album = JSON_OBJ(itm, Yandex::tkn_album);
 //        QString genre = album.value(Yandex::tkn_genre).toString();
-        QString album_id = QString::number(album.value(Yandex::tkn_id).toInt());
-        QString id = QString::number(itm.value(Yandex::tkn_id).toInt()) % QStringLiteral(":") % album_id;
+        QString album_id = JSON_STR(album, Yandex::tkn_id);
+        QString id = JSON_STR(itm, Yandex::tkn_id) % ':' % album_id;
 
         items_amount++;
         IItem * newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
-            QString(artistStr % QStringLiteral(" - ") % itm.value(Yandex::tkn_title).toString()),
+            QString(artistStr % tkn_dash % JSON_STR(itm, Yandex::tkn_title)),
             id,
-            Duration::fromMillis(itm.value(Yandex::tkn_durationMs).toInt(0)),
+            Duration::fromMillis(JSON_INT(itm, Yandex::tkn_durationMs)),
             dm_type
         ));
 
         //newItem -> setGenre(genre); // need to convert genre to genre id
-        if (itm.contains(Yandex::tkn_fileSize))
-            newItem -> setSize(itm.value(Yandex::tkn_fileSize).toInt());
+        if (JSON_HAS_KEY(itm, Yandex::tkn_fileSize))
+            newItem -> setSize(JSON_INT(itm, Yandex::tkn_fileSize));
     }
 
     return items_amount;
@@ -694,26 +697,26 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
 
     int items_amount = 0;
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
-        QJsonObject snippet = itm.value(QStringLiteral("snippet")).toObject();
-        QJsonValue idVal = itm.value(QStringLiteral("id"));
-        QString id = idVal.isString() ? idVal.toString() : idVal.toObject().value(QStringLiteral("videoId")).toString();
+        QJsonObject snippet = JSON_OBJ(itm, LSTR("snippet"));
+        QJsonValue idVal = JSON_VAL(itm, LSTR("id"));
+        QString id = idVal.isString() ? idVal.toString() : JSON_STR(idVal.toObject(), LSTR("videoId"));
 
         items_amount++;
         IItem * newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
-            snippet.value(QStringLiteral("title")).toString(),
+            JSON_STR(snippet, LSTR("title")),
             id
         ));
 
         //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
 
 
-        snippet = itm.value(QStringLiteral("contentDetails")).toObject();
+        snippet = JSON_OBJ(itm, LSTR("contentDetails"));
 //        "contentDetails": {
 //            "duration": "PT3M48S",
 //            "dimension": "2d",
@@ -727,7 +730,7 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
 //            }
 //           }
         if (!snippet.isEmpty()) {
-            qint64 durMillis = Duration::ISO8601StrtoMillis(snippet.value(QStringLiteral("duration")).toString());
+            qint64 durMillis = Duration::ISO8601StrtoMillis(JSON_STR(snippet, LSTR("duration")));
             if (durMillis > 1200000) // 20 min
                 newItem -> setError(ItemErrors::warn_not_permitted);
             newItem -> setDuration(Duration::fromMillis(durMillis));
@@ -745,26 +748,26 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
     bool is_collapsed = parent != root_item;
     int items_amount = 0;
 
-    if (block.contains(tkn_more_cmd))
-        parent -> setFetchableAttrs(block.value(tkn_more_cmd).toString());
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
 
-        if (itm.contains(tkn_media_type))
-            dm_type = (DataMediaType)itm.value(tkn_media_type).toInt();
+        if (JSON_HAS_KEY(itm, tkn_media_type))
+            dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
         if (dm_type & dmt_set) {
-            QString pid = itm.value(tkn_grab_id).toString();
-            QString ptitle = itm.value(tkn_grab_title).toString();
+            QString pid = JSON_STR(itm, tkn_grab_id);
+            QString ptitle = JSON_STR(itm, tkn_grab_title);
             Playlist * folder;
 
-            if (itm.contains(tkn_loadable_cmd)) {
+            if (JSON_HAS_KEY(itm, tkn_loadable_cmd)) {
                 if (parent -> createLoadablePlaylist(
                     folder,
-                    itm.value(tkn_loadable_cmd).toString(),
+                    JSON_STR(itm, tkn_loadable_cmd),
                     ptitle,
                     pid
                 ))
@@ -779,8 +782,8 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
                     folder, sub_update_amount, EXTRACT_MEDIA_TYPE(dm_type), wType
                 );
 
-                if (itm.contains(tkn_more_cmd))
-                    folder -> setFetchableAttrs(itm.value(tkn_more_cmd).toString());
+                if (JSON_HAS_KEY(itm, tkn_more_cmd))
+                    folder -> setFetchableAttrs(JSON_STR(itm, tkn_more_cmd));
 
                 items_amount += taked_amount;
                 folder -> updateItemsCountInBranch(taked_amount);
@@ -789,41 +792,42 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
             if (is_collapsed)
                 folder -> setStates(IItem::flag_not_expanded);
         } else {
-            QString id = QString::number(itm.value(tkn_grab_id).toInt());
-            QString uri = itm.value(tkn_grab_url).toString();
-            QString refresh_url = itm.value(tkn_grab_refresh).toString();
+            QString id = JSON_STR(itm, tkn_grab_id);
+            QString uri = JSON_STR(itm, tkn_grab_url);
+            QString refresh_url = JSON_STR(itm, tkn_grab_refresh);
 
             items_amount++;
             IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
-                itm.value(tkn_grab_title).toString(),
+                JSON_STR(itm, tkn_grab_title),
                 wType, refresh_url,
-                itm.value(tkn_grab_extension).toString(val_def_extension),
+                JSON_STR_DEF(itm, tkn_grab_extension, val_def_extension),
                 dm_type
             ));
 
-            if (itm.contains(tkn_grab_duration)) {
-                if (itm.value(tkn_grab_duration).isDouble())
-                    newItem -> setDuration(Duration::fromMillis(itm.value(tkn_grab_duration).toInt(0)));
+            //CHECKME: some shit written here
+            if (JSON_HAS_KEY(itm, tkn_grab_duration)) {
+                if (JSON_VAL(itm, tkn_grab_duration).isDouble())
+                    newItem -> setDuration(Duration::fromMillis(JSON_INT(itm, tkn_grab_duration)));
                 else
-                    newItem -> setDuration(itm.value(tkn_grab_duration));
+                    newItem -> setDuration(JSON_VAL(itm, tkn_grab_duration));
             }
 
-            if (itm.contains(tkn_grab_genre_id))
-                newItem -> setGenre(itm.value(tkn_grab_genre_id).toInt());
+            if (JSON_HAS_KEY(itm, tkn_grab_genre_id))
+                newItem -> setGenre(JSON_INT(itm, tkn_grab_genre_id));
 
-            if (itm.contains(tkn_grab_bpm))
-                newItem -> setBpm(itm.value(tkn_grab_bpm).toInt());
+            if (JSON_HAS_KEY(itm, tkn_grab_bpm))
+                newItem -> setBpm(JSON_INT(itm, tkn_grab_bpm));
 
-            if (itm.contains(tkn_grab_size))
-                newItem -> setSize(Info::fromUnits(itm.value(tkn_grab_size).toString()));
+            if (JSON_HAS_KEY(itm, tkn_grab_size))
+                newItem -> setSize(Info::fromUnits(JSON_STR(itm, tkn_grab_size)));
 
-            if (!itm.contains(tkn_skip_info))
+            if (!JSON_HAS_KEY(itm, tkn_skip_info))
                 newItem -> setInfo(Info::str(
-                        itm.value(tkn_grab_size).toString("?"),
+                        JSON_STR_DEF(itm, tkn_grab_size, LSTR("?")),
                         newItem -> extension().toString(),
-                        itm.value(tkn_grab_bitrate).toString("?"),
-                        itm.value(tkn_grab_discretion_rate).toString("?"),
-                        itm.value(tkn_grab_channels).toString("?")
+                        JSON_STR_DEF(itm, tkn_grab_bitrate, LSTR("?")),
+                        JSON_STR_DEF(itm, tkn_grab_discretion_rate, LSTR("?")),
+                        JSON_STR_DEF(itm, tkn_grab_channels, LSTR("?"))
                     )
                 );
         }
