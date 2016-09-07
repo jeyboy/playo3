@@ -43,7 +43,7 @@ namespace Core {
                             switch(perm) {
                                 case perm_site: {
                                     QString genre_id = (limits.in_foreign() ? QStringLiteral("foreign") : QString())
-                                            % QString::number(0); // 0 is eql to all genres // limits.genre; // genres.toInt(attrs);
+                                            % limits.genre; // 0 is eql to all genres
 
                                     Response * req_response = Manager::prepare() -> postFollowed(
                                         IQueriable::baseUrlStr(
@@ -67,7 +67,7 @@ namespace Core {
                                 break;}
 
                                 case perm_api: {
-                                    int genre_id = -1; //limits.genre; //genres.toInt(attrs);
+                                    QString genre_id = limits.genre;
 
                                     block_content = saRequest(
                                         baseUrlStr(
@@ -77,7 +77,7 @@ namespace Core {
                                                     tkn_code, QString(
                                                        "var popular = API.audio.getPopular({"
                                                             "only_eng: " + boolToStr(limits.in_foreign())/*boolToStr(onlyEng)*/ + ", "
-                                                            "count: 1000 " + (genre_id != -1 ? (", genre_id: " + QString::number(genre_id)) : "") + ""
+                                                            "count: 1000 " % (!genre_id.isEmpty() ? (", genre_id: " + genre_id) : "") + ""
                                                          "});"
                                                        "return {\"" % block_items_audio % "\": popular};"
                                                     )

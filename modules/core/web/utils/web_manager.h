@@ -190,13 +190,13 @@ namespace Core { // requests and response has memory leaks
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
             Response * post(const Request & request, const QByteArray & data, bool async = false) {
-                qDebug() << "*** POST" << request.url();
+                qDebug() << "*** POST" << request.url() << data;
                 QNetworkReply * m_http = QNetworkAccessManager::post(request, data);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
 
             Response * put(const Request & request, const QByteArray & data, bool async = false) {
-                qDebug() << "*** PUT" << request.url();
+                qDebug() << "*** PUT" << request.url() << data;
                 QNetworkReply * m_http = QNetworkAccessManager::put(request, data);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
