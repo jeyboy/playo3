@@ -38,7 +38,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "USER BY ID is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_user, cmd_mtd_users_by_id, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_id, response, {}, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue usersByName(const QUrlQuery & args) {
@@ -78,7 +78,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "USER BY NAME is not accessable", true);
                     }
-                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
 
                 QJsonValue usersByTrackLikes(const QUrlQuery & args) {
@@ -111,7 +111,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "USER BY TRACK LIKES is not accessable", true);
                     }
-                    return prepareBlock(dmt_user, cmd_mtd_users_by_track_likes, response, {{CMD_ID, track_id}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_track_likes, response, {}, {{CMD_ID, track_id}});
                 }
 
                 QJsonValue usersByTrackReposting(const QUrlQuery & args) {
@@ -139,7 +139,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "USER BY TRACK REPOST is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_user, cmd_mtd_users_by_track_reposting, response, {{CMD_ID, track_id}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_track_reposting, response, {}, {{CMD_ID, track_id}});
                 }
 
                 QJsonValue userFollowings(const QUrlQuery & args) {
@@ -172,7 +172,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "USER FOLLOWINGS is not accessable", true);
                     }
-                    return prepareBlock(dmt_user, cmd_mtd_user_followings, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_user, cmd_mtd_user_followings, response, {}, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue userFollowers(const QUrlQuery & args) {
@@ -205,7 +205,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "USER FOLLOWERS is not accessable", true);
                     }
-                    return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {}, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue userRecommendations(const QUrlQuery & args) {
@@ -222,8 +222,10 @@ namespace Core {
                     switch(perm) {
                         case perm_api:
                         case perm_site: {
+                            QString uid = user_id.startsWith(val_station_head_tkn) ? user_id : QString(val_station_head_tkn % user_id);
+
                             response = pRequest(
-                                baseUrlStr(qst_site_alt1, QStringLiteral("stations/%1/tracks").arg(user_id), {}),
+                                baseUrlStr(qst_site_alt1, QStringLiteral("stations/%1/tracks").arg(uid), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
@@ -231,7 +233,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "USER RECOMMENDATIONS is not accessable", true);
                     }
-                    return prepareBlock(dmt_user, cmd_mtd_user_recommendations, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_user, cmd_mtd_user_recommendations, response, {}, {{CMD_ID, user_id}});
                 }
             };
         }

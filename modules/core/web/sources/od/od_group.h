@@ -30,7 +30,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue groupsByName(const QUrlQuery & args) {
@@ -93,7 +93,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
 
                 QJsonValue groupsById(const QUrlQuery & args) {

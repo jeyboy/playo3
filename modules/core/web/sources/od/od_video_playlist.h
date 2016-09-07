@@ -91,7 +91,7 @@ namespace Core {
                     QJsonObject obj = response.content.first().toObject();
                     return prepareBlock(
                         obj.contains(tkn_duration) ? dmt_video : dmt_video_set,
-                        cmd_mtd_video_by_category, response, {{CMD_ID, QString::number(pl_type)}}
+                        cmd_mtd_video_by_category, response, {}, {{CMD_ID, QString::number(pl_type)}}
                     );
                 }
 
@@ -122,7 +122,7 @@ namespace Core {
                     QJsonObject obj = response.content.first().toObject();
                     return prepareBlock(
                         obj.contains(tkn_duration) ? dmt_video : dmt_video_set,
-                        cmd_mtd_video_by_playlist, response, {{CMD_ID, album_id}}
+                        cmd_mtd_video_by_playlist, response, {}, {{CMD_ID, album_id}}
                     );
                 }
             };

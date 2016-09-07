@@ -78,6 +78,7 @@ namespace Core {
             extern const QString tkn_tag_list;
 
 
+            extern const QString val_station_head_tkn;
             extern const QString val_client_tkn;
             extern const QString val_hotness_order;
             extern const QString val_created_at_order;

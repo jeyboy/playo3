@@ -145,7 +145,7 @@ namespace Core {
                                 return videoByCategory((VideoPlaylistType)set_type);
                     }
 
-                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                 }   
             public:
                 QJsonValue setByType(const QUrlQuery & attrs) {

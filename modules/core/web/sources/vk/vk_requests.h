@@ -128,7 +128,6 @@ namespace Core {
                         );
                     }
                 }
-
                 inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
@@ -297,7 +296,7 @@ namespace Core {
                             QJsonArray res = videoByUser(user_id).toArray();
 
                             res.prepend(prepareBlock(dmt_audio, tracks_res, {{tkn_dir_name, QStringLiteral("Tracks")}}));
-                            res.prepend(prepareBlock(dmt_audio_set, playlists_res,  {{tkn_dir_name, QStringLiteral("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio_set, playlists_res, {{tkn_dir_name, QStringLiteral("Tracks")}}));
 
                             return res;
                         break;}
@@ -319,8 +318,8 @@ namespace Core {
                                 ret.insert(block_sets_audio, ar);
                             }
 
-                            res.prepend(prepareBlock(dmt_audio, ret.value(block_items_audio)));
-                            res.prepend(prepareBlock(dmt_audio_set, ret.value(block_sets_audio)));
+                            res.prepend(prepareBlock(dmt_audio, ret.value(block_items_audio), {{tkn_dir_name, QStringLiteral("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio_set, ret.value(block_sets_audio), {{tkn_dir_name, QStringLiteral("Tracks")}}));
 
                             return ret;
                         break;}

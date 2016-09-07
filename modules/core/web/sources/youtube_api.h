@@ -55,7 +55,7 @@ namespace Core {
 //                        queryRules(100)
 //                    );
 
-                    return prepareBlock(dmt_set, cmd_mtd_set_by_type, response, limits/*, {{CMD_SET_TYPE, set_type}}*/);
+                    return prepareBlock(dmt_set, cmd_mtd_set_by_type, response, limits, {}/*, {{CMD_SET_TYPE, set_type}}*/);
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) { //count = 5

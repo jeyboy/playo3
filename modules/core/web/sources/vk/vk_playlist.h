@@ -37,7 +37,7 @@ namespace Core {
                         default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_set, cmd_mtd_tracks_playlists_by_user, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_set, cmd_mtd_tracks_playlists_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
 //                QJsonValue videoPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0) {

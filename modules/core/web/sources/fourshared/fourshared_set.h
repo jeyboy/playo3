@@ -12,9 +12,9 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_popular_audio: return QStringLiteral("Popular audio: ");
-                        case set_popular_video: return QStringLiteral("Popular video: ");
-                        default: return QStringLiteral("Unknown: ");
+                        case set_popular_audio: return QStringLiteral("Popular audio");
+                        case set_popular_video: return QStringLiteral("Popular video");
+                        default: return QStringLiteral("Unknown");
                     }
                 }
 
@@ -91,7 +91,7 @@ namespace Core {
                         break;}
                     }
 
-                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                 }
             public:
                 QJsonValue setByType(const QUrlQuery & attrs) {

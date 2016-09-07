@@ -115,7 +115,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "SET BY TYPE is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                 }
 
             public:

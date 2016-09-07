@@ -229,8 +229,9 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
     for(QJsonArray::ConstIterator block = blocks.constBegin(); block != blocks.constEnd(); block++) {
         QJsonObject block_obj = (*block).toObject();
 
+        if (JSON_BOOL(block_obj, tkn_is_empty) && !JSON_HAS_KEY(block_obj, tkn_loadable_cmd)) continue;
+
         DataMediaType dmt_type = (DataMediaType)block_obj.value(tkn_media_type).toInt(); //(DataMediaType)EXTRACT_MEDIA_TYPE(pair.key().toInt());
-//        if (dmt_type == 0) dmt_type = dmtype;
 
         Playlist * curr_parent = parent;
         DataSubType wType = (DataSubType)block_obj.value(tkn_source_id).toInt();

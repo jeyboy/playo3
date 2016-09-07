@@ -117,7 +117,7 @@ namespace Core {
                             prepareTracks(items, block_content);
 
                             QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
-                            return prepareBlock(dmt_audio, cmd_mtd_user_recommendations, response, {{CMD_ID, user_id}, {CMD_PREDICATE, (int)randomize}});
+                            return prepareBlock(dmt_audio, cmd_mtd_user_recommendations, response, {}, {{CMD_ID, user_id}, {CMD_PREDICATE, (int)randomize}});
                         break;}
 
                         case perm_api: {
@@ -153,7 +153,6 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET).toInt()
                     );
                 }
-
                 QJsonValue trackRecommendations(const QString & track_id, bool randomize, int offset = 0) {
                     Permissions perm = permissions(pr_recommendations);
                     QJsonArray block_content;
@@ -179,7 +178,7 @@ namespace Core {
                             prepareTracks(items, block_content);
 
                             QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
-                            return prepareBlock(dmt_audio, cmd_mtd_track_recommendations, response, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
+                            return prepareBlock(dmt_audio, cmd_mtd_track_recommendations, response, {}, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
                         break;}
 
                         case perm_api: {
@@ -205,7 +204,7 @@ namespace Core {
                         default: Logger::obj().write("VK", "trackRecommendations is not accessable", true);
                     }
 
-//                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
+//                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
                     return prepareBlock(dmt_audio, block_content);
                 }
 

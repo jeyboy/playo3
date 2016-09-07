@@ -63,7 +63,7 @@ namespace Core {
                                     QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
                                     prepareTracks(items, block_content);
                                     QueriableResponse response = QueriableResponse(block_content, QString::number(limits.start_offset + block_content.size()), 0, 1, block_content.isEmpty());
-                                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {{CMD_SET_TYPE, set_type}});
+                                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                                 break;}
 
                                 case perm_api: {
@@ -88,7 +88,7 @@ namespace Core {
                                         IQUERY_DEF_FIELDS << block_items_audio
                                     );
 
-                                    prepareBlock(dmt_audio, block_content/*,cmd_mtd_set_by_type, response, {{CMD_SET_TYPE, set_type}}*/);
+                                    prepareBlock(dmt_audio, block_content/*,cmd_mtd_set_by_type, response, {}, {{CMD_SET_TYPE, set_type}}*/);
                                 break;}
 
                                 default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);

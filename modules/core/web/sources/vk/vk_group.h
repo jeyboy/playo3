@@ -46,7 +46,7 @@ namespace Core {
                         default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {{CMD_ID, id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, id}});
                 }
 
                 QJsonValue groupsByName(const QUrlQuery & args) {
@@ -94,7 +94,7 @@ namespace Core {
                         default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
             };
         }

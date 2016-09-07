@@ -162,7 +162,7 @@ namespace Core {
 
                             return QJsonArray()
                                 << prepareBlock(dmt_video_set, mod_sets, {{tkn_dir_name, QStringLiteral("Videos")}})
-                                << prepareBlock(dmt_video, cmd_mtd_video_by_user, response, {{CMD_ID, user_id}, {tkn_dir_name, QStringLiteral("Videos")}});
+                                << prepareBlock(dmt_video, cmd_mtd_video_by_user, response, {{tkn_dir_name, QStringLiteral("Videos")}}, {{CMD_ID, user_id}});
                         break;}
 
                         case perm_api: {
@@ -307,7 +307,7 @@ namespace Core {
                         return prepareBlock(dmt_video, block_content);
                     else {
                         QueriableResponse response(block_content, offset, 0, 1, block_content.isEmpty());
-                        return prepareBlock(dmt_video, cmd_mtd_video_by_category, response, {{CMD_ID, category_id}});
+                        return prepareBlock(dmt_video, cmd_mtd_video_by_category, response, {}, {{CMD_ID, category_id}});
                     }
                 }
 

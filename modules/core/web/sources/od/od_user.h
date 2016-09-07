@@ -86,7 +86,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
 
                 QJsonValue usersById(const QString & user_id) {

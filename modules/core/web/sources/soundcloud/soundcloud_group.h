@@ -67,7 +67,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "GROUP BY ID is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {{CMD_ID, group_id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, group_id}});
                 }
 
                 QJsonValue groupsByTrack(const QUrlQuery & args) {
@@ -93,7 +93,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "GROUP BY TRACK is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_track, response, {{CMD_ID, track_id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_track, response, {}, {{CMD_ID, track_id}});
                 }
 
                 QJsonValue groupsByUser(const QUrlQuery & args) {
@@ -129,7 +129,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "GROUP BY USER is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue groupsByName(const QUrlQuery & args) {
@@ -170,7 +170,7 @@ namespace Core {
                         default: Logger::obj().write("Soundcloud", "GROUP BY NAME is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
             };
         }

@@ -101,7 +101,7 @@ namespace Core {
 //                                proc_json_extract, QStringList() << tkn_tracks // similarArtists
 //                            );
 
-//                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_artist, response, {{CMD_ID, artist_id}});
+//                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_artist, response, {}, {{CMD_ID, artist_id}});
 //                }
 
                 QJsonValue tracksByArtist(const QUrlQuery & args) {
@@ -111,22 +111,22 @@ namespace Core {
                     QJsonObject response = sRequest(
                                 audioUrlStr(
                                     path_audio_by_artist_id,
-                                    { {QStringLiteral("artistId"), artist_id} }
+                                    { {LSTR("artistId"), artist_id} }
                                 ),
                                 call_type_json
                             );
 
                     QJsonArray blocks;
 
-                    QJsonArray similar_artists = response.value(QStringLiteral("similarArtists")).toArray();
+                    QJsonArray similar_artists = JSON_ARR(response, LSTR("similarArtists"));
                     if (!similar_artists.isEmpty()) {
                         prepareArtists(similar_artists);
-                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, QStringLiteral("Similar Artists")}});
+                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, LSTR("Similar Artists")}});
                     }
 
-                    QJsonArray albums = response.value(QStringLiteral("masterAlbums")).toArray();
+                    QJsonArray albums = JSON_ARR(response, LSTR("masterAlbums"));
                     prepareAlbums(albums);
-                    blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Albums")}});
+                    blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, LSTR("Albums")}});
 
                     blocks << prepareBlock(dmt_audio, response.value(tkn_tracks));
 
@@ -150,7 +150,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_collection, response, {{CMD_ID, collection_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_collection, response, {}, {{CMD_ID, collection_id}});
                 }
 
                 QJsonValue tracksByTuner(const QUrlQuery & args) {
@@ -173,7 +173,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tuner, response, {{CMD_ID, tuner_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tuner, response, {}, {{CMD_ID, tuner_id}});
                 }
 
                 QJsonValue tracksByAlbum(const QUrlQuery & args) {
@@ -193,7 +193,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_album, response, {{CMD_ID, album_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_album, response, {}, {{CMD_ID, album_id}});
                 }
 
                 QJsonValue tracksByPlaylist(const QUrlQuery & args) {
@@ -213,7 +213,7 @@ namespace Core {
                         0, proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_playlist, response, {{CMD_ID, playlist_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_playlist, response, {}, {{CMD_ID, playlist_id}});
                 }
 
                 QJsonValue tracksByUser(const QUrlQuery & args) {
@@ -230,7 +230,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue userRecommendations(const QUrlQuery & /*args*/) {
@@ -254,13 +254,13 @@ namespace Core {
                     QJsonArray similar_artists = response.value(tkn_artists).toArray();
                     if (!similar_artists.isEmpty()) {
                         prepareArtists(similar_artists);
-                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, QStringLiteral("Artists")}});
+                        blocks << prepareBlock(dmt_audio_set, similar_artists, {{tkn_dir_name, LSTR("Artists")}});
                     }
 
                     QJsonArray albums = response.value(tkn_albums).toArray();
                     if (!albums.isEmpty()) {
                         prepareAlbums(albums);
-                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Albums")}});
+                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, LSTR("Albums")}});
                     }
 
                     blocks << prepareBlock(

@@ -1,5 +1,6 @@
 #include "soundcloud_keys.h"
 
+
 namespace Core {
     namespace Web {
         namespace Soundcloud {
@@ -77,6 +78,7 @@ namespace Core {
             extern const QString tkn_tag_list          = QStringLiteral("tag_list");
 
 
+            extern const QString val_station_head_tkn  = QStringLiteral("soundcloud:artist-stations:");
             extern const QString val_client_tkn        = QStringLiteral("54ca588303e1d2bf524509faf20931b4");
             extern const QString val_hotness_order     = QStringLiteral("hotness");
             extern const QString val_created_at_order  = QStringLiteral("created_at");

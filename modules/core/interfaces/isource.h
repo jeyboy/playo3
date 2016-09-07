@@ -62,19 +62,20 @@ namespace Core {
         void openRelationTab();
         void openPackageTab();
     protected:
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content, const std::initializer_list<std::pair<QString, QString> > & params = {}) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content,
+            const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
             QJsonObject res = QJsonObject {
                 {Web::tkn_content, block_content}, {Web::tkn_media_type, dmt_val}, {Web::tkn_source_id, sourceType()},
                 {Web::tkn_is_empty, block_content.isArray() ? block_content.toArray().isEmpty() : block_content.toObject().isEmpty()}
             };
 
-            if (params.size() > 0)
-                for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = params.begin(); it != params.end(); ++it)
+            if (block_params.size() > 0)
+                for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = block_params.begin(); it != block_params.end(); ++it)
                     res.insert(it -> first, it -> second);
 
             return res;
         }
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const std::initializer_list<std::pair<QString, QString> > & block_params = {}, const std::initializer_list<std::pair<QString, QVariant> > & cmd_params = {}) {
             QJsonObject block;
 
             int source_id = sourceType();
@@ -84,20 +85,26 @@ namespace Core {
             block.insert(Web::tkn_source_id, source_id);
             block.insert(Web::tkn_is_empty, response.content.isEmpty());
 
-            QUrlQuery query = Cmd::paramsToQuery(params);
-            query.addQueryItem(CMD_OFFSET, response.next_offset);
-            query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(response.items_limit));
-            query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(response.requests_limit));
+            if (block_params.size() > 0)
+                for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = block_params.begin(); it != block_params.end(); ++it)
+                    block.insert(it -> first, it -> second);
 
-            if (!response.finished)
+            if (!response.finished) {
+                QUrlQuery query = Cmd::paramsToQuery(cmd_params);
+                query.addQueryItem(CMD_OFFSET, response.next_offset);
+                query.addQueryItem(CMD_ITEMS_LIMIT, QString::number(response.items_limit));
+                query.addQueryItem(CMD_REQUESTS_LIMIT, QString::number(response.requests_limit));
+
                 block.insert(
                     Web::tkn_more_cmd,
                     Cmd::build(source_id, mtd, query).toString()
                 );
+            }
 
             return block;
         }
-        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits, const std::initializer_list<std::pair<QString, QVariant> > & params = {}) {
+        QJsonObject prepareBlock(const DataMediaType & dmt_val, const ICmdMethods & mtd, const Web::QueriableResponse & response, const SearchLimit & limits,
+                const std::initializer_list<std::pair<QString, QString> > & block_params = {}, const std::initializer_list<std::pair<QString, QVariant> > & cmd_params = {}) {
             QJsonObject block;
 
             int source_id = sourceType();
@@ -107,10 +114,14 @@ namespace Core {
             block.insert(Web::tkn_source_id, source_id);
             block.insert(Web::tkn_is_empty, response.content.isEmpty());
 
-            QUrlQuery query = limits.toICmdParams(response.next_offset);
-            Cmd::paramsToQuery(query, params);
+            if (block_params.size() > 0)
+                for (typename std::initializer_list<std::pair<QString, QString> >::const_iterator it = block_params.begin(); it != block_params.end(); ++it)
+                    block.insert(it -> first, it -> second);
 
-            if (!response.finished)
+            if (!response.finished) {
+                QUrlQuery query = limits.toICmdParams(response.next_offset);
+                Cmd::paramsToQuery(query, cmd_params);
+
                 block.insert(
                     Web::tkn_more_cmd,
                     Cmd::build(
@@ -118,6 +129,7 @@ namespace Core {
                         query
                     ).toString()
                 );
+            }
 
             return block;
         }

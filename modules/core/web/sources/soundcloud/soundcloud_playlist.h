@@ -34,7 +34,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLIST BY TAG is not accessable", true);
                     }
-                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_tag, response, {{CMD_PREDICATE, tag}});
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_tag, response, {}, {{CMD_PREDICATE, tag}});
                 }
 
                 QJsonValue playlistsByTrack(const QUrlQuery & args) {
@@ -67,7 +67,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLIST BY TRACKS is not accessable", true);
                     }
-                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_track, response, {{CMD_ID, track_id}});
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_track, response, {}, {{CMD_ID, track_id}});
                 }
 
                 QJsonValue playlistsByPredicate(const QUrlQuery & args) {
@@ -109,7 +109,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLISTS BY PREDICATE is not accessable", true);
                     }
-                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_predicate, response, {{CMD_PREDICATE, predicate}});
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_predicate, response, {}, {{CMD_PREDICATE, predicate}});
                 }
 
                 QJsonValue playlistsByUser(const QUrlQuery & args) {
@@ -141,7 +141,7 @@ namespace Core {
 
                         default: Logger::obj().write("Soundcloud", "PLAYLIST BY USER is not accessable", true);
                     }
-                    return prepareBlock(dmt_audio_set, cmd_mtd_playlists_by_user, response, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_audio_set, cmd_mtd_playlists_by_user, response, {}, {{CMD_ID, user_id}});
                 }
             };
         }
