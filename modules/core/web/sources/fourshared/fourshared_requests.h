@@ -34,12 +34,12 @@ namespace Core {
                                 tkn_loadable_cmd,
                                 Cmd::build(
                                     sourceType(), cmd_mtd_load_set_data,
-                                    {{CMD_ID, dir_obj.value(QStringLiteral("id")).toString()}}
+                                    {{CMD_ID, JSON_STR(dir_obj, LSTR("id"))}}
                                 ).toString()
                             );
 
-                            set_obj.insert(tkn_grab_title, dir_obj.value(QStringLiteral("name")).toString());
-//                            set_obj.insert(tkn_grab_refresh, dir_obj.value(QStringLiteral("id")).toString());
+                            set_obj.insert(tkn_grab_title, JSON_STR(dir_obj, LSTR("name")));
+//                            set_obj.insert(tkn_grab_refresh, dir_obj.value(LSTR("id")).toString());
 
                             res.append(set_obj);
                         }
@@ -48,21 +48,21 @@ namespace Core {
                     for(QJsonArray::Iterator file = files.begin(); file != files.end(); file++) {
                         QJsonObject file_obj = (*file).toObject();
 
-                        QString fileType = file_obj.value(QStringLiteral("typeCss")).toString();
-                        bool isAudio = fileType == QStringLiteral("audio");
-                        bool isVideo = fileType == QStringLiteral("video");
+                        QString fileType = JSON_STR(file_obj, LSTR("typeCss"));
+                        bool isAudio = fileType == LSTR("audio");
+                        bool isVideo = fileType == LSTR("video");
 
                         if (isAudio || isVideo) {
                             QJsonObject item_obj;
 
-                            QString name = file_obj.value(QStringLiteral("name")).toString(), ext;
+                            QString name = JSON_STR(file_obj, LSTR("name")), ext;
                             Extensions::obj().extractExtension(name, ext);
 
-                            if (file_obj.contains(QStringLiteral("prStyle")))
-                                item_obj.insert(tkn_grab_art_url, file_obj[QStringLiteral("prStyle")].toString());
+                            if (JSON_HAS_KEY(file_obj, LSTR("prStyle")))
+                                item_obj.insert(tkn_grab_art_url, JSON_STR(file_obj, LSTR("prStyle")));
 
                             item_obj.insert(tkn_skip_info, true);
-                            item_obj.insert(tkn_grab_refresh, file_obj.value(QStringLiteral("id")).toString());
+                            item_obj.insert(tkn_grab_refresh, JSON_STR(file_obj, LSTR("id")));
                             item_obj.insert(tkn_grab_title, name);
                             item_obj.insert(tkn_grab_extension, ext);
 

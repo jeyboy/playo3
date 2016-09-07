@@ -9,42 +9,36 @@ void Dockbars::load(const QJsonArray & bars) {
     barsList << DOWNLOADS_TAB << LOGS_TAB /*<< SCREEN_TAB*/;
 
     if (bars.count() > 0) {
-        QJsonObject obj;
-        QString barName;
-        QDockWidget * curr_bar;
-
         for(QJsonArray::ConstIterator it = bars.constBegin(); it != bars.constEnd(); it++) {
-            obj = (*it).toObject();
-            barName = obj.value(QStringLiteral("title")).toString();
+            QJsonObject obj = (*it).toObject();
+            QString barName = JSON_STR(obj, LSTR("title"));
             userTabsAmount += (!barsList.removeOne(barName));
 
-            Models::Params params(obj.value(QStringLiteral("set")).toObject());
-            curr_bar = linkNameToToolbars(
-                BarCreationNames(barName, obj.value(QStringLiteral("link")).toString(), obj.value(QStringLiteral("name")).toString()),
+            Models::Params params(JSON_OBJ(obj, LSTR("set")));
+            QDockWidget * curr_bar = linkNameToToolbars(
+                BarCreationNames(barName, JSON_STR(obj, LSTR("link")), JSON_STR(obj, LSTR("name"))),
                 params,
-                obj.value(QStringLiteral("cont")).toObject()
+                JSON_OBJ(obj, LSTR("cont"))
             );
 
             if (curr_bar) {
-                if (obj.value(QStringLiteral("stick")).toBool())
+                if (JSON_BOOL(obj, LSTR("stick")))
                     ((DockBar *)curr_bar) -> markAsSticked();
 
-                ((DockBar *)curr_bar) -> useVerticalTitles(obj.value(QStringLiteral("vertical")).toBool());
+                ((DockBar *)curr_bar) -> useVerticalTitles(JSON_BOOL(obj, LSTR("vertical")));
 
                 container -> addDockWidget(Qt::TopDockWidgetArea, curr_bar);
 
                 IView * v = view(qobject_cast<DockBar *>(curr_bar));
 
                 if (v) {
-                    if (obj.value(QStringLiteral("selection")).isString())
-                        v -> restoreSelection(obj.value(QStringLiteral("selection")).toString());
+                    if (JSON_VAL(obj, LSTR("selection")).isString())
+                        v -> restoreSelection(JSON_STR(obj, LSTR("selection")));
 
-                    if (obj.value(QStringLiteral("played")).toBool()) {
-                        if (v) {
-                            QString path = obj.value(QStringLiteral("played_item")).toString();
-                            if (!path.isEmpty())
-                                v -> execPath(path, PlayerInitState::initiated, obj.value(QStringLiteral("played_time")).toInt());
-                        }
+                    if (JSON_BOOL(obj, LSTR("played"))) {
+                        QString path = JSON_STR(obj, LSTR("played_item"));
+                        if (!path.isEmpty())
+                            v -> execPath(path, PlayerInitState::initiated, JSON_INT(obj, LSTR("played_time")));
                     }
                 }
             }
