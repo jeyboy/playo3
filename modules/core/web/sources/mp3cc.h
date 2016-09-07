@@ -23,7 +23,6 @@ namespace Core {
             }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
-//            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
                 Html::Document parser = reply -> toHtml(removeReply);
                 bool result = false;
 

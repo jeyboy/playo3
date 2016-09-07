@@ -97,7 +97,8 @@ namespace Core {
 
                 QJsonValue videoByUser(const QUrlQuery & args) {
                     return videoByUser(
-                        args.queryItemValue(CMD_ID)
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET).toInt()
                     );
                 }
                 QJsonValue videoByUser(const QString & user_id, int offset = 0) {
@@ -124,10 +125,16 @@ namespace Core {
                             );
 
                             RESPONSE_TO_JSON_PARTS(req_response);
-                            QJsonArray items = JSON_ARR2(json_parts[0].toObject(), LSTR("all"), LSTR("list"));
+                            QJsonObject all_block = JSON_OBJ(json_parts[0].toObject(), LSTR("all"));
+                            QJsonArray items = JSON_ARR(all_block, LSTR("list"));
                             prepareVideo(items, block_content);
-                            QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
 
+                            int new_offset = offset + block_content.size();
+
+                            QueriableResponse response(
+                                block_content, QString::number(new_offset), 0, 1,
+                                new_offset >= JSON_INT(all_block, LSTR("total"))
+                            );
 
                             QJsonArray sets = json_parts[1].toArray();
                             QJsonArray mod_sets;
