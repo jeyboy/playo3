@@ -338,7 +338,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
             items_amount++;
             IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
-                JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title),
+                JSON_HAS_KEY(itm, Vk::tkn_artist) ? JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title) : JSON_STR(itm, Vk::tkn_title),
                 owner, uid,
                 Duration::fromSeconds(JSON_INT(itm, Vk::tkn_duration)),
                 dm_type
