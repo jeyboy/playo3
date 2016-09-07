@@ -53,22 +53,7 @@ namespace Core {
                             sendError(arg -> error_receiver, err, code);
                             arg -> append(QJsonObject {{tkn_error, err}}, false);
                         } else {
-                            QJsonValue val = json;
-
-                            if (arg -> post_proc & proc_json_extract) {
-                                for(QStringList::Iterator field = arg -> fields.begin(); field != arg -> fields.end(); field++)
-                                    if (val.isObject())
-                                        val = val.toObject().value(*field);
-                                    else {
-                                        QJsonArray val_arr = val.toArray();
-                                        QJsonArray new_val;
-                                        for(QJsonArray::Iterator item = val_arr.begin(); item != val_arr.end(); item++) {
-                                            new_val << (*item).toObject().value(*field);
-                                        }
-
-                                        val = new_val;
-                                    }
-                            }
+                            QJsonValue val = arg -> fieldsAffection(json);
 
                             if (arg -> post_proc & proc_json_proc)
                                 val = procJson(val, arg -> post_proc);

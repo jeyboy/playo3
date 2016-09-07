@@ -92,7 +92,7 @@ namespace Core {
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = QStringList(), QObject * error_receiver = 0, bool ignore_arr_content = true)
                 : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get),
-                  post_proc(post_proc), arr(arr), fields(fields), counter(0),
+                  post_proc(post_proc), arr(arr), fields(fields), counter(0), amount_of_appends(0),
                   requests_fact_count(0), error_receiver(error_receiver), last_result_is_empty(false), forse_completing(false)
             {
                 ignoreArrContent(ignore_arr_content);
@@ -173,6 +173,7 @@ namespace Core {
 
             void iterateCounters(int new_amount) {
                 requests_fact_count++;
+                amount_of_appends = new_amount;
                 start_offset += (call_iter == call_iter_type_page ? 1 : new_amount);
                 items_fact_count = arr -> size();
                 prepareRequestUrl();
@@ -205,6 +206,25 @@ namespace Core {
                 request_url.replace(old_data, new_data);
             }
 
+            QJsonValue fieldsAffection(QJsonValue val) {
+                if (post_proc & proc_json_extract) {
+                    for(QStringList::Iterator field = fields.begin(); field != fields.end(); field++)
+                        if (val.isObject())
+                            val = val.toObject().value(*field);
+                        else {
+                            QJsonArray new_val, val_arr = val.toArray();
+
+                            for(QJsonArray::Iterator item = val_arr.begin(); item != val_arr.end(); item++) {
+                                new_val << (*item).toObject().value(*field);
+                            }
+
+                            val = new_val;
+                        }
+                }
+
+                return val;
+            }
+
             QString url_template;
             QString request_url;
 
@@ -223,7 +243,7 @@ namespace Core {
             QStringList fields;
             QString offset_token, offset_token_field, error;
             int items_total_limit, requests_limit, per_request_limit;
-            int start_offset, counter;
+            int start_offset, counter, amount_of_appends; // amount_of_appends - contains amount of added items in previous request
             int items_fact_count, requests_fact_count;
 
             QObject * error_receiver;

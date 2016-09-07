@@ -42,8 +42,8 @@ namespace Core {
                     }
                 }
 
-                inline bool endReached(QJsonObject & response, QueriableArg * arg) {
-                    return response.value(tkn_response).toArray().size() < arg -> per_request_limit;
+                inline bool endReached(QJsonObject & /*response*/, QueriableArg * arg) {
+                    return arg -> amount_of_appends == 0 || arg -> amount_of_appends < arg -> per_request_limit;
                 }
                 inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & json, int & code, QString & message) {
                     QJsonObject stat_obj = json.value(tkn_response).toObject().value(tkn_errors).toArray().first().toObject();

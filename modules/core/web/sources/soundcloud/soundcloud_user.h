@@ -222,6 +222,8 @@ namespace Core {
                     switch(perm) {
                         case perm_api:
                         case perm_site: {
+                            //TODO: if user id is eql to current user id - need to use discover algo
+
                             QString uid = user_id.startsWith(val_station_head_tkn) ? user_id : QString(val_station_head_tkn % user_id);
 
                             response = pRequest(
