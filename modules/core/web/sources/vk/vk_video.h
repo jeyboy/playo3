@@ -254,7 +254,12 @@ namespace Core {
                         QJsonObject cat_obj = (*cat).toObject();
 
                         if (JSON_STR(cat_obj, tkn_id) == category_id) {
-                            int i = 0;
+                            return QJsonObject {
+                                {tkn_content, JSON_ARR(cat_obj, tkn_items)},
+                                {tkn_media_type, dmt_video},
+                                {tkn_source_id, sourceType()},
+                                {tkn_more_cmd, JSON_STR(cat_obj, tkn_more_cmd)}
+                            };
                         }
                     }
 
@@ -273,13 +278,11 @@ namespace Core {
                                     {
                                         {
                                             tkn_code, QString(
-                                                "var offset = " % offset_token % ";"
-                                                "    var response = API.video.getCatalogSection({"
-                                                "        section_id: \"" % category_id % "\","
-                                                "        from: offset, count: 16"
-                                                "    });"
-                                                "    offset = response.next;"
-                                                "return {\"" % block_sets % "\": response.items, \"offset_token\": offset};"
+                                                "var response = API.video.getCatalogSection({"
+                                                "    section_id: \"" % category_id % "\","
+                                                "    from: \"" % offset_token % "\", count: 16"
+                                                "});"
+                                                "return {\"" % block_sets % "\": response.items, \"offset_token\": response.next};"
                                             )
                                         }
                                     }
@@ -317,7 +320,7 @@ namespace Core {
                                     {
                                         {
                                             tkn_code, QString(
-                                                "var search = []; var rule = true; var offset = " % offset_token % "; var counter = 0; var limit = 20;"
+                                                "var search = []; var rule = true; var offset = \"" % offset_token % "\"; var counter = 0; var limit = 20;"
                                                 "do {"
                                                 "    var response = API.video.getCatalog({"
                                                 "        filters: \"feed,top,ugc,series,other\", count: 0, " // count - affect only on other cats amount - max eq to 16
@@ -328,7 +331,7 @@ namespace Core {
                                                 "    counter = counter %2b 1;"
                                                 "    rule = counter <= limit && response.items.length != 0;"
                                                 "} while(rule);"
-                                                "if ()"
+                                                "if (counter < limit) offset = \"\";"
                                                 "return {\"" % block_sets % "\": search, \"offset_token\": offset};"
                                             )
                                         }
@@ -362,7 +365,7 @@ namespace Core {
                         default: Logger::obj().write("VK", "video categories is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_video, block_content);
+                    return prepareBlock(dmt_video_set, block_content);
                 }
             };
         }
