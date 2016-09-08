@@ -54,6 +54,7 @@ namespace Core {
     signals:
         void newPlaylistNeed();
         void likeChanged(bool);
+        void playedItemChanged(QString, QString);
 
     public slots:
         void changeLikeStatus(bool is_liked) { setState(is_liked ? IItem::flag_liked : IItem::flag_not_liked); }

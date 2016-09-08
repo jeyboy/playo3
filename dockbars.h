@@ -16,10 +16,10 @@
 
 #include "dialogs/tabdialog.h"
 
-#define SCREEN_TAB "Screen"
-#define COMMON_TAB "Common"
-#define DOWNLOADS_TAB "Downloads"
-#define LOGS_TAB "Logs"
+#define SCREEN_TAB LSTR("Screen")
+#define COMMON_TAB LSTR("Common")
+#define DOWNLOADS_TAB LSTR("Downloads")
+#define LOGS_TAB LSTR("Logs")
 
 namespace Presentation {
     using namespace Views;

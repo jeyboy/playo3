@@ -32,7 +32,7 @@ int BassPlayer::default_device() {
 }
 
 bool BassPlayer::proceedErrorState() {
-    qDebug() << "proceedErrorState" << BASS_ErrorGetCode();
+    qCritical() << "proceedErrorState" << BASS_ErrorGetCode();
     switch(BASS_ErrorGetCode()) {
         case BASS_OK: return false;
         case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
@@ -65,7 +65,7 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
     }
 
     if (!new_chan) {
-        qDebug() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
+        qCritical() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
         proceedErrorState();
     } else {
         qDebug() << "OPENED" << url.toString();
@@ -121,7 +121,7 @@ void BassPlayer::playPreproccessing() {
         if (is_paused) pause();
     } else {
         proceedErrorState();
-        qDebug() << "IS NOT PLAYED";
+        qCritical() << "IS NOT PLAYED";
     }
 }
 

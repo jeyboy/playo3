@@ -10,8 +10,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     ui -> setupUi(this);
 //    setCentralWidget(new QWidget);
 //    ui-> centralWidget -> hide();
-    QApplication::setWindowIcon(QIcon(QStringLiteral(":ico")));
-    setWindowTitle(QStringLiteral("Playo"));
+    QApplication::setWindowIcon(QIcon(LSTR(":ico")));
+    setWindowTitle(LSTR("Playo"));
     setAcceptDrops(true);
 
     setTabShape(QTabWidget::Rounded);
@@ -76,10 +76,10 @@ void Playo::initialization() {
     ///location correction (test needed)
     ///////////////////////////////////////////////////////////
     locationCorrection();
+
     ///////////////////////////////////////////////////////////
     /// toolbars
     ///////////////////////////////////////////////////////////
-
     ToolBars::obj().load(settings -> read(ToolBars::settingsName()).toArray());
     ToolBars::obj().setEqualizerSettings(settings -> read(SETTINGS_EQUALIZER_SET_KEY).toObject());
     Dockbars::obj().load(settings -> read(Dockbars::settingsName()).toArray());
@@ -133,7 +133,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     HotkeyManager::obj().clear();
     FileSystemWatcher::obj().clear();
 
-    Logger::obj().endMark(QStringLiteral("Main"), QStringLiteral("Saving"));
+    Logger::obj().endMark(LSTR("Main"), LSTR("Saving"));
     MainWindow::closeEvent(e);
 }
 
@@ -168,7 +168,7 @@ void Playo::dropEvent(QDropEvent * event) {
 /////////////////////////////////////////////////////////////////////////////////////
 
 void Playo::receiveMessage(QString message) {
-    Logger::obj().write(QStringLiteral("Main"), QStringLiteral("receiveMessage"));
+    Logger::obj().write(LSTR("Main"), LSTR("receiveMessage"));
     QStringList list = message.split('|', QString::SkipEmptyParts);
     QList<QUrl> urls;
 
@@ -196,7 +196,7 @@ void Playo::showSearchDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         Models::Params settings(dt_search, false, false, false, true);
         SearchLimitLayers prms = dialog.params();
-        Dockbars::obj().createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
+        Dockbars::obj().createDocBar(LSTR("Search"), settings, 0, true, true, &prms);
     }
 }
 

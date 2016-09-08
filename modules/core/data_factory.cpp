@@ -3,32 +3,32 @@
 namespace Core {
     void DataFactory::spoil() {
         if (!current_playlist) {
-            qDebug() << "PLAYLIST IS UNDEFINED";
+            qCritical() << "PLAYLIST IS UNDEFINED";
             return;
         }
 
         if (!current_playlist -> spoil(playedIndex()))
-            qDebug() << "STATE IS NOT CHANGED";
+            qCritical() << "STATE IS NOT CHANGED";
     }
     void DataFactory::setState(int state) {
         if (!current_playlist) {
-            qDebug() << "PLAYLIST IS UNDEFINED";
+            qCritical() << "PLAYLIST IS UNDEFINED";
             return;
         }
 
         qDebug() << "STATE" << state;
         if (!current_playlist -> setState(playedIndex(), state))
-            qDebug() << "STATE IS NOT CHANGED";
+            qCritical() << "STATE IS NOT CHANGED";
     }
 
     void DataFactory::setError(ItemErrors error) {
         if (!current_playlist) {
-            qDebug() << "PLAYLIST IS UNDEFINED";
+            qCritical() << "PLAYLIST IS UNDEFINED";
             return;
         }
 
         if (!current_playlist -> setError(playedIndex(), error))
-            qDebug() << "ERROR IS NOT ATTACHED";
+            qCritical() << "ERROR IS NOT ATTACHED";
     }
 
     void DataFactory::playNext(bool onFail) {
@@ -50,7 +50,7 @@ namespace Core {
 
     void DataFactory::restoreOrNext() { // need to prevent from loop
         if (!current_playlist) {
-            qDebug() << "RESTORE: PLAYLIST IS UNDEFINED";
+            qCritical() << "RESTORE: PLAYLIST IS UNDEFINED";
             return;
         }
 
@@ -60,7 +60,7 @@ namespace Core {
         }
 
         if (!current_playlist -> restoreItem(current_item)) {
-            qDebug() << "RESTORE: FAILED";
+            qCritical() << "RESTORE: FAILED";
             proceedStalledState();
         } else {
             qDebug() << "RESTORE: SUCCESS";
@@ -90,12 +90,16 @@ namespace Core {
         if (current_playlist && current_item && item && current_playlist != playlist)
             spoil();
 
+        QString prev_item_title = current_item ? current_item -> title().toString() : QString();
+
         current_playlist = playlist;
         current_item = item;
         attempts = 0;
 
         if (item) {
             if (item -> error().toInt() != ItemErrors::warn_not_permitted) {
+                emit playedItemChanged(prev_item_title, item -> title().toString());
+
                 if (continuePlaying) {
                     player -> updateMedia(
                         item -> startPosMillis(),
@@ -150,12 +154,12 @@ namespace Core {
             break;}
 
             case UnknownMediaStatus: {
-                qDebug() << "UNKNOOW STATUS MEDIA";
+                qCritical() << "UNKNOOW STATUS MEDIA";
                 playNext(true);
             break;}
 
             case StalledMedia: {
-                qDebug() << "STALLED MEDIA";
+                qCritical() << "STALLED MEDIA";
 
                 if (current_item -> isRemote())
                     restoreOrNext();
@@ -173,7 +177,7 @@ namespace Core {
             break;}
 
             case InvalidMedia: {
-                qDebug() << "INVALID MEDIA";
+                qCritical() << "INVALID MEDIA";
 
                 if (current_item -> isRemote())
                     restoreOrNext();
@@ -185,7 +189,7 @@ namespace Core {
             break;}
 
             case NoMedia: {
-                qDebug() << "NO MEDIA";
+                qCritical() << "NO MEDIA";
 
                 if (current_item) {
                     if (current_item -> isRemote()) {
@@ -197,7 +201,7 @@ namespace Core {
                 }
                 else emit newPlaylistNeed();
             break;}
-            default: { qDebug() << "WTF MEDIA"; }
+            default: { qCritical() << "WTF MEDIA"; }
         }
     }
 }
