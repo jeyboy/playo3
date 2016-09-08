@@ -58,12 +58,19 @@ namespace Core {
                     return randomString;
                 }
 
-                Headers headers() {
+                Headers headers() {                   
                     return dntHeader().unite({
-                        {QStringLiteral("Origin"), QStringLiteral("https://soundcloud.com")},
-                        {QStringLiteral("Referer"), QStringLiteral("https://soundcloud.com")}
+                        {LSTR("Origin"), LSTR("https://soundcloud.com")},
+                        {LSTR("Referer"), LSTR("https://soundcloud.com")},
+                        {LSTR("Authorization"), LSTR("OAuth ") % siteAdditionalToken()}
                     });
                 }
+
+//                Headers ouath() {
+//                    return {
+//                        {LSTR("Authorization"), LSTR("OAuth ") % Manager::cookie(LSTR("oauth_token"), url_api_base)}
+//                    };
+//                }
 
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,

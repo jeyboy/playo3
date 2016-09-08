@@ -222,20 +222,42 @@ namespace Core {
                     switch(perm) {
                         case perm_api:
                         case perm_site: {
-                            //TODO: if user id is eql to current user id - need to use discover algo
+                            // curl 'https://api-v2.soundcloud.com/me/personalized-tracks?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1473279344' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0'
+                            // curl 'https://api-v2.soundcloud.com/me/personalized-tracks?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1467724310&offset=0&limit=200' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7'
 
-                            QString uid = user_id.startsWith(val_station_head_tkn) ? user_id : QString(val_station_head_tkn % user_id);
+                            bool has_station_head = user_id.startsWith(val_station_head_tkn);
 
-                            response = pRequest(
-                                baseUrlStr(qst_site_alt1, QStringLiteral("stations/%1/tracks").arg(uid), {}),
-                                call_type_json, rules(offset, count), 0,
-                                proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
-                            );
+                            if (has_station_head || user_id != userID()) {
+                                QString uid = has_station_head ? user_id : QString(val_station_head_tkn % user_id);
+
+                                response = pRequest(
+                                    baseUrlStr(qst_site_alt1, LSTR("stations/%1/tracks").arg(uid), {}),
+                                    call_type_json, rules(offset, count), 0,
+                                    proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
+                                );
+                                return prepareBlock(dmt_user, cmd_mtd_user_recommendations, response, {}, {{CMD_ID, user_id}});
+                            } else {
+                                response = pRequest(
+                                    baseUrlStr(qst_site_alt1, LSTR("me/personalized-tracks"), {}),
+                                    call_type_json, rules(offset, count), 0,
+                                    proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
+                                );
+
+                                QJsonArray block_content;
+                                for(QJsonArray::Iterator rec = response.content.begin(); rec != response.content.end(); rec++) {
+                                    QJsonObject obj = (*rec).toObject();
+                                    QueriableArg::arrAppend(block_content, JSON_ARR(obj, LSTR("recommended")));
+                                }
+                                response.content = block_content;
+
+                                return prepareBlock(dmt_user, cmd_mtd_user_recommendations, response, {}, {{CMD_ID, user_id}});
+                            }
                         break;}
 
                         default: Logger::obj().write("Soundcloud", "USER RECOMMENDATIONS is not accessable", true);
                     }
-                    return prepareBlock(dmt_user, cmd_mtd_user_recommendations, response, {}, {{CMD_ID, user_id}});
+
+                    return QJsonObject();
                 }
             };
         }

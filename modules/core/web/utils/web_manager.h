@@ -158,6 +158,17 @@ namespace Core { // requests and response has memory leaks
 
                 qDebug() << " -----------------------------------------------------------------";
             }
+            static inline QString headersStr(const Request & request) {
+                QList<QByteArray> heads = request.rawHeaderList();
+                QString res;
+
+                for(QList<QByteArray>::ConstIterator h = heads.cbegin(); h != heads.cend(); h++) {
+                    QString val = QString(request.rawHeader(*h));
+                    res = res % (*h) % ' ' % ':' % val % QStringLiteral("; ");
+                }
+
+                return res;
+            }
             static inline QString cookiesAsHeaderStr(QUrl url = QUrl(), QHash<QString, bool> acceptable = QHash<QString, bool>()) {
                 QString res;
                 bool ignore_filter = acceptable.isEmpty();
@@ -185,18 +196,21 @@ namespace Core { // requests and response has memory leaks
             static inline QString paramVal(const QUrl & url, const QString & param) { return QUrlQuery(url).queryItemValue(param); }
 
             Response * get(const Request & request, bool async = false) {
-                qDebug() << "*** GET" << request.url();
+                qDebug() << "*** GET" << request.url() << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());
+                qDebug() << "------------------------------------------";
                 QNetworkReply * m_http = QNetworkAccessManager::get(request);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
             Response * post(const Request & request, const QByteArray & data, bool async = false) {
-                qDebug() << "*** POST" << request.url() << data;
+                qDebug() << "*** POST" << request.url() << "*** P:" << data  << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());;
+                qDebug() << "------------------------------------------";
                 QNetworkReply * m_http = QNetworkAccessManager::post(request, data);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
 
             Response * put(const Request & request, const QByteArray & data, bool async = false) {
-                qDebug() << "*** PUT" << request.url() << data;
+                qDebug() << "*** PUT" << request.url() << "*** P:" << data  << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());;
+                qDebug() << "------------------------------------------";
                 QNetworkReply * m_http = QNetworkAccessManager::put(request, data);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }

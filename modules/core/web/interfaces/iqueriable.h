@@ -21,9 +21,6 @@ namespace Core {
                 Logger::obj().startMark();
                 bool status = true;
                 int code = -1;
-                qDebug() << "REQUEST" << arg -> request_url;
-                qDebug() << "HEADERS" << arg -> headers;
-                qDebug() << "COOKIES" << Manager::cookiesAsHeaderStr(arg -> request_url);
 
                 switch(arg -> call_type) {
                     case call_type_json: {
@@ -42,7 +39,16 @@ namespace Core {
                                 manager -> statusCode() < 300 &&
                                 (status = extractStatus(arg, json, code, arg -> error)) // check on retry requiring
                             ) break;
-                            else qDebug() << "RETRY" << retries;
+                            else {
+                                // did not retry requests if auth missed
+                                if (manager -> statusCode() == 401) {
+                                    status = false;
+                                    arg -> error = "Authorization missed";
+                                    break;
+                                }
+
+                                qDebug() << "RETRY" << retries;
+                            }
                         }
 
                         if (!status) {

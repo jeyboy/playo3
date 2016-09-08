@@ -112,6 +112,8 @@ namespace Core {
 
                             if (doc.contains(tkn_access_token)) {
                                 newToken = doc.value(tkn_access_token).toString();
+                                setSiteAdditionalToken(newToken);
+
                                 doc = Web::Manager::prepare() -> jsonGet(confirmAuthUrl(newToken));
                                 userID = QString::number(doc.value(tkn_id).toInt());
                                 resp -> deleteLater();
@@ -153,6 +155,22 @@ namespace Core {
 
                     return false;
                 }
+
+//                bool initOAuthToken() {
+//                    QJsonObject obj = Manager::prepare() -> jsonPost(
+//                        baseUrlStr(
+//                            qst_site, QStringLiteral("connect/token"),
+//                            {{LSTR("scope"), LSTR("non-expiring%20fast-connect%20purchase%20upload")}}
+//                        )
+//                    );
+
+//                    bool res = JSON_HAS_KEY(obj, LSTR("access_token"));
+
+//                    if (res)
+//                        setSiteAdditionalToken(JSON_STR(obj, LSTR("access_token")));
+
+//                    return res;
+//                }
             };
         }
     }

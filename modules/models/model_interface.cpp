@@ -231,6 +231,12 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
 
         if (JSON_BOOL(block_obj, tkn_is_empty) && !JSON_HAS_KEY(block_obj, tkn_loadable_cmd)) continue;
 
+        QJsonObject first_item = EXTRACT_ITEMS(block_obj).first().toObject();
+        if (JSON_HAS_KEY(first_item, tkn_error)) {
+            qDebug() << "BLOCK WITH ERR:" << JSON_STR(first_item, tkn_error);
+            continue;
+        }
+
         DataMediaType dmt_type = (DataMediaType)block_obj.value(tkn_media_type).toInt(); //(DataMediaType)EXTRACT_MEDIA_TYPE(pair.key().toInt());
 
         Playlist * curr_parent = parent;
@@ -448,7 +454,7 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
         QString uid = IItem::toUid(owner, id);
         if (ignoreListContainUid(uid)) continue;
 
-        QString uri = JSON_STR(itm, Soundcloud::tkn_download_url);
+        QString uri = JSON_ORIG_STR(itm, Soundcloud::tkn_download_url);
         if (uri.isEmpty()) {
             uri = JSON_STR(itm, Soundcloud::tkn_stream_url);
             original = false;
