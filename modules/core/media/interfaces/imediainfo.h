@@ -9,6 +9,8 @@ using namespace Core::Media;
 
 class IMediaInfo {
 protected:
+    QPixmap art;
+
     QString ext;
     QString artist;
     QString title;
@@ -42,12 +44,14 @@ public:
     inline QString getAlbum() const { return album; }
     inline int getGenre() const { return -1; /*genre*/; } //
     inline QString getExtension() const { return ext; }
+    inline QPixmap getArt() const { return art; }
 
     inline void setArtist(QString newArtist) { artist = newArtist; }
     inline void setTitle(QString newTitle) { title = newTitle; }
     inline void setAlbum(QString newAlbum) { album = newAlbum; }
     inline void setGenre(QString newGenre) { genre = newGenre; }
     inline void setGenre(int newGenre) { genre = MusicGenres::obj().toString(newGenre); } // need to update on global list init
+    inline void setArt(const QPixmap & new_art) { art = new_art; }
 
     inline qint64 getSize() const { return size; }
     inline int getYear() const { return year; }

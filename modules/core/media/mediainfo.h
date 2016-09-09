@@ -20,7 +20,8 @@ namespace Core {
             inline ~MediaInfo() { delete fileName; }
             void initInfo();
         private:
-            void readInfo(TagLib::FileRef f);
+            void readInfo(const TagLib::FileRef & f);
+            void takeArt(const TagLib::FileRef & f);
 
             TagLib::FileName * fileName;
         };
