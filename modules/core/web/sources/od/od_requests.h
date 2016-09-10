@@ -343,8 +343,6 @@ namespace Core {
                     else return false;
                 }
 
-//                bool sessionIsValid() { return !Auth::hasError(userInfo().toObject()); }
-
                 bool takeOnlineCredentials() {
                     QString sid = Auth::grabSID();
 

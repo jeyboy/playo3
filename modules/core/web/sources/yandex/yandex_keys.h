@@ -1,5 +1,5 @@
-#ifndef YANDEX_API_KEYS
-#define YANDEX_API_KEYS
+#ifndef YANDEX_KEYS
+#define YANDEX_KEYS
 
 #include <qstringbuilder.h>
 
@@ -7,8 +7,8 @@ namespace Core {
     namespace Web {
         namespace Yandex {
             extern const QString url_root;
-            extern const QString url_api_v1;
-            extern const QString url_api_v2;
+            extern const QString url_site_v1;
+            extern const QString url_site_v2;
 
 
 //            extern const QString path_sid;
@@ -37,8 +37,9 @@ namespace Core {
 //            extern const QString val_resend_sms_title;
 //            extern const QString val_sms_code_title;
             extern const QString val_name;
+            extern const QString val_key_set;
         }
     }
 }
 
-#endif // YANDEX_API_KEYS
+#endif // YANDEX_KEYS

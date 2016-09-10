@@ -1,12 +1,12 @@
-#include "yandex_api_keys.h"
+#include "yandex_keys.h"
 
 namespace Core {
     namespace Web {
         namespace Yandex {
             extern const QString url_root =                         QStringLiteral("https://music.yandex.ua/");
 
-            extern const QString url_api_v1 =                       QStringLiteral("https://music.yandex.ua/handlers/");
-            extern const QString url_api_v2 =                       QStringLiteral("https://music.yandex.ua/api/v2.0/handlers/");
+            extern const QString url_site_v1 =                      url_root % QStringLiteral("handlers/");
+            extern const QString url_site_v2 =                      url_root % QStringLiteral("api/v2.0/handlers/");
 
 
 //            extern const QString url_base_auth =                    QStringLiteral("https://www.ok.ru/");
@@ -38,6 +38,8 @@ namespace Core {
 //            extern const QString val_resend_sms_title =             QStringLiteral("Resend sms");
 //            extern const QString val_sms_code_title =               QStringLiteral("Code from sms");
             extern const QString val_name =                         QStringLiteral("Yandex");
+
+            extern const QString val_key_set =                      QStringLiteral("XGRlBW9FXlekgbPrRHuSiA");
         }
     }
 }

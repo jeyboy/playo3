@@ -7,19 +7,6 @@ namespace Core {
     namespace Web {
         namespace Vk {
             class Feed : public Base {
-//                Permissions perm = permissions(pr_media_content);
-
-//                switch(perm) {
-//                    case perm_site:
-//                    case perm_api: {
-
-//                    }
-
-//                    default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
-//                }
-
-//                return QJsonArray();
-
             public:
                 // https://new.vk.com/dev/newsfeed.getRecommended
                 QJsonValue feedsBySource(const QStringList & sources = QStringList()) { // not finished

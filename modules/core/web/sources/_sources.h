@@ -4,7 +4,7 @@
 #include "vk_queries.h"
 #include "od_queries.h"
 #include "soundcloud_queries.h"
-#include "yandex_api.h"
+#include "yandex_queries.h"
 #include "youtube_api.h"
 
 #include "myzuka_album.h"

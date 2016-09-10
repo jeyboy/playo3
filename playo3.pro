@@ -285,9 +285,6 @@ HEADERS += \
     modules/core/web/sources/shmidt.h \
     modules/core/web/sources/soundcloud_queries.h \
     modules/core/web/sources/vk_queries.h \
-    modules/core/web/sources/yandex_api.h \
-    modules/core/web/sources/yandex/yandex_api_keys.h \
-    modules/core/web/sources/yandex/yandex_request_api.h \
     modules/core/web/sources/youtube_api.h \
     modules/core/web/sources/youtube/youtube_api_keys.h \
     modules/core/web/sources/youtube/youtube_api_misc.h \
@@ -326,7 +323,21 @@ HEADERS += \
     modules/views/web/web_view.h \
     modules/models/service/removed_items.h \
     modules/core/web/sources/soundcloud/soundcloud_stream.h \
-    modules/core/defines.h
+    modules/core/defines.h \
+    modules/core/web/sources/yandex/yandex_misc.h \
+    modules/core/web/sources/yandex/yandex_keys.h \
+    modules/core/web/sources/yandex/yandex_defines.h \
+    modules/core/web/sources/yandex/yandex_artist.h \
+    modules/core/web/sources/yandex/yandex_feed.h \
+    modules/core/web/sources/yandex/yandex_set.h \
+    modules/core/web/sources/yandex/yandex_album.h \
+    modules/core/web/sources/yandex/yandex_playlist.h \
+    modules/core/web/sources/yandex/yandex_requests.h \
+    modules/core/web/sources/yandex_queries.h \
+    modules/core/web/sources/yandex/yandex_user.h \
+    modules/core/web/sources/yandex/yandex_auth.h \
+    modules/core/web/sources/yandex/yandex_track.h \
+    modules/core/web/sources/yandex/yandex_video.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -451,11 +462,11 @@ SOURCES += \
     modules/core/web/sources/shmidt.cpp \
     modules/core/web/sources/soundcloud_queries.cpp \
     modules/core/web/sources/vk_queries.cpp \
-    modules/core/web/sources/yandex/yandex_api_keys.cpp \
     modules/core/web/sources/youtube_api.cpp \
     modules/core/web/sources/youtube/youtube_api_keys.cpp \
     modules/core/web/sources/zaycev.cpp \
     modules/core/web/sources/od/od_keys.cpp \
     modules/core/web/sources/od_queries.cpp \
     modules/core/web/sources/fourshared_queries.cpp \
-    modules/core/web/sources/fourshared/fourshared_keys.cpp
+    modules/core/web/sources/fourshared/fourshared_keys.cpp \
+    modules/core/web/sources/yandex/yandex_keys.cpp
