@@ -167,7 +167,7 @@ namespace Core {
 //                    bool res = JSON_HAS_KEY(obj, LSTR("access_token"));
 
 //                    if (res)
-//                        setSiteAdditionalToken(JSON_STR(obj, LSTR("access_token")));
+//                        setSiteAdditionalToken(JSON_CSTR(obj, LSTR("access_token")));
 
 //                    return res;
 //                }

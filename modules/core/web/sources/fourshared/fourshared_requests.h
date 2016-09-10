@@ -34,7 +34,7 @@ namespace Core {
                                 tkn_loadable_cmd,
                                 Cmd::build(
                                     sourceType(), cmd_mtd_load_set_data,
-                                    {{CMD_ID, JSON_STR(dir_obj, LSTR("id"))}}
+                                    {{CMD_ID, JSON_CSTR(dir_obj, LSTR("id"))}}
                                 ).toString()
                             );
 

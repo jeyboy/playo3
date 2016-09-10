@@ -121,7 +121,7 @@ namespace Core {
                             title = JSON_STR_CAT(obj, LSTR("first_name"), ' ', LSTR("last_name"));
 
                         linkables << Linkable(
-                            JSON_STR(obj, tkn_id),
+                            JSON_CSTR(obj, tkn_id),
                             title,
                             JSON_STR(obj, tkn_screen_name),
                             JSON_STR(obj, tkn_photo)
@@ -137,7 +137,7 @@ namespace Core {
                             title = obj.value(QStringLiteral("name")).toString();
 
                         linkables << Linkable(
-                            JSON_STR(obj, tkn_id),
+                            JSON_CSTR(obj, tkn_id),
                             title,
                             JSON_STR(obj, tkn_screen_name),
                             JSON_STR(obj, tkn_photo)

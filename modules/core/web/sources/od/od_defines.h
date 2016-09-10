@@ -64,7 +64,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator collection = collections.begin(); collection != collections.end(); collection++) {
                         QJsonObject collection_obj = (*collection).toObject();
-                        QString uid = JSON_STR(collection_obj, tkn_id);
+                        QString uid = JSON_CSTR(collection_obj, tkn_id);
 
                         collection_obj.insert(
                             tkn_loadable_cmd,
@@ -83,7 +83,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator album = albums.begin(); album != albums.end(); album++) {
                         QJsonObject album_obj = (*album).toObject();
-                        QString uid = JSON_STR(album_obj, tkn_id);
+                        QString uid = JSON_CSTR(album_obj, tkn_id);
 
                         album_obj.insert(
                             tkn_loadable_cmd,
@@ -102,7 +102,7 @@ namespace Core {
                     QJsonArray res;
                     for(QJsonArray::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
                         QJsonObject artist_obj = (*artist).toObject();
-                        QString uid = JSON_STR(artist_obj, tkn_id);
+                        QString uid = JSON_CSTR(artist_obj, tkn_id);
 
                         artist_obj.insert(
                             tkn_loadable_cmd,

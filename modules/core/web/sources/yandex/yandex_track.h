@@ -15,14 +15,14 @@ namespace Core {
                     );
 
                     obj = Manager::prepare() -> jsonGet(
-                        QString(JSON_ORIG_STR(obj, LSTR("src")) % LSTR("&format=json"))
+                        QString(JSON_STR(obj, LSTR("src")) % LSTR("&format=json"))
                     );
 
-                    QString path = JSON_ORIG_STR(obj, LSTR("path"));
+                    QString path = JSON_STR(obj, LSTR("path"));
 
                     return QStringLiteral("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
-                        JSON_ORIG_STR(obj, LSTR("host")), calcKey(path, JSON_ORIG_STR(obj, LSTR("s"))),
-                        JSON_ORIG_STR(obj, LSTR("ts")), path, track_id.split(':').first()
+                        JSON_STR(obj, LSTR("host")), calcKey(path, JSON_CSTR(obj, LSTR("s"))),
+                        JSON_CSTR(obj, LSTR("ts")), path, track_id.split(':').first()
                     );
                 }
 
@@ -48,7 +48,7 @@ namespace Core {
 
                             Response * response = Manager::prepare() -> postFollowed(
                                 baseUrlStr(
-                                    qst_site_alt1, QStringLiteral("tracks"), query
+                                    qst_site_alt1, LSTR("tracks"), query
                                 ), dntHeader()
                             );
 

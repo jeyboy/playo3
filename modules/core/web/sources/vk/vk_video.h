@@ -180,8 +180,8 @@ namespace Core {
                             for(QJsonArray::Iterator set = sets.begin(); set != sets.end(); set++) {
                                 QJsonObject obj = (*set).toObject();
 
-                                QString id = JSON_STR(obj, tkn_id);
-                                QString owner_id = JSON_STR(obj, tkn_owner_id);
+                                QString id = JSON_CSTR(obj, tkn_id);
+                                QString owner_id = JSON_CSTR(obj, tkn_owner_id);
 
                                 obj.insert(
                                     tkn_loadable_cmd,
@@ -260,7 +260,7 @@ namespace Core {
                     for(QJsonArray::Iterator cat = cats.begin(); cat != cats.end(); cat++) {
                         QJsonObject cat_obj = (*cat).toObject();
 
-                        if (JSON_STR(cat_obj, tkn_id) == category_id) {
+                        if (JSON_CSTR(cat_obj, tkn_id) == category_id) {
                             return QJsonObject {
                                 {tkn_content, JSON_ARR(cat_obj, tkn_items)},
                                 {tkn_media_type, dmt_video},
@@ -357,8 +357,8 @@ namespace Core {
                                     Cmd::build(
                                         sourceType(), cmd_mtd_video_by_category,
                                         {
-                                            {CMD_ID, JSON_STR(cat_obj, tkn_id)},
-                                            {CMD_OFFSET, JSON_STR(cat_obj, LSTR("next"))}
+                                            {CMD_ID, JSON_CSTR(cat_obj, tkn_id)},
+                                            {CMD_OFFSET, JSON_CSTR(cat_obj, LSTR("next"))}
                                         }
                                     ).toString()
                                 );

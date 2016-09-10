@@ -18,7 +18,7 @@ namespace Core {
                     if (tracks.isEmpty()) {
                         int totalTracks = res.value(QStringLiteral("totalTracks")).toInt();
                         if (totalTracks > 0) {
-                            QJsonObject media = userMedia(JSON_STR(res, tkn_me)).toObject();
+                            QJsonObject media = userMedia(JSON_CSTR(res, tkn_me)).toObject();
                             tracks = JSON_ARR(media, tkn_tracks);
                             res.insert(tkn_tracks, tracks);
                         }

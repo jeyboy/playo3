@@ -14,9 +14,10 @@
 
 #define JSON_VAL(json, key) json.value(key)
 
-#define JSON_ORIG_STR(json, key) json.value(key).toString()
-#define JSON_STR(json, key) JSON_CONV_STR(json.value(key))
+#define JSON_CSTR(json, key) JSON_CONV_STR(json.value(key))
+#define JSON_STR(json, key) json.value(key).toString()
 #define JSON_STR_DEF(json, key, def) json.value(key).toString(def)
+
 #define JSON_INT(json, key) (qint64)json.value(key).toDouble()
 #define JSON_BOOL(json, key) json.value(key).toBool()
 #define JSON_OBJ(json, key) json.value(key).toObject()
