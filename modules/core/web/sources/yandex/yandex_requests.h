@@ -118,12 +118,11 @@ namespace Core {
                 }
 
                 QJsonValue popular(const SearchLimit & limits) {
-                    return sRequest(
-                        topUrl(tkn_tracks, limits.genre),
-                        call_type_json
-                    ).value(tkn_tracks).toArray();
-
-                //                    return sQuery(topUrl(tkn_tracks, limits.genre)).value(tkn_tracks).toArray();
+                    return setByType(set_popular_tracks, limits);
+//                    return sRequest(
+//                        topUrl(tkn_tracks, limits.genre),
+//                        call_type_json
+//                    ).value(tkn_tracks).toArray();
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {

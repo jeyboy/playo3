@@ -35,7 +35,7 @@ namespace Core {
                     }
                 }
 
-                QMap<QString, QString> siteOptions() {
+                QMap<QString, QString> audioSetOptions() {
                     return {
                         { QStringLiteral("All Genres"),                 QStringLiteral("all-music") },
                         { QStringLiteral("Alternative Rock"),           QStringLiteral("alternativerock") },
@@ -128,7 +128,7 @@ namespace Core {
 
                 QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
-                    QMap<QString, QString> opts = siteOptions();
+                    QMap<QString, QString> opts = audioSetOptions();
 
                     QString new_hot_title = setTypeToStr(set_new_hot);
                     QString top_50_title = setTypeToStr(set_top_50);

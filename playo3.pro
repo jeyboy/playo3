@@ -337,7 +337,8 @@ HEADERS += \
     modules/core/web/sources/yandex/yandex_user.h \
     modules/core/web/sources/yandex/yandex_auth.h \
     modules/core/web/sources/yandex/yandex_track.h \
-    modules/core/web/sources/yandex/yandex_video.h
+    modules/core/web/sources/yandex/yandex_video.h \
+    modules/core/web/sources/yandex/yandex_stream.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

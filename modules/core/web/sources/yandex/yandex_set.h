@@ -1,7 +1,7 @@
 #ifndef YANDEX_SET_H
 #define YANDEX_SET_H
 
-#include "yandex_defines.h"
+#include "yandex_stream.h"
 
 namespace Core {
     namespace Web {
@@ -15,7 +15,7 @@ namespace Core {
                     set_compilations
                 };
 
-                QMap<QString, QString> siteOptions() {
+                QMap<QString, QString> audioSetOptions() {
                     return {
                         { QStringLiteral("All Genres"),                 QStringLiteral("all") },
 
@@ -159,8 +159,6 @@ namespace Core {
                                     );
 
                                     int i = 0;
-
-
                                 break;}
 
                                 case set_compilations: {
@@ -178,7 +176,7 @@ namespace Core {
 //                                        call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS << QStringLiteral("track"), call_method_get, headers()
 //                                    );
 
-                                    return prepareBlock(dmt_audio_set, block_content);
+//                                    return prepareBlock(dmt_audio_set, block_content);
                                 break;}
                             }
                         break;}
@@ -199,67 +197,87 @@ namespace Core {
 
                 QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
-                    QMap<QString, QString> opts = siteOptions();
+                    QMap<QString, QString> opts = audioSetOptions();
 
                     QString pop_tracks_title = setTypeToStr(set_popular_tracks);
                     QString pop_artists_title = setTypeToStr(set_popular_artists);
                     QString pop_promos_title = setTypeToStr(set_popular_promotions);
                     QString new_albums_title = setTypeToStr(set_new_albums);
+                    QString compilations_title = setTypeToStr(set_compilations);
 
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
 
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
-//                        res.insert(
-//                            new_hot_title % opt.key(),
-//                            cmd_tmpl.setAttrs(
-//                                {
-//                                    { CMD_SET_TYPE, QString::number(set_new_hot) },
-//                                    { CMD_GENRE, opt.value() }
-//                                }
-//                            ) -> toString()
-//                        );
-//                        res.insert(
-//                            top_50_title % opt.key(),
-//                            cmd_tmpl.setAttrs(
-//                                {
-//                                    { CMD_SET_TYPE, QString::number(set_top_50) },
-//                                    { CMD_GENRE, opt.value() }
-//                                }
-//                            ) -> toString()
-//                        );
+                        res.insert(
+                            pop_tracks_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_popular_tracks) },
+                                    { CMD_GENRE, opt.value() },
+                                    { CMD_PREDICATE, LSTR("tracks") }
+                                }
+                            ) -> toString()
+                        );
 
-//                        QStringList parts = opt.key().split('&', QString::SkipEmptyParts);
+                        res.insert(
+                            pop_artists_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_popular_artists) },
+                                    { CMD_GENRE, opt.value() },
+                                    { CMD_PREDICATE, LSTR("artists") }
+                                }
+                            ) -> toString()
+                        );
 
-//                        if (parts.size() == 1)
-//                            res.insert(
-//                                popular_title % opt.key(),
-//                                cmd_tmpl.setAttrs(
-//                                    {
-//                                        { CMD_SET_TYPE, QString::number(set_popular) },
-//                                        { CMD_GENRE, opt.value() }
-//                                    }
-//                                ) -> toString()
-//                            );
-//                        else {
-//                            res.insert(
-//                                popular_title % parts.first(),
-//                                cmd_tmpl.setAttrs(
-//                                    {
-//                                        { CMD_SET_TYPE, QString::number(set_popular) },
-//                                        { CMD_GENRE, parts.first() }
-//                                    }
-//                                ) -> toString()
-//                            );
-//                            res.insert(
-//                                popular_title % parts.last(),
-//                                cmd_tmpl.setAttrs(
-//                                    {
-//                                        { CMD_SET_TYPE, QString::number(set_popular) },
-//                                        { CMD_GENRE, parts.last() }
-//                                    }
-//                                ) -> toString()
-//                            );
-//                        }
+                        res.insert(
+                            pop_promos_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_popular_promotions) },
+                                    { CMD_GENRE, opt.value() },
+                                    { CMD_PREDICATE, LSTR("promotions") }
+                                }
+                            ) -> toString()
+                        );
+
+                        res.insert(
+                            new_albums_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_new_albums) },
+                                    { CMD_GENRE, opt.value() },
+                                    { CMD_PREDICATE, LSTR("albums") }
+                                }
+                            ) -> toString()
+                        );
+                    }
+
+                    QMap<QString, QString> compilations = {
+                        { LSTR("Autumn melodies"), LSTR("autumn") },
+                        { LSTR("How to love classical"), LSTR("classical") },
+                        { LSTR("New music"), LSTR("newmusic") },
+                        { LSTR("Background music"), LSTR("activity") },
+                        { LSTR("Artist choose"), LSTR("artistchoice") },
+                        { LSTR("By decades"), LSTR("decades") },
+                        { LSTR("For holidays"), LSTR("holiday") },
+                        { LSTR("Mood"), LSTR("mood") },
+                        { LSTR("Music from serials"), LSTR("TVost") },
+                        { LSTR("Music from moovies"), LSTR("ost") },
+                        { LSTR("For workout"), LSTR("workout") },
+                        { LSTR("Mixed genres"), LSTR("genres") }
+                    };
+
+                    for(QMap<QString, QString>::Iterator opt = compilations.begin(); opt != compilations.end(); opt++) {
+                        res.insert(
+                            compilations_title % opt.key(),
+                            cmd_tmpl.setAttrs(
+                                {
+                                    { CMD_SET_TYPE, QString::number(set_compilations) },
+                                    { CMD_GENRE, opt.value() }
+                                }
+                            ) -> toString()
+                        );
                     }
 
 //                    res.insert(
@@ -270,11 +288,6 @@ namespace Core {
 //                                { CMD_GENRE, PACKAGE_REPLACE_FRAGMENT }
 //                            }
 //                        ) -> toString()
-//                    );
-
-//                    res.insert(
-//                        setTypeToStr(set_recommended_artists),
-//                        cmd_tmpl.setAttrs({{ CMD_SET_TYPE, QString::number(set_recommended_artists) }}) -> toString()
 //                    );
 
                     return res;

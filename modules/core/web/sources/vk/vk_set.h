@@ -10,7 +10,7 @@ namespace Core {
             class Set : public Video {
             protected:
                 enum SetType { set_popular_tracks = 1, set_popular_video, set_feed_video, set_top_video, set_series_video, set_other_video };
-                QMap<QString, QString> siteOptions() {
+                QMap<QString, QString> audioSetOptions() {
                     return {
                         { QStringLiteral("All Genres"),                 QStringLiteral("0") },
                         { QStringLiteral("Rock"),                       QStringLiteral("1") },
@@ -131,7 +131,7 @@ namespace Core {
 
                 QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
-                    QMap<QString, QString> opts = siteOptions();
+                    QMap<QString, QString> opts = audioSetOptions();
 
                     QString popular_title = setTypeToStr(set_popular_tracks);
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
