@@ -1,6 +1,8 @@
 #ifndef _SOURCES
 #define _SOURCES
 
+#include "fourshared_queries.h"
+
 #include "vk_queries.h"
 #include "od_queries.h"
 #include "soundcloud_queries.h"
@@ -17,8 +19,6 @@
 #include "jetune.h"
 #include "musicshara.h"
 #include "redmp3.h"
-
-#include "fourshared_queries.h"
 
 #endif // _SOURCES
 

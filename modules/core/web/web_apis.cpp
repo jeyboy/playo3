@@ -7,7 +7,7 @@ namespace Core {
 
         void Apis::initiate(const QJsonObject & obj) {
             sources.insert(Youtube::Api::obj().sourceType(),      &Youtube::Api::obj());
-            sources.insert(Yandex::Api::obj().sourceType(),       &Yandex::Api::obj());
+            sources.insert(Yandex::Queries::obj().sourceType(),       &Yandex::Queries::obj());
             sources.insert(Vk::Queries::obj().sourceType(),           &Vk::Queries::obj());
             sources.insert(Soundcloud::Queries::obj().sourceType(),   &Soundcloud::Queries::obj());
             sources.insert(Fourshared::Queries::obj().sourceType(),   &Fourshared::Queries::obj());

@@ -6,7 +6,7 @@ void WebModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
 
-    switch(sttngs.type) {
+    switch(sttngs.type) { //TODO: move this to virt funcs in isource
         case dt_web_vk: {
             switch(sttngs.rec_type) {
                 case rec_none: {
@@ -119,6 +119,40 @@ void WebModel::refresh() {
                         new Func(this, SLOT(proceedJson(QJsonValue &)))
                     );
                 return;}
+
+                default: {}
+            }
+        break;}
+
+        case dt_web_yandex: {
+            switch(sttngs.rec_type) {
+    //            case rec_none: {
+    //                Yandex::Queries::obj().objectInfoAsync(
+    //                    sttngs.uid,
+    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
+    //                );
+    //            return;}
+
+    //            case rec_song: {
+    //                Yandex::Queries::obj().trackRecommendationsAsync(
+    //                    sttngs.uid,
+    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
+    //                );
+    //            return;}
+
+                case rec_set: {
+                    Yandex::Queries::obj().openSetAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
+
+    //            case rec_user: {
+    //                Yandex::Queries::obj().userRecommendationsAsync(
+    //                    sttngs.uid,
+    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
+    //                );
+    //            return;}
 
                 default: {}
             }

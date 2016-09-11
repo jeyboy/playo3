@@ -32,7 +32,6 @@ namespace Core {
                     ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendationsAsync, user_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
                 }
 
-
             protected:
                 QJsonValue searchInSets(const SearchLimit & limits) {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
