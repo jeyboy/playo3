@@ -83,7 +83,7 @@ namespace Core {
             cmd_mtd_unknown = 0,
 
             cmd_mtd_set_by_type,
-            cmd_mtd_open_set,
+            cmd_mtd_open_set, //FIXME remove and replace calls with cmd_mtd_open_set
             cmd_mtd_load_set_data,
 
             cmd_mtd_users_by_id,
@@ -134,6 +134,8 @@ namespace Core {
             cmd_mtd_streams_recommendations,
 
             cmd_mtd_artists_search,
+            cmd_mtd_artist_info,
+
             cmd_mtd_albums_search
         };
 
@@ -190,6 +192,8 @@ namespace Core {
                 case cmd_mtd_streams_recommendations: return streamsRecommendations(params);
 
                 case cmd_mtd_artists_search: return artistsSearch(params);
+                case cmd_mtd_artist_info: return artistInfo(params);
+
                 case cmd_mtd_albums_search: return albumsSearch(params);
 
                 default: return QJsonObject();
@@ -252,6 +256,8 @@ namespace Core {
         virtual QJsonValue streamsRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue artistInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
+
         virtual QJsonValue albumsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }

@@ -129,7 +129,21 @@ namespace Core {
                         default: { return url_root % predicate; }
                     }
                 }
-                inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api) { return QUrlQuery(); }
+                inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api) {
+                    switch(stype) {
+                        case qst_site:
+                        case qst_site_alt1:
+                            return QUrlQuery(
+                                QString(
+                                    LSTR("external-domain=") % LSTR("music.yandex.ua") %
+                                    LSTR("&overembed=") % LSTR("false") %
+                                    LSTR("&lang=") % LSTR("uk")
+                                )
+                            );
+
+                        default: return QUrlQuery();
+                    }
+                }
             public:
                 Requests() {
                     // need to add checking presents of cookies

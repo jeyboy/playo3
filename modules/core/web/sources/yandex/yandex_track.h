@@ -76,10 +76,10 @@ namespace Core {
                         baseUrlStr(
                             qst_site, LSTR("album.jsx"),
                             {
-                                {LSTR("album"), album_id},
+                                {LSTR("album"), album_id}/*,
                                 {LSTR("external-domain"), LSTR("music.yandex.ua")},
                                 {LSTR("overembed"), LSTR("false")},
-                                {LSTR("lang"), LSTR("uk")}
+                                {LSTR("lang"), LSTR("uk")}*/
                             }
                         ),
                         call_type_json, 0, proc_json_extract, QStringList() << LSTR("volumes")

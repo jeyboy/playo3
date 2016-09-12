@@ -45,14 +45,17 @@ namespace Core {
 
                 void prepareTracks(QJsonArray & tracks) {
                     // TODO: write me
+                    int i = 0;
                 }
 
                 void preparePromotions(QJsonArray & promos) {
                     // TODO: write me
+                    int i = 0;
                 }
 
                 void preparePlaylists(QJsonArray & playlists) {
                     // TODO: write me
+                    int i = 0;
                 }
 
                 void prepareAlbums(QJsonArray & albums) {
@@ -93,7 +96,30 @@ namespace Core {
                 }
 
                 void prepareArtists(QJsonArray & artists) {
-                    // TODO: write me
+                    QJsonArray res;
+
+                    for(QJsonArray::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+                        QJsonObject artist_obj = (*artist).toObject();
+
+                        artist_obj.insert(
+                            tkn_loadable_cmd,
+                             Cmd::build(
+                                sourceType(), cmd_mtd_artist_info,
+                                {{CMD_ID, JSON_CSTR(artist_obj, tkn_id)}}
+                             ).toString()
+                        );
+
+                        artist_obj.insert(
+                            tkn_coverUri,
+                            LSTR("http://") + JSON_STR(JSON_OBJ(artist_obj, tkn_cover), LSTR("uri")).replace(LSTR("%%"), LSTR("s400x400"))
+                        );
+
+                        artist_obj.insert(tkn_full_title, JSON_STR(artist_obj, tkn_name));
+
+                        res << artist_obj;
+                    }
+
+                    artists = res;
                 }
             };
         }
