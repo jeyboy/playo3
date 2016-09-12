@@ -132,9 +132,9 @@ namespace Core {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
 
-                        QString title = obj.value(tkn_title).toString();
+                        QString title = JSON_STR(obj, tkn_title);
                         if (title.isEmpty())
-                            title = obj.value(QStringLiteral("name")).toString();
+                            title = JSON_STR(obj, LSTR("name"));
 
                         linkables << Linkable(
                             JSON_CSTR(obj, tkn_id),
@@ -264,19 +264,19 @@ namespace Core {
                         case perm_site: {
                             Response * response = Manager::prepare() -> postFollowed(
                                 IQueriable::baseUrlStr(
-                                    qst_site, QStringLiteral("al_audio.php"),
+                                    qst_site, LSTR("al_audio.php"),
                                     {
-                                        { QStringLiteral("act"), QStringLiteral("load_silent") },
-                                        { QStringLiteral("al"), QStringLiteral("1") },
-                                        { QStringLiteral("album_id"), QStringLiteral("-2") },
-                                        { QStringLiteral("band"), QStringLiteral("true") },
-                                        { QStringLiteral("owner_id"), user_id }
+                                        { LSTR("act"), LSTR("load_silent") },
+                                        { LSTR("al"), LSTR("1") },
+                                        { LSTR("album_id"), LSTR("-2") },
+                                        { LSTR("band"), LSTR("true") },
+                                        { LSTR("owner_id"), user_id }
                                     }
                                 ),
                                 Auth::dntHeader()
                             );
 
-                            QJsonArray tracks_res, items = RESPONSE_TO_JSON_OBJECT(response).value(QStringLiteral("list")).toArray();
+                            QJsonArray tracks_res, items = JSON_ARR(RESPONSE_TO_JSON_OBJECT(response), LSTR("list"));
                             QHash<QString, QJsonArray> albums;
 
                             Track::prepareTracks(items, tracks_res, &albums);
@@ -295,8 +295,8 @@ namespace Core {
                             /////////////////////////////////////
                             QJsonArray res = videoByUser(user_id).toArray();
 
-                            res.prepend(prepareBlock(dmt_audio, tracks_res, {{tkn_dir_name, QStringLiteral("Tracks")}}));
-                            res.prepend(prepareBlock(dmt_audio_set, playlists_res, {{tkn_dir_name, QStringLiteral("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio, tracks_res, {{tkn_dir_name, LSTR("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio_set, playlists_res, {{tkn_dir_name, LSTR("Tracks")}}));
 
                             return res;
                         break;}
@@ -318,8 +318,8 @@ namespace Core {
                                 ret.insert(block_sets_audio, ar);
                             }
 
-                            res.prepend(prepareBlock(dmt_audio, ret.value(block_items_audio), {{tkn_dir_name, QStringLiteral("Tracks")}}));
-                            res.prepend(prepareBlock(dmt_audio_set, ret.value(block_sets_audio), {{tkn_dir_name, QStringLiteral("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio, ret.value(block_items_audio), {{tkn_dir_name, LSTR("Tracks")}}));
+                            res.prepend(prepareBlock(dmt_audio_set, ret.value(block_sets_audio), {{tkn_dir_name, LSTR("Tracks")}}));
 
                             return ret;
                         break;}

@@ -22,7 +22,31 @@ namespace Core {
                     QJsonObject pager_obj = JSON_OBJ(response, LSTR("pager"));
                     return (JSON_INT(pager_obj, LSTR("page")) + 1) * JSON_INT(pager_obj, LSTR("perPage")) >= JSON_INT(pager_obj, LSTR("total"));
                 }
-                inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; }
+                inline bool extractStatus(QueriableArg * arg, QJsonObject & json, int & /*code*/, QString & /*message*/) {
+                    if (JSON_HAS_KEY(json, JSON_ERR_FIELD)) {
+                        Html::Document doc(JSON_STR(json, JSON_ERR_FIELD));
+
+                        Html::Tag * form_tag = doc.findFirst(".form form");
+
+                        if (!form_tag) {
+                            qCritical() << "Captcha form is not found";
+                            return false;
+                        }
+
+                        QString captcha_img = form_tag -> findFirst("img") -> src();
+
+
+                        QHash<QString, QString> fields;
+                        showingCaptcha(QUrl(captcha_img), fields[LSTR("rep")]);
+                        if (fields[LSTR("rep")].isEmpty())
+                            return false;
+
+                        QUrl captcha_proc_url = form_tag -> serializeFormToUrl(fields);
+                        json = Manager::prepare() -> jsonPost(captcha_proc_url, arg -> headers, arg -> post_proc & proc_json_wrap);
+                    }
+
+                    return true;
+                }
             protected:
                 inline SourceFlags defaultFlags() {
                     return (SourceFlags)(

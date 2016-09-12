@@ -12,6 +12,7 @@
 #define REQUEST_DELAY 260 // ms
 #define COOKIES_KEY QStringLiteral("cookies")
 
+#define JSON_ERR_FIELD QStringLiteral("json_err")
 #define DEF_JSON_FIELD QStringLiteral("response")
 #define USER_AGENT_HEADER_NAME QStringLiteral("User-Agent")
 

@@ -49,10 +49,18 @@ namespace Core {
         }
         QJsonObject Response::toJson(const QString & wrap, bool destroy) { //TODO: enc not used yet
             if (error()) qDebug() << "IOERROR" << error() << url();
-            QByteArray ar = readAll(); // ' wraps responds to errors on parsing // need to replace ' with "
-            if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
-            if (destroy) deleteLater();
-            return QJsonDocument::fromJson(ar).object();
+
+            QByteArray ar = readAll();
+
+            if (rawHeader("Content-Type").startsWith("application/json")) {
+//                ar.replace('\'', '"'); // ' wraps responds to errors on parsing // need to replace ' with "
+                if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
+                if (destroy) deleteLater();
+                return QJsonDocument::fromJson(ar).object();
+            } else {
+                qCritical() << "NOT JSON" << rawHeader("Content-Type");
+                return QJsonObject {{JSON_ERR_FIELD, QString(ar)}};
+            }
         }
         QPixmap Response::toPixmap(bool destroy) {
             if (error()) qDebug() << "IOERROR" << error() << url();

@@ -678,6 +678,9 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
         };
 
         QJsonObject album = JSON_OBJ(itm, Yandex::tkn_album);
+        if (album.isEmpty())
+            album = JSON_ARR(itm, Yandex::tkn_albums).first().toObject();
+
 //        QString genre = album.value(Yandex::tkn_genre).toString();
         QString album_id = JSON_CSTR(album, Yandex::tkn_id);
         QString id = JSON_CSTR(itm, Yandex::tkn_id) % ':' % album_id;
