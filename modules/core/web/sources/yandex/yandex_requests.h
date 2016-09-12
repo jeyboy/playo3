@@ -35,14 +35,15 @@ namespace Core {
 
                         QString captcha_img = form_tag -> findFirst("img") -> src();
 
-
                         QHash<QString, QString> fields;
                         showingCaptcha(QUrl(captcha_img), fields[LSTR("rep")]);
                         if (fields[LSTR("rep")].isEmpty())
                             return false;
 
                         QUrl captcha_proc_url = form_tag -> serializeFormToUrl(fields);
-                        json = Manager::prepare() -> jsonPost(captcha_proc_url, arg -> headers, arg -> post_proc & proc_json_wrap);
+                        if(captcha_proc_url.isRelative())
+                            captcha_proc_url = QUrl(url_root).resolved(captcha_proc_url);
+                        json = Manager::prepare() -> jsonGet(captcha_proc_url, arg -> headers, arg -> post_proc & proc_json_wrap);
                     }
 
                     return true;
@@ -132,7 +133,7 @@ namespace Core {
             public:
                 Requests() {
                     // need to add checking presents of cookies
-                    Manager::prepare() -> getFollowed(QUrl(url_root));
+//                    Manager::prepare() -> getFollowed(QUrl(url_root));
                 }
 
                 // here refresh_page must by eq to track id
