@@ -133,6 +133,7 @@ namespace Core {
 
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
+                    DataMediaType mtype = dmt_audio;
 
                     switch(perm) {
                         case perm_api:
@@ -141,7 +142,7 @@ namespace Core {
                                 case set_popular_tracks:
                                 case set_popular_artists:
                                 case set_popular_promotions:
-                                case set_new_albums: {
+                                case set_new_albums: {                               
                                     response = pRequest(
                                         // curl 'https://music.yandex.ua/handlers/genre.jsx?genre=ska&filter=&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.5854833866762779' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1; _ym_visorc_1028356=b' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/ska' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/genre/ska'
                                         // -H 'X-Retpath-Y: https://music.yandex.ua/genre/ska'
@@ -155,10 +156,28 @@ namespace Core {
                                                 {LSTR("filter"), limits.predicate}
                                             }
                                         ),
-                                        call_type_json, pageRules(LSTR("page"), limits.start_offset, limits.items_limit), 0, proc_json_patch
+                                        call_type_json, pageRules(LSTR("page"), limits.start_offset, limits.items_limit),
+                                        0, proc_json_extract, QStringList() << limits.predicate
                                     );
 
-                                    int i = 0;
+                                    switch(set_type) {
+                                        case set_popular_tracks: {
+                                            prepareTracks(response.content);
+                                        break;}
+                                        case set_popular_artists: {
+                                            prepareArtists(response.content);
+                                            mtype = dmt_audio_set;
+                                        break;}
+                                        case set_popular_promotions: {
+                                            preparePromotions(response.content);
+                                            mtype = dmt_audio_set;
+                                        break;}
+                                        case set_new_albums: {
+                                            prepareAlbums(response.content);
+                                            mtype = dmt_audio_set;
+                                        break;}
+                                        default:;
+                                    }
                                 break;}
 
                                 case set_compilations: {
@@ -184,7 +203,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "SET BY TYPE is not accessable", true);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(mtype, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                 }
 
             public:

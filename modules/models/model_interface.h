@@ -156,6 +156,8 @@ namespace Models {
         int proceedOdSet(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
 
         int proceedYandexList(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_yandex);
+        int proceedYandexSet(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_od);
+
         int proceedYoutubeList(const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_youtube);
 
         int proceedGrabberList( const QJsonObject & collection, Playlist * parent, int & update_amount, const DataMediaType & fdmtype, const DataSubType & wType);

@@ -23,6 +23,7 @@ namespace Core {
             extern const QString tkn_durationMs;
             extern const QString tkn_id;
             extern const QString tkn_title;
+            extern const QString tkn_full_title;
             extern const QString tkn_fileSize;
             extern const QString tkn_name;
             extern const QString tkn_storageDir;

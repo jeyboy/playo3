@@ -1,6 +1,7 @@
 #ifndef DEFINES
 #define DEFINES
 
+#include <qstring.h>
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
@@ -11,6 +12,13 @@
 #define JSON_CONV_STR(json_val) (json_val.isString() ? json_val.toString() : QString::number((qint64)json_val.toDouble()))
 
 #define JSON_STR_CAT(json, key1, separator, key2) QString(JSON_STR(json, key1) % separator % JSON_STR(json, key2))
+//#define JSON_ARR_STR_CAT(json, key, separator) \
+//    QString cat_str; \
+//    for(QJsonArray::Iterator item = json.begin(); item != json.end(); item++) { \
+//        QJsonObject item_obj = (*item).toObject(); \
+//        cat_str = cat_str % (cat_str.isEmpty() ? QString() : separator) % JSON_STR(item_obj, key); \
+//    }\
+//    cat_str
 
 #define JSON_VAL(json, key) json.value(key)
 

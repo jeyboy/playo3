@@ -257,7 +257,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
             break;}
             case dt_web_yandex: {
                 proc_func = &IModel::proceedYandexList;
-                proc_set_func = 0;
+                proc_set_func = &IModel::proceedYandexSet;
             break;}
             case dt_web_youtube: {
                 proc_func = &IModel::proceedYoutubeList;
@@ -649,7 +649,6 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
     return items_amount;
 }
 
-
 int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
 //    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
 
@@ -698,6 +697,59 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
 
     return items_amount;
 }
+int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int & update_amount, const DataMediaType & fdmtype, const DataSubType & wType) {
+    QJsonArray collection = EXTRACT_ITEMS(block);
+    if (collection.isEmpty()) return 0;
+    int items_amount = 0;
+
+//    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+    bool is_collapsed = parent != root_item;
+
+    if (JSON_HAS_KEY(block, tkn_more_cmd))
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
+
+    for(QJsonArray::Iterator it = collection.begin(); it != collection.end(); it++) {
+        QJsonObject playlist = (*it).toObject();
+
+//        int amount = JSON_INT(playlist, Od::tkn_count);
+        bool is_loadable = JSON_HAS_KEY(playlist, tkn_loadable_cmd);
+
+        QString pid = JSON_CSTR(playlist, Yandex::tkn_id);
+        QString name = JSON_STR(playlist, Yandex::tkn_full_title);
+        Playlist * folder;
+
+        if (is_loadable) {
+            if (parent -> createLoadablePlaylist(
+                folder,
+                JSON_STR(playlist, tkn_loadable_cmd),
+                name, pid
+            ))
+                update_amount++;
+        } else {
+            int i = 0;
+//            if (parent -> createPlaylist(folder, wType, pid, name))
+//                update_amount++;
+
+//            QJsonObject items_block = Yandex::Queries::obj().tracksByPlaylist(pid).toObject();
+//            int sub_update_amount = 0;
+//            int amount = proceedOdList(items_block, folder, sub_update_amount, dmt_type);
+//            folder -> updateItemsCountInBranch(amount);
+//            items_amount += amount;
+        }
+
+        if (JSON_HAS_KEY(playlist, tkn_more_cmd))
+            folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
+
+//        folder -> setOwner(JSON_CSTR(playlist, Od::tkn_owner));
+        folder -> setArtPath(JSON_STR(playlist, Yandex::tkn_coverUri));
+
+        if (is_collapsed)
+            folder -> setStates(IItem::flag_not_expanded);
+    }
+
+    return items_amount;
+}
+
 
 int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, const DataMediaType & /*fdmtype*/, const DataSubType & /*wType*/) {
     QJsonArray collection = EXTRACT_ITEMS(block);

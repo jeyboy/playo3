@@ -18,7 +18,10 @@ namespace Core {
             class Requests : /*public Sociable,*/ public User, public Auth,
                     public Playlist, public Set, public Track {
 
-                inline bool endReached(QJsonObject & /*response*/, QueriableArg * /*arg*/) { return true; }
+                inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) {
+                    QJsonObject pager_obj = JSON_OBJ(response, LSTR("pager"));
+                    return (JSON_INT(pager_obj, LSTR("page")) + 1) * JSON_INT(pager_obj, LSTR("perPage")) >= JSON_INT(pager_obj, LSTR("total"));
+                }
                 inline bool extractStatus(QueriableArg * /*arg*/, QJsonObject & /*json*/, int & /*code*/, QString & /*message*/) { return true; }
             protected:
                 inline SourceFlags defaultFlags() {

@@ -26,6 +26,7 @@ namespace Core {
             extern const QString tkn_fileSize =                     QStringLiteral("fileSize");
             extern const QString tkn_name =                         QStringLiteral("name");
             extern const QString tkn_title =                        QStringLiteral("title");
+            extern const QString tkn_full_title =                   QStringLiteral("ftitle");
             extern const QString tkn_storageDir =                   QStringLiteral("storageDir");
             extern const QString tkn_genre =                        QStringLiteral("genre");
             extern const QString tkn_year =                         QStringLiteral("year");

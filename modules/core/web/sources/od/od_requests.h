@@ -249,9 +249,9 @@ namespace Core {
                     return true;
                 }
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) {
-                    QJsonObject chunk_obj = response.value(tkn_chunk).toObject();
+                    QJsonObject chunk_obj = JSON_OBJ(response, tkn_chunk);
                     if (chunk_obj.isEmpty()) return false;
-                    return chunk_obj.value(tkn_count).toInt() < arg -> per_request_limit/*OD_LIMIT_PER_REQUEST*/;
+                    return JSON_INT(chunk_obj, tkn_count) < arg -> per_request_limit;
                 }
             protected:
                 inline SourceFlags defaultFlags() {

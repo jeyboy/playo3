@@ -43,12 +43,53 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
+                void prepareTracks(QJsonArray & tracks) {
+                    // TODO: write me
+                }
+
+                void preparePromotions(QJsonArray & promos) {
+                    // TODO: write me
+                }
+
                 void preparePlaylists(QJsonArray & playlists) {
                     // TODO: write me
                 }
 
                 void prepareAlbums(QJsonArray & albums) {
-                    // TODO: write me
+                    QJsonArray res;
+
+                    for(QJsonArray::Iterator album = albums.begin(); album != albums.end(); album++) {
+                        QJsonObject album_obj = (*album).toObject();
+
+                        album_obj.insert(
+                            tkn_loadable_cmd,
+                             Cmd::build(
+                                sourceType(), cmd_mtd_tracks_by_album,
+                                {{CMD_ID, JSON_CSTR(album_obj, tkn_id)}}
+                             ).toString()
+                        );
+
+                        QString cat_str;
+                        QJsonArray artists = JSON_ARR(album_obj, tkn_artists);
+                        for(QJsonArray::Iterator item = artists.begin(); item != artists.end(); item++) {
+                            QJsonObject item_obj = (*item).toObject();
+                            cat_str = cat_str % (cat_str.isEmpty() ? QString() : LSTR(",")) % JSON_STR(item_obj, tkn_name);
+                        }
+
+                        album_obj.insert(
+                            tkn_full_title,
+                            QString(cat_str % LSTR(" - ") % JSON_STR(album_obj, tkn_title))
+                        );
+
+                        album_obj.insert(
+                            tkn_coverUri,
+                            LSTR("http://") + JSON_STR(album_obj, tkn_coverUri).replace(LSTR("%%"), LSTR("s400x400"))
+                        );
+
+                        res << album_obj;
+                    }
+
+                    albums = res;
                 }
 
                 void prepareArtists(QJsonArray & artists) {
