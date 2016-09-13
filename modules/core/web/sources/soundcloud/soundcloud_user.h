@@ -35,7 +35,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER BY ID is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY ID is not accessable", true);
                     }
 
                     return prepareBlock(dmt_user, cmd_mtd_users_by_id, response, {}, {{CMD_ID, user_id}});
@@ -48,14 +48,14 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue usersByName(const QString & name, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue usersByName(const QString & uname, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api, path_users, {{tkn_q, name}}),
+                                baseUrlStr(qst_api, path_users, {{tkn_q, uname}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
@@ -65,7 +65,7 @@ namespace Core {
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("search/users"),
                                     {
-                                        { tkn_q, name },
+                                        { tkn_q, uname },
                                         { QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base) },
                                         { QStringLiteral("sc_a_id"), generateMark() },
                                         { QStringLiteral("facet"), QStringLiteral("place") }
@@ -76,7 +76,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER BY NAME is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY NAME is not accessable", true);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
@@ -109,7 +109,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER BY TRACK LIKES is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY TRACK LIKES is not accessable", true);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_users_by_track_likes, response, {}, {{CMD_ID, track_id}});
                 }
@@ -136,7 +136,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER BY TRACK REPOST is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY TRACK REPOST is not accessable", true);
                     }
 
                     return prepareBlock(dmt_user, cmd_mtd_users_by_track_reposting, response, {}, {{CMD_ID, track_id}});
@@ -170,7 +170,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER FOLLOWINGS is not accessable", true);
+                        default: Logger::obj().write(name(), "USER FOLLOWINGS is not accessable", true);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_user_followings, response, {}, {{CMD_ID, user_id}});
                 }
@@ -203,7 +203,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER FOLLOWERS is not accessable", true);
+                        default: Logger::obj().write(name(), "USER FOLLOWERS is not accessable", true);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {}, {{CMD_ID, user_id}});
                 }
@@ -254,7 +254,7 @@ namespace Core {
                             }
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "USER RECOMMENDATIONS is not accessable", true);
+                        default: Logger::obj().write(name(), "USER RECOMMENDATIONS is not accessable", true);
                     }
 
                     return QJsonObject();

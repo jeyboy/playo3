@@ -147,7 +147,7 @@ namespace Core {
 
                         if (!size_tag) {
                             Logger::obj().write(
-                                QStringLiteral("Myzuka grabber"),
+                                name(),
                                 QStringLiteral("Search: parsing of songs"),
                                 QStringLiteral("Some shit happened"), true
                             );

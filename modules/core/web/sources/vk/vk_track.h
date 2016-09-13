@@ -30,7 +30,7 @@ namespace Core {
                             ).value(QStringLiteral("hudo")).toString();
                         }
 
-                        default: Logger::obj().write("VK", "track Lyric is not accessable", true);
+                        default: Logger::obj().write(name(), "track Lyric is not accessable", true);
                     }
 
                     return QString();
@@ -79,7 +79,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "track info is not accessable", true);
+                        default: Logger::obj().write(name(), "track info is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, block_content);
@@ -140,7 +140,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "userRecommendations is not accessable", true);
+                        default: Logger::obj().write(name(), "userRecommendations is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, block_content);
@@ -201,7 +201,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "trackRecommendations is not accessable", true);
+                        default: Logger::obj().write(name(), "trackRecommendations is not accessable", true);
                     }
 
 //                    return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, track_id}, {CMD_PREDICATE, (int)randomize}});
@@ -271,7 +271,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "tracksSearch is not accessable", true);
+                        default: Logger::obj().write(name(), "tracksSearch is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, block_content);
@@ -303,7 +303,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "tracksByPlaylist is not accessable", true);
+                        default: Logger::obj().write(name(), "tracksByPlaylist is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, block_content);

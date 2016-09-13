@@ -133,7 +133,7 @@ namespace Core {
                             return QUrlQuery(tkn_client_id % val_id_tkn);
                         case qst_site:
                         case qst_site_alt1:
-                            return QUrlQuery(tkn_client_id % siteToken() % QStringLiteral("&app_version=") % siteHash());
+                            return QUrlQuery(tkn_client_id % siteToken() % LSTR("&app_version=") % siteHash());
                         default: return QUrlQuery();
                     }
                 }
@@ -161,15 +161,15 @@ namespace Core {
                     QJsonArray blocks;
 
                     QJsonObject json = tracksByUser(user_id).toObject();
-                    json.insert(tkn_dir_name, QStringLiteral("Tracks"));
+                    json.insert(tkn_dir_name, LSTR("Tracks"));
                     blocks << json;
 
                     json = tracksByUserLikes(user_id).toObject();
-                    json.insert(tkn_dir_name, QStringLiteral("Likes"));
+                    json.insert(tkn_dir_name, LSTR("Likes"));
                     blocks << json;
 
                     json = playlistsByUser(user_id).toObject();
-                    json.insert(tkn_dir_name, QStringLiteral("Playlists"));
+                    json.insert(tkn_dir_name, LSTR("Playlists"));
                     blocks << json;
 
                     if (user_id == userID()) { // ignore socials for not current user

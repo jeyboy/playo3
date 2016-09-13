@@ -49,6 +49,7 @@ void ModelItemDelegate::recalcAttrs(int item_icon_size) {
     int size = icon_size - state_width * 2;
 
     icons.insert(-1000,                                                 PIXMAP(QStringLiteral(":/download"), size));
+    icons.insert(-1000 + SELECTION_ITER,                                PIXMAP(QStringLiteral(":/download_on"), size));
 
     icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));
     icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
@@ -246,7 +247,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
                         bodyRect.height()
                     );
 
-            painter -> drawPixmap(rect, icons[-1000]);
+            painter -> drawPixmap(rect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
         }
     }
 
@@ -494,7 +495,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         if (loadable.isValid()) {
             QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
             QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
-            painter -> drawPixmap(rect, icons[-1000]);
+            painter -> drawPixmap(rect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
             left_offset += rect.width() + 6;
         }
     }

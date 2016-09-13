@@ -4,7 +4,7 @@
 #include "soundcloud_defines.h"
 #include "soundcloud_stream.h"
 
-#define SOUNDCLOUD_ALL_GENRES_PARAM QStringLiteral("all-music")
+#define SOUNDCLOUD_ALL_GENRES_PARAM LSTR("all-music")
 
 namespace Core {
     namespace Web {
@@ -27,47 +27,47 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_new_hot: return QStringLiteral("New & Hot: ");
-                        case set_top_50: return QStringLiteral("Top 50: ");
-                        case set_popular: return QStringLiteral("Popular: ");
-                        case set_recommended_artists: return QStringLiteral("Recommended Artists");
-                        default: return QStringLiteral("Unknown: ");
+                        case set_new_hot: return LSTR("New & Hot: ");
+                        case set_top_50: return LSTR("Top 50: ");
+                        case set_popular: return LSTR("Popular: ");
+                        case set_recommended_artists: return LSTR("Recommended Artists");
+                        default: return LSTR("Unknown: ");
                     }
                 }
 
                 QMap<QString, QString> audioSetOptions() {
                     return {
-                        { QStringLiteral("All Genres"),                 QStringLiteral("all-music") },
-                        { QStringLiteral("Alternative Rock"),           QStringLiteral("alternativerock") },
-                        { QStringLiteral("Ambient"),                    QStringLiteral("ambient") },
-                        { QStringLiteral("Classical"),                  QStringLiteral("classical") },
-                        { QStringLiteral("Country"),                    QStringLiteral("country") },
-                        { QStringLiteral("Dance & EDM"),                QStringLiteral("danceedm") },
-                        { QStringLiteral("Dancehall"),                  QStringLiteral("dancehall") },
-                        { QStringLiteral("Deep House"),                 QStringLiteral("deephouse") },
-                        { QStringLiteral("Disco"),                      QStringLiteral("disco") },
-                        { QStringLiteral("Drum & Bass"),                QStringLiteral("drumbass") },
-                        { QStringLiteral("Dubstep"),                    QStringLiteral("dubstep") },
-                        { QStringLiteral("Electronic"),                 QStringLiteral("electronic") },
-                        { QStringLiteral("Folk & Singer-Songwriter"),   QStringLiteral("folksingersongwriter") },
-                        { QStringLiteral("Hip-hop & Rap"),              QStringLiteral("hiphoprap") },
-                        { QStringLiteral("House"),                      QStringLiteral("house") },
-                        { QStringLiteral("Indie"),                      QStringLiteral("indie") },
-                        { QStringLiteral("Jazz & Blues"),               QStringLiteral("jazzblues") },
-                        { QStringLiteral("Latin"),                      QStringLiteral("latin") },
-                        { QStringLiteral("Metal"),                      QStringLiteral("metal") },
-                        { QStringLiteral("Piano"),                      QStringLiteral("piano") },
-                        { QStringLiteral("Pop"),                        QStringLiteral("pop") },
-                        { QStringLiteral("R&B & Soul"),                 QStringLiteral("rbsoul") },
-                        { QStringLiteral("Reggae"),                     QStringLiteral("reggae") },
-                        { QStringLiteral("Reggaeton"),                  QStringLiteral("reggaeton") },
-                        { QStringLiteral("Rock"),                       QStringLiteral("rock") },
-                        { QStringLiteral("Soundtrack"),                 QStringLiteral("soundtrack") },
-                        { QStringLiteral("Techno"),                     QStringLiteral("techno") },
-                        { QStringLiteral("Trance"),                     QStringLiteral("trance") },
-                        { QStringLiteral("Trap"),                       QStringLiteral("trap") },
-                        { QStringLiteral("Triphop"),                    QStringLiteral("triphop") },
-                        { QStringLiteral("World"),                      QStringLiteral("world") }
+                        { LSTR("All Genres"),                 LSTR("all-music") },
+                        { LSTR("Alternative Rock"),           LSTR("alternativerock") },
+                        { LSTR("Ambient"),                    LSTR("ambient") },
+                        { LSTR("Classical"),                  LSTR("classical") },
+                        { LSTR("Country"),                    LSTR("country") },
+                        { LSTR("Dance & EDM"),                LSTR("danceedm") },
+                        { LSTR("Dancehall"),                  LSTR("dancehall") },
+                        { LSTR("Deep House"),                 LSTR("deephouse") },
+                        { LSTR("Disco"),                      LSTR("disco") },
+                        { LSTR("Drum & Bass"),                LSTR("drumbass") },
+                        { LSTR("Dubstep"),                    LSTR("dubstep") },
+                        { LSTR("Electronic"),                 LSTR("electronic") },
+                        { LSTR("Folk & Singer-Songwriter"),   LSTR("folksingersongwriter") },
+                        { LSTR("Hip-hop & Rap"),              LSTR("hiphoprap") },
+                        { LSTR("House"),                      LSTR("house") },
+                        { LSTR("Indie"),                      LSTR("indie") },
+                        { LSTR("Jazz & Blues"),               LSTR("jazzblues") },
+                        { LSTR("Latin"),                      LSTR("latin") },
+                        { LSTR("Metal"),                      LSTR("metal") },
+                        { LSTR("Piano"),                      LSTR("piano") },
+                        { LSTR("Pop"),                        LSTR("pop") },
+                        { LSTR("R&B & Soul"),                 LSTR("rbsoul") },
+                        { LSTR("Reggae"),                     LSTR("reggae") },
+                        { LSTR("Reggaeton"),                  LSTR("reggaeton") },
+                        { LSTR("Rock"),                       LSTR("rock") },
+                        { LSTR("Soundtrack"),                 LSTR("soundtrack") },
+                        { LSTR("Techno"),                     LSTR("techno") },
+                        { LSTR("Trance"),                     LSTR("trance") },
+                        { LSTR("Trap"),                       LSTR("trap") },
+                        { LSTR("Triphop"),                    LSTR("triphop") },
+                        { LSTR("World"),                      LSTR("world") }
                     };
                 }
 
@@ -112,7 +112,7 @@ namespace Core {
                             }
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "SET BY TYPE is not accessable", true);
+                        default: Logger::obj().write(name(), "SET BY TYPE is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});

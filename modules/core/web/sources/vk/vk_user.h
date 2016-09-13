@@ -22,7 +22,7 @@ namespace Core {
                             return ret.value(tkn_response).toArray().first().toObject();
                         }
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return QJsonObject();
@@ -57,7 +57,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return prepareBlock(dmt_user, block_content);
@@ -70,7 +70,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue usersByName(const QString & name, int offset = 0, int count = 100) {
+                QJsonValue usersByName(const QString & uname, int offset = 0, int count = 100) {
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -81,7 +81,7 @@ namespace Core {
                                 baseUrlStr(
                                     qst_api, path_users_search,
                                     {
-                                        { tkn_q, name },
+                                        { tkn_q, uname },
                                         { tkn_fields, val_user_fields },
                                         { tkn_limit, count },
                                         { tkn_offset, OFFSET_TEMPLATE }
@@ -91,7 +91,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});

@@ -29,7 +29,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "feedsBySource is not accessable", true);
+                        default: Logger::obj().write(name(), "feedsBySource is not accessable", true);
                     }
 
                     return prepareBlock(dmt_feed, block_content);

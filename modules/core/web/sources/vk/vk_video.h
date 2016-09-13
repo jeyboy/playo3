@@ -88,7 +88,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "video Search is not accessable", true);
+                        default: Logger::obj().write(name(), "video Search is not accessable", true);
                     }
 
                     return prepareBlock(dmt_video, block_content);
@@ -200,7 +200,7 @@ namespace Core {
                                 << prepareBlock(dmt_video, content.value(block_items_video), {{tkn_dir_name, QStringLiteral("Videos")}});
                         break;}
 
-                        default: Logger::obj().write("VK", "video Search is not accessable", true);
+                        default: Logger::obj().write(name(), "video Search is not accessable", true);
                     }
 
                     return QJsonArray();
@@ -242,7 +242,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "tracksByPlaylist is not accessable", true);
+                        default: Logger::obj().write(name(), "tracksByPlaylist is not accessable", true);
                     }
 
                     return prepareBlock(dmt_video, block_content);
@@ -298,7 +298,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "video by category is not accessable", true);
+                        default: Logger::obj().write(name(), "video by category is not accessable", true);
                     }
 
                     QString offset = JSON_STR(response, LSTR("offset_token"));
@@ -369,7 +369,7 @@ namespace Core {
                             block_content = temp;
                         break;}
 
-                        default: Logger::obj().write("VK", "video categories is not accessable", true);
+                        default: Logger::obj().write(name(), "video categories is not accessable", true);
                     }
 
                     return prepareBlock(dmt_video_set, block_content);

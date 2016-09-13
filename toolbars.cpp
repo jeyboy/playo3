@@ -387,6 +387,7 @@ QToolBar * ToolBars::createControlToolBar() {
     QToolBar * ptb = precreateToolBar(toolbar_controls_key);
 
     ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(QStringLiteral(":/add")), ptb);
+    listBtn -> setToolTip(LSTR("Create new tab"));
     connect(listBtn, SIGNAL(clicked(bool)), &Dockbars::obj(), SLOT(createNewBar()));
     connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));
     ptb -> addWidget(listBtn);

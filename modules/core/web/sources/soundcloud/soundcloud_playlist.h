@@ -32,7 +32,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "PLAYLIST BY TAG is not accessable", true);
+                        default: Logger::obj().write(name(), "PLAYLIST BY TAG is not accessable", true);
                     }
                     return prepareBlock(dmt_set, cmd_mtd_playlists_by_tag, response, {}, {{CMD_PREDICATE, tag}});
                 }
@@ -65,7 +65,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "PLAYLIST BY TRACKS is not accessable", true);
+                        default: Logger::obj().write(name(), "PLAYLIST BY TRACKS is not accessable", true);
                     }
                     return prepareBlock(dmt_set, cmd_mtd_playlists_by_track, response, {}, {{CMD_ID, track_id}});
                 }
@@ -107,7 +107,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "PLAYLISTS BY PREDICATE is not accessable", true);
+                        default: Logger::obj().write(name(), "PLAYLISTS BY PREDICATE is not accessable", true);
                     }
                     return prepareBlock(dmt_set, cmd_mtd_playlists_by_predicate, response, {}, {{CMD_PREDICATE, predicate}});
                 }
@@ -139,7 +139,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "PLAYLIST BY USER is not accessable", true);
+                        default: Logger::obj().write(name(), "PLAYLIST BY USER is not accessable", true);
                     }
                     return prepareBlock(dmt_audio_set, cmd_mtd_playlists_by_user, response, {}, {{CMD_ID, user_id}});
                 }

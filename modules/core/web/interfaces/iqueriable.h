@@ -29,7 +29,7 @@ namespace Core {
                         Manager * manager = Manager::prepare();
                         int retries = 0;
 
-                        while (++retries <= QUERY_RETRY_AMOUNT) {
+                        while(++retries <= QUERY_RETRY_AMOUNT) {
                             switch(arg -> call_method) {
                                 case call_method_post: { json = manager -> jsonPost(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap); break; }
                                 default: json = manager -> jsonGet(arg -> request_url, arg -> headers, arg -> post_proc & proc_json_wrap);

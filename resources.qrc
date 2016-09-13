@@ -46,6 +46,7 @@
         <file alias="more">images/elements/more.png</file>
         <file alias="add_yandex">images/elements/add_yandex.png</file>
         <file alias="add_yandex_on">images/elements/add_yandex_on.png</file>
+        <file alias="download_on">images/elements/download_on.png</file>
     </qresource>
     <qresource prefix="/items">
         <file alias="sc_item">images/items/sc.png</file>

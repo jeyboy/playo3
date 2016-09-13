@@ -27,7 +27,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return QJsonObject();
@@ -64,7 +64,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "GROUP BY ID is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY ID is not accessable", true);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, group_id}});
@@ -90,7 +90,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "GROUP BY TRACK is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY TRACK is not accessable", true);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_track, response, {}, {{CMD_ID, track_id}});
@@ -126,7 +126,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "GROUP BY USER is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY USER is not accessable", true);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {}, {{CMD_ID, user_id}});
@@ -139,14 +139,14 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue groupsByName(const QString & name, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue groupsByName(const QString & gname, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
                         case perm_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api, path_groups, {{tkn_q, name}}),
+                                baseUrlStr(qst_api, path_groups, {{tkn_q, gname}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
@@ -156,7 +156,7 @@ namespace Core {
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("search/groups"),
                                     {
-                                        {tkn_q, name},
+                                        {tkn_q, gname},
                                         {QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base)},
                                         {QStringLiteral("sc_a_id"), generateMark()},
                                         {QStringLiteral("facet"), QStringLiteral("model")}
@@ -167,7 +167,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "GROUP BY NAME is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY NAME is not accessable", true);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});

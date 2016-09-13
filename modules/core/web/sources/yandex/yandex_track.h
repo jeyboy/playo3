@@ -2,6 +2,7 @@
 #define YANDEX_TRACK_H
 
 #include "yandex_defines.h"
+#include "math.h"
 
 namespace Core {
     namespace Web {
@@ -32,34 +33,38 @@ namespace Core {
                     return content.isEmpty() ? QJsonObject() : content[0].toObject();
                 }
 
+                QJsonValue tracksInfo(const QUrlQuery & args) {
+                    return tracksInfo(
+                        args.queryItemValue(CMD_ID).split(',')
+                    );
+                }
                 QJsonValue tracksInfo(const QStringList & track_ids) { // TODO: finish me
                     Permissions perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
-                    // array of { id, realId, title, fileSize, storageDir, durationMs, embedPlayback, artists: {id, name, decomposed: ["feat or vs", {id, name}, ..]}}
+                    // curl 'https://music.yandex.ua/handlers/track-entries.jsx' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/artist/79215/tracks' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/artist/79215/tracks' --data 'entries=2757988&strict=true&lang=uk&external-domain=music.yandex.ua&overembed=false'
 
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
-                            QUrlQuery query;
+                            int limiter = track_ids.size() / YANDEX_IDS_PER_REQUEST + (int)(track_ids.size() % YANDEX_IDS_PER_REQUEST != 0);
+                            for(int step = 0; step < limiter; step++) {
+                                std::initializer_list<std::pair<QString, QVariant> > params = {
+                                    { LSTR("entries"), (QStringList)track_ids.mid(step * YANDEX_IDS_PER_REQUEST, YANDEX_IDS_PER_REQUEST) },
+                                    { LSTR("strict"), LSTR("true") }
+                                };
 
-                            for(QStringList::ConstIterator track_id = track_ids.constBegin(); track_id != track_ids.constEnd(); track_id++)
-                                query.addQueryItem(LSTR("tracks[]"), *track_id);
-
-                            Response * response = Manager::prepare() -> postFollowed(
-                                baseUrlStr(
-                                    qst_site_alt1, LSTR("tracks"), query
-                                ), dntHeader()
-                            );
-
-
-                            int i = 0;
-//                            prepareTracks(items, block_content);
+                                saRequest(
+                                    baseUrlStr(qst_site, LSTR("track-entries.jsx"), params),
+                                    call_type_json, &block_content, proc_json_patch, IQUERY_DEF_FIELDS, call_method_post
+                                );
+                            }
                         break;}
 
-                        default: Logger::obj().write("VK", "track info is not accessable", true);
+                        default: Logger::obj().write(name(), "track info is not accessable", true);
                     }
 
+                    prepareTracks(block_content);
                     return prepareBlock(dmt_audio, block_content);
                 }
 
@@ -73,15 +78,7 @@ namespace Core {
                     // curl 'https://music.yandex.ua/handlers/album.jsx?album=2211661&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.36949077823991205' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; _ym_isad=1; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/country/albums?page=109' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/genre/country/albums?page=109'
 
                     QJsonArray volumes = saRequest(
-                        baseUrlStr(
-                            qst_site, LSTR("album.jsx"),
-                            {
-                                {LSTR("album"), album_id}/*,
-                                {LSTR("external-domain"), LSTR("music.yandex.ua")},
-                                {LSTR("overembed"), LSTR("false")},
-                                {LSTR("lang"), LSTR("uk")}*/
-                            }
-                        ),
+                        baseUrlStr(qst_site, LSTR("album.jsx"), {{LSTR("album"), album_id}}),
                         call_type_json, 0, proc_json_extract, QStringList() << LSTR("volumes")
                     );
 

@@ -91,7 +91,7 @@ namespace Core {
                                     prepareBlock(dmt_audio, block_content/*,cmd_mtd_set_by_type, response, {}, {{CMD_SET_TYPE, set_type}}*/);
                                 break;}
 
-                                default: Logger::obj().write("VK", "SET BY TYPE is not accessable", true);
+                                default: Logger::obj().write(name(), "SET BY TYPE is not accessable", true);
                             }
                         break;}
 

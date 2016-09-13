@@ -37,7 +37,7 @@ namespace Core {
                             return res;
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK URL is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK URL is not accessable", true);
                     }
 
                     return QString();
@@ -65,7 +65,7 @@ namespace Core {
                             return obj.value(QStringLiteral("status")).toString().startsWith(QStringLiteral("201"));
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "LIKE TRACK is not accessable", true);
+                        default: Logger::obj().write(name(), "LIKE TRACK is not accessable", true);
                     }
 
                     return false;
@@ -89,7 +89,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK INFO is not accessable", true);
                     }
 
                     return QJsonObject();
@@ -121,7 +121,7 @@ namespace Core {
                                 );
                             break;}
 
-                            default: { Logger::obj().write("Soundcloud", "TRACKS INFO is not accessable", true); break;}
+                            default: { Logger::obj().write(name(), "TRACKS INFO is not accessable", true); break;}
                         }
 
                         QueriableArg::arrAppend(response, obj.value(DEF_JSON_FIELD).toArray());
@@ -157,7 +157,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK RELATIONS is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK RELATIONS is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_track_recommendations, response, {}, {{CMD_ID, track_id}});
@@ -197,7 +197,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK SEARCH is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
@@ -236,7 +236,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK BY TAG is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK BY TAG is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tag, response, {}, {{CMD_PREDICATE, tag}});
@@ -270,7 +270,7 @@ namespace Core {
                         break;}
 
                         default:
-                            Logger::obj().write("Soundcloud", "TRACK BY GROUP is not accessable", true);
+                            Logger::obj().write(name(), "TRACK BY GROUP is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_group, response, {}, {{CMD_ID, group_id}});
@@ -306,7 +306,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK BY USER is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK BY USER is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {}, {{CMD_ID, user_id}});
@@ -340,7 +340,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("Soundcloud", "TRACK BY USER LIKES is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK BY USER LIKES is not accessable", true);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user_likes, response, {}, {{CMD_ID, user_id}});

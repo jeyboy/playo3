@@ -43,7 +43,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, id}});
@@ -56,7 +56,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue groupsByName(const QString & name, int offset = 0, int count = 100) {
+                QJsonValue groupsByName(const QString & gname, int offset = 0, int count = 100) {
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -81,7 +81,7 @@ namespace Core {
                                     qst_api, path_groups_search,
                                     {
                                         { tkn_type, val_group_types },
-                                        { tkn_q, name },
+                                        { tkn_q, gname },
                                         { tkn_limit, 100 },
                                         { tkn_offset, OFFSET_TEMPLATE }
                                     }
@@ -91,7 +91,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});

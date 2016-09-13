@@ -102,6 +102,7 @@ namespace Core {
             cmd_mtd_items_search, // search of items with mixed types
             cmd_mtd_items_by_collection, // get items with mixed types
 
+            cmd_mtd_tracks_info,
             cmd_mtd_tracks_search,
             cmd_mtd_track_recommendations,
             cmd_mtd_tracks_by_artist,
@@ -161,6 +162,7 @@ namespace Core {
                 case cmd_mtd_items_search: return itemsSearch(params);
                 case cmd_mtd_items_by_collection: return itemsByCollection(params);
 
+                case cmd_mtd_tracks_info:  return tracksInfo(params);
                 case cmd_mtd_tracks_search:  return tracksSearch(params);
                 case cmd_mtd_track_recommendations: return trackRecommendations(params);
                 case cmd_mtd_tracks_by_artist: return tracksByArtist(params);
@@ -224,6 +226,7 @@ namespace Core {
         virtual QJsonValue itemsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue itemsByCollection(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
+        virtual QJsonValue tracksInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue tracksSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue trackRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue tracksByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }

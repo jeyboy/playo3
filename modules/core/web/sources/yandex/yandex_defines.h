@@ -6,6 +6,7 @@
 #include "yandex_misc.h"
 
 #define YANDEX_SEARCH_LIMIT 200
+#define YANDEX_IDS_PER_REQUEST 50
 
 namespace Core {
     namespace Web {
@@ -43,22 +44,25 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
-                void prepareTracks(QJsonArray & tracks) {
+                QJsonArray & prepareTracks(QJsonArray & tracks) {
                     // TODO: write me
                     int i = 0;
+                    return tracks;
                 }
 
-                void preparePromotions(QJsonArray & promos) {
+                QJsonArray & preparePromotions(QJsonArray & promos) {
                     // TODO: write me
                     int i = 0;
+                    return promos;
                 }
 
-                void preparePlaylists(QJsonArray & playlists) {
+                QJsonArray & preparePlaylists(QJsonArray & playlists) {
                     // TODO: write me
                     int i = 0;
+                    return playlists;
                 }
 
-                void prepareAlbums(QJsonArray & albums) {
+                QJsonArray & prepareAlbums(QJsonArray & albums) {
                     QJsonArray res;
 
                     for(QJsonArray::Iterator album = albums.begin(); album != albums.end(); album++) {
@@ -93,9 +97,10 @@ namespace Core {
                     }
 
                     albums = res;
+                    return albums;
                 }
 
-                void prepareArtists(QJsonArray & artists) {
+                QJsonArray & prepareArtists(QJsonArray & artists) {
                     QJsonArray res;
 
                     for(QJsonArray::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
@@ -120,6 +125,7 @@ namespace Core {
                     }
 
                     artists = res;
+                    return artists;
                 }
             };
         }

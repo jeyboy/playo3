@@ -53,7 +53,7 @@ namespace Core {
                                     );
                                 break;}
 
-                                default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
+                                default: Logger::obj().write(name(), "SET BY TYPE is not accessable", true);
                             }
                         break;}
 
@@ -86,7 +86,7 @@ namespace Core {
                                     );
                                 break;}
 
-                                default: Logger::obj().write("Fourshared", "SET BY TYPE is not accessable", true);
+                                default: Logger::obj().write(name(), "SET BY TYPE is not accessable", true);
                             }
                         break;}
                     }

@@ -34,7 +34,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
                     }
 
                     return prepareBlock(dmt_set, cmd_mtd_tracks_playlists_by_user, response, {}, {{CMD_ID, user_id}});
@@ -56,7 +56,7 @@ namespace Core {
 //                            );
 //                        }
 
-//                        default: Logger::obj().write("VK", "GROUP INFO is not accessable", true);
+//                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
 //                    }
 
 //                    return QJsonArray();

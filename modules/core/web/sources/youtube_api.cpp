@@ -64,7 +64,7 @@ using namespace Core::Web::Youtube;
 //        Html::Set forms = html.find("form.authorize-token");
 
 //        if (forms.isEmpty()) {
-//            Logger::obj().write(val_auth_title, QStringLiteral("Auth form did not found"), true);
+//            Logger::obj().write(name(), QStringLiteral("Auth form did not found"), true);
 //            return false;
 //        }
 
