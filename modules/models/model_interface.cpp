@@ -278,15 +278,20 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
             update_amount++;
         }
 
-        if (dmt_type != dmt_any && dmt_type & dmt_set)
-            block_amount = (*this.*proc_set_func)(block_obj, curr_parent, update_amount, dmt_type, wType);
-        else
-            block_amount = (*this.*proc_func)(block_obj, curr_parent, update_amount, dmt_type, wType);
+        if (dmt_type & dmt_dir) { // INFO: construction of item, with more than second level deepness // only yandex use this at this moment
+            QJsonArray dirs = EXTRACT_ITEMS(block_obj);
+            proceedBlocks(dirs, curr_parent);
+        } else {
+            if (dmt_type != dmt_any && dmt_type & dmt_set)
+                block_amount = (*this.*proc_set_func)(block_obj, curr_parent, update_amount, dmt_type, wType);
+            else
+                block_amount = (*this.*proc_func)(block_obj, curr_parent, update_amount, dmt_type, wType);
 
-        items_amount += block_amount;
+            items_amount += block_amount;
 
-        if (curr_parent == parent)
-            update_amount += block_amount;
+            if (curr_parent == parent)
+                update_amount += block_amount;
+        }
     }
 
     if (update_amount > 0) {

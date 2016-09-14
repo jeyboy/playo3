@@ -8,7 +8,7 @@ namespace Core {
         namespace Yandex {
             class User : public Base {
             public:
-
+                // https://music.yandex.ua/users/music.partners/playlists
             };
         }
     }

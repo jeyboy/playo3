@@ -170,7 +170,7 @@ namespace Core {
                                         break;}
                                         case set_popular_promotions: {
                                             preparePromotions(response.content);
-                                            mtype = dmt_audio_set;
+                                            mtype = dmt_dir_set;
                                         break;}
                                         case set_new_albums: {
                                             prepareAlbums(response.content);

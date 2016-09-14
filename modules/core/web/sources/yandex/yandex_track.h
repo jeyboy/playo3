@@ -42,8 +42,6 @@ namespace Core {
                     Permissions perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
-                    // curl 'https://music.yandex.ua/handlers/track-entries.jsx' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Content-Type: application/x-www-form-urlencoded; charset=UTF-8' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/artist/79215/tracks' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/artist/79215/tracks' --data 'entries=2757988&strict=true&lang=uk&external-domain=music.yandex.ua&overembed=false'
-
                     switch(perm) {
                         case perm_site:
                         case perm_api: {
@@ -68,7 +66,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, block_content);
                 }
 
-
                 QJsonValue tracksByAlbum(const QUrlQuery & args) {
                     return tracksByAlbum(
                         args.queryItemValue(CMD_ID)
@@ -91,11 +88,36 @@ namespace Core {
 
 
 
+                QJsonValue tracksByPlaylist(const QUrlQuery & args) {
+                    return tracksByPlaylist(
+                        args.queryItemValue(CMD_OWNER),
+                        args.queryItemValue(CMD_ID)
+                    );
+                }
+                QJsonValue tracksByPlaylist(const QString & owner_uid, const QString & kinds) {
+                    // curl 'https://music.yandex.ua/handlers/playlist.jsx?owner=music.partners&kinds=1767&light=true&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.6619828515219549' -H 'Host: music.yandex.ua' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Referer: https://music.yandex.ua/genre/metal' -H 'X-Retpath-Y: https://music.yandex.ua/genre/metal' -H 'X-Requested-With: XMLHttpRequest' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'Connection: keep-alive'
+
+                    QJsonArray tracks = saRequest(
+                        baseUrlStr(qst_site, LSTR("playlist.jsx"),
+                            {
+                                {LSTR("owner"), owner_uid},
+                                {LSTR("kinds"), kinds},
+                                {LSTR("light"), LSTR("true")}
+                            }
+                        ),
+                        call_type_json, 0, proc_json_extract, QStringList() << tkn_tracks
+                    );
+
+                    return prepareBlock(dmt_audio, tracks);
+                }
 
 
 
-                //artist // similar // albums // alsoAlbums // tracks // radio // alsoAlbumIds // albumIds // concerts
-                inline QString artistTracksUrl(const QString & artistId) { return url_site_v1 + QStringLiteral("artist.jsx?artist=%1&what=tracks&sort=&dir=").arg(artistId); }
+
+
+
+//                //artist // similar // albums // alsoAlbums // tracks // radio // alsoAlbumIds // albumIds // concerts
+//                inline QString artistTracksUrl(const QString & artistId) { return url_site_v1 + QStringLiteral("artist.jsx?artist=%1&what=tracks&sort=&dir=").arg(artistId); }
 
                 inline QString searchUrl(const QString & predicate, const QString & sources = QStringLiteral("all")) { return url_site_v1 + QStringLiteral("music-search.jsx?text=%1&type=%2").arg(predicate, sources); }
             };

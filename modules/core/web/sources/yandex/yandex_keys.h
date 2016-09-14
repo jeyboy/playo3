@@ -19,6 +19,7 @@ namespace Core {
             extern const QString tkn_albums;
             extern const QString tkn_artists;
             extern const QString tkn_tracks;
+            extern const QString tkn_playlist;
 
             extern const QString tkn_durationMs;
             extern const QString tkn_id;

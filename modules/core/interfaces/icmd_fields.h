@@ -10,6 +10,7 @@
 
 #define CMD_MEDIA_TYPE QStringLiteral("media_type")
 
+#define CMD_OWNER QStringLiteral("owner")
 #define CMD_ID QStringLiteral("id")
 #define CMD_SET_TYPE QStringLiteral("set_type")
 

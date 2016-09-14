@@ -44,22 +44,51 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
-                QJsonArray & prepareTracks(QJsonArray & tracks) {
-                    // TODO: write me
-                    int i = 0;
+                QJsonArray & prepareTracks(QJsonArray & tracks) { // TODO: write me
                     return tracks;
                 }
 
-                QJsonArray & preparePromotions(QJsonArray & promos) {
-                    // TODO: write me
-                    int i = 0;
+                QJsonArray & preparePromotions(QJsonArray & promos) { // TODO: write me
+                    QJsonArray res;
+
+                    for(QJsonArray::Iterator promo = promos.begin(); promo != promos.end(); promo++) {
+                        QJsonObject promo_obj = (*promo).toObject();
+
+                        if (JSON_HAS_KEY(promo_obj, tkn_albums)) {
+                            QJsonArray albums = JSON_ARR(promo_obj, tkn_albums);
+                            res << prepareBlock(dmt_audio_set, prepareAlbums(albums), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
+                        } else if (JSON_HAS_KEY(promo_obj, tkn_playlist)) {
+                            QJsonObject playlist = JSON_OBJ(promo_obj, tkn_playlist);
+                            res << prepareBlock(dmt_audio_set, preparePlaylist(playlist), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
+                        } else {
+                            qCritical() << "undefined promo:" << promo_obj;
+                        }
+                    }
+
+                    promos = res;
                     return promos;
                 }
 
-                QJsonArray & preparePlaylists(QJsonArray & playlists) {
-                    // TODO: write me
-                    int i = 0;
-                    return playlists;
+                QJsonObject & preparePlaylist(QJsonObject & playlist) {
+                    QJsonObject pl_obj = JSON_OBJ(playlist, tkn_playlist);
+
+                    pl_obj.insert(
+                        tkn_coverUri,
+                        LSTR("http://") + JSON_STR(pl_obj, LSTR("ogImage")).replace(LSTR("%%"), LSTR("400x400"))
+                    );
+
+                    pl_obj.insert(
+                        tkn_loadable_cmd,
+                         Cmd::build(
+                            sourceType(), cmd_mtd_tracks_by_playlist,
+                            {
+                                {CMD_ID, JSON_CSTR(pl_obj, LSTR("kind"))},
+                                {CMD_OWNER, JSON_CSTR(JSON_OBJ(pl_obj, LSTR("owner")), LSTR("login"))}
+                            }
+                         ).toString()
+                    );
+
+                    return (playlist = pl_obj);
                 }
 
                 QJsonArray & prepareAlbums(QJsonArray & albums) {
@@ -99,7 +128,6 @@ namespace Core {
                     albums = res;
                     return albums;
                 }
-
                 QJsonArray & prepareArtists(QJsonArray & artists) {
                     QJsonArray res;
 
