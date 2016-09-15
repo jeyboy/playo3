@@ -91,6 +91,8 @@ namespace Presentation {
         QToolBar * createTimeMediaBar();
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();
+        QToolBar * createSearchButtonBar();
+        QToolBar * createSettingsButtonBar();
         QToolBar * createEqualizerToolBar();
         QToolBar * createEqualizerButtonBar();
 
@@ -113,16 +115,18 @@ namespace Presentation {
         QPoint lastClickPoint;
         QMainWindow * container;
 
-        const QString toolbar_media_key = QStringLiteral("Media");
-        const QString toolbar_media_plus_key = QStringLiteral("Media+");
-        const QString toolbar_media_pos_key = QStringLiteral("Media+Position");
-        const QString toolbar_media_pan_key = QStringLiteral("Media+Pan");
-        const QString toolbar_media_time_key = QStringLiteral("Media+Time");
-        const QString toolbar_media_volume_key = QStringLiteral("Media+Volume");
-        const QString toolbar_controls_key = QStringLiteral("Controls");
-        const QString toolbar_spectrum_key = QStringLiteral("Spectrum");
-        const QString toolbar_equalizer_key = QStringLiteral("Equalizer");
-        const QString toolbar_equalizer_button_key = QStringLiteral("EqualizerButton");
+        const QString toolbar_media_key =               LSTR("Media");
+        const QString toolbar_media_plus_key =          LSTR("Media+");
+        const QString toolbar_media_pos_key =           LSTR("Media+Position");
+        const QString toolbar_media_pan_key =           LSTR("Media+Pan");
+        const QString toolbar_media_time_key =          LSTR("Media+Time");
+        const QString toolbar_media_volume_key =        LSTR("Media+Volume");
+        const QString toolbar_controls_key =            LSTR("Controls");
+        const QString toolbar_spectrum_key =            LSTR("Spectrum");
+        const QString toolbar_equalizer_key =           LSTR("Equalizer");
+        const QString toolbar_equalizer_button_key =    LSTR("EqualizerButton");
+        const QString toolbar_search_key =              LSTR("Search");
+        const QString toolbar_settings_key =            LSTR("Settings");
         const char * toolbar_service_mark = "service";
     };
 }

@@ -81,8 +81,10 @@ QMenu * ToolBars::createPopupMenu() {
 void ToolBars::load(const QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
-        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_media_time_key << toolbar_media_pan_key
-            << toolbar_media_volume_key << toolbar_controls_key << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
+        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key
+                 << toolbar_media_time_key << toolbar_media_pan_key << toolbar_media_volume_key
+                 << toolbar_controls_key << toolbar_search_key << toolbar_settings_key
+                 << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -206,6 +208,8 @@ QToolBar * ToolBars::linkNameToToolbars(const QString & barName) {
     else if (barName == toolbar_spectrum_key)           return getSpectrum();
     else if (barName == toolbar_equalizer_key)          return createEqualizerToolBar();
     else if (barName == toolbar_media_pan_key)          return createPanMediaBar();
+    else if (barName == toolbar_search_key)             return createSearchButtonBar();
+    else if (barName == toolbar_settings_key)           return createSettingsButtonBar();
     else                                                return createToolBar(barName);
 }
 
@@ -392,17 +396,29 @@ QToolBar * ToolBars::createControlToolBar() {
     connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));
     ptb -> addWidget(listBtn);
 
-//    ptb -> addAction(QIcon(QStringLiteral(":/add")), QStringLiteral("Add new local tab"), &Dockbars::obj(), SLOT(createNewBar()));
-
     QMap<DataSubType, ISource *> apis = Web::Apis::sourcesList();
     for(QMap<DataSubType, ISource *>::Iterator api = apis.begin(); api != apis.end(); api++) {
         QToolButton * btn = api.value() -> initButton(container);
         if (btn) ptb -> addWidget(btn);
     }
 
-    ptb -> addSeparator();
+    ptb -> adjustSize();
+
+    return ptb;
+}
+
+QToolBar * ToolBars::createSearchButtonBar() {
+    QToolBar * ptb = precreateToolBar(toolbar_search_key);
+
     ptb -> addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Search"), container, SLOT(showSearchDialog()));
-    ptb -> addSeparator();
+    ptb -> adjustSize();
+
+    return ptb;
+}
+
+QToolBar * ToolBars::createSettingsButtonBar() {
+    QToolBar * ptb = precreateToolBar(toolbar_settings_key);
+
     ptb -> addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("Common setting"), container, SLOT(showSettingsDialog()));
     ptb -> adjustSize();
 
