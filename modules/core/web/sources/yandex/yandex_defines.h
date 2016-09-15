@@ -49,23 +49,23 @@ namespace Core {
                 }
 
                 QJsonArray & preparePromotions(QJsonArray & promos) { // TODO: write me
-                    QJsonArray res;
+                    QJsonArray blocks;
 
                     for(QJsonArray::Iterator promo = promos.begin(); promo != promos.end(); promo++) {
                         QJsonObject promo_obj = (*promo).toObject();
 
                         if (JSON_HAS_KEY(promo_obj, tkn_albums)) {
                             QJsonArray albums = JSON_ARR(promo_obj, tkn_albums);
-                            res << prepareBlock(dmt_audio_set, prepareAlbums(albums), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
+                            blocks << prepareBlock(dmt_audio_set, prepareAlbums(albums), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
                         } else if (JSON_HAS_KEY(promo_obj, tkn_playlist)) {
                             QJsonObject playlist = JSON_OBJ(promo_obj, tkn_playlist);
-                            res << prepareBlock(dmt_audio_set, preparePlaylist(playlist), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
+                            blocks << prepareBlock(dmt_audio_set, QJsonArray() << preparePlaylist(playlist));
                         } else {
                             qCritical() << "undefined promo:" << promo_obj;
                         }
                     }
 
-                    promos = res;
+                    promos = blocks;
                     return promos;
                 }
 

@@ -237,37 +237,10 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
             continue;
         }
 
+        Playlist * curr_parent = parent;       
+
         DataMediaType dmt_type = (DataMediaType)block_obj.value(tkn_media_type).toInt(); //(DataMediaType)EXTRACT_MEDIA_TYPE(pair.key().toInt());
-
-        Playlist * curr_parent = parent;
         DataSubType wType = (DataSubType)block_obj.value(tkn_source_id).toInt();
-
-        switch(wType) {
-            case dt_web_vk: {
-                proc_func = &IModel::proceedVkList;
-                proc_set_func = &IModel::proceedVkSet;
-            break;}
-            case dt_web_sc: {
-                proc_func = &IModel::proceedScList;
-                proc_set_func = &IModel::proceedScSet;
-            break;}
-            case dt_web_od: {
-                proc_func = &IModel::proceedOdList;
-                proc_set_func = &IModel::proceedOdSet;
-            break;}
-            case dt_web_yandex: {
-                proc_func = &IModel::proceedYandexList;
-                proc_set_func = &IModel::proceedYandexSet;
-            break;}
-            case dt_web_youtube: {
-                proc_func = &IModel::proceedYoutubeList;
-                proc_set_func = 0;
-            break;}
-            default:
-                proc_func = &IModel::proceedGrabberList;
-                proc_set_func = 0;
-        }
-
 
         // if used other playlist - should updating (beginInsertRows) for it and add + 1 to parent :(
         if (block_obj.contains(tkn_dir_name)) {
@@ -279,9 +252,37 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
         }
 
         if (dmt_type & dmt_dir) { // INFO: construction of item, with more than second level deepness // only yandex use this at this moment
-            QJsonArray dirs = EXTRACT_ITEMS(block_obj);
-            proceedBlocks(dirs, curr_parent);
+            if (JSON_HAS_KEY(block_obj, tkn_more_cmd))
+                curr_parent -> setFetchableAttrs(JSON_STR(block_obj, tkn_more_cmd));
+
+            proceedBlocks(EXTRACT_ITEMS(block_obj), curr_parent);
         } else {
+            switch(wType) {
+                case dt_web_vk: {
+                    proc_func = &IModel::proceedVkList;
+                    proc_set_func = &IModel::proceedVkSet;
+                break;}
+                case dt_web_sc: {
+                    proc_func = &IModel::proceedScList;
+                    proc_set_func = &IModel::proceedScSet;
+                break;}
+                case dt_web_od: {
+                    proc_func = &IModel::proceedOdList;
+                    proc_set_func = &IModel::proceedOdSet;
+                break;}
+                case dt_web_yandex: {
+                    proc_func = &IModel::proceedYandexList;
+                    proc_set_func = &IModel::proceedYandexSet;
+                break;}
+                case dt_web_youtube: {
+                    proc_func = &IModel::proceedYoutubeList;
+                    proc_set_func = 0;
+                break;}
+                default:
+                    proc_func = &IModel::proceedGrabberList;
+                    proc_set_func = 0;
+            }
+
             if (dmt_type != dmt_any && dmt_type & dmt_set)
                 block_amount = (*this.*proc_set_func)(block_obj, curr_parent, update_amount, dmt_type, wType);
             else
@@ -705,7 +706,7 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
 
     return items_amount;
 }
-int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int & update_amount, const DataMediaType & fdmtype, const DataSubType & wType) {
+int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int & update_amount, const DataMediaType & /*fdmtype*/, const DataSubType & /*wType*/) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
     int items_amount = 0;
@@ -723,7 +724,7 @@ int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int &
         bool is_loadable = JSON_HAS_KEY(playlist, tkn_loadable_cmd);
 
         QString pid = JSON_CSTR(playlist, Yandex::tkn_id);
-        QString name = JSON_STR(playlist, Yandex::tkn_full_title);
+        QString name = JSON_STR(playlist, JSON_HAS_KEY(playlist, Yandex::tkn_full_title) ? Yandex::tkn_full_title : Yandex::tkn_title);
         Playlist * folder;
 
         if (is_loadable) {
@@ -735,6 +736,7 @@ int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int &
                 update_amount++;
         } else {
             int i = 0;
+            continue;
 //            if (parent -> createPlaylist(folder, wType, pid, name))
 //                update_amount++;
 

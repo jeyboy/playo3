@@ -27,6 +27,7 @@ namespace Core {
 
                         QJsonObject json;
                         Manager * manager = Manager::prepare();
+                        manager -> setExtractParamsToPayload(arg -> extract_params_to_payload);
                         int retries = 0;
 
                         while(++retries <= QUERY_RETRY_AMOUNT) {
@@ -132,10 +133,10 @@ namespace Core {
             bool sRequest(
                 const QString & url, QJsonObject & json, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = IQUERY_DEF_FIELDS, const ApiCallMethod & call_method = call_method_get,
-                const Headers & headers = Headers(), QObject * error_receiver = 0)
+                const Headers & headers = Headers(), QObject * error_receiver = 0, bool extract_params_to_payload = true)
             {
                 QJsonArray arr;
-                QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver);
+                QueriableArg arg(&arr, url, call_type, post_proc, fields, error_receiver, extract_params_to_payload);
                 arg.changeCallMethod(call_method);
                 arg.setRequestHeaders(headers);
 
@@ -147,20 +148,20 @@ namespace Core {
             QJsonObject sRequest(
                 const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = IQUERY_DEF_FIELDS, const ApiCallMethod & call_method = call_method_get,
-                const Headers & headers = Headers(), QObject * error_receiver = 0)
+                const Headers & headers = Headers(), QObject * error_receiver = 0, bool extract_params_to_payload = true)
             {
-                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, headers, error_receiver);
+                QJsonArray res = saRequest(url, call_type, arr, post_proc, fields, call_method, headers, error_receiver, extract_params_to_payload);
                 return res.isEmpty() ? QJsonObject() : res.last().toObject();
             }
             QJsonArray saRequest(
                 const QString & url, const ApiCallType & call_type, QJsonArray * arr = 0, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = IQUERY_DEF_FIELDS, const ApiCallMethod & call_method = call_method_get,
-                const Headers & headers = Headers(), QObject * error_receiver = 0)
+                const Headers & headers = Headers(), QObject * error_receiver = 0, bool extract_params_to_payload = true)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
-                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
+                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver, extract_params_to_payload);
                 arg.changeCallMethod(call_method);
                 arg.setRequestHeaders(headers);
 
@@ -173,13 +174,13 @@ namespace Core {
                 const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
                 const AdditionalProc & post_proc = proc_none, const QStringList & fields = IQUERY_DEF_FIELDS,
                 const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
-                QObject * error_receiver = 0, bool ignore_arr_content = true)
+                QObject * error_receiver = 0, bool ignore_arr_content = true, bool extract_params_to_payload = true)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
 
-                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
+                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver, extract_params_to_payload);
                 arg.ignoreArrContent(ignore_arr_content);
                 arg.changeCallMethod(call_method);
                 arg.setRequestHeaders(headers);
@@ -193,13 +194,13 @@ namespace Core {
                 const QString & url, const ApiCallType & call_type, const PolyQueryRules & poly_rules, QJsonArray * arr = 0,
                 const AdditionalProc & post_proc = proc_none, const QStringList & fields = IQUERY_DEF_FIELDS,
                 const ApiCallMethod & call_method = call_method_get, const Headers & headers = Headers(),
-                QObject * error_receiver = 0, bool ignore_arr_content = true)
+                QObject * error_receiver = 0, bool ignore_arr_content = true, bool extract_params_to_payload = true)
             {
                 QJsonArray temp_arr;
                 if (!arr)
                     arr = &temp_arr;
 
-                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver);
+                QueriableArg arg(arr, url, call_type, post_proc, fields, error_receiver, extract_params_to_payload);
                 arg.ignoreArrContent(ignore_arr_content);
                 arg.changeCallMethod(call_method);
                 arg.setRequestHeaders(headers);

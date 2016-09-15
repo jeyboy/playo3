@@ -15,7 +15,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Stream : public Base {
+            class Stream : public virtual Base {
             public:
 
             };

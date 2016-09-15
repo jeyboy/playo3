@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class User : public Base {
+            class User : public virtual Base {
             public:
                 // https://music.yandex.ua/users/music.partners/playlists
             };

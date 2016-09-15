@@ -114,7 +114,7 @@ namespace Core {
 
         Response * Request::viaPost(const QString & content_type) {
             QUrl curl = url();
-            QByteArray payload = extractParams(curl);
+            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
             setUrl(curl);
 
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
@@ -123,7 +123,7 @@ namespace Core {
 
         Response * Request::viaPut(const QString & content_type) {
             QUrl curl = url();
-            QByteArray payload = extractParams(curl);
+            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
             setUrl(curl);
 
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
@@ -171,7 +171,7 @@ namespace Core {
         }
 
         Manager::Manager(QObject * parent, QSsl::SslProtocol protocol, QSslSocket::PeerVerifyMode mode)
-            : QNetworkAccessManager(parent) {
+            : QNetworkAccessManager(parent), extract_params_to_payload(true) {
             this -> protocol = protocol;
             this -> mode = mode;
             this -> setCookieJar(Manager::cookies);

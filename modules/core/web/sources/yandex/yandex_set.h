@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Set : public Base {
+            class Set : public Stream {
             protected:
 //                inline QString topUrl(const QString & filter = QString(), QString genre = LSTR("all")) { return url_site_v1 + LSTR("top.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
@@ -170,7 +170,7 @@ namespace Core {
                                         break;}
                                         case set_popular_promotions: {
                                             preparePromotions(response.content);
-                                            mtype = dmt_dir_set;
+                                            mtype = dmt_dir;
                                         break;}
                                         case set_new_albums: {
                                             prepareAlbums(response.content);

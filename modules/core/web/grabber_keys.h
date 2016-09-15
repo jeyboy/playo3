@@ -9,6 +9,7 @@
 #define PACKAGE_REPLACE_FRAGMENT QStringLiteral("%")
 
 #define EXTRACT_ITEMS(json) json.value(tkn_content).toArray()
+//#define EXTRACT_DIR(json) json.value(tkn_content).toObject()
 
 namespace Core {
     namespace Web {

@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Playlist : public Base {
+            class Playlist : public virtual Base {
             public:
 //                // title, kind, trackCount, tracks, owner: {uid, login, name, verified}, cover: {type, dir, version, uri}, trackIds, modified
 //                inline QString playlistUrl(const QString & owner, const QString & kinds) { return url_site_v1 + QStringLiteral("playlist.jsx?owner=%1&kinds=%2&light=true").arg(owner, kinds); }

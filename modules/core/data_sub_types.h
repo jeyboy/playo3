@@ -35,6 +35,9 @@ namespace Core {
         dmt_video_set = dmt_set | dmt_video,
         dmt_dir_set = dmt_set | dmt_dir,
 
+        dmt_audio_cat = dmt_audio_set | dmt_dir,
+        dmt_video_cat = dmt_video_set | dmt_dir,
+
         dmt_any_item = dmt_audio | dmt_video,
         dmt_any = dmt_set | dmt_any_item
     };

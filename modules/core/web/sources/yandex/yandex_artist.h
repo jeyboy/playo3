@@ -70,9 +70,7 @@ namespace Core {
 
                         tracks_block.insert(
                             Web::tkn_more_cmd,
-                            Cmd::build(
-                                sourceType(), cmd_mtd_tracks_info, {{CMD_ID, ids}}
-                            ).toString()
+                            Cmd::build(sourceType(), cmd_mtd_tracks_info, {{CMD_ID, ids}}).toString()
                         );
                     }
 

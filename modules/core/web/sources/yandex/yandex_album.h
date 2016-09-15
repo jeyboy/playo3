@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Album : public Base {
+            class Album : public virtual Base {
             public:
                 // id, title, year, cover, coverUri, genre, artists, labels: [{id, name}], volumes: [[{id, realId, title, durationMs, fileSize, storageDir, available}, ..]]
                 inline QString albumInfoUrl(const QString & albumId) { return url_site_v1 + QStringLiteral("albums.jsx?albumIds=%1").arg(albumId); }

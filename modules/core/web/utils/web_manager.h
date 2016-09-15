@@ -125,6 +125,7 @@ namespace Core { // requests and response has memory leaks
             QSsl::SslProtocol protocol;
             QSslSocket::PeerVerifyMode mode;
             int last_code;
+            bool extract_params_to_payload;
 
             static Cookies * cookies;
             static QHash<QObject *, Manager *> managers;
@@ -133,6 +134,9 @@ namespace Core { // requests and response has memory leaks
             static Manager * prepare();
 
             Manager(QObject * parent = 0, QSsl::SslProtocol protocol = QSsl::TlsV1SslV3, QSslSocket::PeerVerifyMode mode = QSslSocket::VerifyNone);
+
+            bool isExtractParamsToPayload() { return extract_params_to_payload; }
+            void setExtractParamsToPayload(bool extract = true) { extract_params_to_payload = extract; }
 
             void setStatusCode(int code) { last_code = code; }
             int statusCode() { return last_code; }

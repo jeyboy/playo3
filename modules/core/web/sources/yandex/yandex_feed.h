@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Feed : public Base {
+            class Feed : public virtual Base {
             public:
                 // ncrnd=0.9069681936002026
                 // days: [{day, tracksToPlay: [], events: [{type = 'recomended-genre-radio', title: {}, genres: [id, artists:[{}], albums: []]}, {type='genre-top, tracks: [], genre, title: {type, text}'}]}]
