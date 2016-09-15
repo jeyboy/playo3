@@ -47,19 +47,30 @@ namespace Core {
                 QJsonArray & prepareTracks(QJsonArray & tracks) { // TODO: write me
                     return tracks;
                 }
-
-                QJsonArray & preparePromotions(QJsonArray & promos) { // TODO: write me
+                QJsonArray & preparePromotions(QJsonArray & promos) {
                     QJsonArray blocks;
 
                     for(QJsonArray::Iterator promo = promos.begin(); promo != promos.end(); promo++) {
                         QJsonObject promo_obj = (*promo).toObject();
 
-                        if (JSON_HAS_KEY(promo_obj, tkn_albums)) {
+                        if (JSON_HAS_KEY(promo_obj, tkn_album)) {
+                            QJsonObject album = JSON_OBJ(promo_obj, tkn_album);
+                            blocks << prepareBlock(dmt_audio_set, prepareAlbums(QJsonArray() << album), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
+                        } else if (JSON_HAS_KEY(promo_obj, tkn_albums)) {
                             QJsonArray albums = JSON_ARR(promo_obj, tkn_albums);
                             blocks << prepareBlock(dmt_audio_set, prepareAlbums(albums), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
                         } else if (JSON_HAS_KEY(promo_obj, tkn_playlist)) {
                             QJsonObject playlist = JSON_OBJ(promo_obj, tkn_playlist);
-                            blocks << prepareBlock(dmt_audio_set, QJsonArray() << preparePlaylist(playlist));
+                            blocks << prepareBlock(dmt_audio_set, preparePlaylists(QJsonArray() << playlist));
+                        } else if (JSON_HAS_KEY(promo_obj, tkn_playlists)) {
+                            QJsonArray playlists = JSON_ARR(promo_obj, tkn_playlists);
+                            blocks << prepareBlock(dmt_audio_set, preparePlaylists(playlists));
+                        } else if (JSON_HAS_KEY(promo_obj, tkn_track)) {
+                            QJsonObject track = JSON_OBJ(promo_obj, tkn_track);
+                            blocks << prepareBlock(dmt_audio, prepareTracks(QJsonArray() << track), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
+                        } else if (JSON_HAS_KEY(promo_obj, tkn_tracks)) {
+                            QJsonArray tracks = JSON_ARR(promo_obj, tkn_tracks);
+                            blocks << prepareBlock(dmt_audio, prepareTracks(tracks), {{tkn_dir_name, JSON_STR(promo_obj, tkn_title)}});
                         } else {
                             qCritical() << "undefined promo:" << promo_obj;
                         }
@@ -68,29 +79,34 @@ namespace Core {
                     promos = blocks;
                     return promos;
                 }
+                QJsonArray & preparePlaylists(QJsonArray & playlists) {
+                    QJsonArray res;
 
-                QJsonObject & preparePlaylist(QJsonObject & playlist) {
-                    QJsonObject pl_obj = JSON_OBJ(playlist, tkn_playlist);
+                    for(QJsonArray::Iterator playlist = playlists.begin(); playlist != playlists.end(); playlist++) {
+                        QJsonObject playlist_obj = JSON_OBJ((*playlist).toObject(), tkn_playlist);
 
-                    pl_obj.insert(
-                        tkn_coverUri,
-                        LSTR("http://") + JSON_STR(pl_obj, LSTR("ogImage")).replace(LSTR("%%"), LSTR("400x400"))
-                    );
+                        playlist_obj.insert(
+                            tkn_coverUri,
+                            LSTR("http://") + JSON_STR(playlist_obj, LSTR("ogImage")).replace(LSTR("%%"), LSTR("400x400"))
+                        );
 
-                    pl_obj.insert(
-                        tkn_loadable_cmd,
-                         Cmd::build(
-                            sourceType(), cmd_mtd_tracks_by_playlist,
-                            {
-                                {CMD_ID, JSON_CSTR(pl_obj, LSTR("kind"))},
-                                {CMD_OWNER, JSON_CSTR(JSON_OBJ(pl_obj, LSTR("owner")), LSTR("login"))}
-                            }
-                         ).toString()
-                    );
+                        playlist_obj.insert(
+                            tkn_loadable_cmd,
+                             Cmd::build(
+                                sourceType(), cmd_mtd_tracks_by_playlist,
+                                {
+                                    {CMD_ID, JSON_CSTR(playlist_obj, LSTR("kind"))},
+                                    {CMD_OWNER, JSON_CSTR(JSON_OBJ(playlist_obj, LSTR("owner")), LSTR("login"))}
+                                }
+                             ).toString()
+                        );
 
-                    return (playlist = pl_obj);
+                        res << playlist_obj;
+                    }
+
+                    playlists = res;
+                    return playlists;
                 }
-
                 QJsonArray & prepareAlbums(QJsonArray & albums) {
                     QJsonArray res;
 

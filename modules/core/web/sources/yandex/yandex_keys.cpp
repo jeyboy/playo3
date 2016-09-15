@@ -19,8 +19,12 @@ namespace Core {
             extern const QString tkn_album =                        QStringLiteral("album");
             extern const QString tkn_albums =                       QStringLiteral("albums");
             extern const QString tkn_artists =                      QStringLiteral("artists");
+            extern const QString tkn_track =                        QStringLiteral("track");
             extern const QString tkn_tracks =                       QStringLiteral("tracks");
             extern const QString tkn_playlist =                     QStringLiteral("playlist");
+            extern const QString tkn_playlists =                    QStringLiteral("playlists");
+            extern const QString tkn_promotions =                   QStringLiteral("promotions");
+
 
             extern const QString tkn_durationMs =                   QStringLiteral("durationMs");
             extern const QString tkn_id =                           QStringLiteral("id");
@@ -35,6 +39,10 @@ namespace Core {
             extern const QString tkn_available =                    QStringLiteral("available");
             extern const QString tkn_coverUri =                     QStringLiteral("coverUri");
             extern const QString tkn_cover =                        QStringLiteral("cover");
+
+            extern const QString tkn_page =                         QStringLiteral("page");
+            extern const QString tkn_pager =                        QStringLiteral("pager");
+            extern const QString tkn_rep =                          QStringLiteral("rep");
 
 //            extern const QString val_login_title =                  QStringLiteral("Odnoklassniki auth");
 //            extern const QString val_resend_sms_title =             QStringLiteral("Resend sms");

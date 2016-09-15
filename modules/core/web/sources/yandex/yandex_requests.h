@@ -19,8 +19,8 @@ namespace Core {
                     public Playlist, public Set, public Track, public User {
 
                 inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) {
-                    QJsonObject pager_obj = JSON_OBJ(response, LSTR("pager"));
-                    return (JSON_INT(pager_obj, LSTR("page")) + 1) * JSON_INT(pager_obj, LSTR("perPage")) >= JSON_INT(pager_obj, LSTR("total"));
+                    QJsonObject pager_obj = JSON_OBJ(response, tkn_pager);
+                    return (JSON_INT(pager_obj, tkn_page) + 1) * JSON_INT(pager_obj, LSTR("perPage")) >= JSON_INT(pager_obj, LSTR("total"));
                 }
                 inline bool extractStatus(QueriableArg * arg, QJsonObject & json, int & /*code*/, QString & /*message*/) {
                     while(true) { // INFO: check captcha validation456
@@ -37,15 +37,14 @@ namespace Core {
                             QString captcha_img = form_tag -> findFirst("img") -> src();
 
                             QHash<QString, QString> fields;
-                            showingCaptcha(QUrl(captcha_img), fields[LSTR("rep")]);
-                            if (fields[LSTR("rep")].isEmpty())
+                            showingCaptcha(QUrl(captcha_img), fields[tkn_rep]);
+                            if (fields[tkn_rep].isEmpty())
                                 return false;
 
                             QUrl captcha_proc_url = form_tag -> serializeFormToUrl(fields);
                             if(captcha_proc_url.isRelative())
                                 captcha_proc_url = QUrl(url_root).resolved(captcha_proc_url);
                             json = Manager::prepare() -> jsonGet(captcha_proc_url, arg -> headers, arg -> post_proc & proc_json_wrap);
-                            //return false; //INFO: need to resend request, because if captcha is wrongly inputed, we missing a part of data
                         }
                         else return true;
                     }

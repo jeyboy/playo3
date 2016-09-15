@@ -129,8 +129,6 @@ namespace Core {
                     }
                 }
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
-                    //curl 'https://music.yandex.ua/handlers/mix-promos.jsx?id=autumn&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.7792388001525733' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; _ym_isad=1; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_visorc_1028356=b' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/mix/autumn' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/mix/autumn'
-
                     Permissions perm = permissions(pr_media_content);
                     QueriableResponse response;
                     DataMediaType mtype = dmt_audio;
@@ -144,9 +142,6 @@ namespace Core {
                                 case set_popular_promotions:
                                 case set_new_albums: {                               
                                     response = pRequest(
-                                        // curl 'https://music.yandex.ua/handlers/genre.jsx?genre=ska&filter=&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.5854833866762779' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1; _ym_visorc_1028356=b' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/ska' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/genre/ska'
-                                        // -H 'X-Retpath-Y: https://music.yandex.ua/genre/ska'
-
                                         baseUrlStr(
                                             qst_site, LSTR("genre.jsx"),
                                             {
@@ -156,7 +151,7 @@ namespace Core {
                                                 {LSTR("filter"), limits.predicate}
                                             }
                                         ),
-                                        call_type_json, pageRules(LSTR("page"), limits.start_offset, limits.items_limit),
+                                        call_type_json, pageRules(tkn_page, limits.start_offset, limits.items_limit),
                                         0, proc_json_extract, QStringList() << limits.predicate
                                     );
 
@@ -181,21 +176,17 @@ namespace Core {
                                 break;}
 
                                 case set_compilations: {
-                                    // curl 'https://music.yandex.ua/handlers/mix-promos.jsx?id=classical&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.0015247747424892433' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/mix/classical' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/mix/classical'
+                                    QJsonObject obj = sRequest(
+                                        baseUrlStr(
+                                            qst_site, LSTR("mix-promos.jsx"),
+                                            {{LSTR("id"), limits.genre}}
+                                        ),
+                                        call_type_json
+                                    );
 
-//                                    QJsonArray block_content = saRequest(
-//                                        baseUrlStr(
-//                                            qst_site_alt1, QStringLiteral("charts"),
-//                                            {
-//                                                { tkn_limit, SOUNDCLOUD_PER_REQUEST_LIMIT },
-//                                                { QStringLiteral("genre"), QString(QStringLiteral("soundcloud:genres:") % (limits.genre.isEmpty() ? SOUNDCLOUD_ALL_GENRES_PARAM : limits.genre)) },
-//                                                { QStringLiteral("kind"), set_type == set_new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
-//                                            }
-//                                        ),
-//                                        call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS << QStringLiteral("track"), call_method_get, headers()
-//                                    );
-
-//                                    return prepareBlock(dmt_audio_set, block_content);
+                                    response = QueriableResponse(JSON_ARR(obj, tkn_promotions), QString(), 1, 1, true);
+                                    preparePromotions(response.content);
+                                    mtype = dmt_dir;
                                 break;}
                             }
                         break;}
