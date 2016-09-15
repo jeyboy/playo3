@@ -69,7 +69,7 @@ namespace Core {
                         Html::Tag * form = html.findFirst("form.authorize-token");
 
                         if (!form) {
-                            Logger::obj().write(name(), QStringLiteral("Auth form did not found"), true);
+                            Logger::obj().write(name(), QStringLiteral("Auth form did not found"), Logger::log_error);
                             return false;
                         }
 

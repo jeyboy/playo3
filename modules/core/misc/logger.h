@@ -16,6 +16,12 @@
 class Logger : public QObject, public Core::Singleton<Logger> {
     Q_OBJECT
 public:
+    enum LogLevel : int {
+        log_info = 0,
+        log_error = 1,
+        log_url
+    };
+
     ~Logger();
 
     static void dump(const QByteArray & content) {
@@ -27,9 +33,9 @@ public:
         }
     }
 
-    void write(const QString & initiator, const QString & value, bool error = false);
-    void write(const QString & initiator, const QString & value, const QString & attr, bool error = false);
-    void write(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);
+    void write(const QString & initiator, const QString & value, LogLevel level = log_info);
+    void write(const QString & initiator, const QString & value, const QString & attr, LogLevel level = log_info);
+    void write(const QString & initiator, const QString & value, const QStringList & attrs, LogLevel level = log_info);
 
     void initiate(QString fileName = "", QPlainTextEdit * editor = 0);
     inline void setShowDateTime(bool show) { m_showDate = show; }
@@ -57,9 +63,9 @@ private:
 
     static Logger * self;
 private slots:
-    void writeToStream(const QString & initiator, const QString & value, bool error = false);
-    void writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, bool error = false);
-    void writeToStream(const QString & initiator, const QString & value, const QString & attr, bool error = false);
+    void writeToStream(const QString & initiator, const QString & value, int level = log_info);
+    void writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, int level = log_info);
+    void writeToStream(const QString & initiator, const QString & value, const QString & attr, int level = log_info);
 };
 
 #endif // LOGGER

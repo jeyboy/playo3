@@ -35,7 +35,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "USER BY ID is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY ID is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_user, cmd_mtd_users_by_id, response, {}, {{CMD_ID, user_id}});
@@ -76,7 +76,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "USER BY NAME is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY NAME is not accessable", Logger::log_error);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
@@ -109,7 +109,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "USER BY TRACK LIKES is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY TRACK LIKES is not accessable", Logger::log_error);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_users_by_track_likes, response, {}, {{CMD_ID, track_id}});
                 }
@@ -136,7 +136,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "USER BY TRACK REPOST is not accessable", true);
+                        default: Logger::obj().write(name(), "USER BY TRACK REPOST is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_user, cmd_mtd_users_by_track_reposting, response, {}, {{CMD_ID, track_id}});
@@ -170,7 +170,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "USER FOLLOWINGS is not accessable", true);
+                        default: Logger::obj().write(name(), "USER FOLLOWINGS is not accessable", Logger::log_error);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_user_followings, response, {}, {{CMD_ID, user_id}});
                 }
@@ -203,7 +203,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "USER FOLLOWERS is not accessable", true);
+                        default: Logger::obj().write(name(), "USER FOLLOWERS is not accessable", Logger::log_error);
                     }
                     return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {}, {{CMD_ID, user_id}});
                 }
@@ -254,7 +254,7 @@ namespace Core {
                             }
                         break;}
 
-                        default: Logger::obj().write(name(), "USER RECOMMENDATIONS is not accessable", true);
+                        default: Logger::obj().write(name(), "USER RECOMMENDATIONS is not accessable", Logger::log_error);
                     }
 
                     return QJsonObject();

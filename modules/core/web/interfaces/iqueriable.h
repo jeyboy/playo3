@@ -56,7 +56,7 @@ namespace Core {
                             QString err = arg -> error;
                             if( err.isEmpty()) err = QStringLiteral("Some shit happened");
 
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, true);
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, Logger::log_error);
                             sendError(arg -> error_receiver, err, code);
                             arg -> append(QJsonObject {{tkn_error, err}}, false);
                         } else {
@@ -87,7 +87,7 @@ namespace Core {
                             QString err = arg -> error;
                             if( err.isEmpty()) err = QStringLiteral("Some shit happened");
 
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, true);
+                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, Logger::log_error);
                             arg -> append(QJsonObject {{tkn_error, err}}, false);
                             sendError(arg -> error_receiver, err, code);
                         }

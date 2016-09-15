@@ -58,7 +58,7 @@ namespace Core {
                             }
                         break;}
 
-                        default: Logger::obj().write(name(), "track info is not accessable", true);
+                        default: Logger::obj().write(name(), "track info is not accessable", Logger::log_error);
                     }
 
                     prepareTracks(block_content);

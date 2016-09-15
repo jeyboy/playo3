@@ -150,7 +150,7 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                 qint64 time_mark = (*index) -> toMillis();
                 if (time_marks.contains(time_mark)) {
                     error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
-                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, true);
+                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, Logger::log_error);
                     time_mark = 0;
                 }
 
@@ -198,7 +198,7 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                 qint64 time_mark = (*index) -> toMillis();
                 if (time_marks.contains(time_mark)) {
                     error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
-                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, true);
+                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, Logger::log_error);
                     time_mark = 0;
                 }
 
@@ -265,7 +265,7 @@ void Cue::proceedLine(QString & line) {
         Cue::CueTokens token = Cue::tokens.value(parts.takeFirst().toUpper(), Cue::unknow);
 
         if (token == -1 || parts.isEmpty()) {
-            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, true);
+            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, Logger::log_error);
             return;
         }
 
@@ -279,14 +279,14 @@ void Cue::proceedLine(QString & line) {
                         case Cue::rem: {
                             if (parts.length() < 2)
                                 Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
-                                    QStringList() << line, true);
+                                    QStringList() << line, Logger::log_error);
                             else _infos.insert(parts.takeFirst(), parts.join(' '));
                         return;}
 
                         case Cue::file: {
                             if (parts.length() != 2)
                                 Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
-                                    QStringList() << line, true);
+                                    QStringList() << line, Logger::log_error);
                             else {
                                 level++;
                                 addFile(parts[0], parts[1]); return;
@@ -308,7 +308,7 @@ void Cue::proceedLine(QString & line) {
                         case Cue::track: {
                             if (parts.length() != 2)
                                 Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
-                                    QStringList() << line, true);
+                                    QStringList() << line, Logger::log_error);
                             else {
                                 level++;
                                 activeFile -> addTrack(parts[0], parts[1]); return;
@@ -318,7 +318,7 @@ void Cue::proceedLine(QString & line) {
                         case Cue::index: {
                             if (parts.length() < 2)
                                 Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
-                                    QStringList() << line, true);
+                                    QStringList() << line, Logger::log_error);
                             else activeFile -> addIndex(parts[0], parts[1]); return;
                         return;}
                         default: ;
@@ -330,7 +330,7 @@ void Cue::proceedLine(QString & line) {
                         case Cue::index: {
                             if (parts.length() < 2)
                                 Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
-                                    QStringList() << line, true);
+                                    QStringList() << line, Logger::log_error);
                             else activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
                         return;}
 
@@ -350,7 +350,7 @@ void Cue::proceedLine(QString & line) {
                 break;}
 
                 default: Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("UNSUPPORTED PREDICATE"),
-                            QStringList() << line, true);
+                            QStringList() << line, Logger::log_error);
             }
 
             level--;
@@ -358,7 +358,7 @@ void Cue::proceedLine(QString & line) {
     }
 
     if (level == -1) {
-        Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("ERROR LEVEL"), QStringList() << line, true);
+        Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("ERROR LEVEL"), QStringList() << line, Logger::log_error);
         level = 0;
     }
 }

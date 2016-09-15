@@ -53,7 +53,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", true);
+                        default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits);

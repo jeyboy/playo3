@@ -44,7 +44,7 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
-                QJsonArray & prepareTracks(QJsonArray & tracks) { // TODO: write me
+                QJsonArray & prepareTracks(QJsonArray & tracks) { // INFO: its just a stub at this moment
                     return tracks;
                 }
                 QJsonArray & preparePromotions(QJsonArray & promos) {
@@ -76,8 +76,7 @@ namespace Core {
                         }
                     }
 
-                    promos = blocks;
-                    return promos;
+                    return (promos = blocks);
                 }
                 QJsonArray & preparePlaylists(QJsonArray & playlists) {
                     QJsonArray res;
@@ -104,8 +103,7 @@ namespace Core {
                         res << playlist_obj;
                     }
 
-                    playlists = res;
-                    return playlists;
+                    return (playlists = res);
                 }
                 QJsonArray & prepareAlbums(QJsonArray & albums) {
                     QJsonArray res;
@@ -141,8 +139,7 @@ namespace Core {
                         res << album_obj;
                     }
 
-                    albums = res;
-                    return albums;
+                    return (albums = res);
                 }
                 QJsonArray & prepareArtists(QJsonArray & artists) {
                     QJsonArray res;
@@ -168,8 +165,7 @@ namespace Core {
                         res << artist_obj;
                     }
 
-                    artists = res;
-                    return artists;
+                    return (artists = res);
                 }
             };
         }

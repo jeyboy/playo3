@@ -38,7 +38,7 @@ namespace Core {
                             prepareStreams(response.content);
                          break;}
 
-                        default: Logger::obj().write(name(), "STREAMS RECOMMENDATIONS is not accessable", true);
+                        default: Logger::obj().write(name(), "STREAMS RECOMMENDATIONS is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_audio_set, cmd_mtd_streams_recommendations, response);

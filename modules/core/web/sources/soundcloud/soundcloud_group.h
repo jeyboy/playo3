@@ -27,7 +27,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return QJsonObject();
@@ -64,7 +64,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP BY ID is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY ID is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, group_id}});
@@ -90,7 +90,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP BY TRACK is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY TRACK is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_track, response, {}, {{CMD_ID, track_id}});
@@ -126,7 +126,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP BY USER is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY USER is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {}, {{CMD_ID, user_id}});
@@ -167,7 +167,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP BY NAME is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP BY NAME is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});

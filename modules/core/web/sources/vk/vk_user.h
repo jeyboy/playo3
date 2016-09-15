@@ -22,7 +22,7 @@ namespace Core {
                             return ret.value(tkn_response).toArray().first().toObject();
                         }
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return QJsonObject();
@@ -57,7 +57,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_user, block_content);
@@ -91,7 +91,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});

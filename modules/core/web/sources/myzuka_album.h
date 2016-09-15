@@ -149,7 +149,7 @@ namespace Core {
                             Logger::obj().write(
                                 name(),
                                 QStringLiteral("Search: parsing of songs"),
-                                QStringLiteral("Some shit happened"), true
+                                QStringLiteral("Some shit happened"), Logger::log_error
                             );
                             return arr;
                         }

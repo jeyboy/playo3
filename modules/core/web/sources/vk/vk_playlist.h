@@ -34,7 +34,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_set, cmd_mtd_tracks_playlists_by_user, response, {}, {{CMD_ID, user_id}});

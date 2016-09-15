@@ -15,11 +15,14 @@ void myMessageOutput(QtMsgType msgType, const QMessageLogContext & context, cons
 //        if(type == QtFatalMsg) abort();
     #endif
 
+//    if (msgType == QtInfoMsg)
+
     Logger::obj().write(
         QStringLiteral("%1 - %2 - %3").arg(QString(context.file), QString(context.function), QString::number(context.line)),
         message,
         context.category,
-        msgType == QtWarningMsg || msgType == QtCriticalMsg || msgType == QtFatalMsg
+        msgType == QtWarningMsg || msgType == QtCriticalMsg || msgType == QtFatalMsg ?
+            Logger::log_error : msgType == QtInfoMsg ? Logger::log_url : Logger::log_info
     );
 }
 

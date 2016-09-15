@@ -112,7 +112,7 @@ namespace Core {
                             }
                         break;}
 
-                        default: Logger::obj().write(name(), "SET BY TYPE is not accessable", true);
+                        default: Logger::obj().write(name(), "SET BY TYPE is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});

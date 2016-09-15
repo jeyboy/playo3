@@ -46,7 +46,7 @@ namespace Core {
 
                             if (!form) {
                                 error = QStringLiteral("Auth form did not found");
-                                Logger::obj().write(name(), error, true);
+                                Logger::obj().write(name(), error, Logger::log_error);
                                 return false;
                             }
 

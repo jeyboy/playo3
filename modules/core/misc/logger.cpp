@@ -12,17 +12,17 @@ Logger::~Logger() {
     delete file;
 }
 
-void Logger::write(const QString & initiator, const QString & value, bool error) {
+void Logger::write(const QString & initiator, const QString & value, LogLevel level) {
     QMetaObject::invokeMethod(
         this,
         "writeToStream",
         Qt::AutoConnection,
         Q_ARG(const QString &, initiator),
         Q_ARG(const QString &, value),
-        Q_ARG(bool, error)
+        Q_ARG(int, level)
     );
 }
-void Logger::write(const QString & initiator, const QString & value, const QString & attr, bool error) {
+void Logger::write(const QString & initiator, const QString & value, const QString & attr, LogLevel level) {
     QMetaObject::invokeMethod(
         this,
         "writeToStream",
@@ -30,10 +30,10 @@ void Logger::write(const QString & initiator, const QString & value, const QStri
         Q_ARG(const QString &, initiator),
         Q_ARG(const QString &, value),
         Q_ARG(const QString &, attr),
-        Q_ARG(bool, error)
+        Q_ARG(int, level)
     );
 }
-void Logger::write(const QString & initiator, const QString & value, const QStringList & attrs, bool error) {
+void Logger::write(const QString & initiator, const QString & value, const QStringList & attrs, LogLevel level) {
     QMetaObject::invokeMethod(
         this,
         "writeToStream",
@@ -41,7 +41,7 @@ void Logger::write(const QString & initiator, const QString & value, const QStri
         Q_ARG(const QString &, initiator),
         Q_ARG(const QString &, value),
         Q_ARG(const QStringList &, attrs),
-        Q_ARG(bool, error)
+        Q_ARG(int, level)
     );
 }
 
@@ -89,17 +89,19 @@ void Logger::toEditor(const QString & initiator, const QString & value) {
     }
 }
 
-void Logger::writeToStream(const QString & initiator, const QString & value, bool error) {
-    writeToStream(initiator, value, QString(), error);
+void Logger::writeToStream(const QString & initiator, const QString & value, int level) {
+    writeToStream(initiator, value, QString(), level);
 }
 
-void Logger::writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, bool error) {
-    writeToStream(initiator, value, attrs.join(" , "), error);
+void Logger::writeToStream(const QString & initiator, const QString & value, const QStringList & attrs, int level) {
+    writeToStream(initiator, value, attrs.join(" , "), level);
 }
 
-void Logger::writeToStream(const QString & initiator, const QString & value, const QString & attr, bool error) {
+void Logger::writeToStream(const QString & initiator, const QString & value, const QString & attr, int level) {
     toFile(initiator, QString("%1   :::   %2").arg(value, attr));
     toEditor(initiator,
-        QString("<span style='color: " % QString(error ? QStringLiteral("red") : QStringLiteral("green")) % "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
+        QString("<span style='color: " %
+            QString(level == log_error ? QStringLiteral("red") : level == log_info ? QStringLiteral("green") : QStringLiteral("blue")) %
+                "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
     );
 }

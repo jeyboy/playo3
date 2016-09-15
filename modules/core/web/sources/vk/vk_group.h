@@ -43,7 +43,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, id}});
@@ -91,7 +91,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", true);
+                        default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});
