@@ -10,13 +10,13 @@
 #include "yandex_track.h"
 #include "yandex_user.h"
 
-//#include "modules/core/web/interfaces/sociable/sociable.h"
+#include "modules/core/web/interfaces/sociable/sociable.h"
 
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Requests : public Auth, public Album, public Artist, public Feed,
-                    public Playlist, public Set, public Track, public User {
+            class Requests : public Sociable, public Auth, public Album, public Artist,
+                    public Feed, public Playlist, public Set, public Track, public User {
 
                 inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) {
                     QJsonObject pager_obj = JSON_OBJ(response, tkn_pager);
@@ -67,16 +67,16 @@ namespace Core {
                 }
 
                 void saveAdditionals(QJsonObject & obj) {
-//                    Sociable::toJson(obj);
+                    Sociable::toJson(obj);
                     Manager::saveCookies(obj, QUrl(url_root));
                 }
                 void loadAdditionals(QJsonObject & obj) {
-//                    Sociable::fromJson(obj);
+                    Sociable::fromJson(obj);
                     Manager::loadCookies(obj);
                 }
                 void clearAdditionals() {
-//                    clearFriends();
-//                    clearGroups();
+                    clearFriends();
+                    clearGroups();
                     Manager::removeCookies(QUrl(url_root));
                 }
 
@@ -172,17 +172,49 @@ namespace Core {
                     if (limits.predicate.isEmpty() || limits.by_popularity()) {
                         return popular(limits);
                     } else {
-                        QString tkn = limits.by_artists() ? tkn_artists : tkn_tracks;
+                        QJsonArray blocks;
 
-                        return sRequest(
-                            searchUrl(limits.predicate, tkn),
-                            call_type_json
-                        ).value(tkn).toObject().value(QStringLiteral("items")).toArray();
+                        // all // albums // tracks // artists // videos // playlists
+                        // respondable to page param
+                        QString url = baseUrlStr(qst_site, LSTR("music-search.jsx"),
+                             {
+                                 {LSTR("text"), limits.predicate},
+                                 {LSTR("type"), LSTR("%1")}
+                             }
+                        );
 
-                //                        if (limits.by_artists())
-                //                            return sQuery(searchUrl(limits.predicate, tkn_artists)).value(tkn_artists).toObject().value(tkn).toArray();
-                //                        else
-                //                            return sQuery(searchUrl(limits.predicate, tkn_tracks)).value(tkn_tracks).toObject().value(tkn).toArray();
+
+//                        QString key =
+//                                limits.include_audio()
+//                                limits.by_artists() ? LSTR("artists") :
+//                                        (limits.by_songs_name() || limits.by_titles()) ?
+//                                        LSTR("")
+
+
+//                        QJsonObject obj = sRequest( // all // albums // tracks // artists // videos // playlists
+//                            baseUrlStr(qst_site, LSTR("music-search.jsx"),
+//                                {
+//                                    {LSTR("text"), limits.predicate},
+//                                    {LSTR("type"), LSTR("all")}
+//                                }
+//                            ),
+//                            call_type_json
+//                        );
+
+                        if (limits.include_audio()) {
+                            if (limits.by_artists()) {
+
+//                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
+                            }
+                        }
+
+                        if (limits.include_video()) {
+//                            blocks << videoSearch(limits);
+                            QJsonObject obj = sRequest(url.arg(tkn_videos), call_type_json);
+                            int i = 0;
+                        }
+
+                        return blocks;
                     }
                 }
             };

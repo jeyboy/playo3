@@ -85,8 +85,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, tracks);
                 }
 
-
-
                 QJsonValue tracksByPlaylist(const QUrlQuery & args) {
                     return tracksByPlaylist(
                         args.queryItemValue(CMD_OWNER),
@@ -113,10 +111,12 @@ namespace Core {
                     return prepareBlock(dmt_audio, tracks);
                 }
 
+//                QJsonValue tracksByUser(const QUrlQuery & args) {}
+
 //                //artist // similar // albums // alsoAlbums // tracks // radio // alsoAlbumIds // albumIds // concerts
 //                inline QString artistTracksUrl(const QString & artistId) { return url_site_v1 + QStringLiteral("artist.jsx?artist=%1&what=tracks&sort=&dir=").arg(artistId); }
 
-                inline QString searchUrl(const QString & predicate, const QString & sources = QStringLiteral("all")) { return url_site_v1 + QStringLiteral("music-search.jsx?text=%1&type=%2").arg(predicate, sources); }
+//                inline QString searchUrl(const QString & predicate, const QString & sources = QStringLiteral("all")) { return url_site_v1 + QStringLiteral("music-search.jsx?text=%1&type=%2").arg(predicate, sources); }
             };
         }
     }

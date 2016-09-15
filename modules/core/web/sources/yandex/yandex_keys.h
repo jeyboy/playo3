@@ -23,6 +23,8 @@ namespace Core {
             extern const QString tkn_playlist;
             extern const QString tkn_playlists;
             extern const QString tkn_promotions;
+            extern const QString tkn_items;
+            extern const QString tkn_videos;
 
             extern const QString tkn_durationMs;
             extern const QString tkn_id;

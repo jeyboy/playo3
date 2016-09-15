@@ -201,20 +201,17 @@ namespace Core { // requests and response has memory leaks
             static inline QString paramVal(const QUrl & url, const QString & param) { return QUrlQuery(url).queryItemValue(param); }
 
             Response * get(const Request & request, bool async = false) {
-                qInfo() << "------------------------------------------";
-                qInfo() << "*** GET" << request.url() << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());
+                qInfo() << "*** GET" << (async ? "ASYNC" : "") << request.url().toString() << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());
                 QNetworkReply * m_http = QNetworkAccessManager::get(request);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
             Response * post(const Request & request, const QByteArray & data, bool async = false) {
-                qInfo() << "------------------------------------------";
-                qInfo() << "*** POST" << request.url() << "*** P:" << data  << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());;
+                qInfo() << "*** POST" << (async ? "ASYNC" : "")<< request.url().toString() << "*** P:" << data  << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());;
                 QNetworkReply * m_http = QNetworkAccessManager::post(request, data);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }
             Response * put(const Request & request, const QByteArray & data, bool async = false) {
-                qInfo() << "------------------------------------------";
-                qInfo() << "*** PUT" << request.url() << "*** P:" << data  << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());;
+                qInfo() << "*** PUT" << (async ? "ASYNC" : "")<< request.url().toString() << "*** P:" << data  << "*** H:" << headersStr(request) << "*** C:" << Manager::cookiesAsHeaderStr(request.url());;
                 QNetworkReply * m_http = QNetworkAccessManager::put(request, data);
                 return async ? (Response *)m_http : synchronizeRequest(m_http);
             }

@@ -24,7 +24,8 @@ namespace Core {
             extern const QString tkn_playlist =                     QStringLiteral("playlist");
             extern const QString tkn_playlists =                    QStringLiteral("playlists");
             extern const QString tkn_promotions =                   QStringLiteral("promotions");
-
+            extern const QString tkn_items =                        QStringLiteral("items");
+            extern const QString tkn_videos =                       QStringLiteral("videos");
 
             extern const QString tkn_durationMs =                   QStringLiteral("durationMs");
             extern const QString tkn_id =                           QStringLiteral("id");
