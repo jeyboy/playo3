@@ -11,6 +11,33 @@ namespace Core {
 //                // title, kind, trackCount, tracks, owner: {uid, login, name, verified}, cover: {type, dir, version, uri}, trackIds, modified
 //                inline QString playlistUrl(const QString & owner, const QString & kinds) { return url_site_v1 + QStringLiteral("playlist.jsx?owner=%1&kinds=%2&light=true").arg(owner, kinds); }
 
+                QJsonValue playlistsSearch(const QUrlQuery & args) { return playlistsSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue playlistsSearch(const SearchLimit & limits) {
+                    Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
+
+                    switch(perm) {
+                        case perm_api:
+                        case perm_site: {
+                            response = pRequest(
+                                baseUrlStr(qst_site, LSTR("music-search.jsx"),
+                                     {
+                                         {LSTR("text"), limits.predicate},
+                                         {LSTR("type"), tkn_playlists}
+                                     }
+                                ),
+                                call_type_json, pageRules(tkn_page, limits.start_offset, limits.requests_limit, limits.items_limit),
+                                0, proc_json_extract, QStringList() << tkn_playlists << tkn_items
+                            );
+
+                            preparePlaylists(response.content);
+                        break;}
+
+                        default: Logger::obj().write(name(), "PLAYLISTS SEARCH is not accessable", Logger::log_error);
+                    }
+
+                    return prepareBlock(dmt_audio_set, cmd_mtd_playlists_search, response, limits);
+                }
             };
         }
     }

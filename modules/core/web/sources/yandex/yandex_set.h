@@ -2,11 +2,12 @@
 #define YANDEX_SET_H
 
 #include "yandex_stream.h"
+#include "yandex_video.h"
 
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Set : public Stream {
+            class Set : public Stream, public Video {
             protected:
 //                inline QString topUrl(const QString & filter = QString(), QString genre = LSTR("all")) { return url_site_v1 + LSTR("top.jsx?genre=%1&filter=%2").arg(genre, filter); }
 

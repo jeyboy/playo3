@@ -42,7 +42,6 @@ namespace Core {
                 QJsonValue artistInfo(const QUrlQuery & args) {
                     return artistInfo(args.queryItemValue(CMD_ID));
                 }
-
                 QJsonValue artistInfo(const QString & artist_id) {
                     QJsonArray blocks;
 
@@ -89,6 +88,34 @@ namespace Core {
                     // QJsonArray videos = JSON_ARR(info, LSTR("videos"));
 
                     return blocks;
+                }
+
+                QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue artistsSearch(const SearchLimit & limits) {
+                    Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
+
+                    switch(perm) {
+                        case perm_api:
+                        case perm_site: {
+                            response = pRequest(
+                                baseUrlStr(qst_site, LSTR("music-search.jsx"),
+                                     {
+                                         {LSTR("text"), limits.predicate},
+                                         {LSTR("type"), tkn_artists}
+                                     }
+                                ),
+                                call_type_json, pageRules(tkn_page, limits.start_offset, limits.requests_limit, limits.items_limit),
+                                0, proc_json_extract, QStringList() << tkn_artists << tkn_items
+                            );
+
+                            prepareArtists(response.content);
+                        break;}
+
+                        default: Logger::obj().write(name(), "ARTIST SEARCH is not accessable", Logger::log_error);
+                    }
+
+                    return prepareBlock(dmt_audio_set, cmd_mtd_artists_search, response, limits);
                 }
             };
         }

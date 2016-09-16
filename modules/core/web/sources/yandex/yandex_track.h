@@ -65,6 +65,34 @@ namespace Core {
                     return prepareBlock(dmt_audio, block_content);
                 }
 
+                QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue tracksSearch(const SearchLimit & limits) {
+                    Permissions perm = permissions(pr_media_content);
+                    QueriableResponse response;
+
+                    switch(perm) {
+                        case perm_api:
+                        case perm_site: {
+                            response = pRequest(
+                                baseUrlStr(qst_site, LSTR("music-search.jsx"),
+                                     {
+                                         {LSTR("text"), limits.predicate},
+                                         {LSTR("type"), tkn_tracks}
+                                     }
+                                ),
+                                call_type_json, pageRules(tkn_page, limits.start_offset, limits.requests_limit, limits.items_limit),
+                                0, proc_json_extract, QStringList() << tkn_tracks << tkn_items
+                            );
+
+                            prepareTracks(response.content);
+                        break;}
+
+                        default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", Logger::log_error);
+                    }
+
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
+                }
+
                 QJsonValue tracksByAlbum(const QUrlQuery & args) {
                     return tracksByAlbum(
                         args.queryItemValue(CMD_ID)

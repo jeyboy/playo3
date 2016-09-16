@@ -155,74 +155,36 @@ namespace Core {
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
                     switch(itemMediaType) {
                         case dmt_audio: return trackUrl(refresh_page);
-//                        case dmt_video: return trackUrl(refresh_page);
+                        case dmt_video: return videoUrl(refresh_page);
                         default: return QString();
                     }
                 }
 
                 QJsonValue popular(const SearchLimit & limits) {
                     return setByType(set_popular_tracks, limits);
-//                    return sRequest(
-//                        topUrl(tkn_tracks, limits.genre),
-//                        call_type_json
-//                    ).value(tkn_tracks).toArray();
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) {
-                    if (limits.predicate.isEmpty() || limits.by_popularity()) {
+                    if (limits.predicate.isEmpty() || limits.by_popularity())
                         return popular(limits);
-                    } else {
+                    else {
                         QJsonArray blocks;
 
-                        // all // albums // tracks // artists // videos // playlists
-                        // respondable to page param
-                        QString url = IQueriable::baseUrlStr(qst_site, LSTR("music-search.jsx"),
-                             {
-                                 {LSTR("text"), limits.predicate},
-                                 {LSTR("type"), QString()}
-                             }
-                        );
-
-
-//                        QString key =
-//                                limits.include_audio()
-//                                limits.by_artists() ? LSTR("artists") :
-//                                        (limits.by_songs_name() || limits.by_titles()) ?
-//                                        LSTR("")
-
-
-//                        QJsonObject obj = sRequest( // all // albums // tracks // artists // videos // playlists
-//                            baseUrlStr(qst_site, LSTR("music-search.jsx"),
-//                                {
-//                                    {LSTR("text"), limits.predicate},
-//                                    {LSTR("type"), LSTR("all")}
-//                                }
-//                            ),
-//                            call_type_json
-//                        );
-
                         if (limits.include_audio()) {
-                            if (limits.by_artists()) {
+                            if (limits.by_artists())
+                                blocks << artistsSearch(limits);
 
-//                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
-                            }
-
-                            if (limits.by_songs_name() || limits.by_titles()) {
-
-//                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
-                            }
+                            if (limits.by_songs_name() || limits.by_titles())
+                                blocks << tracksSearch(limits);
 
                             if (limits.by_sets()) {
-
-//                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
+                                blocks << albumsSearch(limits);
+                                blocks << playlistsSearch(limits);
                             }
                         }
 
-                        if (limits.include_video()) {
-//                            blocks << videoSearch(limits);
-                            QJsonObject obj = sRequest(url % tkn_videos, call_type_json);
-                            int i = 0;
-                        }
+                        if (limits.include_video())
+                            blocks << videoSearch(limits);
 
                         return blocks;
                     }
