@@ -85,7 +85,6 @@ namespace Core {
             extern const QString tkn_tuner =                        QStringLiteral("tuner");
             extern const QString tkn_locale =                       QStringLiteral("locale");
 
-            extern const QString val_login_title =                  QStringLiteral("Odnoklassniki auth");
             extern const QString val_resend_sms_title =             QStringLiteral("Resend sms");
             extern const QString val_sms_code_title =               QStringLiteral("Code from sms");
             extern const QString val_name =                         QStringLiteral("Od");

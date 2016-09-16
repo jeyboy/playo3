@@ -10,11 +10,6 @@ namespace Core {
             extern const QString url_site_v1;
             extern const QString url_site_v2;
 
-
-//            extern const QString path_sid;
-//            extern const QString path_auth;
-//            extern const QString path_auth2;
-
             extern const QString tkn_album;
             extern const QString tkn_albums;
             extern const QString tkn_artists;
@@ -26,7 +21,7 @@ namespace Core {
             extern const QString tkn_items;
             extern const QString tkn_videos;
 
-            extern const QString tkn_durationMs;
+            extern const QString tkn_duration_ms;
             extern const QString tkn_id;
             extern const QString tkn_title;
             extern const QString tkn_full_title;
@@ -44,11 +39,11 @@ namespace Core {
             extern const QString tkn_pager;
             extern const QString tkn_rep;
 
-//            extern const QString val_login_title;
 //            extern const QString val_resend_sms_title;
 //            extern const QString val_sms_code_title;
             extern const QString val_name;
             extern const QString val_key_set;
+            extern const QString val_default_locale;
         }
     }
 }

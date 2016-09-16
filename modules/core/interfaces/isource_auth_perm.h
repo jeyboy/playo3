@@ -21,6 +21,8 @@
 #define SOURCE_SITE_ADDITIONAL_TOKEN_JSON QStringLiteral("_sat")
 #define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
 
+#define SOURCE_SITE_LOCALE QStringLiteral("_sl")
+
 
 #define NOT_HAS_FLAG(flags, flag) (flags & flag) != flag
 #define HAS_FLAG(flags, flag) (flags & flag) == flag
@@ -157,6 +159,15 @@ namespace Core {
         inline void setSiteHash(const QString & token)
                                             { attrs[SOURCE_SITE_HASH_JSON] = token; }
         inline QString siteHash() const     { return attrs[SOURCE_SITE_HASH_JSON].toString(); }
+
+        inline void setSiteLocale(const QString & new_locale)
+                                            { attrs[SOURCE_SITE_LOCALE] = new_locale; }
+        inline QString siteLocale(const QString & default_locale = QString()) const {
+            return attrs.value(SOURCE_SITE_LOCALE, default_locale).toString();
+        }
+
+
+
 
         virtual bool connectUserApi()       { return false; }
         virtual bool connectUserSite()      { return false; }

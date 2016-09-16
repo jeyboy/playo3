@@ -142,8 +142,11 @@ namespace Core {
                 ////////  Tag //////////
 
                 // appendable - appends inputs from vals, which not finded in form
-                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable) { // not full support of inputs
-                    QUrl url = QUrl(value(attr_action));
+                // default_url - if form did not contains action, we should use source url
+                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable, const QString & default_url) { // not full support of inputs
+                    QString action = value(attr_action);
+                    QUrl url = QUrl(action.isEmpty() ? default_url : action);
+
                     Set inputs = find("input") << find("select");
                     QHash<QString, QString> url_vals(vals);
 

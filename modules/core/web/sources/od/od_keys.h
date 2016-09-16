@@ -91,7 +91,6 @@ namespace Core {
             extern const QString tkn_tuner;
             extern const QString tkn_locale;
 
-            extern const QString val_login_title;
             extern const QString val_resend_sms_title;
             extern const QString val_sms_code_title;
             extern const QString val_name;

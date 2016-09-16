@@ -122,12 +122,10 @@ namespace Core {
                     return text ? text -> attrs.value(tkn_text_block) : QString();
                 }
                 inline QString src() const { return value(attr_src); }
-
-
-                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false);
-                QString toText() const;
-
                 inline QString link() const { return attrs.value(attr_href); }
+
+                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false, const QString & default_url = QString());
+                QString toText() const;
 
                 inline bool is_link() { return _name == tag_a; }
                 inline bool is_script() { return _name == tag_script; }

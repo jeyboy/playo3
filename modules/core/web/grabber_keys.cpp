@@ -48,6 +48,7 @@ namespace Core {
         extern const QString tkn_dash                   = QStringLiteral(" - ");
 
         extern const QString val_def_extension          = QStringLiteral("mp3");
+        extern const QString val_login_title_postfix    = QStringLiteral(" auth");
 
     //    extern const QString page_offset_key        = QStringLiteral("%1");
     }

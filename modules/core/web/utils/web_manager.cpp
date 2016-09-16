@@ -132,7 +132,18 @@ namespace Core {
 
         Response * Request::viaForm(const QByteArray & data) {
             setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
-            return manager -> post(*this, data);
+
+            QUrl curl = url();
+            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+            setUrl(curl);
+
+            if (!data.isEmpty()) {
+                if (!payload.isEmpty()) {
+                    payload = payload + '&' + data;
+                } else payload = data;
+            }
+
+            return manager -> post(*this, payload);
         }
 
         //////////////////////////     WEB_MANAGER     /////////////////////////////

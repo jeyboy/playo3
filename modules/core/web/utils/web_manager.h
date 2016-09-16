@@ -95,6 +95,15 @@ namespace Core { // requests and response has memory leaks
 
                 return QString();
             }
+            Response * output() {
+                qDebug() << "-------------------------";
+                qDebug() << "URL:" << toUrl(false);
+                qDebug() << "REDIRECT URL:" << toRedirectUrl(false);
+                qDebug() << "HEADERS:" << rawHeaderPairs();
+                qDebug() << "-------------------------";
+
+                return this;
+            }
         };
 
         class Manager;

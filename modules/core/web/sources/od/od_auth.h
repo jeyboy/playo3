@@ -21,7 +21,7 @@ namespace Core {
                     QString authE, authP;
 
                     while(true) {
-                        if (!showingLogin(val_login_title, authE, authP, err)) return false;
+                        if (!showingLogin(name() % val_login_title_postfix, authE, authP, err)) return false;
 
                         Response * reply = Manager::prepare() -> form(authRequestUrl(authE, authP), initHeaders());
                         QUrl url = reply -> toRedirectUrl();

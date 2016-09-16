@@ -695,7 +695,7 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
         IItem * newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
             QString(artistStr % tkn_dash % JSON_STR(itm, Yandex::tkn_title)),
             id,
-            Duration::fromMillis(JSON_INT(itm, Yandex::tkn_durationMs)),
+            Duration::fromMillis(JSON_INT(itm, Yandex::tkn_duration_ms)),
             dm_type
         ));
 

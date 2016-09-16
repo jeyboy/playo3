@@ -61,6 +61,7 @@ namespace Core {
         extern const QString tkn_dash;
 
         extern const QString val_def_extension;
+        extern const QString val_login_title_postfix;
     }
 }
 

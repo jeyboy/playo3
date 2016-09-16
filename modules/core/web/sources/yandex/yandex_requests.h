@@ -43,7 +43,7 @@ namespace Core {
 
                             QUrl captcha_proc_url = form_tag -> serializeFormToUrl(fields);
                             if(captcha_proc_url.isRelative())
-                                captcha_proc_url = QUrl(url_root).resolved(captcha_proc_url);
+                                captcha_proc_url = QUrl(baseUrlStr(qst_site_base)).resolved(captcha_proc_url);
                             json = Manager::prepare() -> jsonGet(captcha_proc_url, arg -> headers, arg -> post_proc & proc_json_wrap);
                         }
                         else return true;
@@ -68,7 +68,7 @@ namespace Core {
 
                 void saveAdditionals(QJsonObject & obj) {
                     Sociable::toJson(obj);
-                    Manager::saveCookies(obj, QUrl(url_root));
+                    Manager::saveCookies(obj, QUrl(baseUrlStr(qst_site_base)));
                 }
                 void loadAdditionals(QJsonObject & obj) {
                     Sociable::fromJson(obj);
@@ -77,7 +77,7 @@ namespace Core {
                 void clearAdditionals() {
                     clearFriends();
                     clearGroups();
-                    Manager::removeCookies(QUrl(url_root));
+                    Manager::removeCookies(QUrl(baseUrlStr(qst_site_base)));
                 }
 
                 bool connectUserSite() {
@@ -123,11 +123,13 @@ namespace Core {
                 }
 
 
-                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+                inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = QString()) {
+                    QString locale = siteLocale(val_default_locale);
+
                     switch(stype) {
-                        case qst_site: { return url_site_v1 % predicate; }
-                        case qst_site_alt1: { return url_site_v2 % predicate; }
-                        default: { return url_root % predicate; }
+                        case qst_site: {        return url_site_v1.arg(locale) % predicate; }
+                        case qst_site_alt1: {   return url_site_v2.arg(locale) % predicate; }
+                        default: {              return url_root.arg(locale) % predicate; }
                     }
                 }
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api) {
@@ -148,7 +150,7 @@ namespace Core {
             public:
                 Requests() {
                     // need to add checking presents of cookies
-//                    Manager::prepare() -> getFollowed(QUrl(url_root));
+//                    Manager::prepare() -> getFollowed(QUrl(baseUrlStr(qst_site_base)));
                 }
 
                 // here refresh_page must by eq to track id
