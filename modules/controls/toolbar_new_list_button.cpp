@@ -16,7 +16,7 @@ void ToolbarNewListButton::dropReaction(QDropEvent * event) {
             if ((*url).isLocalFile()) {
                 QFileInfo file = QFileInfo((*url).toLocalFile());
                 if (file.isDir())
-                    emit folderAdded((file.baseName().isEmpty() ? file.filePath() : file.baseName()), (*url));
+                    emit folderAdded((file.fileName().isEmpty() ? file.filePath() : file.fileName()), (*url));
             }
         }
         event -> accept();

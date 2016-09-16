@@ -176,10 +176,10 @@ namespace Core {
 
                         // all // albums // tracks // artists // videos // playlists
                         // respondable to page param
-                        QString url = baseUrlStr(qst_site, LSTR("music-search.jsx"),
+                        QString url = IQueriable::baseUrlStr(qst_site, LSTR("music-search.jsx"),
                              {
                                  {LSTR("text"), limits.predicate},
-                                 {LSTR("type"), LSTR("%1")}
+                                 {LSTR("type"), QString()}
                              }
                         );
 
@@ -206,11 +206,21 @@ namespace Core {
 
 //                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
                             }
+
+                            if (limits.by_songs_name() || limits.by_titles()) {
+
+//                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
+                            }
+
+                            if (limits.by_sets()) {
+
+//                                blocks << prepareBlock(prepareArtists(JSON_ARR(JSON_OBJ(obj, tkn_artists), tkn_items)));
+                            }
                         }
 
                         if (limits.include_video()) {
 //                            blocks << videoSearch(limits);
-                            QJsonObject obj = sRequest(url.arg(tkn_videos), call_type_json);
+                            QJsonObject obj = sRequest(url % tkn_videos, call_type_json);
                             int i = 0;
                         }
 
