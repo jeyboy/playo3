@@ -37,7 +37,7 @@ namespace Core {
                         args.queryItemValue(CMD_ID).split(',')
                     );
                 }
-                QJsonValue tracksInfo(const QStringList & track_ids) { // TODO: finish me
+                QJsonValue tracksInfo(const QStringList & track_ids) {
                     Permissions perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
@@ -123,7 +123,7 @@ namespace Core {
                     // curl 'https://music.yandex.ua/handlers/playlist.jsx?owner=music.partners&kinds=1767&light=true&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.6619828515219549' -H 'Host: music.yandex.ua' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Referer: https://music.yandex.ua/genre/metal' -H 'X-Retpath-Y: https://music.yandex.ua/genre/metal' -H 'X-Requested-With: XMLHttpRequest' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'Connection: keep-alive'
 
                     //INFO: yandex server is crashed if we split params to payload!!!! wtf?
-                    QJsonArray tracks = saRequest(
+                    QJsonObject obj = sRequest(
                         baseUrlStr(qst_site, LSTR("playlist.jsx"),
                             {
                                 {LSTR("owner"), owner_uid},
@@ -132,11 +132,17 @@ namespace Core {
                             }
                         ),
                         call_type_json, 0, proc_json_extract,
-                        QStringList() << tkn_playlist << tkn_tracks,
+                        QStringList() << tkn_playlist,
                         call_method_post, Headers(), 0, false
                     );
 
-                    return prepareBlock(dmt_audio, tracks);
+                    QJsonArray tracks = JSON_ARR(obj, tkn_tracks);
+                    QJsonArray track_ids = JSON_ARR(obj, LSTR("trackIds"));
+                    QJsonObject tracks_block = prepareBlock(dmt_audio, prepareTracks(tracks));
+
+                    prepareTrackPack(tracks_block, tracks, track_ids);
+
+                    return tracks_block;
                 }
 
 //                QJsonValue tracksByUser(const QUrlQuery & args) {

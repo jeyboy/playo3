@@ -44,6 +44,20 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
+
+                void prepareTrackPack(QJsonObject & block, const QJsonArray & tracks, const QJsonArray & track_ids) {
+                    if (tracks.size() < track_ids.size()) {
+                        QString ids;
+
+                        for(QJsonArray::ConstIterator id = track_ids.constBegin() + tracks.size(); id != track_ids.constEnd(); id++)
+                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % (*id).toString();
+
+                        block.insert(
+                            Web::tkn_more_cmd,
+                            Cmd::build(sourceType(), cmd_mtd_tracks_info, {{CMD_ID, ids}}).toString()
+                        );
+                    }
+                }
                 QJsonArray & prepareTracks(QJsonArray & tracks) { // INFO: its just a stub at this moment
                     return tracks;
                 }
