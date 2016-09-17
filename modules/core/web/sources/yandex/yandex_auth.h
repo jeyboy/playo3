@@ -46,7 +46,7 @@ namespace Core {
 
 
                         if (JSON_CSTR(response, LSTR("uid")) != LSTR("0")) {
-                            user_id = JSON_CSTR(response, LSTR("uid"));
+                            user_id = JSON_CSTR(response, LSTR("login"));
                             return true;
                         } else {
                             Html::Tag * err_tag = resp_doc.findFirst(".js-messages");
