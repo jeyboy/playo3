@@ -44,7 +44,6 @@ namespace Core {
                         QJsonObject response = Manager::prepare() -> jsonGet(baseUrlStr(qst_site, LSTR("auth.jsx"), {}));
                         response = JSON_OBJ(response, LSTR("user"));
 
-
                         if (JSON_CSTR(response, LSTR("uid")) != LSTR("0")) {
                             user_id = JSON_CSTR(response, LSTR("login"));
                             return true;

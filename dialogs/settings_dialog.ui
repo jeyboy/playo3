@@ -1254,7 +1254,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>-79</y>
       <width>340</width>
       <height>350</height>
      </rect>
@@ -1263,7 +1263,7 @@
      <property name="geometry">
       <rect>
        <x>110</x>
-       <y>280</y>
+       <y>290</y>
        <width>211</width>
        <height>22</height>
       </rect>
@@ -1286,7 +1286,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
+       <y>260</y>
        <width>111</width>
        <height>21</height>
       </rect>
@@ -1319,7 +1319,7 @@
      <property name="geometry">
       <rect>
        <x>220</x>
-       <y>250</y>
+       <y>260</y>
        <width>21</width>
        <height>21</height>
       </rect>
@@ -1377,7 +1377,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>280</y>
+       <y>290</y>
        <width>81</width>
        <height>21</height>
       </rect>
@@ -1464,18 +1464,19 @@
        <x>10</x>
        <y>220</y>
        <width>141</width>
-       <height>17</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Open drop point in tab</string>
+      <string>Open drop point and 
+ fast drops in</string>
      </property>
     </widget>
     <widget class="QDoubleSpinBox" name="openTimeOut">
      <property name="geometry">
       <rect>
        <x>130</x>
-       <y>250</y>
+       <y>260</y>
        <width>81</width>
        <height>22</height>
       </rect>
@@ -1497,7 +1498,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>310</y>
+       <y>320</y>
        <width>101</width>
        <height>21</height>
       </rect>
@@ -1513,7 +1514,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>310</y>
+       <y>320</y>
        <width>81</width>
        <height>22</height>
       </rect>

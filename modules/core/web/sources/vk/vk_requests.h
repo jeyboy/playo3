@@ -170,7 +170,6 @@ namespace Core {
 
                     return QJsonArray();
                 }
-
                 QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
 
                 void procSociables(QJsonObject & json) {
@@ -227,16 +226,6 @@ namespace Core {
 
                     return QString();
                 }
-
-//                QJsonValue userTracksGroupsFriends(const QString & user_id) {
-//                    return User::sRequest(
-//                        User::baseUrlStr(
-//                            qst_api, tkn_execute,
-//                            {{ tkn_code, query_user_tracks_groups_friends.arg(user_id) }}
-//                        ),
-//                        call_type_json, 0, proc_json_extract
-//                    );
-//                }
 
                 QJsonValue userInfo(const QString & user_id) {
                     Permissions perm = permissions(pr_object_content);
