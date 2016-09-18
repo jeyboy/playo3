@@ -44,19 +44,40 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
+                QJsonObject prepareTracksBlock(QJsonObject & obj, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
+                    QJsonArray tracks = JSON_ARR(obj, tkn_tracks);
+                    QJsonArray track_ids = JSON_ARR(obj, LSTR("trackIds"));
+                    QJsonObject tracks_block = prepareBlock(dmt_audio, prepareTracks(tracks), block_params);
 
-                void prepareTrackPack(QJsonObject & block, const QJsonArray & tracks, const QJsonArray & track_ids) {
                     if (tracks.size() < track_ids.size()) {
                         QString ids;
 
                         for(QJsonArray::ConstIterator id = track_ids.constBegin() + tracks.size(); id != track_ids.constEnd(); id++)
                             ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % (*id).toString();
 
-                        block.insert(
+                        tracks_block.insert(
                             Web::tkn_more_cmd,
                             Cmd::build(sourceType(), cmd_mtd_tracks_info, {{CMD_ID, ids}}).toString()
                         );
                     }
+
+                    return tracks_block;
+                }
+                QJsonArray & prepareUsers(QJsonArray & users) {
+                    QJsonArray res;
+
+                    for(QJsonArray::Iterator user = users.begin(); user != users.end(); user++) {
+                        QJsonObject user_obj = (*user).toObject();
+
+                        user_obj.insert(
+                            tkn_coverUri,
+                            LSTR("https://yapic.yandex.ru/get/%1/islands-retina-middle").arg(JSON_CSTR(user_obj, tkn_uid))
+                        );
+
+                        res << user_obj;
+                    }
+
+                    return (users = res);
                 }
                 QJsonArray & prepareTracks(QJsonArray & tracks) { // INFO: its just a stub at this moment
                     return tracks;
@@ -109,7 +130,7 @@ namespace Core {
                                 sourceType(), cmd_mtd_tracks_by_playlist,
                                 {
                                     {CMD_ID, JSON_CSTR(playlist_obj, LSTR("kind"))},
-                                    {CMD_OWNER, JSON_CSTR(JSON_OBJ(playlist_obj, LSTR("owner")), LSTR("login"))}
+                                    {CMD_OWNER, JSON_CSTR(JSON_OBJ(playlist_obj, tkn_owner), tkn_login)}
                                 }
                              ).toString()
                         );

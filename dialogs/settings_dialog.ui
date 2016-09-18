@@ -262,7 +262,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
+      <y>-261</y>
       <width>320</width>
       <height>550</height>
      </rect>
@@ -1143,7 +1143,7 @@
       </rect>
      </property>
      <property name="minimum">
-      <number>1</number>
+      <number>4</number>
      </property>
      <property name="maximum">
       <number>100</number>
@@ -1485,7 +1485,7 @@
       <number>1</number>
      </property>
      <property name="minimum">
-      <double>0.500000000000000</double>
+      <double>1.000000000000000</double>
      </property>
      <property name="maximum">
       <double>25000.000000000000000</double>

@@ -126,7 +126,7 @@ namespace Core {
                     QJsonObject obj = sRequest(
                         baseUrlStr(qst_site, LSTR("playlist.jsx"),
                             {
-                                {LSTR("owner"), owner_uid},
+                                {tkn_owner, owner_uid},
                                 {LSTR("kinds"), kinds},
                                 {LSTR("light"), LSTR("true")}
                             }
@@ -136,18 +136,24 @@ namespace Core {
                         call_method_post, Headers(), 0, false
                     );
 
-                    QJsonArray tracks = JSON_ARR(obj, tkn_tracks);
-                    QJsonArray track_ids = JSON_ARR(obj, LSTR("trackIds"));
-                    QJsonObject tracks_block = prepareBlock(dmt_audio, prepareTracks(tracks));
-
-                    prepareTrackPack(tracks_block, tracks, track_ids);
-
-                    return tracks_block;
+                    return prepareTracksBlock(obj);
                 }
 
-//                QJsonValue tracksByUser(const QUrlQuery & args) {
+                QJsonValue tracksByUser(const QUrlQuery & args) { return tracksByUser(args.queryItemValue(CMD_ID)); }
+                QJsonValue tracksByUser(const QString & user_id) {
+                    QJsonObject info = sRequest(
+                        baseUrlStr(
+                            qst_site, LSTR("library.jsx"),
+                            {
+                                {tkn_owner, user_id},
+                                {tkn_filter, tkn_tracks}
+                            }
+                        ),
+                        call_type_json
+                    );
 
-//                }
+                    return prepareTracksBlock(info);
+                }
             };
         }
     }

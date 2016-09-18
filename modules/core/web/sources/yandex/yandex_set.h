@@ -149,7 +149,7 @@ namespace Core {
                                                 {LSTR("genre"), limits.genre},
                                                 {LSTR("external-domain"), LSTR("music.yandex.ua")},
                                                 {LSTR("overembed"), LSTR("false")},
-                                                {LSTR("filter"), limits.predicate}
+                                                {tkn_filter, limits.predicate}
                                             }
                                         ),
                                         call_type_json, pageRules(tkn_page, limits.start_offset, limits.items_limit),

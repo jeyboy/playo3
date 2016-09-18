@@ -28,6 +28,12 @@ namespace Core {
             extern const QString tkn_storageDir =                   QStringLiteral("storageDir");
             extern const QString tkn_genre =                        QStringLiteral("genre");
             extern const QString tkn_year =                         QStringLiteral("year");
+            extern const QString tkn_uid =                          QStringLiteral("uid");
+            extern const QString tkn_login =                        QStringLiteral("login");
+            extern const QString tkn_owner =                        QStringLiteral("owner");
+            extern const QString tkn_filter =                       QStringLiteral("filter");
+
+
 
             extern const QString tkn_available =                    QStringLiteral("available");
             extern const QString tkn_coverUri =                     QStringLiteral("coverUri");

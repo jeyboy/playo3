@@ -38,6 +38,23 @@ namespace Core {
 
                     return prepareBlock(dmt_audio_set, cmd_mtd_playlists_search, response, limits);
                 }
+
+                QJsonValue playlistsByUser(const QUrlQuery & args) { return playlistsByUser(args.queryItemValue(CMD_ID)); }
+                QJsonValue playlistsByUser(const QString & user_id) {
+                    QJsonObject info = sRequest(
+                        baseUrlStr(
+                            qst_site, LSTR("library.jsx"),
+                            {
+                                {tkn_owner, user_id},
+                                {tkn_filter, tkn_playlists}
+                            }
+                        ),
+                        call_type_json
+                    );
+
+                    QJsonArray playlists = JSON_ARR(info, tkn_playlists);
+                    return prepareBlock(dmt_audio_set, preparePlaylists(playlists));
+                }
             };
         }
     }

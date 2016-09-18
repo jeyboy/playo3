@@ -30,6 +30,10 @@ namespace Core {
             extern const QString tkn_storageDir;
             extern const QString tkn_genre;
             extern const QString tkn_year;
+            extern const QString tkn_uid;
+            extern const QString tkn_login;
+            extern const QString tkn_owner;
+            extern const QString tkn_filter;
 
             extern const QString tkn_available;
             extern const QString tkn_coverUri;

@@ -126,19 +126,12 @@ void WebModel::refresh() {
 
         case dt_web_yandex: {
             switch(sttngs.rec_type) {
-    //            case rec_none: {
-    //                Yandex::Queries::obj().objectInfoAsync(
-    //                    sttngs.uid,
-    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
-    //                );
-    //            return;}
-
-    //            case rec_song: {
-    //                Yandex::Queries::obj().trackRecommendationsAsync(
-    //                    sttngs.uid,
-    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
-    //                );
-    //            return;}
+                case rec_none: {
+                    Yandex::Queries::obj().userInfoAsync(
+                        sttngs.uid,
+                        new Func(this, SLOT(proceedJson(QJsonValue &)))
+                    );
+                return;}
 
                 case rec_set: {
                     Yandex::Queries::obj().openSetAsync(
@@ -146,6 +139,13 @@ void WebModel::refresh() {
                         new Func(this, SLOT(proceedJson(QJsonValue &)))
                     );
                 return;}
+
+    //            case rec_song: {
+    //                Yandex::Queries::obj().trackRecommendationsAsync(
+    //                    sttngs.uid,
+    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
+    //                );
+    //            return;}
 
     //            case rec_user: {
     //                Yandex::Queries::obj().userRecommendationsAsync(

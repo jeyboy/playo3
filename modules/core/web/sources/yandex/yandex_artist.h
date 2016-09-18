@@ -34,25 +34,7 @@ namespace Core {
                     );
 
                     //////////////////// TRACKS ///////////////////////
-                    QJsonArray tracks = JSON_ARR(info, tkn_tracks);
-                    QJsonArray track_ids = JSON_ARR(info, LSTR("trackIds"));
-                    QJsonObject tracks_block = prepareBlock(dmt_audio, prepareTracks(tracks), {{tkn_dir_name, LSTR("Tracks")}});
-
-                    prepareTrackPack(tracks_block, tracks, track_ids);
-
-//                    if (tracks.size() < track_ids.size()) {
-//                        QString ids;
-
-//                        for(QJsonArray::Iterator id = track_ids.begin() + tracks.size(); id != track_ids.end(); id++)
-//                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % (*id).toString();
-
-//                        tracks_block.insert(
-//                            Web::tkn_more_cmd,
-//                            Cmd::build(sourceType(), cmd_mtd_tracks_info, {{CMD_ID, ids}}).toString()
-//                        );
-//                    }
-
-                    blocks << tracks_block;
+                    blocks << prepareTracksBlock(info, {{tkn_dir_name, LSTR("Tracks")}});
 
                     //////////////////// ALBUMS ///////////////////////
                     QJsonArray albums = JSON_ARR(info, tkn_albums);

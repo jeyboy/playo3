@@ -91,8 +91,10 @@ bool ISourceAuthPerm::connectUser() {
             attrs[SOURCE_SITE_AUTH_JSON] = true;
     }
 
-    if (siteConnected()) // take / refresh online attrs
+    if (siteConnected()) { // take / refresh online attrs
         res &= requireOnlineCredentials() == takeOnlineCredentials();
+        if (!res) qCritical() << "Site req on online credentials";
+    }
 
     initButton();
 

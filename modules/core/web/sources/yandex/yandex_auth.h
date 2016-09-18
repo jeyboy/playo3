@@ -44,8 +44,8 @@ namespace Core {
                         QJsonObject response = Manager::prepare() -> jsonGet(baseUrlStr(qst_site, LSTR("auth.jsx"), {}));
                         response = JSON_OBJ(response, LSTR("user"));
 
-                        if (JSON_CSTR(response, LSTR("uid")) != LSTR("0")) {
-                            user_id = JSON_CSTR(response, LSTR("login"));
+                        if (JSON_CSTR(response, tkn_uid) != LSTR("0")) {
+                            user_id = JSON_CSTR(response, tkn_login);
                             return true;
                         } else {
                             Html::Tag * err_tag = resp_doc.findFirst(".js-messages");
