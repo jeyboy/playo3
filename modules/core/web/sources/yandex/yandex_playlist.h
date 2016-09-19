@@ -52,8 +52,7 @@ namespace Core {
                         call_type_json
                     );
 
-                    QJsonArray playlists = JSON_ARR(info, tkn_playlists);
-                    return prepareBlock(dmt_audio_set, preparePlaylists(playlists));
+                    return preparePlaylistsBlock(info);
                 }
             };
         }

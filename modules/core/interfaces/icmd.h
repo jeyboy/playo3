@@ -121,6 +121,7 @@ namespace Core {
             cmd_mtd_video_by_category,
 
             // mixed types playlists
+            cmd_mtd_playlists_info,
             cmd_mtd_playlists_search,
             cmd_mtd_playlists_by_tag,
             cmd_mtd_playlists_by_track,
@@ -181,6 +182,7 @@ namespace Core {
                 case cmd_mtd_video_by_playlist: return videoByPlaylist(params);
                 case cmd_mtd_video_by_category: return videoByCategory(params);
 
+                case cmd_mtd_playlists_info: return playlistsInfo(params);
                 case cmd_mtd_playlists_search: return playlistsSearch(params);
                 case cmd_mtd_playlists_by_tag: return playlistsByTag(params);
                 case cmd_mtd_playlists_by_track: return playlistsByTrack(params);
@@ -247,6 +249,7 @@ namespace Core {
         virtual QJsonValue videoByCategory(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         // mixed types playlists
+        virtual QJsonValue playlistsInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsByTag(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsByTrack(const QUrlQuery & /*args*/) { return QJsonObject(); }

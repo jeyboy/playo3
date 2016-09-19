@@ -63,6 +63,26 @@ namespace Core {
 
                     return tracks_block;
                 }
+                QJsonObject preparePlaylistsBlock(QJsonObject & obj, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
+                    QJsonArray playlists = JSON_ARR(obj, tkn_playlists);
+                    QJsonArray playlist_ids = JSON_ARR(obj, LSTR("playlistIds"));
+                    QJsonObject playlists_block = prepareBlock(dmt_audio_set, preparePlaylists(playlists), block_params);
+
+                    if (playlists.size() < playlist_ids.size()) {
+                        QString ids;
+
+                        for(QJsonArray::ConstIterator id = playlist_ids.constBegin() + playlists.size(); id != playlist_ids.constEnd(); id++)
+                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % (*id).toString();
+
+                        playlists_block.insert(
+                            Web::tkn_more_cmd,
+                            Cmd::build(sourceType(), cmd_mtd_playlists_info, {{CMD_ID, ids}}).toString()
+                        );
+                    }
+
+                    return playlists_block;
+                }
+
                 QJsonArray & prepareUsers(QJsonArray & users) {
                     QJsonArray res;
 
@@ -117,12 +137,15 @@ namespace Core {
                     QJsonArray res;
 
                     for(QJsonArray::Iterator playlist = playlists.begin(); playlist != playlists.end(); playlist++) {
-                        QJsonObject playlist_obj = JSON_OBJ((*playlist).toObject(), tkn_playlist);
+                        QJsonObject playlist_obj = (*playlist).toObject();
+                        if (JSON_HAS_KEY(playlist_obj, tkn_playlist))
+                            playlist_obj = JSON_OBJ((*playlist).toObject(), tkn_playlist);
 
-                        playlist_obj.insert(
-                            tkn_coverUri,
-                            LSTR("http://") + JSON_STR(playlist_obj, LSTR("ogImage")).replace(LSTR("%%"), LSTR("400x400"))
-                        );
+                        if (JSON_HAS_KEY(playlist_obj, LSTR("ogImage")))
+                            playlist_obj.insert(
+                                tkn_coverUri,
+                                LSTR("http://") + JSON_STR(playlist_obj, LSTR("ogImage")).replace(LSTR("%%"), LSTR("400x400"))
+                            );
 
                         playlist_obj.insert(
                             tkn_loadable_cmd,
