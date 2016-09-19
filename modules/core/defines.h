@@ -34,6 +34,7 @@
 #define JSON_ARR(json, key) json.value(key).toArray()
 
 //#define JSON_INT(json, key1, key2) JSON_INT(JSON_OBJ(json, key1), key2)
+#define JSON_CSTR2(json, key1, key2) JSON_CSTR(JSON_OBJ(json, key1), key2)
 #define JSON_OBJ2(json, key1, key2) JSON_OBJ(JSON_OBJ(json, key1), key2)
 #define JSON_ARR2(json, key1, key2) JSON_ARR(JSON_OBJ(json, key1), key2)
 

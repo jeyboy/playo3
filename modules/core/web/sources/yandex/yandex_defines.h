@@ -76,7 +76,7 @@ namespace Core {
 
                         playlists_block.insert(
                             Web::tkn_more_cmd,
-                            Cmd::build(sourceType(), cmd_mtd_playlists_info, {{CMD_ID, ids}}).toString()
+                            Cmd::build(sourceType(), cmd_mtd_playlists_info, {{CMD_OWNER, JSON_CSTR2(obj, tkn_owner, tkn_login)}, {CMD_ID, ids}}).toString()
                         );
                     }
 
@@ -152,8 +152,8 @@ namespace Core {
                              Cmd::build(
                                 sourceType(), cmd_mtd_tracks_by_playlist,
                                 {
-                                    {CMD_ID, JSON_CSTR(playlist_obj, LSTR("kind"))},
-                                    {CMD_OWNER, JSON_CSTR(JSON_OBJ(playlist_obj, tkn_owner), tkn_login)}
+                                    {CMD_ID, JSON_CSTR(playlist_obj, tkn_kind)},
+                                    {CMD_OWNER, JSON_CSTR2(playlist_obj, tkn_owner, tkn_login)}
                                 }
                              ).toString()
                         );

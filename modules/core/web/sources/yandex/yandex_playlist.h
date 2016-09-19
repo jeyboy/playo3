@@ -11,6 +11,10 @@ namespace Core {
 //                // title, kind, trackCount, tracks, owner: {uid, login, name, verified}, cover: {type, dir, version, uri}, trackIds, modified
 //                inline QString playlistUrl(const QString & owner, const QString & kinds) { return url_site_v1 + QStringLiteral("playlist.jsx?owner=%1&kinds=%2&light=true").arg(owner, kinds); }
 
+//                QJsonValue playlistsInfo(const QUrlQuery & args) {
+//                    return QJsonObject();
+//                }
+
                 QJsonValue playlistsSearch(const QUrlQuery & args) { return playlistsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue playlistsSearch(const SearchLimit & limits) {
                     Permissions perm = permissions(pr_media_content);
