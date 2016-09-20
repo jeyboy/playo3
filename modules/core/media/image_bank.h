@@ -14,7 +14,7 @@
 
 #define BANK_IMG_MAX_SIZE QSize(640, 480)
 #define BANK_IMG_SLOTS_AMOUNT 8
-#define BANK_DEFAULT_FORMAT "PNG"
+#define BANK_DEFAULT_FORMAT "JPG"
 
 using namespace Core::Web;
 
@@ -33,9 +33,7 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
     QHash<QString, QString> locale_pathes;
 
     ImageBank() : bank_temp_dir(QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/")), in_proc(0) {
-        QDir dir(bank_temp_dir);
-        if (!dir.exists())
-            dir.mkpath(".");
+        checkFolderExistance();
     }
 
     ~ImageBank() { clearCache(); }
@@ -56,6 +54,12 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
                 in_proc++;
             } else break;
         }
+    }
+
+    void checkFolderExistance() {
+        QDir dir(bank_temp_dir);
+        if (!dir.exists())
+            dir.mkpath(".");
     }
 public:
     void clearCache() {
@@ -144,7 +148,7 @@ public:
     }
 public slots:
     void pixmapDownloaded(Response * response) {
-        QUrl url = response -> url();
+        QUrl url = response -> baseUrl();
         QString url_str = url.toString();
         QString filename = bank_temp_dir % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
 
@@ -158,6 +162,7 @@ public slots:
             if (pix_size.width() > max_size.width() || pix_size.height() > max_size.height())
                 pix = pix.scaled(BANK_IMG_MAX_SIZE, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
+            checkFolderExistance();
             if (pix.save(filename, BANK_DEFAULT_FORMAT, 100)) // without compression
                 locale_pathes.insert(url_str, filename);
             else {

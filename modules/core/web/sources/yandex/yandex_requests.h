@@ -70,14 +70,11 @@ namespace Core {
                         sf_primary_source |
                         sf_auth_site_has | //sf_site_online_credentials_req |
                         sf_items_serachable | sf_sets_serachable | sf_packable |
-//                        sf_sociable_users /*| sf_sociable_groups*/ | sf_shareable |
+                        sf_sociable_users | sf_shareable |
 //                        /*sf_recomendable_by_item |*/ sf_recomendable_by_user |
 //                        /*sf_newable |*/ sf_populable |
 
-                        sf_content_audio_has | sf_content_video_has
-//                        sf_content_photo_has | sf_content_news_has |
-
-//                        sf_site_auth_mandatory
+                        sf_content_audio_has | sf_content_video_has/* | sf_content_news_has*/
                     );
                 }
 
