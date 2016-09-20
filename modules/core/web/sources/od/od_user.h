@@ -34,7 +34,7 @@ namespace Core {
                     );
                 }
 
-                QJsonValue usersByName(const QString & name, int offset = 1, int pages_limit = 5) {
+                QJsonValue usersByName(const QString & name, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
 //                    st._aid
 //                    st.army
 //                    st.bthDay
@@ -86,16 +86,16 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, block_params, {{CMD_PREDICATE, name}});
                 }
 
-                QJsonValue usersById(const QString & user_id) {
+                QJsonValue usersById(const QString & user_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray block_content = saRequest(
                         baseUrlStr(qst_site, QStringLiteral("profile/") % user_id, {}),
                         call_type_html, 0, proc_user2
                     );
 
-                    return prepareBlock(dmt_user, block_content);
+                    return prepareBlock(dmt_user, block_content, block_params);
                 }
             };
         }

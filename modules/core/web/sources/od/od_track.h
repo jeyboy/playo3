@@ -38,10 +38,10 @@ namespace Core {
                     return false;
                 }
 
-                QJsonValue tracksInfo(const QStringList & uids) { // need to split ids by groups with max size eql to 40 ids
+                QJsonValue tracksInfo(const QStringList & uids, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // need to split ids by groups with max size eql to 40 ids
                     QJsonArray block_content = sRequest(audioInfoUrl(uids), call_type_json)
                         .value(tkn_tracks).toArray();
-                    return prepareBlock(dmt_audio, block_content);
+                    return prepareBlock(dmt_audio, block_content, block_params);
                 }
 
 //                // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'
@@ -52,7 +52,7 @@ namespace Core {
 //                inline QString searchTracksUrl(const QString & predicate) { return audioUrlStr(path_audio_search_tracks, QUrlQuery(tkn_q_eq % predicate)); } // params : (q: predicate) and pagination attrs
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
-                QJsonValue tracksSearch(const SearchLimit & limits) {
+                QJsonValue tracksSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     PolyQueryRules prules = rules(limits.start_offset, qMax(TRACKS_AMOUNT_LIMIT, qMin(200, limits.items_limit)), limits.requests_limit);
                     QueriableResponse response;
 
@@ -81,7 +81,7 @@ namespace Core {
 //                            proc_json_extract, QStringList() << tkn_tracks
 //                        );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits, block_params);
                 }
 
 //                QJsonValue tracksByArtist(const QUrlQuery & args) {
@@ -107,7 +107,7 @@ namespace Core {
                 QJsonValue tracksByArtist(const QUrlQuery & args) {
                     return tracksByArtist(args.queryItemValue(CMD_ID));
                 }
-                QJsonValue tracksByArtist(const QString & artist_id) {
+                QJsonValue tracksByArtist(const QString & artist_id) { //FIXME: split blocks creation
                     QJsonObject response = sRequest(
                                 audioUrlStr(
                                     path_audio_by_artist_id,
@@ -140,7 +140,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
+                QJsonValue tracksByCollection(const QString & collection_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_collection,
@@ -150,7 +150,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_collection, response, {}, {{CMD_ID, collection_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_collection, response, block_params, {{CMD_ID, collection_id}});
                 }
 
                 QJsonValue tracksByTuner(const QUrlQuery & args) {
@@ -160,7 +160,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = QStringLiteral("ru")) { //TODO: need to check
+                QJsonValue tracksByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = QStringLiteral("ru"), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { //TODO: need to check
                     QueriableResponse response = pRequest( // artists // tracks //albums
                         audioUrlStr(
                             path_audio_radio,
@@ -173,7 +173,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tuner, response, {}, {{CMD_ID, tuner_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tuner, response, block_params, {{CMD_ID, tuner_id}});
                 }
 
                 QJsonValue tracksByAlbum(const QUrlQuery & args) {
@@ -183,7 +183,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
+                QJsonValue tracksByAlbum(const QString & album_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_by_album_id,
@@ -193,7 +193,7 @@ namespace Core {
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_album, response, {}, {{CMD_ID, album_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_album, response, block_params, {{CMD_ID, album_id}});
                 }
 
                 QJsonValue tracksByPlaylist(const QUrlQuery & args) {
@@ -203,7 +203,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
+                QJsonValue tracksByPlaylist(const QString & playlist_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             tkn_my,
@@ -213,7 +213,7 @@ namespace Core {
                         0, proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_playlist, response, {}, {{CMD_ID, playlist_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_playlist, response, block_params, {{CMD_ID, playlist_id}});
                 }
 
                 QJsonValue tracksByUser(const QUrlQuery & args) {
@@ -223,14 +223,14 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT) {
+                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         audioUrlStr(tkn_my, {{tkn_uid, user_id}}),
                         call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,
                         proc_json_extract, QStringList() << tkn_tracks
                     );
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {}, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, block_params, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue userRecommendations(const QUrlQuery & /*args*/) {

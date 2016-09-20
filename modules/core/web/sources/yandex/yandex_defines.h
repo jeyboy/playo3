@@ -82,6 +82,26 @@ namespace Core {
 
                     return playlists_block;
                 }
+                QJsonObject prepareAlbumsBlock(QJsonObject & obj, const QString & prefix, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
+                    QJsonArray albums = JSON_ARR(obj, prefix % 's');
+                    QJsonArray album_ids = JSON_ARR(obj, prefix % LSTR("Ids"));
+                    QJsonObject albums_block = prepareBlock(dmt_audio_set, prepareAlbums(albums), block_params);
+
+                    if (albums.size() < album_ids.size()) {
+                        QString ids;
+
+                        for(QJsonArray::ConstIterator id = album_ids.constBegin() + albums.size(); id != album_ids.constEnd(); id++)
+                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % JSON_CONV_STR((*id));
+
+                        albums_block.insert(
+                            Web::tkn_more_cmd,
+                            Cmd::build(sourceType(), cmd_mtd_albums_info, {{CMD_ID, ids}}).toString()
+                        );
+                    }
+
+                    return albums_block;
+                }
+
 
                 QJsonArray & prepareUsers(QJsonArray & users) {
                     QJsonArray res;

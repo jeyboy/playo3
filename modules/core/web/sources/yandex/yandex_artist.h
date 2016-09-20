@@ -17,11 +17,10 @@ namespace Core {
                 QJsonValue artistInfo(const QString & artist_id) {
                     QJsonArray blocks;
 
-                    blocks << tracksByArtist(artist_id);
+                    blocks << tracksByArtist(artist_id, {{tkn_dir_name, LSTR("Tracks")}});
+                    QueriableArg::arrAppend(blocks, albumsByArtist(artist_id).toArray());
 
-                    blocks << albumsByArtist(artist_id);
-
-                    blocks << artistRecommendations(artist_id);
+                    blocks << artistRecommendations(artist_id, {{tkn_dir_name, LSTR("Similar")}});
 
 //                    QJsonObject info = sRequest(
 //                        baseUrlStr(
@@ -55,7 +54,7 @@ namespace Core {
                 QJsonValue artistRecommendations(const QUrlQuery & args) {
                     return artistRecommendations(args.queryItemValue(CMD_ID));
                 }
-                QJsonValue artistRecommendations(const QString & artist_id) {
+                QJsonValue artistRecommendations(const QString & artist_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonObject info = sRequest(
                         baseUrlStr(
                             qst_site, LSTR("artist.jsx"),
@@ -68,7 +67,7 @@ namespace Core {
                     );
 
                     QJsonArray similar_artists = JSON_ARR(info, LSTR("similar"));
-                    return prepareBlock(dmt_audio_set, prepareArtists(similar_artists));
+                    return prepareBlock(dmt_audio_set, prepareArtists(similar_artists), block_params);
                 }
 
                 QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }

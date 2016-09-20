@@ -18,7 +18,7 @@ namespace Core {
                     }
                 }
 
-                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;
                     DataMediaType dmt_val = dmt_unknow;
@@ -91,7 +91,7 @@ namespace Core {
                         break;}
                     }
 
-                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
+                    return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, block_params, {{CMD_SET_TYPE, set_type}});
                 }
             public:
                 QJsonValue setByType(const QUrlQuery & attrs) {

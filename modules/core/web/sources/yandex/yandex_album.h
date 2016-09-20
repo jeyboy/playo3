@@ -40,18 +40,22 @@ namespace Core {
 
                 QJsonValue albumsByArtist(const QUrlQuery & args) { return albumsByArtist(args.queryItemValue(CMD_ID)); }
                 QJsonValue albumsByArtist(const QString & artist_id) {
+                    QJsonArray blocks;
+
                     QJsonObject info = sRequest(
                         baseUrlStr(
                             qst_site, LSTR("artist.jsx"),
                             {
                                 {LSTR("artist"), artist_id},
-                                {LSTR("what"), LSTR("albums")} // alsoAlbums
+                                {LSTR("what"), tkn_albums}
                             }
                         ), call_type_json
                     );
 
-                    QJsonArray albums = JSON_ARR(info, tkn_albums);
-                    return prepareBlock(dmt_audio_set, prepareAlbums(albums));
+                    blocks << prepareAlbumsBlock(info, tkn_album, {{tkn_dir_name, LSTR("Albums")}});
+                    blocks << prepareAlbumsBlock(info, LSTR("alsoAlbum"), {{tkn_dir_name, LSTR("Compilations")}});
+
+                    return blocks;
                 }
 
                 QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }

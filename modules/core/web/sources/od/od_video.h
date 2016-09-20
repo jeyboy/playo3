@@ -38,12 +38,12 @@ namespace Core {
                     return QString();
                 }
 
-                QJsonValue videoSearch(const SearchLimit & limits) {
+                QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response;
 
                     //TODO: finish me
 
-                    return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits);
+                    return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits, block_params);
                 }
             };
         }

@@ -8,7 +8,7 @@ namespace Core {
         namespace Fourshared {
             class Item : public Base {
             public:
-                QJsonValue itemsByCollection(const QString & collection_id) {
+                QJsonValue itemsByCollection(const QString & collection_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray block_content = saRequest(
                         baseUrlStr(
                             qst_site_base, QStringLiteral("web/accountActions/changeDir"),
@@ -18,7 +18,7 @@ namespace Core {
                         QStringList(), call_method_post, siteHeaders()
                     );
 
-                    return prepareBlock(dmt_any, block_content);
+                    return prepareBlock(dmt_any, block_content, block_params);
                 }
             };
         }

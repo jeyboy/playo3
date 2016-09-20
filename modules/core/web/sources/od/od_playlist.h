@@ -18,10 +18,10 @@ namespace Core {
 
 //                inline QString playlistAudioUrl(const QString & pid) { return audioUrlStr(tkn_my, QUrlQuery(tkn_pid_eq % pid)); } // params: (pid: playlist id) and pagination attrs
             public:
-                QJsonValue playlistsInfo(const QStringList & playlist_ids) { // TODO: not tested
+                QJsonValue playlistsInfo(const QStringList & playlist_ids, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // TODO: not tested
                     QJsonArray block_content = sRequest(audioInfoUrl(playlist_ids), call_type_json).value(tkn_albums).toArray();
 
-                    return prepareBlock(dmt_audio_set, block_content);
+                    return prepareBlock(dmt_audio_set, block_content, block_params);
                 }
             };
         }

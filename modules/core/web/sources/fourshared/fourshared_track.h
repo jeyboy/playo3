@@ -21,7 +21,7 @@ namespace Core {
                 }
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
-                QJsonValue tracksSearch(const SearchLimit & limits) {
+                QJsonValue tracksSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;
 
@@ -56,7 +56,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
+                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits, block_params);
                 }
             };
         }

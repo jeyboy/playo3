@@ -71,7 +71,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoByCategory(const VideoPlaylistType & pl_type, int pages_limit = 1, const QString & offset_token = QString()) {
+                QJsonValue videoByCategory(const VideoPlaylistType & pl_type, int pages_limit = 1, const QString & offset_token = QString(), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QString vpl = vplToParam(pl_type);
                     QueriableResponse response = pRequest(
                         baseUrlStr(
@@ -91,7 +91,7 @@ namespace Core {
                     QJsonObject obj = response.content.first().toObject();
                     return prepareBlock(
                         obj.contains(tkn_duration) ? dmt_video : dmt_video_set,
-                        cmd_mtd_video_by_category, response, {}, {{CMD_ID, QString::number(pl_type)}}
+                        cmd_mtd_video_by_category, response, block_params, {{CMD_ID, QString::number(pl_type)}}
                     );
                 }
 
@@ -102,7 +102,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoByPlaylist(const QString & album_id, int pages_limit = 1, const QString & offset_token = QString()) {
+                QJsonValue videoByPlaylist(const QString & album_id, int pages_limit = 1, const QString & offset_token = QString(), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         baseUrlStr(
                             qst_site_video, QStringLiteral("video/%1").arg(album_id),
@@ -122,7 +122,7 @@ namespace Core {
                     QJsonObject obj = response.content.first().toObject();
                     return prepareBlock(
                         obj.contains(tkn_duration) ? dmt_video : dmt_video_set,
-                        cmd_mtd_video_by_playlist, response, {}, {{CMD_ID, album_id}}
+                        cmd_mtd_video_by_playlist, response, block_params, {{CMD_ID, album_id}}
                     );
                 }
             };

@@ -15,7 +15,7 @@ namespace Core {
                         args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
                     );
                 }
-                QJsonValue groupsByUser(const QString & user_id, int offset = 1, int pages_limit = 5) {
+                QJsonValue groupsByUser(const QString & user_id, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                                 baseUrlStr(
                                     qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
@@ -30,7 +30,7 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {}, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, block_params, {{CMD_ID, user_id}});
                 }
 
                 QJsonValue groupsByName(const QUrlQuery & args) {
@@ -40,7 +40,7 @@ namespace Core {
                         args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
                     );
                 }
-                QJsonValue groupsByName(const QString & name, int offset = 1, int pages_limit = 5) {
+                QJsonValue groupsByName(const QString & name, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
 //                    dirty	1
 //                    st._aid
 //                    st.army
@@ -93,19 +93,19 @@ namespace Core {
 
                     );
 
-                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, {}, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, block_params, {{CMD_PREDICATE, name}});
                 }
 
                 QJsonValue groupsById(const QUrlQuery & args) {
                     return groupsByIdOrPerma(args.queryItemValue(CMD_PREDICATE));
                 }
-                QJsonValue groupsByIdOrPerma(const QString & group_id) {
+                QJsonValue groupsByIdOrPerma(const QString & group_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QString url = Info::isNumber(group_id) ?
                         baseUrlStr(qst_site, QStringLiteral("group/") % group_id, {}) :
                         baseUrlStr(qst_site, group_id, {});
 
                     QJsonArray block_content = saRequest(url, call_type_html, 0, proc_group3);
-                    return prepareBlock(dmt_group, block_content);
+                    return prepareBlock(dmt_group, block_content, block_params);
                 }
             };
         }

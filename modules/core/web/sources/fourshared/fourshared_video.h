@@ -16,12 +16,11 @@ namespace Core {
 
                 QString videoUrlFromPath(const QString & path) {
                     QString res = Manager::prepare() -> getFollowed(path, siteHeaders()) -> toText();
-                    res = Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
-                    return res;
+                    return Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
                 }
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
-                QJsonValue videoSearch(const SearchLimit & limits) {
+                QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     Permissions perm = permissions(pr_search_media);
                     QueriableResponse response;
 
@@ -56,7 +55,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits);
+                    return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits, block_params);
                 }
             };
         }

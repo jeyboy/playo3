@@ -9,14 +9,14 @@ namespace Core {
             class Collection : public virtual Base {
             protected:
                 // collections did not have search or something else - just pseudo(?) random list
-                QJsonValue randomCollections() { // TODO: not tested
+                QJsonValue randomCollections(const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // TODO: not tested
                     QJsonArray block_content = saRequest(
                         audioUrlStr(path_audio_collections),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_collections
                     );
 
                     prepareCollections(block_content);
-                    return prepareBlock(dmt_audio_set, block_content);
+                    return prepareBlock(dmt_audio_set, block_content, block_params);
                 }
             };
         }
