@@ -5,6 +5,14 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+//class StrInitList : public std::initializer_list<std::pair<QString, QString> > {
+
+//};
+
+//class VarInitList : public std::initializer_list<std::pair<QString, QVariant> > {
+
+//};
+
 #define LSTR(str) QStringLiteral(str)
 
 #define JSON_HAS_KEY(json, key) json.contains(key)

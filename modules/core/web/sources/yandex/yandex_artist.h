@@ -21,6 +21,8 @@ namespace Core {
 
                     blocks << albumsByArtist(artist_id);
 
+                    blocks << artistRecommendations(artist_id);
+
 //                    QJsonObject info = sRequest(
 //                        baseUrlStr(
 //                            qst_site, LSTR("artist.jsx"),
@@ -48,6 +50,25 @@ namespace Core {
                     // QJsonArray videos = JSON_ARR(info, LSTR("videos"));
 
                     return blocks;
+                }
+
+                QJsonValue artistRecommendations(const QUrlQuery & args) {
+                    return artistRecommendations(args.queryItemValue(CMD_ID));
+                }
+                QJsonValue artistRecommendations(const QString & artist_id) {
+                    QJsonObject info = sRequest(
+                        baseUrlStr(
+                            qst_site, LSTR("artist.jsx"),
+                            {
+                                {LSTR("artist"), artist_id},
+                                {LSTR("what"), LSTR("similar")}
+                            }
+                        ),
+                        call_type_json
+                    );
+
+                    QJsonArray similar_artists = JSON_ARR(info, LSTR("similar"));
+                    return prepareBlock(dmt_audio_set, prepareArtists(similar_artists));
                 }
 
                 QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }

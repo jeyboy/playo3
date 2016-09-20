@@ -12,10 +12,26 @@ namespace Core {
 //                inline QString topUrl(const QString & filter = QString(), QString genre = LSTR("all")) { return url_site_v1 + LSTR("top.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
                 enum SetType {
-                    set_popular_tracks = 1, set_popular_artists, set_popular_promotions, set_new_albums,
-                    set_compilations
+                    set_popular_tracks = 1, set_popular_artists, set_popular_promotions,
+                    set_new_albums, set_compilations
                 };
 
+                QMap<QString, QString> audioCompilationOptions() {
+                    return {
+                        { LSTR("Autumn melodies"), LSTR("autumn") },
+                        { LSTR("How to love classical"), LSTR("classical") },
+                        { LSTR("New music"), LSTR("newmusic") },
+                        { LSTR("Background music"), LSTR("activity") },
+                        { LSTR("Artist choose"), LSTR("artistchoice") },
+                        { LSTR("By decades"), LSTR("decades") },
+                        { LSTR("For holidays"), LSTR("holiday") },
+                        { LSTR("Mood"), LSTR("mood") },
+                        { LSTR("Music from serials"), LSTR("TVost") },
+                        { LSTR("Music from moovies"), LSTR("ost") },
+                        { LSTR("For workout"), LSTR("workout") },
+                        { LSTR("Mixed genres"), LSTR("genres") }
+                    };
+                }
                 QMap<QString, QString> audioSetOptions() {
                     return {
                         { QStringLiteral("All Genres"),                 QStringLiteral("all") },
@@ -264,21 +280,7 @@ namespace Core {
                         );
                     }
 
-                    QMap<QString, QString> compilations = {
-                        { LSTR("Autumn melodies"), LSTR("autumn") },
-                        { LSTR("How to love classical"), LSTR("classical") },
-                        { LSTR("New music"), LSTR("newmusic") },
-                        { LSTR("Background music"), LSTR("activity") },
-                        { LSTR("Artist choose"), LSTR("artistchoice") },
-                        { LSTR("By decades"), LSTR("decades") },
-                        { LSTR("For holidays"), LSTR("holiday") },
-                        { LSTR("Mood"), LSTR("mood") },
-                        { LSTR("Music from serials"), LSTR("TVost") },
-                        { LSTR("Music from moovies"), LSTR("ost") },
-                        { LSTR("For workout"), LSTR("workout") },
-                        { LSTR("Mixed genres"), LSTR("genres") }
-                    };
-
+                    QMap<QString, QString> compilations = audioCompilationOptions();
                     for(QMap<QString, QString>::Iterator opt = compilations.begin(); opt != compilations.end(); opt++) {
                         res.insert(
                             compilations_title % opt.key(),

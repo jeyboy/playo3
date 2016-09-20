@@ -94,7 +94,7 @@ namespace Core {
                 }
 
                 QJsonValue tracksByArtist(const QUrlQuery & args) { return tracksByArtist(args.queryItemValue(CMD_ID)); }
-                QJsonValue tracksByArtist(const QString & artist_id) {
+                QJsonValue tracksByArtist(const QString & artist_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonObject info = sRequest(
                         baseUrlStr(
                             qst_site, LSTR("artist.jsx"),
@@ -106,7 +106,7 @@ namespace Core {
                         call_type_json
                     );
 
-                    return prepareTracksBlock(info);
+                    return prepareTracksBlock(info, block_params);
                 }
 
                 QJsonValue tracksByAlbum(const QUrlQuery & args) {
