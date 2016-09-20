@@ -107,17 +107,17 @@ QString ItemFields::toUid() {
     switch(dataType()) {
         case dt_web_vk:
 //            case dt_playlist_vk:
-            return toUid(owner(), id());
+            return toUid(ownerId(), id());
         default: return id().toString();
     }
 }
 
 QString ItemFields::fullPath() const {
-    QString path_buff = path().toString();
-    #ifdef Q_OS_LINUX
-        path_buff = '/' % path_buff;
-    #endif
-    return path_buff;
+    return
+        #ifdef Q_OS_LINUX
+            '/' %
+        #endif
+            path().toString();
 }
 
 QUrl ItemFields::toUrl() const {

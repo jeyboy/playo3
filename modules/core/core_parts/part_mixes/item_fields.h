@@ -26,8 +26,7 @@ namespace Core {
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
         inline bool hasMoreItems() const                        { return isLoadable() || isFetchable(); }
-        // remove first valid loader
-        inline void removeLoader()                              {
+        inline void removeLoader()                              { //INFO: remove first valid loader
             if (isLoadable())
                 removeLoadability();
             else if (isFetchable())
@@ -46,13 +45,17 @@ namespace Core {
         inline QString fetchableCmd()                           { return attrs[JSON_TYPE_CONTAINER_FETCHABLE].toString(); }
 
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
-        inline QVariant owner() const                           { return attrs.value(JSON_TYPE_OWNER_ID); }
+        inline QVariant ownerId() const                         { return attrs.value(JSON_TYPE_OWNER_ID); }
         inline QVariant artistIds() const                       { return attrs.value(JSON_TYPE_ARTIST_IDS); }
         inline QVariant songId() const                          { return attrs.value(JSON_TYPE_SONG_ID); }
+        inline QVariant albumId() const                         { return attrs.value(JSON_TYPE_ALBUM_ID); }
+        inline QVariant genreId() const                         { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
+
+        inline QVariant tags()                                  { return attrs.value(JSON_TYPE_TAGS); }
 
         inline QVariant title() const                           { return attrs.value(JSON_TYPE_TITLE); }
         QVariant path() const;
-        virtual inline QString refresh_path()                   { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
+        inline QString refresh_path()                           { return attrs.value(JSON_TYPE_REFRESH_PATH).toString(); }
 
         inline QVariant extension() const                       { return attrs.value(JSON_TYPE_EXTENSION); }
         inline QString extensionStr() const                     { return attrs.value(JSON_TYPE_EXTENSION, QStringLiteral("mp3")).toString(); }
@@ -65,7 +68,6 @@ namespace Core {
         inline QVariant _info() const                           { return attrs.value(JSON_TYPE_INFO); }
 
         inline QVariant size() const                            { return attrs.value(JSON_TYPE_BYTES_SIZE, -1); }
-        inline QVariant genreID() const                         { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
         inline QVariant bpm() const                             { return attrs.value(JSON_TYPE_BPM, 0); }
 
         inline QVariant artPath() const                         { return attrs.value(JSON_TYPE_MEDIA_ART); }
@@ -85,17 +87,22 @@ namespace Core {
         inline void setFetchableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_FETCHABLE] = data; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
+        inline void setOwnerId(const QVariant & new_owner_id)   { attrs[JSON_TYPE_OWNER_ID] = new_owner_id; }
         inline void addArtistId(const QString & id)             { attrs[JSON_TYPE_ARTIST_IDS] = attrs[JSON_TYPE_ARTIST_IDS].toStringList() << id; }
         inline void setArtistIds(const QStringList & ids)       { attrs[JSON_TYPE_ARTIST_IDS] = ids; }
         inline void setSongId(const QVariant & new_song_id)     { attrs[JSON_TYPE_SONG_ID] = new_song_id; }
+        inline void setAlbumId(const QVariant & new_album_id)   { attrs[JSON_TYPE_ALBUM_ID] = new_album_id; }
+        inline void setGenreId(const QVariant & new_genre_id)   { attrs[JSON_TYPE_GENRE_ID] = new_genre_id; }
 
-        inline void setOwner(const QVariant & new_owner)        { attrs[JSON_TYPE_OWNER_ID] = new_owner; }
+        inline void addTag(const QString & tag)                 { attrs[JSON_TYPE_TAGS] = attrs[JSON_TYPE_TAGS].toStringList() << tag; }
+        inline void setTags(const QStringList & tags)           { attrs[JSON_TYPE_TAGS] = tags; }
+
+
         inline void setBpm(const QVariant & new_beat)           { attrs[JSON_TYPE_BPM] = new_beat; }
         inline void setArtPath(const QVariant & new_path)       { attrs[JSON_TYPE_MEDIA_ART] = new_path; }
 
         inline void setStartPos(const QVariant & new_start_pos) { attrs[JSON_TYPE_START_POS] = new_start_pos; }
         inline void setDuration(const QVariant & new_duration)  { attrs[JSON_TYPE_DURATION] = new_duration; }
-        inline void setGenre(const QVariant & new_genre_id)     { attrs[JSON_TYPE_GENRE_ID] = new_genre_id; }
         inline void setSize(const QVariant & new_size)          { attrs[JSON_TYPE_BYTES_SIZE] = new_size; }
         inline void setPath(const QVariant & new_path)          { attrs[JSON_TYPE_PATH] = new_path; }
         inline void setRefreshPath(const QVariant & new_path)   { attrs[JSON_TYPE_REFRESH_PATH] = new_path; }

@@ -254,7 +254,35 @@ namespace Core {
 
                     return videos;
                 }
+                QJsonArray & prepareStreams(QJsonArray & streams) {//TODO: write me
+                    int i = 0;
+//                    QJsonArray res;
 
+//                    for(QJsonArray::Iterator video = videos.begin(); video != videos.end(); video++) {
+//                        QJsonObject video_obj = (*video).toObject();
+
+//                        video_obj.insert(
+//                            tkn_loadable_cmd,
+//                             Cmd::build(
+//                                sourceType(), cmd_mtd_artist_info,
+//                                {{CMD_ID, JSON_CSTR(video_obj, tkn_id)}}
+//                             ).toString()
+//                        );
+
+//                        video_obj.insert(
+//                            tkn_coverUri,
+//                            LSTR("http://") + JSON_STR(JSON_OBJ(video_obj, tkn_cover), LSTR("uri")).replace(LSTR("%%"), LSTR("s400x400"))
+//                        );
+
+//                        video_obj.insert(tkn_full_title, JSON_STR(artist_obj, tkn_name));
+
+//                        res << video_obj;
+//                    }
+
+//                    return (videos = res);
+
+                    return streams;
+                }
             };
         }
     }

@@ -329,9 +329,10 @@ void IView::openRecomendationsforItemUser() {
     ISource * src = Web::Apis::source(it -> dataType());
 
     if (src -> respondableTo(pr_recommendations)) {
-        if (it -> owner().isValid()) {
-            Params bar_settings(it -> dataType(), false, false, false, true, it -> owner().toString(), rec_user);
-            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % it -> owner().toString()), bar_settings, 0, true, true);
+        QVariant owner_id = it -> ownerId();
+        if (owner_id.isValid()) {
+            Params bar_settings(it -> dataType(), false, false, false, true, owner_id.toString(), rec_user);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % owner_id.toString()), bar_settings, 0, true, true);
         }
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }

@@ -17,7 +17,15 @@ namespace Core {
         namespace Yandex {
             class Stream : public virtual Base {
             public:
+                QJsonValue streamsByGenre(const QUrlQuery & args) { return streamsByGenre(args.queryItemValue(CMD_GENRE)); }
+                QJsonValue streamsByGenre(const QString & genre) {
+                    return QJsonObject();
+                }
 
+                QJsonValue streamByArtist(const QUrlQuery & args) { return streamByArtist(args.queryItemValue(CMD_ID)); }
+                QJsonValue streamByArtist(const QString & artist_id) {
+                    return QJsonObject();
+                }
             };
         }
     }

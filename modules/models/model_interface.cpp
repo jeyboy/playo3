@@ -488,7 +488,7 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
 //                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
 
             if (JSON_HAS_KEY(itm, Soundcloud::tkn_genre_id))
-                newItem -> setGenre(JSON_INT(itm, Soundcloud::tkn_genre_id));
+                newItem -> setGenreId(JSON_INT(itm, Soundcloud::tkn_genre_id));
         } else {
             QList<IItem *>::Iterator it_it = items.begin();
 
@@ -645,7 +645,7 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
             if (JSON_HAS_KEY(playlist, tkn_more_cmd))
                 folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
 
-            folder -> setOwner(JSON_CSTR(playlist, Od::tkn_owner));
+            folder -> setOwnerId(JSON_CSTR(playlist, Od::tkn_owner));
 
             if (is_collapsed)
                 folder -> setStates(IItem::flag_not_expanded);
@@ -656,8 +656,6 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
 }
 
 int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
-//    QJsonValue("album":{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014},"albums":[{"artists":[],"available":true,"availableForPremiumUsers":true,"cover":1,"coverUri":"avatars.yandex.net/get-music-content/410d1df6.a.2327834-1/%%","genre":"rap","id":2327834,"originalReleaseYear":2014,"recent":false,"storageDir":"410d1df6.a.2327834","title":"Still Rich","trackCount":23,"veryImportant":false,"year":2014}],"artists":[{"composer":false,"cover":{"prefix":"3c84dd0a.a.705443/1.","type":"from-album-cover","uri":"avatars.yandex.net/get-music-content/3c84dd0a.a.705443-1/%%"},"decomposed":[],"id":999162,"name":"Chief Keef","various":false}],"available":true,"durationMillis":201830,"durationMs":201830,"explicit":false,"id":20454067,"regions":["UKRAINE","UKRAINE_MOBILE_PREMIUM"],"storageDir":"11916_1b93d8e3.20454067","title":"Sosa")
-
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
@@ -698,6 +696,9 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
             Duration::fromMillis(JSON_INT(itm, Yandex::tkn_duration_ms)),
             dm_type
         ));
+
+        newItem -> setArtistIds(artistUids);
+        newItem -> setAlbumId(album_id);
 
         //newItem -> setGenre(genre); // need to convert genre to genre id
         if (JSON_HAS_KEY(itm, Yandex::tkn_fileSize))
@@ -883,7 +884,7 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
             }
 
             if (JSON_HAS_KEY(itm, tkn_grab_genre_id))
-                newItem -> setGenre(JSON_INT(itm, tkn_grab_genre_id));
+                newItem -> setGenreId(JSON_INT(itm, tkn_grab_genre_id));
 
             if (JSON_HAS_KEY(itm, tkn_grab_bpm))
                 newItem -> setBpm(JSON_INT(itm, tkn_grab_bpm));
