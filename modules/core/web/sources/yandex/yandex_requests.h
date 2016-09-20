@@ -56,10 +56,12 @@ namespace Core {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
 
+                        QString perma = JSON_STR(obj, tkn_login);
+
                         linkables << Linkable(
-                            JSON_CSTR(obj, tkn_uid),
+                            perma/*JSON_CSTR(obj, tkn_uid)*/,
                             JSON_STR(obj, tkn_name),
-                            JSON_STR(obj, tkn_login),
+                            perma,
                             JSON_STR(obj, tkn_coverUri)
                         );
                     }
@@ -137,6 +139,13 @@ namespace Core {
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = QString()) {
                     QString locale = siteLocale(val_default_locale);
+
+//                    QString user_id;
+//                    if (checkConnection(user_id))
+//                        setSiteUserID(user_id);
+//                    else {
+//                        qCritical() << "YANDEX AUTH MISSED";
+//                    }
 
                     switch(stype) {
                         case qst_site: {        return url_site_v1.arg(locale) % predicate; }

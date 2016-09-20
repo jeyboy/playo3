@@ -53,7 +53,7 @@ namespace Core {
                         QString ids;
 
                         for(QJsonArray::ConstIterator id = track_ids.constBegin() + tracks.size(); id != track_ids.constEnd(); id++)
-                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % (*id).toString();
+                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % JSON_CONV_STR((*id));
 
                         tracks_block.insert(
                             Web::tkn_more_cmd,
@@ -72,11 +72,11 @@ namespace Core {
                         QString ids;
 
                         for(QJsonArray::ConstIterator id = playlist_ids.constBegin() + playlists.size(); id != playlist_ids.constEnd(); id++)
-                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % (*id).toString();
+                            ids = ids % (ids.isEmpty() ? QString() : LSTR(",")) % JSON_CONV_STR((*id));
 
                         playlists_block.insert(
                             Web::tkn_more_cmd,
-                            Cmd::build(sourceType(), cmd_mtd_playlists_info, {{CMD_OWNER, JSON_CSTR2(obj, tkn_owner, tkn_login)}, {CMD_ID, ids}}).toString()
+                            Cmd::build(sourceType(), cmd_mtd_playlists_info, {{CMD_OWNER, JSON_CSTR2(obj, tkn_owner, tkn_uid)}, {CMD_ID, ids}}).toString()
                         );
                     }
 
