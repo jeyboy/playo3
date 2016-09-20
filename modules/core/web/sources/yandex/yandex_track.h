@@ -93,6 +93,22 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
                 }
 
+                QJsonValue tracksByArtist(const QUrlQuery & args) { return tracksByArtist(args.queryItemValue(CMD_ID)); }
+                QJsonValue tracksByArtist(const QString & artist_id) {
+                    QJsonObject info = sRequest(
+                        baseUrlStr(
+                            qst_site, LSTR("artist.jsx"),
+                            {
+                                {LSTR("artist"), artist_id},
+                                {LSTR("what"), LSTR("tracks")}
+                            }
+                        ),
+                        call_type_json
+                    );
+
+                    return prepareTracksBlock(info);
+                }
+
                 QJsonValue tracksByAlbum(const QUrlQuery & args) {
                     return tracksByAlbum(
                         args.queryItemValue(CMD_ID)

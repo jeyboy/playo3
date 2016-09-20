@@ -2,12 +2,10 @@
 #define YANDEX_REQUESTS_H
 
 #include "yandex_auth.h"
-#include "yandex_album.h"
 #include "yandex_artist.h"
 #include "yandex_feed.h"
 #include "yandex_playlist.h"
 #include "yandex_set.h"
-#include "yandex_track.h"
 #include "yandex_user.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -15,8 +13,8 @@
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Requests : public Sociable, public Auth, public Album, public Artist,
-                    public Feed, public Playlist, public Set, public Track, public User {
+            class Requests : public Sociable, public Auth, public Artist,
+                    public Feed, public Playlist, public Set, public User {
 
                 inline bool endReached(QJsonObject & response, QueriableArg * /*arg*/) {
                     QJsonObject pager_obj = JSON_OBJ(response, tkn_pager);

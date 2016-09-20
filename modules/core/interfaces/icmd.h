@@ -138,10 +138,13 @@ namespace Core {
             cmd_mtd_streams_by_genre,
             cmd_mtd_stream_by_artist,
 
-            cmd_mtd_artists_search,
             cmd_mtd_artist_info,
+            cmd_mtd_artists_search,
+            cmd_mtd_artist_recommendations,
 
-            cmd_mtd_albums_search
+            cmd_mtd_albums_info,
+            cmd_mtd_albums_search,
+            cmd_mtd_albums_by_artist
         };
 
         QJsonValue run(const ICmdMethods & cmd, const QUrlQuery & params) {
@@ -201,10 +204,13 @@ namespace Core {
                 case cmd_mtd_streams_by_genre: return streamsByGenre(params);
                 case cmd_mtd_stream_by_artist: return streamByArtist(params);
 
-                case cmd_mtd_artists_search: return artistsSearch(params);
                 case cmd_mtd_artist_info: return artistInfo(params);
+                case cmd_mtd_artists_search: return artistsSearch(params);
+                case cmd_mtd_artist_recommendations: return artistRecommendations(params);
 
+                case cmd_mtd_albums_info: return albumsInfo(params);
                 case cmd_mtd_albums_search: return albumsSearch(params);
+                case cmd_mtd_albums_by_artist: return albumsByArtist(params);
 
                 default: return QJsonObject();
             }
@@ -270,10 +276,13 @@ namespace Core {
         virtual QJsonValue streamsByGenre(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue artistInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue artistRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
+        virtual QJsonValue albumsInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue albumsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue albumsByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }
 
