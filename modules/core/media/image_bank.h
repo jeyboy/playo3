@@ -40,7 +40,11 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
 
     friend class Core::Singleton<ImageBank>;
 
-    Core::Web::Response * procImageCall(const QUrl & url) { return Core::Web::Manager::prepare() -> getFollowed(url); }
+    Core::Web::Response * procImageCall(const QUrl & url) {
+        Core::Web::Response * response = Core::Web::Manager::prepare() -> getFollowed(url);
+        response -> setUrl(url);
+        return response;
+    }
 
     void procOrder() {
         while(!orders.isEmpty()) {
@@ -148,7 +152,7 @@ public:
     }
 public slots:
     void pixmapDownloaded(Response * response) {
-        QUrl url = response -> baseUrl();
+        QUrl url = response -> url();
         QString url_str = url.toString();
         QString filename = bank_temp_dir % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz-") % url.fileName();
 

@@ -37,6 +37,8 @@ namespace Core { // requests and response has memory leaks
         public:
             static Response * fromReply(QNetworkReply * reply);
 
+            void setUrl(const QUrl & url) { QNetworkReply::setUrl(url); }
+
             inline void printHeaders() {
                 QList<RawHeaderPair> headers = rawHeaderPairs();
 
