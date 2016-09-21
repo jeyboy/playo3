@@ -138,6 +138,8 @@ namespace Core {
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = QString()) {
                     QString locale = siteLocale(val_default_locale);
 
+                    //FIXME: if user opens page with logged in account in browser - our cookies is automatically expired
+
 //                    QString user_id;
 //                    if (checkConnection(user_id))
 //                        setSiteUserID(user_id);
@@ -148,6 +150,7 @@ namespace Core {
                     switch(stype) {
                         case qst_site: {        return url_site_v1.arg(locale) % predicate; }
                         case qst_site_alt1: {   return url_site_v2.arg(locale) % predicate; }
+                        case qst_site_alt2: {   return url_site_v2_1.arg(locale) % predicate; }
                         default: {              return url_root.arg(locale) % predicate; }
                     }
                 }
@@ -155,11 +158,12 @@ namespace Core {
                     switch(stype) {
                         case qst_site:
                         case qst_site_alt1:
+                        case qst_site_alt2:
                             return QUrlQuery(
                                 QString(
                                     LSTR("external-domain=") % LSTR("music.yandex.ua") %
                                     LSTR("&overembed=") % LSTR("false") %
-                                    LSTR("&lang=") % LSTR("uk")
+                                    LSTR("&lang=") % siteLocale(val_default_locale)
                                 )
                             );
 

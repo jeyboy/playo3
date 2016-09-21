@@ -13,7 +13,7 @@ namespace Core {
 
                 enum SetType {
                     set_popular_tracks = 1, set_popular_artists, set_popular_promotions,
-                    set_new_albums, set_compilations
+                    set_new_albums, set_compilations, set_genre_stream
                 };
 
                 QMap<QString, QString> audioCompilationOptions() {
@@ -34,104 +34,104 @@ namespace Core {
                 }
                 QMap<QString, QString> audioSetOptions() {
                     return {
-                        { QStringLiteral("All Genres"),                 QStringLiteral("all") },
+                        { LSTR("All Genres"),                 LSTR("all") },
 
-                        { QStringLiteral("Pop"),                        QStringLiteral("pop") },
-                        { QStringLiteral("Russian Pop"),                QStringLiteral("ruspop") },
-                        { QStringLiteral("Disco"),                      QStringLiteral("disco") },
+                        { LSTR("Pop"),                        LSTR("pop") },
+                        { LSTR("Russian Pop"),                LSTR("ruspop") },
+                        { LSTR("Disco"),                      LSTR("disco") },
 
-                        { QStringLiteral("Indie"),                      QStringLiteral("indie") },
-                        { QStringLiteral("Local Indie"),                QStringLiteral("local-indie") },
+                        { LSTR("Indie"),                      LSTR("indie") },
+                        { LSTR("Local Indie"),                LSTR("local-indie") },
 
-                        { QStringLiteral("Rock"),                       QStringLiteral("rock") },
-                        { QStringLiteral("Russian Rock"),               QStringLiteral("rusrock") },
-                        { QStringLiteral("Rock & Roll"),                QStringLiteral("rock-n-roll") },
-                        { QStringLiteral("Progressive Rock"),           QStringLiteral("prog-rock") },
-                        { QStringLiteral("Post Rock"),                  QStringLiteral("post-rock") },
-                        { QStringLiteral("New Wave"),                   QStringLiteral("new-wave") },
-                        { QStringLiteral("Ukranian Rock"),              QStringLiteral("ukrrock") },
+                        { LSTR("Rock"),                       LSTR("rock") },
+                        { LSTR("Russian Rock"),               LSTR("rusrock") },
+                        { LSTR("Rock & Roll"),                LSTR("rock-n-roll") },
+                        { LSTR("Progressive Rock"),           LSTR("prog-rock") },
+                        { LSTR("Post Rock"),                  LSTR("post-rock") },
+                        { LSTR("New Wave"),                   LSTR("new-wave") },
+                        { LSTR("Ukranian Rock"),              LSTR("ukrrock") },
 
-                        { QStringLiteral("Metal"),                      QStringLiteral("metal") },
+                        { LSTR("Metal"),                      LSTR("metal") },
 
-                        { QStringLiteral("Alternative"),                QStringLiteral("alternative") },
+                        { LSTR("Alternative"),                LSTR("alternative") },
 
-                        { QStringLiteral("Electronic"),                 QStringLiteral("electronic") },
-                        { QStringLiteral("Dubstep"),                    QStringLiteral("dubstep") },
-                        { QStringLiteral("Industrial"),                 QStringLiteral("industrial") },
-                        { QStringLiteral("Experimental"),               QStringLiteral("experimental") },
+                        { LSTR("Electronic"),                 LSTR("electronic") },
+                        { LSTR("Dubstep"),                    LSTR("dubstep") },
+                        { LSTR("Industrial"),                 LSTR("industrial") },
+                        { LSTR("Experimental"),               LSTR("experimental") },
 
-                        { QStringLiteral("Dance"),                      QStringLiteral("dance") },
-                        { QStringLiteral("House"),                      QStringLiteral("house") },
-                        { QStringLiteral("Techno"),                     QStringLiteral("techno") },
-                        { QStringLiteral("Trance"),                     QStringLiteral("trance") },
-                        { QStringLiteral("Drum & Bass"),                QStringLiteral("drum-n-bass") },
+                        { LSTR("Dance"),                      LSTR("dance") },
+                        { LSTR("House"),                      LSTR("house") },
+                        { LSTR("Techno"),                     LSTR("techno") },
+                        { LSTR("Trance"),                     LSTR("trance") },
+                        { LSTR("Drum & Bass"),                LSTR("drum-n-bass") },
 
-                        { QStringLiteral("Rap and Hip-Hop"),            QStringLiteral("hip-hop") },
-                        { QStringLiteral("Russian Rap"),                QStringLiteral("rusrap") },
+                        { LSTR("Rap and Hip-Hop"),            LSTR("hip-hop") },
+                        { LSTR("Russian Rap"),                LSTR("rusrap") },
 
-                        { QStringLiteral("RNB"),                        QStringLiteral("r-n-b") },
-                        { QStringLiteral("Urban"),                      QStringLiteral("urban") },
-                        { QStringLiteral("Soul"),                       QStringLiteral("soul") },
-                        { QStringLiteral("Funk"),                       QStringLiteral("funk") },
+                        { LSTR("RNB"),                        LSTR("r-n-b") },
+                        { LSTR("Urban"),                      LSTR("urban") },
+                        { LSTR("Soul"),                       LSTR("soul") },
+                        { LSTR("Funk"),                       LSTR("funk") },
 
-                        { QStringLiteral("Jazz"),                       QStringLiteral("jazz") },
-                        { QStringLiteral("Traditional Jazz"),           QStringLiteral("trad-jass") },
-                        { QStringLiteral("Modern Jazz"),                QStringLiteral("modern-jazz") },
+                        { LSTR("Jazz"),                       LSTR("jazz") },
+                        { LSTR("Traditional Jazz"),           LSTR("trad-jass") },
+                        { LSTR("Modern Jazz"),                LSTR("modern-jazz") },
 
-                        { QStringLiteral("Blues"),                      QStringLiteral("blues") },
+                        { LSTR("Blues"),                      LSTR("blues") },
 
-                        { QStringLiteral("Reggae"),                     QStringLiteral("reggae") },
-                        { QStringLiteral("Reggaeton"),                  QStringLiteral("reggaeton") },
-                        { QStringLiteral("Dub"),                        QStringLiteral("dub") },
+                        { LSTR("Reggae"),                     LSTR("reggae") },
+                        { LSTR("Reggaeton"),                  LSTR("reggaeton") },
+                        { LSTR("Dub"),                        LSTR("dub") },
 
-                        { QStringLiteral("Ska"),                        QStringLiteral("ska") },
+                        { LSTR("Ska"),                        LSTR("ska") },
 
-                        { QStringLiteral("Punk"),                       QStringLiteral("punk") },
-                        { QStringLiteral("Hardcore"),                   QStringLiteral("hardcore") },
+                        { LSTR("Punk"),                       LSTR("punk") },
+                        { LSTR("Hardcore"),                   LSTR("hardcore") },
 
-                        { QStringLiteral("World"),                      QStringLiteral("world") },
-                        { QStringLiteral("Russian"),                    QStringLiteral("russian") },
-                        { QStringLiteral("Tatar"),                      QStringLiteral("tatar") },
-                        { QStringLiteral("Celtic"),                     QStringLiteral("celtic") },
-                        { QStringLiteral("Balkan"),                     QStringLiteral("balkan") },
-                        { QStringLiteral("European"),                   QStringLiteral("european") },
-                        { QStringLiteral("Eastern"),                    QStringLiteral("eastern") },
-                        { QStringLiteral("African"),                    QStringLiteral("african") },
-                        { QStringLiteral("Latin"),                      QStringLiteral("latin-american") },
-                        { QStringLiteral("American"),                   QStringLiteral("american") },
+                        { LSTR("World"),                      LSTR("world") },
+                        { LSTR("Russian"),                    LSTR("russian") },
+                        { LSTR("Tatar"),                      LSTR("tatar") },
+                        { LSTR("Celtic"),                     LSTR("celtic") },
+                        { LSTR("Balkan"),                     LSTR("balkan") },
+                        { LSTR("European"),                   LSTR("european") },
+                        { LSTR("Eastern"),                    LSTR("eastern") },
+                        { LSTR("African"),                    LSTR("african") },
+                        { LSTR("Latin"),                      LSTR("latin-american") },
+                        { LSTR("American"),                   LSTR("american") },
 
-                        { QStringLiteral("Classical"),                  QStringLiteral("classical") },
-                        { QStringLiteral("Opera"),                      QStringLiteral("opera") },
-                        { QStringLiteral("Modern Classical"),           QStringLiteral("modern-classical") },
+                        { LSTR("Classical"),                  LSTR("classical") },
+                        { LSTR("Opera"),                      LSTR("opera") },
+                        { LSTR("Modern Classical"),           LSTR("modern-classical") },
 
-                        { QStringLiteral("Estrada"),                    QStringLiteral("estrada") },
-                        { QStringLiteral("Russian Estrada"),            QStringLiteral("rusestrada") },
+                        { LSTR("Estrada"),                    LSTR("estrada") },
+                        { LSTR("Russian Estrada"),            LSTR("rusestrada") },
 
-                        { QStringLiteral("Shanson"),                    QStringLiteral("shanson") },
+                        { LSTR("Shanson"),                    LSTR("shanson") },
 
-                        { QStringLiteral("Country"),                    QStringLiteral("country") },
+                        { LSTR("Country"),                    LSTR("country") },
 
-                        { QStringLiteral("Soundtrack"),                 QStringLiteral("soundtrack") },
-                        { QStringLiteral("Soundtrack from moovies"),    QStringLiteral("films") },
-                        { QStringLiteral("Soundtrack from serials"),    QStringLiteral("tv-series") },
-                        { QStringLiteral("Soundtrack from cartoons"),   QStringLiteral("animated-films") },
-                        { QStringLiteral("Soundtrack from videogames"), QStringLiteral("videogame-music") },
-                        { QStringLiteral("Soundtrack from musicals"),   QStringLiteral("musical") },
-                        { QStringLiteral("Soundtrack from bollywood"),  QStringLiteral("bollywood") },
+                        { LSTR("Soundtrack"),                 LSTR("soundtrack") },
+                        { LSTR("Soundtrack from moovies"),    LSTR("films") },
+                        { LSTR("Soundtrack from serials"),    LSTR("tv-series") },
+                        { LSTR("Soundtrack from cartoons"),   LSTR("animated-films") },
+                        { LSTR("Soundtrack from videogames"), LSTR("videogame-music") },
+                        { LSTR("Soundtrack from musicals"),   LSTR("musical") },
+                        { LSTR("Soundtrack from bollywood"),  LSTR("bollywood") },
 
-                        { QStringLiteral("Easy Listening"),             QStringLiteral("easy") },
-                        { QStringLiteral("Lounge"),                     QStringLiteral("lounge") },
-                        { QStringLiteral("New Age"),                    QStringLiteral("new-age") },
-                        { QStringLiteral("Meditative"),                 QStringLiteral("meditative") },
+                        { LSTR("Easy Listening"),             LSTR("easy") },
+                        { LSTR("Lounge"),                     LSTR("lounge") },
+                        { LSTR("New Age"),                    LSTR("new-age") },
+                        { LSTR("Meditative"),                 LSTR("meditative") },
 
-                        { QStringLiteral("Singer & Songwriter"),        QStringLiteral("singer-songwriter") },
-                        { QStringLiteral("Russian Singer & Songwriter"),QStringLiteral("rusbards") },
-                        { QStringLiteral("Romances"),                   QStringLiteral("romances") },
+                        { LSTR("Singer & Songwriter"),        LSTR("singer-songwriter") },
+                        { LSTR("Russian Singer & Songwriter"),LSTR("rusbards") },
+                        { LSTR("Romances"),                   LSTR("romances") },
 
-                        { QStringLiteral("For Children"),               QStringLiteral("children") },
+                        { LSTR("For Children"),               LSTR("children") },
 
-                        { QStringLiteral("For Sport"),                  QStringLiteral("sport") },
-                        { QStringLiteral("For Holidays"),               QStringLiteral("holiday") }
+                        { LSTR("For Sport"),                  LSTR("sport") },
+                        { LSTR("For Holidays"),               LSTR("holiday") }
                     };
                 }
 
@@ -142,6 +142,7 @@ namespace Core {
                         case set_popular_promotions: return QStringLiteral("Popular Promotions: ");
                         case set_new_albums: return QStringLiteral("New Albums: ");
                         case set_compilations: return QStringLiteral("Compilation: ");
+                        case set_genre_stream: return QStringLiteral("Stream: ");
                         default: return QStringLiteral("Unknown: ");
                     }
                 }
@@ -205,6 +206,10 @@ namespace Core {
                                     preparePromotions(response.content);
                                     mtype = dmt_dir;
                                 break;}
+
+                                case set_genre_stream: {
+                                    return streamsByGenre(limits.genre);
+                                break;}
                             }
                         break;}
 
@@ -231,10 +236,23 @@ namespace Core {
                     QString pop_promos_title = setTypeToStr(set_popular_promotions);
                     QString new_albums_title = setTypeToStr(set_new_albums);
                     QString compilations_title = setTypeToStr(set_compilations);
+                    QString stream_title = setTypeToStr(set_genre_stream);
 
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
 
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
+                        if (opt.value() != LSTR("all")) {
+                            res.insert(
+                                stream_title % opt.key(),
+                                cmd_tmpl.setAttrs(
+                                    {
+                                        { CMD_SET_TYPE, QString::number(set_genre_stream) },
+                                        { CMD_GENRE, opt.value() }
+                                    }
+                                ) -> toString()
+                            );
+                        }
+
                         res.insert(
                             pop_tracks_title % opt.key(),
                             cmd_tmpl.setAttrs(

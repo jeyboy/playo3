@@ -9,6 +9,7 @@ namespace Core {
             extern const QString url_root;
             extern const QString url_site_v1;
             extern const QString url_site_v2;
+            extern const QString url_site_v2_1;
 
             extern const QString tkn_album;
             extern const QString tkn_albums;

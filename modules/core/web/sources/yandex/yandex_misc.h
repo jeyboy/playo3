@@ -20,6 +20,13 @@ namespace Core {
                     // url_api_v2 % auth?external-domain=music.yandex.ua&overembed=no&__t=1451819854469 // returns csrf, device_id, logged, premium, invalid
 //                    bool sessionIsValid() { return false; }
 
+                    Headers headers() { return {{ LSTR("X-Retpath-Y"), encodeStr(baseUrlStr(qst_site_base))}}; }
+
+                    QString radioToken() {
+                        //e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg164922
+                        return LSTR("e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg164922");
+                    }
+
                     QString calcKey(const QString & path, const QString & s) {
                         QString str = path.mid(1) + s;
     //                    str.replace(QStringLiteral("\r\n"), QStringLiteral("\n"))

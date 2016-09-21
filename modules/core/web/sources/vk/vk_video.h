@@ -206,7 +206,9 @@ namespace Core {
                     return QJsonArray();
                 }
 
-
+                QJsonValue videoByPlaylist(const QUrlQuery & args) {
+                    return videoByPlaylist(args.queryItemValue(CMD_ID));
+                }
                 QJsonValue videoByPlaylist(const QString & playlist_id) { // not finished
                     Permissions perm = permissions(pr_media_content);
                     QJsonArray block_content;

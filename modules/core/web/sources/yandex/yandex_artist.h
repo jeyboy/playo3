@@ -9,8 +9,6 @@ namespace Core {
         namespace Yandex {
             class Artist : public virtual Track, public virtual Album {
             protected:
-                inline QString artistSimilarUrl(const QString & artistId) { return url_site_v1 + QStringLiteral("artist.jsx?artist=%1&what=similar&sort=&dir=").arg(artistId); }
-
                 QJsonValue artistInfo(const QUrlQuery & args) {
                     return artistInfo(args.queryItemValue(CMD_ID));
                 }

@@ -7,6 +7,7 @@ namespace Core {
 
             extern const QString url_site_v1 =                      url_root % QStringLiteral("handlers/");
             extern const QString url_site_v2 =                      url_root % QStringLiteral("api/v2.0/handlers/");
+            extern const QString url_site_v2_1 =                    url_root % QStringLiteral("api/v2.1/handlers/");
 
             extern const QString tkn_album =                        QStringLiteral("album");
             extern const QString tkn_albums =                       QStringLiteral("albums");
