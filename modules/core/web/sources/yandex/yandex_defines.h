@@ -8,11 +8,12 @@
 #define YANDEX_SEARCH_LIMIT 200
 #define YANDEX_IDS_PER_REQUEST 50
 
-#define YANDEX_ITEM_UID(json) JSON_CSTR(json, tkn_id) % ':' % \
-        JSON_CSTR( \
-            (JSON_HAS_KEY(json, tkn_album) ? JSON_OBJ(json, tkn_album) : JSON_ARR(json, tkn_albums).first().toObject()), \
-            tkn_id \
-        )
+#define YANDEX_ITEM_ALBUM(json) JSON_CSTR( \
+        (JSON_HAS_KEY(json, tkn_album) ? JSON_OBJ(json, tkn_album) : JSON_ARR(json, tkn_albums).first().toObject()), \
+        tkn_id \
+    )
+
+#define YANDEX_ITEM_UID(json) JSON_CSTR(json, tkn_id) % ':' % YANDEX_ITEM_ALBUM(json)
 
 namespace Core {
     namespace Web {
