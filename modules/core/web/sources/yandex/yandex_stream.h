@@ -54,7 +54,7 @@ namespace Core {
                                     {LSTR("trackId"), JSON_CSTR(it, tkn_id)},
                                     {LSTR("albumId"), YANDEX_ITEM_ALBUM(it)},
                                     {LSTR("totalPlayed"), LSTR("20")},
-                                    {LSTR("sign"), LSTR("e15dd6691040ceb2686ff55c3b0a39b2b08e1618%3A1474509752632")}
+                                    {LSTR("sign"), siteAdditionalToken()}
                                 }
                             ), headers()
                         );

@@ -150,7 +150,12 @@ namespace Core {
                     switch(stype) {
                         case qst_site: {        return url_site_v1.arg(locale) % predicate; }
                         case qst_site_alt1: {   return url_site_v2.arg(locale) % predicate; }
-                        case qst_site_alt2: {   return url_site_v2_1.arg(locale) % predicate; }
+                        case qst_site_alt2: {
+                            if (siteAdditionalToken().isEmpty())
+                                setSiteAdditionalToken(sign());
+
+                            return url_site_v2_1.arg(locale) % predicate;
+                        }
                         default: {              return url_root.arg(locale) % predicate; }
                     }
                 }
