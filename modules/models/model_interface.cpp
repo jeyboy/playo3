@@ -688,10 +688,15 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
 //        QString genre = album.value(Yandex::tkn_genre).toString();
         QString album_id = JSON_CSTR(album, Yandex::tkn_id);
         QString id = JSON_CSTR(itm, Yandex::tkn_id) % ':' % album_id;
+        QString title = QString(artistStr % tkn_dash % JSON_STR(itm, Yandex::tkn_title));
+
+        QString version = JSON_STR(itm, LSTR("version"));
+        if (!version.isEmpty())
+            title = title % ' ' % '(' % version % ')';
 
         items_amount++;
         IItem * newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
-            QString(artistStr % tkn_dash % JSON_STR(itm, Yandex::tkn_title)),
+            title,
             id,
             Duration::fromMillis(JSON_INT(itm, Yandex::tkn_duration_ms)),
             dm_type

@@ -18,7 +18,10 @@ namespace Core {
             public:
                 // queue (96212:67376,350006:35232) track:album
                 //curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/relax/tracks/n/ru/e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg164922?queue=&external-domain=music.yandex.ua&overembed=no&__t=1473552998877' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/easy' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Feasy'
+                //curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/relax/tracks/n/ru/e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg164922?queue=96212:67376&external-domain=music.yandex.ua&overembed=no&__t=1473552998877' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: Session_id=noauth:1473434912; yandexuid=2190563221452621883; L=BVhXc19GQ2NeT2oAWUZyQF5TXUphWUsMPiwgLSgqXkgPeQ==.1473434711.12637.322461.43fa5d46fffc2065a3098115c2a5d7f2; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Fusers%2Fjeyboy1985%2Fartists%22%7D; yabs-vdrf=N9ifNtWF8wa009ifN0WEw4Am09ifNJ0GrC0y19ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/easy' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Feasy'
                 //curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/alternative/tracks/w/ru/34684/0.xml?queue=&external-domain=music.yandex.ua&overembed=no&__t=1474439581282' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: yandexuid=2190563221452621883; L=WnEJRFAPV0xrQVpRcXN0SEdPV0t6bmtBXl0rEDg8e3p/cg==.1474342480.12659.397393.538aa840261797a55723bf7670f887c4; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Ffeed%22%7D; yabs-vdrf=SpDnNIW57Yqy0pDnNEmOrC0y1pDnNWG5dJ5C1pDnNDm3LUrK1WDnN5GIw4Am0VjnNDm1Aa5G1hTbN201Z8L819ifNtWF8wa009ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=; Session_id=noauth:1474430260; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/alternative' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Falternative'
+                //curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/trance/tracks?queue=2844159%3A306389%2C3720123%3A417274&external-domain=music.yandex.ua&overembed=no&__t=1474439581282' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'Cookie: yandexuid=2190563221452621883; L=WnEJRFAPV0xrQVpRcXN0SEdPV0t6bmtBXl0rEDg8e3p/cg==.1474342480.12659.397393.538aa840261797a55723bf7670f887c4; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Ffeed%22%7D; yabs-vdrf=SpDnNIW57Yqy0pDnNEmOrC0y1pDnNWG5dJ5C1pDnNDm3LUrK1WDnN5GIw4Am0VjnNDm1Aa5G1hTbN201Z8L819ifNtWF8wa009ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=; Session_id=noauth:1474430260; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/alternative' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Falternative'
+
                 QJsonValue streamsByGenre(const QUrlQuery & args) {
                     return streamsByGenre(
                         args.queryItemValue(CMD_GENRE),
@@ -28,16 +31,20 @@ namespace Core {
                 QJsonValue streamsByGenre(const QString & genre, const QString & queue = QString("")) { // INFO: X-Retpath-Y header is mandatory there
                     QJsonArray content = saRequest(
                         baseUrlStr(
-                            qst_site_alt2, LSTR("radio/genre/%1/tracks/n/%2/%3").arg(genre, siteLocale(), radioToken()),
+                            qst_site_alt2, LSTR("radio/genre/%1/tracks").arg(genre),
                             {{LSTR("queue"), queue}}
                         ),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_tracks << tkn_track, call_method_get, headers()
                     );
 
-                    QJsonObject first_obj = content.first().toObject();
-                    QJsonObject last_obj = content.last().toObject();
+                    QString offset;
+                    for(QJsonArray::Iterator item = content.begin(); item != content.end(); item++) {
+                        QJsonObject it = (*item).toObject();
 
-                    QString offset = encodeStr(YANDEX_ITEM_UID(first_obj) % ',' % YANDEX_ITEM_UID(last_obj));
+                        offset = offset % ',' % YANDEX_ITEM_UID(it);
+                    }
+                    offset = encodeStr(offset.mid(1));
+
                     return prepareBlock(
                         dmt_audio, prepareTracks(content),
                         {
@@ -61,14 +68,14 @@ namespace Core {
                 QJsonValue streamByArtist(const QString & artist_id, const QString & queue = QString("")) {
                     QJsonArray content = saRequest(
                         baseUrlStr(
-                            qst_site_alt2, LSTR("radio/artist/%1/tracks/a/net/get-direct/%2").arg(artist_id, radioToken()),
+                            qst_site_alt2, LSTR("radio/artist/%1/tracks").arg(artist_id),
                             {{LSTR("queue"), queue}}
                         ),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_tracks << tkn_track, call_method_get, headers()
                     );
 
-                    QJsonObject first_obj = content.first().toObject();
-                    QJsonObject last_obj = content.last().toObject();
+                    QJsonObject first_obj = content[content.size() - 2].toObject();
+                    QJsonObject last_obj = content[content.size() - 1].toObject();
 
                     QString offset = encodeStr(YANDEX_ITEM_UID(first_obj) % ',' % YANDEX_ITEM_UID(last_obj));
                     return prepareBlock(

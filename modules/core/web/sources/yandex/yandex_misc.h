@@ -22,11 +22,6 @@ namespace Core {
 
                     Headers headers() { return {{ LSTR("X-Retpath-Y"), encodeStr(baseUrlStr(qst_site_base))}}; }
 
-                    QString radioToken() {
-                        //e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg164922
-                        return LSTR("e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg164922");
-                    }
-
                     QString calcKey(const QString & path, const QString & s) {
                         QString str = path.mid(1) + s;
     //                    str.replace(QStringLiteral("\r\n"), QStringLiteral("\n"))
