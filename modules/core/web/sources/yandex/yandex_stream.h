@@ -58,10 +58,7 @@ namespace Core {
                                 }
                             ), headers()
                         );
-
-                        int i = 9;
                     }
-//                    QString offset = YANDEX_ITEM_UID(content[content.size() - 2].toObject()) % ',' % YANDEX_ITEM_UID(content[content.size() - 1].toObject());
                     QString offset = YANDEX_ITEM_UID(content.first().toObject()) % ',' % YANDEX_ITEM_UID(content.last().toObject());
 
                     return prepareBlock(
