@@ -133,10 +133,10 @@ namespace Core {
                 //            "02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea"
 
                 //        credentials
-                //            Object { identifier="jeyboy1985@gmail.com",  password="5675675675"}
+                //            Object { identifier="some@gmail.com",  password="5675675675"}
 
                 //        identifier
-                //            "jeyboy1985@gmail.com"
+                //            "some@gmail.com"
 
                 //        password
                 //            "5675675675"

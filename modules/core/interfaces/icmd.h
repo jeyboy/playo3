@@ -137,6 +137,7 @@ namespace Core {
             cmd_mtd_streams_recommendations,
             cmd_mtd_streams_by_genre,
             cmd_mtd_stream_by_artist,
+            cmd_mtd_stream_configure,
 
             cmd_mtd_artist_info,
             cmd_mtd_artists_search,
@@ -203,6 +204,7 @@ namespace Core {
                 case cmd_mtd_streams_recommendations: return streamsRecommendations(params);
                 case cmd_mtd_streams_by_genre: return streamsByGenre(params);
                 case cmd_mtd_stream_by_artist: return streamByArtist(params);
+                case cmd_mtd_stream_configure: return streamConfigure(params);
 
                 case cmd_mtd_artist_info: return artistInfo(params);
                 case cmd_mtd_artists_search: return artistsSearch(params);
@@ -275,6 +277,7 @@ namespace Core {
         virtual QJsonValue streamsRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamsByGenre(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue streamConfigure(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue artistInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
