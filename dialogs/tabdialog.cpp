@@ -75,4 +75,9 @@ void TabDialog::setSettings(const Models::Params & params) {
     ui -> tabType -> setEnabled(false);
     ui -> tabType -> setCurrentIndex(index);
 
+    Core::ISource * source = Core::Web::Apis::source(data_type);
+
+    QWidget * settings_block = source -> settingsBlock();
+    if (settings_block)
+        ui -> verticalLayout -> addWidget(settings_block);
 }

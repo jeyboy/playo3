@@ -55,6 +55,7 @@ namespace Core {
         virtual inline QMap<QString, QString> setsList() { return QMap<QString, QString>(); }
 
         QToolButton * initButton(QWidget * parent = 0);
+        QWidget * settingsBlock() { return 0; }
 
     public slots:
         void openTab();
