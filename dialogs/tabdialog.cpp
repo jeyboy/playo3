@@ -1,65 +1,84 @@
 #include "tabdialog.h"
 #include "ui_tabdialog.h"
+#include "modules/core/web/web_apis.h"
 
 using namespace Dialogs;
 
 TabDialog::TabDialog(QWidget * parent) :
-  BaseDialog(parent), ui(new Ui::TabDialog) {
-  ui -> setupUi(this);
+    BaseDialog(parent), ui(new Ui::TabDialog) {
+    ui -> setupUi(this);
 
-  setWindowTitle(QStringLiteral("View settings"));
-  ui -> interactive -> setEnabled(false);
-  ui -> isVkRadio -> setEnabled(false);
-  ui -> isSoundcloudRadio -> setEnabled(false);
+    setWindowTitle(QStringLiteral("View settings"));
+    ui -> interactive -> setEnabled(false);
+
+    int index = -1;
+    Core::DataSubType data_type = DST_EXTRACT_FLAGS(settings.data_type);
+
+    QMap<Core::DataSubType, QString> data_list = {
+        {Core::dt_tree, LSTR("Grouped list with subgroups")},
+        {Core::dt_level_tree, LSTR("Grouped list")},
+        {Core::dt_level, LSTR("List")}
+    };
+    for(QMap<Core::DataSubType, QString>::Iterator source = data_list.begin(); source != data_list.end(); source++) {
+        ui -> tabType -> addItem(source.value(), source.key());
+        if (source.key() == data_type)
+            index = ui -> tabType -> count() - 1;
+    }
+
+//    ui -> tabType -> addItem(LSTR("Grouped list with subgroups"), Core::dt_tree);
+//    ui -> tabType -> addItem(LSTR("Grouped list"), Core::dt_level_tree);
+//    if (Core::dt_level_tree == data_type) index = ui -> tabType -> size() - 1;
+
+//    ui -> tabType -> addItem(LSTR("List"), Core::dt_level);
+//    if (Core::dt_level == data_type) index = ui -> tabType -> size() - 1;
+
+    bool is_new_tab = settings.data_type == Core::dt_none;
+
+    if (!is_new_tab) {
+        QMap<Core::DataSubType, Core::ISource *> list = Core::Web::Apis::sourcesList();
+
+        for(QMap<Core::DataSubType, Core::ISource *>::Iterator source = list.begin(); source != list.end(); source++) {
+            ui -> tabType -> addItem(source.value() -> name(), source.key());
+            if (source.key() == data_type)
+                index = ui -> tabType -> count() - 1;
+        }
+    }
+
+    ui -> tabType -> setEnabled(is_new_tab);
+    ui -> tabType -> setCurrentIndex(index);
 }
 
 TabDialog::~TabDialog() {
-  delete ui;
+    delete ui;
 }
 
 QString TabDialog::getName() {
-  return ui -> tabName -> text();
+    return ui -> tabName -> text();
 }
 
 void TabDialog::setName(QString name) {
-  ui -> tabName -> setText(name);
+    ui -> tabName -> setText(name);
 }
 
 Models::Params TabDialog::getSettings() {
-    Models::Params settings;
+    Core::DataSubType sel_data_type = (Core::DataSubType)ui -> tabType -> currentData().toInt();
 
-    settings.deleteFile = ui -> deleteFile -> isChecked();
-    settings.interactive = ui -> interactive -> isChecked(); //checkState() == Qt::Checked
-    settings.playlist = ui -> playlist -> isChecked();
+    int new_flags =
+        (ui -> deleteFile -> isChecked() ? Models::mpf_del_file : Models::mpf_none) |
+        (ui -> interactive -> isChecked() ? Models::mpf_interactive : Models::mpf_none) |
+        (ui -> autoPlayNext -> isChecked() ? Models::mpf_auto_play_next : Models::mpf_none) |
+        (!settings.isCommon() && sel_data_type < Core::dt_search ? Models::mpf_configurable : Models::mpf_none);
 
-    if (ui -> isListRadio -> isChecked())
-        settings.type = Core::dt_level;
-    else if (ui -> isOneLevelTreeRadio -> isChecked())
-        settings.type = Core::dt_level_tree;
-    else if (ui -> isTreeRadio -> isChecked())
-        settings.type = Core::dt_tree;
-    else if (ui -> isVkRadio -> isChecked())
-        settings.type = Core::dt_web_vk;
-    else if (ui -> isSoundcloudRadio -> isChecked())
-        settings.type = Core::dt_web_sc;
+    settings.data_type = sel_data_type;
+    settings.setFlags(new_flags);
 
     return settings;
 }
 
-void TabDialog::setSettings(const Models::Params & settings) {
-  ui -> deleteFile -> setChecked(settings.deleteFile);
-  ui -> interactive -> setChecked(settings.interactive);
-  ui -> playlist -> setChecked(settings.playlist);
+void TabDialog::setSettings(const Models::Params & params) {
+    settings = params;
 
-  ui -> isListRadio -> setChecked(settings.type == Core::dt_level);
-  ui -> isOneLevelTreeRadio -> setChecked(settings.type == Core::dt_level_tree);
-  ui -> isTreeRadio -> setChecked(settings.type == Core::dt_tree);
-  ui -> isVkRadio -> setChecked(settings.type == Core::dt_web_vk);
-  ui -> isSoundcloudRadio -> setChecked(settings.type == Core::dt_web_sc);
-
-  ui -> isListRadio -> setEnabled(false);
-  ui -> isTreeRadio -> setEnabled(false);
-  ui -> isOneLevelTreeRadio -> setEnabled(false);
-  ui -> isVkRadio -> setEnabled(false);
-  ui -> isSoundcloudRadio -> setEnabled(false);
+    ui -> deleteFile -> setChecked(settings.isDeleteFile());
+    ui -> interactive -> setChecked(settings.isInteractive());
+    ui -> autoPlayNext -> setChecked(settings.isAutoPlayNext());
 }

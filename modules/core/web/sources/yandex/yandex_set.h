@@ -239,12 +239,13 @@ namespace Core {
                     QString stream_title = setTypeToStr(set_genre_stream);
 
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
+                    Cmd stream_cmd_tmpl(sourceType() | dt_stream, cmd_mtd_open_set, {});
 
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
                         if (opt.value() != LSTR("all")) {
                             res.insert(
                                 stream_title % opt.key(),
-                                cmd_tmpl.setAttrs(
+                                stream_cmd_tmpl.setAttrs(
                                     {
                                         { CMD_SET_TYPE, QString::number(set_genre_stream) },
                                         { CMD_GENRE, opt.value() }

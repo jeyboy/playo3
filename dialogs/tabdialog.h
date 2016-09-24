@@ -8,19 +8,20 @@ namespace Ui { class TabDialog; }
 
 namespace Dialogs {
     class TabDialog : public BaseDialog {
-      Q_OBJECT
+        Q_OBJECT
     public:
-      explicit TabDialog(QWidget * parent = 0);
-      ~TabDialog();
+        explicit TabDialog(QWidget * parent = 0);
+        ~TabDialog();
 
-      QString getName();
-      void setName(QString name);
+        QString getName();
+        void setName(QString name);
 
-      Models::Params getSettings();
-      void setSettings(const Models::Params & hash);
+        Models::Params getSettings();
+        void setSettings(const Models::Params & hash);
 
     private:
-      Ui::TabDialog * ui;
+        Models::Params settings;
+        Ui::TabDialog * ui;
     };
 }
 

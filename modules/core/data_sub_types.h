@@ -44,62 +44,66 @@ namespace Core {
 
     #define EXTRACT_MEDIA_TYPE(val) (DataMediaType)(val & 3)
 
+    #define DATA_SUB_TYPE_BASE 10
     enum DataSubType : int {
         dt_level                    = -9000,
         dt_level_tree               = -8000,
         dt_tree                     = -7000,
-        dt_search                   = -6000,
+        dt_search                   = -1000,
 
         dt_none                     = 0,
 
         dt_web                      = 1,
         dt_local                    = 2,
         dt_playlist                 = 4,
-        //reserved 8
+        dt_stream                   = 8,
 
         dt_playlist_local           = dt_local | dt_playlist,
 
-        dt_dummy                    = 10,
+        dt_dummy                    = DATA_SUB_TYPE_BASE,
 
-        dt_cue                      = 20,
+        dt_cue                      = DATA_SUB_TYPE_BASE * 2,
         dt_local_cue                = dt_cue | dt_local,
         dt_web_cue                  = dt_cue | dt_web,
         dt_playlist_cue             = dt_cue | dt_playlist,
 
-        dt_web_vk                   = 30 | dt_web,
+        dt_web_vk                   = DATA_SUB_TYPE_BASE * 3 | dt_web,
         dt_playlist_vk              = dt_web_vk | dt_playlist,
 
-        dt_web_od                   = 40 | dt_web,
+        dt_web_od                   = DATA_SUB_TYPE_BASE * 4 | dt_web,
         dt_playlist_od              = dt_web_od | dt_playlist,
 
-        dt_web_sc                   = 50 | dt_web,
+        dt_web_sc                   = DATA_SUB_TYPE_BASE * 5 | dt_web,
         dt_playlist_sc              = dt_web_sc | dt_playlist,
 
-        dt_web_myzuka               = 60 | dt_web,
-        dt_web_fourshared           = 70 | dt_web,
-        dt_web_zaycev               = 80 | dt_web,
-        dt_web_mp3base              = 90 | dt_web,
-        dt_web_promodj              = 100 | dt_web,
-        dt_web_mp3cc                = 110 | dt_web,
-        dt_web_mp3pm                = 120 | dt_web,
-        dt_web_shmidt               = 130 | dt_web,
-        dt_web_jetune               = 140 | dt_web,
-        dt_web_music_shara          = 150 | dt_web,
-        dt_web_redmp3               = 160 | dt_web,
-        dt_web_yandex               = 170 | dt_web,
-        dt_web_youtube              = 180 | dt_web
+        dt_web_myzuka               = DATA_SUB_TYPE_BASE * 6 | dt_web,
+        dt_web_fourshared           = DATA_SUB_TYPE_BASE * 7 | dt_web,
+        dt_web_zaycev               = DATA_SUB_TYPE_BASE * 8 | dt_web,
+        dt_web_mp3base              = DATA_SUB_TYPE_BASE * 9 | dt_web,
+        dt_web_promodj              = DATA_SUB_TYPE_BASE * 10 | dt_web,
+        dt_web_mp3cc                = DATA_SUB_TYPE_BASE * 11 | dt_web,
+        dt_web_mp3pm                = DATA_SUB_TYPE_BASE * 12 | dt_web,
+        dt_web_shmidt               = DATA_SUB_TYPE_BASE * 13 | dt_web,
+        dt_web_jetune               = DATA_SUB_TYPE_BASE * 14 | dt_web,
+        dt_web_music_shara          = DATA_SUB_TYPE_BASE * 15 | dt_web,
+        dt_web_redmp3               = DATA_SUB_TYPE_BASE * 16 | dt_web,
+        dt_web_yandex               = DATA_SUB_TYPE_BASE * 17 | dt_web,
+        dt_web_youtube              = DATA_SUB_TYPE_BASE * 18 | dt_web
     };
 
-    #define DST_HAS_FLAG(dst, flag) ((dst % 10) & flag)
-    #define DST_EXTRACT_FLAGS(dst) (DataSubType)(dst - (dst % 10))
-    #define DST_EXTRACT_FLAG(dst, flag) (DataSubType)(dst - DST_HAS_FLAG(dst, flag))
-    #define DST_APPEND_FLAG(dst, flag) DST_HAS_FLAG(dst, flag) ? dst : (DataSubType)(dst + flag)
+    #define DST_FLAGS(dst)  (dst % DATA_SUB_TYPE_BASE)
+
+    #define DST_HAS_FLAG(dst, flag) (DST_FLAGS(dst) & flag)
+    #define DST_EXTRACT_FLAGS(dst) (Core::DataSubType)(dst - DST_FLAGS(dst))
+    #define DST_EXTRACT_FLAG(dst, flag) (Core::DataSubType)(dst - DST_HAS_FLAG(dst, flag))
+    #define DST_APPEND_FLAG(dst, flag) DST_HAS_FLAG(dst, flag) ? dst : (Core::DataSubType)(dst + flag)
 
     #define DST_SET_FOLDER(dst) DST_APPEND_FLAG(dst, dt_playlist)
 
-    #define DST_IS_WEB(dst) (dst % 10) & dt_web
-    #define DST_IS_LOCAL(dst) (dst % 10) & dt_local
-    #define DST_IS_PLAYLIST(dst) (dst % 10) & dt_playlist
+    #define DST_IS_WEB(dst) DST_FLAGS(dst) & dt_web
+    #define DST_IS_LOCAL(dst) DST_FLAGS(dst) & dt_local
+    #define DST_IS_PLAYLIST(dst) DST_FLAGS(dst) & dt_playlist
+    #define DST_IS_STREAM(dst) DST_FLAGS(dst) & dt_stream
 }
 
 #endif // DATA_SUB_TYPES

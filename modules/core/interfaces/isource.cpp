@@ -76,7 +76,7 @@ void ISource::openTab() {
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(user_id)),
-            Models::Params(sourceType(), user_id), 0, true, true, 0, true
+            Models::Params(sourceType(), Models::mpf_none, user_id), 0, true, true, 0, true
         );
     }
 }
@@ -86,30 +86,37 @@ void ISource::openRecomendations() {
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Models::Params(sourceType(), user_id, rec_user), 0, true, true
+        Models::Params(sourceType(), Models::mpf_none, user_id, rec_user), 0, true, true
     );
 }
 
 void ISource::openRelationTab() {
     RelationsDialog dialog(this, Settings::obj().anchorWidget());
-    if (dialog.exec() == QDialog::Accepted)
+    if (dialog.exec() == QDialog::Accepted) {
+        QString dialog_params = dialog.getId();
+
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
                 QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-                uidStr(dialog.getId())
+                uidStr(dialog_params)
             ),
-            Models::Params(sourceType(), dialog.getId()), 0, true, true
+            Models::Params(sourceType(), Models::mpf_auto_play_next, dialog_params), 0, true, true
         );
+    }
 }
 
 void ISource::openPackageTab() {
     PackagesDialog dialog(this, Settings::obj().anchorWidget());
-    if (dialog.exec() == QDialog::Accepted)
+    if (dialog.exec() == QDialog::Accepted) {
+        QString dialog_params = dialog.getParams();
+        Cmd cmnd = Cmd(dialog_params); // we should use source type from cmd, because it contains additional flags clarification
+
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
                 QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-                uidStr(dialog.getParams())
+                uidStr(dialog_params)
             ),
-            Models::Params(sourceType(), dialog.getParams(), rec_set), 0, true, true
+            Models::Params((DataSubType)cmnd.source_type, Models::mpf_auto_play_next, dialog_params, rec_set), 0, true, true
         );
+    }
 }

@@ -50,11 +50,12 @@ namespace Views {
 
         bool restoreItem(IItem * itm) { return mdl -> restoreUrl(itm); }
 
-        inline bool isRemoveFileWithItem() const { return settings().deleteFile; }
-        inline bool isPlaylist() const { return settings().playlist; }
-        inline bool isCommon() const { return settings().common; }
-        inline bool isEditable() const { return settings().type < dt_search && !isCommon(); }
-        inline bool isSearch() const { return settings().type == dt_search; }
+        inline bool isRemoveFileWithItem() const { return settings().isDeleteFile(); }
+        inline bool isAutoPlayNext() const { return settings().isAutoPlayNext(); }
+        inline bool isCommon() const { return settings().isCommon(); }
+        inline bool isConfigurable() const { return settings().isConfigurable(); }
+        inline bool isSearch() const { return settings().data_type == dt_search; }
+        inline bool isStream() const { return DST_IS_STREAM(settings().data_type); }
 
         inline Params settings() const { return mdl -> settings(); }
         inline void setSettings(const Params & newSettings) { mdl -> setSettings(newSettings); }

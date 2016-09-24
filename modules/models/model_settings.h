@@ -5,20 +5,31 @@
 #include <qjsonobject.h>
 
 namespace Models {
-    struct Params {
-        Params(Core::DataSubType cType, const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none) : deleteFile(false), playlist(true),
-            interactive(false), common(false), uid(uniq_id), rec_type(rec), type(cType) { }
+    enum ParamsFlags : int {
+        mpf_none = 0,
 
-        Params(Core::DataSubType cType = Core::dt_tree, bool isCommon = false, bool delFile = false, bool isInteractive = false,
-            bool isPlaylist = false, const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none) : deleteFile(delFile), playlist(isPlaylist),
-            interactive(isInteractive), common(isCommon), uid(uniq_id), rec_type(rec), type(cType) { }
+        mpf_configurable = 1,
+        mpf_common = 2,
+        //4
+        //8
+        //16
+        //32
+        //64
+        mpf_del_file = 128,
+        mpf_interactive = 256,
+        mpf_auto_play_next = 512,
+
+
+        mpf_common_playlist = mpf_common | mpf_auto_play_next
+    };
+
+    struct Params {
+        Params(const Core::DataSubType & dataType = Core::dt_none, const ParamsFlags & flags = mpf_auto_play_next, const QString & uniq_id = QString(),
+            Core::RecType rec = Core::rec_none) : flags(flags), uid(uniq_id), rec_type(rec), data_type(dataType) { }
 
         Params(const QJsonObject & obj) {
-            deleteFile = obj[QStringLiteral("del")].toBool();
-            playlist = obj[QStringLiteral("play")].toBool();
-            interactive = obj[QStringLiteral("int")].toBool();
-            common = obj[QStringLiteral("common")].toBool();
-            type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
+            flags = (ParamsFlags)obj[QStringLiteral("flags")].toInt();
+            data_type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
             rec_type = (Core::RecType)obj[QStringLiteral("rec_type")].toInt();
         }
@@ -26,11 +37,8 @@ namespace Models {
         QJsonObject toJson() {
             QJsonObject obj;
 
-            obj[QStringLiteral("del")] = deleteFile;
-            obj[QStringLiteral("play")] = playlist;
-            obj[QStringLiteral("int")] = interactive;
-            obj[QStringLiteral("common")] = common;
-            obj[QStringLiteral("type")] = type;
+            obj[QStringLiteral("flags")] = flags;
+            obj[QStringLiteral("type")] = data_type;
             if (!uid.isEmpty())
                 obj[QStringLiteral("uid")] = uid;
 
@@ -39,14 +47,24 @@ namespace Models {
             return obj;
         }
 
-        bool deleteFile;
-        bool playlist;
-        bool interactive;
-        bool common;
+        void setFlag(int flag, bool on = true) {
+            if (on)
+                flags = (ParamsFlags)(flags | flag);
+            else
+                flags = (ParamsFlags)(flags & (~(flag)));
+        }
+        void setFlags(int new_flags) { flags = (ParamsFlags)((flags & 3) | new_flags); }
+
+        bool isAutoPlayNext() { return flags & mpf_auto_play_next; }
+        bool isInteractive() { return flags & mpf_interactive; }
+        bool isDeleteFile() { return flags & mpf_del_file; }
+        bool isCommon() { return flags & mpf_common; }
+        bool isConfigurable() { return flags & mpf_configurable; }
+
+        ParamsFlags flags;
         QString uid;
         Core::RecType rec_type;
-
-        Core::DataSubType type;
+        Core::DataSubType data_type;
     };
 }
 

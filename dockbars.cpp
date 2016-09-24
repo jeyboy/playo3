@@ -123,7 +123,8 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, Model
         return 0; // stub
     } else if (names.is(COMMON_TAB)) {
         if (common) return 0;
-        settings.playlist = true; settings.common = true;
+        //settings.playlist = true; settings.common = true;
+        settings.setFlag(mpf_common_playlist);
         return (common = createDocBar(names, settings, &attrs, false));
     } else if (names.is(DOWNLOADS_TAB)) {
         DockBar * bar = createDocBar(names, false);
@@ -142,7 +143,7 @@ QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, Model
     }
 }
 
-Models::Params defSettings(dt_level, true, false, false, true);
+Models::Params defSettings(dt_level, mpf_common_playlist);
 
 DockBar * Dockbars::commonBar() {
     if (!common) common = createDocBar(BarCreationNames(COMMON_TAB), defSettings, 0, false);
@@ -183,7 +184,7 @@ DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::P
     bar -> initiateSearch();
 
     if (!attrs) {
-        if (settings.type != dt_search)
+        if (settings.data_type != dt_search)
             ((IModel *)view -> model()) -> refresh();
         else
             ((SearchView *)view) -> search(*search_settings);
@@ -268,7 +269,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
     if (bar) {
         IView * view = dynamic_cast<IView *>(bar -> widget());
 
-        if (!view -> isEditable()) {
+        if (!view -> isConfigurable()) {
             QMessageBox::warning(this, QStringLiteral("Settings"), QStringLiteral("This view type is not editable ..."));
             return;
         }

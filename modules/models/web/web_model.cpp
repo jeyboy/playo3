@@ -6,7 +6,7 @@ void WebModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
 
-    switch(sttngs.type) { //TODO: move this to virt funcs in isource
+    switch(sttngs.data_type) { //TODO: move this to virt funcs in isource
         case dt_web_vk: {
             switch(sttngs.rec_type) {
                 case rec_none: {

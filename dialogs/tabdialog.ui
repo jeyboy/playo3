@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>302</width>
-    <height>181</height>
+    <height>226</height>
    </rect>
   </property>
   <property name="font">
@@ -22,7 +22,7 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>150</y>
+     <y>190</y>
      <width>261</width>
      <height>32</height>
     </rect>
@@ -75,10 +75,10 @@
   <widget class="QGroupBox" name="groupBox">
    <property name="geometry">
     <rect>
-     <x>150</x>
+     <x>10</x>
      <y>40</y>
-     <width>141</width>
-     <height>101</height>
+     <width>281</width>
+     <height>51</height>
     </rect>
    </property>
    <property name="toolTip">
@@ -87,87 +87,14 @@
    <property name="title">
     <string>List type</string>
    </property>
-   <widget class="QRadioButton" name="isListRadio">
-    <property name="geometry">
-     <rect>
-      <x>70</x>
-      <y>20</y>
-      <width>51</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In this case you will see items, without any relation to the folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>List</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="isTreeRadio">
+   <widget class="QComboBox" name="tabType">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>51</width>
-      <height>17</height>
+      <width>261</width>
+      <height>22</height>
      </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt; In this case you will see full path, which will be splited on folders.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>Tree</string>
-    </property>
-    <property name="checked">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="isOneLevelTreeRadio">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>44</y>
-      <width>121</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In this case you will see only parent folder of item. If you include two folders with the same name - it will be shown as one folder and will contain items from both folders.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>One Level Tree</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="isVkRadio">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>70</y>
-      <width>41</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In this case you will see items, without any relation to the folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>Vk</string>
-    </property>
-   </widget>
-   <widget class="QRadioButton" name="isSoundcloudRadio">
-    <property name="geometry">
-     <rect>
-      <x>60</x>
-      <y>70</y>
-      <width>91</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;In this case you will see items, without any relation to the folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-    </property>
-    <property name="text">
-     <string>Soundcloud</string>
     </property>
    </widget>
   </widget>
@@ -175,15 +102,15 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>40</y>
-     <width>141</width>
-     <height>101</height>
+     <y>100</y>
+     <width>281</width>
+     <height>81</height>
     </rect>
    </property>
    <property name="title">
     <string>List options</string>
    </property>
-   <widget class="QCheckBox" name="playlist">
+   <widget class="QCheckBox" name="autoPlayNext">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -202,10 +129,10 @@
    <widget class="QCheckBox" name="interactive">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>43</y>
+      <x>150</x>
+      <y>20</y>
       <width>121</width>
-      <height>17</height>
+      <height>20</height>
      </rect>
     </property>
     <property name="text">
@@ -216,8 +143,8 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>66</y>
-      <width>131</width>
+      <y>40</y>
+      <width>261</width>
       <height>31</height>
      </rect>
     </property>
@@ -232,11 +159,10 @@
      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this option when you remove item, you are initiate deletion  of object from your hard disk ( or account data storage)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="styleSheet">
-     <string notr="true">font-weight: bold;</string>
+     <string notr="true">font-weight: bold; color: red;</string>
     </property>
     <property name="text">
-     <string>Delete file 
- with item</string>
+     <string>Delete file with item</string>
     </property>
    </widget>
   </widget>

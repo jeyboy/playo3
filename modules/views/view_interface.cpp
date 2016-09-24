@@ -319,7 +319,7 @@ void IView::openRecomendationsforUser() {
 
     if (src -> respondableTo(pr_recommendations)) {
         QString user_uid = settings().uid;
-        Params bar_settings(mdl -> playlistType(), false, false, false, true, user_uid, rec_user);
+        Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_user);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % user_uid), bar_settings, 0, true, true);
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }
@@ -331,7 +331,7 @@ void IView::openRecomendationsforItemUser() {
     if (src -> respondableTo(pr_recommendations)) {
         QVariant owner_id = it -> ownerId();
         if (owner_id.isValid()) {
-            Params bar_settings(it -> dataType(), false, false, false, true, owner_id.toString(), rec_user);
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_user);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % owner_id.toString()), bar_settings, 0, true, true);
         }
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
@@ -343,7 +343,7 @@ void IView::openRecomendationsforItem() {
 
     if (src -> respondableTo(pr_recommendations)) {
         if (it -> id().isValid()) {
-            Params bar_settings(it -> dataType(), false, false, false, true, it -> toUid(), rec_song);
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_song);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
         }
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
@@ -393,7 +393,7 @@ void IView::focusInEvent(QFocusEvent *) {
 void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is not work properly // need to use addActions() maybe
     QMenu menu(this);
 
-    if (isEditable()) {
+    if (isConfigurable()) {
         menu.addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
         menu.addSeparator();
     }

@@ -37,7 +37,7 @@ namespace Core {
             qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
             return;
         }
-        if (current_playlist -> isPlaylist()) {
+        if (current_playlist -> isAutoPlayNext()) {
             if (onFail && Settings::obj().isFindValid())
                 if (++attempts > MAX_ATTEMPTS) {
                     attempts = 0;

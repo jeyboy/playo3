@@ -41,6 +41,11 @@ namespace Core {
         extern const QString tkn_cmd_parser;
         extern const QString tkn_is_empty;
 
+        extern const QString tkn_mood;
+        extern const QString tkn_energy;
+        extern const QString tkn_lang;
+        extern const QString tkn_diversity;
+
         extern const QString tkn_grab_title;
         extern const QString tkn_grab_duration;
         extern const QString tkn_grab_size;
