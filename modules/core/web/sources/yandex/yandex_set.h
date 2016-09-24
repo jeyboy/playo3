@@ -248,7 +248,8 @@ namespace Core {
                                 stream_cmd_tmpl.setAttrs(
                                     {
                                         { CMD_SET_TYPE, QString::number(set_genre_stream) },
-                                        { CMD_GENRE, opt.value() }
+                                        { CMD_GENRE, opt.value() },
+                                        { CMD_CONFIGURABLE, LSTR("t") }
                                     }
                                 ) -> toString()
                             );

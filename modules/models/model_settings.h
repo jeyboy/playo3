@@ -5,7 +5,7 @@
 #include <qjsonobject.h>
 
 namespace Models {
-    enum ParamsFlags : int {
+    enum ParamFlags : int {
         mpf_none = 0,
 
         mpf_configurable = 1,
@@ -24,11 +24,11 @@ namespace Models {
     };
 
     struct Params {
-        Params(const Core::DataSubType & dataType = Core::dt_none, const ParamsFlags & flags = mpf_auto_play_next, const QString & uniq_id = QString(),
+        Params(const Core::DataSubType & dataType = Core::dt_none, const ParamFlags & flags = mpf_auto_play_next, const QString & uniq_id = QString(),
             Core::RecType rec = Core::rec_none) : flags(flags), uid(uniq_id), rec_type(rec), data_type(dataType) { }
 
         Params(const QJsonObject & obj) {
-            flags = (ParamsFlags)obj[QStringLiteral("flags")].toInt();
+            flags = (ParamFlags)obj[QStringLiteral("flags")].toInt();
             data_type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
             rec_type = (Core::RecType)obj[QStringLiteral("rec_type")].toInt();
@@ -49,11 +49,11 @@ namespace Models {
 
         void setFlag(int flag, bool on = true) {
             if (on)
-                flags = (ParamsFlags)(flags | flag);
+                flags = (ParamFlags)(flags | flag);
             else
-                flags = (ParamsFlags)(flags & (~(flag)));
+                flags = (ParamFlags)(flags & (~(flag)));
         }
-        void setFlags(int new_flags) { flags = (ParamsFlags)((flags & 3) | new_flags); }
+        void setFlags(int new_flags) { flags = (ParamFlags)((flags & 3) | new_flags); }
 
         bool isAutoPlayNext() { return flags & mpf_auto_play_next; }
         bool isInteractive() { return flags & mpf_interactive; }
@@ -61,7 +61,7 @@ namespace Models {
         bool isCommon() { return flags & mpf_common; }
         bool isConfigurable() { return flags & mpf_configurable; }
 
-        ParamsFlags flags;
+        ParamFlags flags;
         QString uid;
         Core::RecType rec_type;
         Core::DataSubType data_type;

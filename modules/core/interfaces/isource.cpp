@@ -110,13 +110,19 @@ void ISource::openPackageTab() {
     if (dialog.exec() == QDialog::Accepted) {
         QString dialog_params = dialog.getParams();
         Cmd cmnd = Cmd(dialog_params); // we should use source type from cmd, because it contains additional flags clarification
+        bool is_configurable = cmnd.attrs.hasQueryItem(CMD_CONFIGURABLE);
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
                 QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
                 uidStr(dialog_params)
             ),
-            Models::Params((DataSubType)cmnd.source_type, Models::mpf_auto_play_next, dialog_params, rec_set), 0, true, true
+            Models::Params(
+                (DataSubType)cmnd.source_type,
+                (Models::ParamFlags)(Models::mpf_auto_play_next | (is_configurable ? Models::mpf_configurable : Models::mpf_none)),
+                dialog_params, rec_set
+            ),
+            0, true, true
         );
     }
 }

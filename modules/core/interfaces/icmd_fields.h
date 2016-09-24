@@ -17,6 +17,7 @@
 #define CMD_PARSER QStringLiteral("parser")
 
 #define CMD_GENRE QStringLiteral("genre")
+#define CMD_CONFIGURABLE QStringLiteral("config")
 
 #define CMD_PREDICATE QStringLiteral("predicate")
 #define CMD_PREDICATE_TYPE QStringLiteral("predicate_type")
