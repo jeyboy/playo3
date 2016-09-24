@@ -14,7 +14,7 @@ namespace Dialogs {
         ~TabDialog();
 
         QString getName();
-        void setName(QString name);
+        void setName(const QString & name);
 
         Models::Params getSettings();
         void setSettings(const Models::Params & hash);
