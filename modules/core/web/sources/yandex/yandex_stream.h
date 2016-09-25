@@ -30,7 +30,8 @@ namespace Core {
                     Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(block);
                     mood_slider -> setRange(1, 4);
                     mood_slider -> setMinimumWidth(100);
-                    layout -> addWidget(mood_slider, 1, 1, -1, 4);
+                    mood_slider -> setOrientation(Qt::Horizontal);
+                    layout -> addWidget(mood_slider, 1, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("Cheerful"), block), 1, col_span - 1);
                     elems.insert(LSTR("mood"), mood_slider);
 
@@ -39,7 +40,8 @@ namespace Core {
                     Controls::ClickableSlider * energy_slider = new Controls::ClickableSlider(block);
                     energy_slider -> setRange(1, 4);
                     energy_slider -> setMinimumWidth(100);
-                    layout -> addWidget(energy_slider, 3, 1, -1, 4);
+                    energy_slider -> setOrientation(Qt::Horizontal);
+                    layout -> addWidget(energy_slider, 3, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("More"), block), 3, col_span - 1);
                     elems.insert(LSTR("energy"), energy_slider);
 
