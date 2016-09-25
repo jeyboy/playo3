@@ -18,8 +18,15 @@
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {
         Q_OBJECT
+    protected:
+        enum SourceSettngsType : int {
+            sst_none = 0,
+            sst_source,
+            sst_feeds,
+            sst_stream
+        };
 
-        QHash<QString, QWidget *> settings_forms;
+        QHash<int, QHash<QString, QWidget *> > settings_forms;
     public:
         virtual ~ISource() {}
 

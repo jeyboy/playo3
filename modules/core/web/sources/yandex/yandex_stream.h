@@ -10,6 +10,8 @@
 
 #include "yandex_defines.h"
 #include "modules/controls/clickable_slider.h"
+#include "qgroupbox.h"
+#include "qradiobutton.h"
 
 namespace Core {
     namespace Web {
@@ -17,17 +19,64 @@ namespace Core {
             class Stream : public virtual Base {
             public:
                 QWidget * streamSettingsBlock() { // need to set default values from streamConfiguration
+                    QHash<QString, QWidget *> elems;
+
                     QWidget * block = new QWidget();
                     QGridLayout * layout = new QGridLayout(block);
                     int col_span = 6;
 
-                    layout -> addWidget(new QLabel(LSTR("Mood"), block), 0, 0, 1, col_span);
-
+                    layout -> addWidget(new QLabel(LSTR("Mood"), block), 0, 0, 1, col_span, Qt::AlignCenter);
                     layout -> addWidget(new QLabel(LSTR("Calmly"), block), 1, 0);
                     Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(block);
                     mood_slider -> setRange(1, 4);
-                    layout -> addWidget(mood_slider, 1, 1, 1, 4);
+                    mood_slider -> setMinimumWidth(100);
+                    layout -> addWidget(mood_slider, 1, 1, -1, 4);
                     layout -> addWidget(new QLabel(LSTR("Cheerful"), block), 1, col_span - 1);
+                    elems.insert(LSTR("mood"), mood_slider);
+
+                    layout -> addWidget(new QLabel(LSTR("Energy"), block), 2, 0, 1, col_span, Qt::AlignCenter);
+                    layout -> addWidget(new QLabel(LSTR("Less"), block), 3, 0);
+                    Controls::ClickableSlider * energy_slider = new Controls::ClickableSlider(block);
+                    energy_slider -> setRange(1, 4);
+                    energy_slider -> setMinimumWidth(100);
+                    layout -> addWidget(energy_slider, 3, 1, -1, 4);
+                    layout -> addWidget(new QLabel(LSTR("More"), block), 3, col_span - 1);
+                    elems.insert(LSTR("energy"), energy_slider);
+
+                    QGroupBox * lang_group = new QGroupBox(LSTR("Language"));
+                    QHBoxLayout * lang_layout = new QHBoxLayout(lang_group);
+                    QRadioButton * lang_any = new QRadioButton(LSTR("Any"), lang_group);
+                    lang_layout -> addWidget(lang_any);
+                    QRadioButton * lang_rus = new QRadioButton(LSTR("Russian"), lang_group);
+                    lang_layout -> addWidget(lang_rus);
+                    QRadioButton * lang_non_rus = new QRadioButton(LSTR("Non Russian"), lang_group);
+                    lang_layout -> addWidget(lang_non_rus);
+
+                    elems.insert(LSTR("lang_any"), lang_any);
+                    elems.insert(LSTR("lang_rus"), lang_rus);
+                    elems.insert(LSTR("lang_non_rus"), lang_non_rus);
+                    layout -> addWidget(lang_group, 4, 0, 1, col_span);
+
+
+                    QGroupBox * diversity_group = new QGroupBox(LSTR("Diversity"));
+                    QHBoxLayout * diversity_layout = new QHBoxLayout(diversity_group);
+
+                    QRadioButton * diversity_all = new QRadioButton(LSTR("All"), diversity_group);
+                    diversity_layout -> addWidget(diversity_all);
+                    QRadioButton * diversity_popular = new QRadioButton(LSTR("Popular"), diversity_group);
+                    diversity_layout -> addWidget(diversity_popular);
+                    QRadioButton * diversity_favorite = new QRadioButton(LSTR("Favorite"), diversity_group);
+                    diversity_layout -> addWidget(diversity_favorite);
+                    QRadioButton * diversity_diverse = new QRadioButton(LSTR("Diverse"), diversity_group);
+                    diversity_layout -> addWidget(diversity_diverse);
+
+                    elems.insert(LSTR("diversity_all"), diversity_all);
+                    elems.insert(LSTR("diversity_popular"), diversity_popular);
+                    elems.insert(LSTR("diversity_favorite"), diversity_favorite);
+                    elems.insert(LSTR("diversity_diverse"), diversity_diverse);
+                    layout -> addWidget(diversity_group, 5, 0, 1, col_span);
+
+                    settings_forms.insert(sst_stream, elems);
 
                     return block;
                 }

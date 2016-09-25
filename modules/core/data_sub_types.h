@@ -58,6 +58,8 @@ namespace Core {
         dt_playlist                 = 4,
         dt_stream                   = 8,
 
+        dt_location                 = dt_web | dt_local,
+
         dt_playlist_local           = dt_local | dt_playlist,
 
         dt_dummy                    = DATA_SUB_TYPE_BASE,
@@ -94,7 +96,7 @@ namespace Core {
     #define DST_FLAGS(dst)  (dst % DATA_SUB_TYPE_BASE)
 
     #define DST_HAS_FLAG(dst, flag) (DST_FLAGS(dst) & flag)
-    #define DST_EXTRACT_FLAGS(dst) (Core::DataSubType)(dst - DST_FLAGS(dst))
+    #define DST_EXTRACT_FLAGS(dst) (Core::DataSubType)((dst - DST_FLAGS(dst)) | dst & Core::dt_location)
     #define DST_EXTRACT_FLAG(dst, flag) (Core::DataSubType)(dst - DST_HAS_FLAG(dst, flag))
     #define DST_APPEND_FLAG(dst, flag) DST_HAS_FLAG(dst, flag) ? dst : (Core::DataSubType)(dst + flag)
 
