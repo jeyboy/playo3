@@ -8,17 +8,16 @@ namespace Models {
     enum ParamFlags : int {
         mpf_none = 0,
 
-        mpf_configurable = 1,
-        mpf_common = 2,
-        //4
-        //8
-        //16
+        mpf_tab_configurable = 1,
+        mpf_source_configurable = 2,
+        mpf_stream_configurable = 4,
+        mpf_feeds_configurable = 8,
+        mpf_common = 16,
         //32
         //64
         mpf_del_file = 128,
         mpf_interactive = 256,
         mpf_auto_play_next = 512,
-
 
         mpf_common_playlist = mpf_common | mpf_auto_play_next
     };
@@ -53,13 +52,18 @@ namespace Models {
             else
                 flags = (ParamFlags)(flags & (~(flag)));
         }
-        void setFlags(int new_flags) { flags = (ParamFlags)((flags & 3) | new_flags); }
+        void setFlags(int new_flags) { flags = (ParamFlags)((flags & 31) | new_flags); }
 
         bool isAutoPlayNext() { return flags & mpf_auto_play_next; }
         bool isInteractive() { return flags & mpf_interactive; }
         bool isDeleteFile() { return flags & mpf_del_file; }
         bool isCommon() { return flags & mpf_common; }
-        bool isConfigurable() { return flags & mpf_configurable; }
+
+        bool isConfigurable() { return flags & (mpf_common - 1); }
+        bool isTabConfigurable() { return flags & mpf_tab_configurable; }
+        bool isSourceConfigurable() { return flags & mpf_source_configurable; }
+        bool isStreamConfigurable() { return flags & mpf_stream_configurable; }
+        bool isFeedsConfigurable() { return flags & mpf_feeds_configurable; }
 
         ParamFlags flags;
         QString uid;

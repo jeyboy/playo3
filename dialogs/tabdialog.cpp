@@ -40,10 +40,15 @@ Models::Params TabDialog::getSettings() {
         (ui -> deleteFile -> isChecked() ? Models::mpf_del_file : Models::mpf_none) |
         (ui -> interactive -> isChecked() ? Models::mpf_interactive : Models::mpf_none) |
         (ui -> autoPlayNext -> isChecked() ? Models::mpf_auto_play_next : Models::mpf_none) |
-        (!settings.isCommon() && sel_data_type < Core::dt_search ? Models::mpf_configurable : Models::mpf_none);
+        (!settings.isCommon() && sel_data_type < Core::dt_search ? Models::mpf_tab_configurable : Models::mpf_none);
 
     settings.data_type = sel_data_type;
     settings.setFlags(new_flags);
+
+    Core::DataSubType data_type = DST_EXTRACT_FLAGS(settings.data_type);
+    Core::ISource * source = Core::Web::Apis::source(data_type);
+    if (source)
+        source -> applySettings();
 
     return settings;
 }
@@ -75,9 +80,31 @@ void TabDialog::setSettings(const Models::Params & params) {
     ui -> tabType -> setEnabled(false);
     ui -> tabType -> setCurrentIndex(index);
 
+    if (!settings.isTabConfigurable()) {
+        ui -> groupBox -> setEnabled(false);
+        ui -> groupBox_2 -> setEnabled(false);
+        ui -> groupBox_3 -> setEnabled(false);
+    }
+
     Core::ISource * source = Core::Web::Apis::source(data_type);
 
-    QWidget * settings_block = source -> settingsBlock();
-    if (settings_block)
-        ui -> verticalLayout -> addWidget(settings_block);
+    if (source) {
+        if (settings.isSourceConfigurable()) {
+            QWidget * settings_block = source -> sourceSettingsBlock();
+            if (settings_block)
+                ui -> verticalLayout -> addWidget(settings_block);
+        }
+
+        if (settings.isFeedsConfigurable()) {
+            QWidget * settings_block = source -> feedsSettingsBlock();
+            if (settings_block)
+                ui -> verticalLayout -> addWidget(settings_block);
+        }
+
+        if (settings.isStreamConfigurable()) {
+            QWidget * settings_block = source -> streamSettingsBlock();
+            if (settings_block)
+                ui -> verticalLayout -> addWidget(settings_block);
+        }
+    }
 }

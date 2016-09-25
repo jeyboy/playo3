@@ -249,7 +249,7 @@ namespace Core {
                                     {
                                         { CMD_SET_TYPE, QString::number(set_genre_stream) },
                                         { CMD_GENRE, opt.value() },
-                                        { CMD_CONFIGURABLE, LSTR("t") }
+                                        { CMD_STREAM_CONFIGURABLE, LSTR("t") }
                                     }
                                 ) -> toString()
                             );

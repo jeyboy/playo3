@@ -18,6 +18,8 @@
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {
         Q_OBJECT
+
+        QHash<QString, QWidget *> settings_forms;
     public:
         virtual ~ISource() {}
 
@@ -55,7 +57,10 @@ namespace Core {
         virtual inline QMap<QString, QString> setsList() { return QMap<QString, QString>(); }
 
         QToolButton * initButton(QWidget * parent = 0);
-        QWidget * settingsBlock() { return 0; }
+        virtual QWidget * streamSettingsBlock() { return 0; }
+        virtual QWidget * sourceSettingsBlock() { return 0; }
+        virtual QWidget * feedsSettingsBlock() { return 0; }
+        virtual void applySettings() { settings_forms.clear(); }
 
     public slots:
         void openTab();

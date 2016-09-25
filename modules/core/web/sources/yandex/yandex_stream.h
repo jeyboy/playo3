@@ -9,12 +9,29 @@
 
 
 #include "yandex_defines.h"
+#include "modules/controls/clickable_slider.h"
 
 namespace Core {
     namespace Web {
         namespace Yandex {
             class Stream : public virtual Base {
             public:
+                QWidget * streamSettingsBlock() { // need to set default values from streamConfiguration
+                    QWidget * block = new QWidget();
+                    QGridLayout * layout = new QGridLayout(block);
+                    int col_span = 6;
+
+                    layout -> addWidget(new QLabel(LSTR("Mood"), block), 0, 0, 1, col_span);
+
+                    layout -> addWidget(new QLabel(LSTR("Calmly"), block), 1, 0);
+                    Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(block);
+                    mood_slider -> setRange(1, 4);
+                    layout -> addWidget(mood_slider, 1, 1, 1, 4);
+                    layout -> addWidget(new QLabel(LSTR("Cheerful"), block), 1, col_span - 1);
+
+                    return block;
+                }
+
                 QJsonValue streamConfiguration(const QUrlQuery & args) {
                     return streamConfiguration(args.queryItemValue(CMD_GENRE));
                 }
