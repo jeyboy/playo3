@@ -9,7 +9,7 @@ namespace Core {
         namespace Yandex {
             class Set : public Stream, public Video {
             protected:
-//                inline QString topUrl(const QString & filter = QString(), QString genre = LSTR("all")) { return url_site_v1 + LSTR("top.jsx?genre=%1&filter=%2").arg(genre, filter); }
+                // curl 'https://music.yandex.ua/handlers/top.jsx?genre=punk&filter=albums&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.6197049105143202' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/album/3075289/track/23799609' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/album/3075289/track/23799609'
 
                 enum SetType {
                     set_popular_tracks = 1, set_popular_artists, set_popular_promotions,
@@ -218,7 +218,6 @@ namespace Core {
 
                     return prepareBlock(mtype, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                 }
-
             public:
                 QJsonValue setByType(const QUrlQuery & attrs) {
                     return setByType(

@@ -8,9 +8,85 @@
 #include <qvariant.h>
 #include <qhash.h>
 #include <qregularexpression.h>
+#include <qdatetime.h>
+#include <qstringbuilder.h>
 
 namespace Core {
     struct Cmd {
+        static QString variantToStr(const QVariant & data) {
+            QString res;
+
+            switch(data.type()) {
+                case QVariant::Int:
+                    { res = QString::number(data.toInt()); break;}
+                case QVariant::UInt:
+                    { res = QString::number(data.toUInt()); break;}
+                case QVariant::LongLong:
+                    { res = QString::number(data.toLongLong()); break;}
+                case QVariant::ULongLong:
+                    { res = QString::number(data.toULongLong()); break;}
+                case QVariant::Double:
+                    { res = QString::number(data.toDouble()); break;}
+
+
+                case QVariant::Map:
+                    {
+                        QVariantMap map = data.toMap();
+                        for(QVariantMap::Iterator entry = map.begin(); entry != map.end(); entry++)
+                            res += ',' % entry.key() % ':' % variantToStr(entry.value());
+
+                        res = res.mid(1);
+
+                    break;}
+                case QVariant::List:
+                    {
+                        QVariantList map = data.toList();
+                        for(QVariantList::Iterator entry = map.begin(); entry != map.end(); entry++)
+                            res += ',' % variantToStr(*entry);
+
+                        res = res.mid(1);
+
+                    break;}
+                case QVariant::StringList:
+                    {
+                        QStringList map = data.toStringList();
+                        for(QStringList::Iterator entry = map.begin(); entry != map.end(); entry++)
+                            res += ',' % (*entry);
+
+                        res = res.mid(1);
+
+                    break;}
+                case QVariant::Hash:
+                    {
+                        QVariantHash map = data.toHash();
+                        for(QVariantHash::Iterator entry = map.begin(); entry != map.end(); entry++)
+                            res += ',' % entry.key() % ':' % variantToStr(entry.value());
+
+                        res = res.mid(1);
+
+                    break;}
+
+
+                case QVariant::Url:
+                    { res = data.toUrl().toString(); break;}
+                case QVariant::Date:
+                    { res = data.toDate().toString(); break;}
+                case QVariant::Time:
+                    { res = data.toTime().toString(); break;}
+                case QVariant::DateTime:
+                    { res = data.toDateTime().toString(); break;}
+
+
+                case QVariant::Bool:
+                    { res = data.toBool() ? QStringLiteral("true") : QStringLiteral("false"); break;}
+                case QVariant::Char:
+                    { res = data.toChar(); break;}
+                default: res = data.toString();
+            }
+
+            return res;
+        }
+
         static QUrlQuery paramsToQuery(const std::initializer_list<std::pair<QString, QVariant> > & params) {
             QUrlQuery query;
             paramsToQuery(query, params);
@@ -138,7 +214,7 @@ namespace Core {
             cmd_mtd_streams_by_genre,
             cmd_mtd_stream_by_artist,
             cmd_mtd_stream_configure,
-            cmd_mtd_stream_configuration,
+//            cmd_mtd_stream_configuration,
 
             cmd_mtd_artist_info,
             cmd_mtd_artists_search,
@@ -206,7 +282,7 @@ namespace Core {
                 case cmd_mtd_streams_by_genre: return streamsByGenre(params);
                 case cmd_mtd_stream_by_artist: return streamByArtist(params);
                 case cmd_mtd_stream_configure: return streamConfigure(params);
-                case cmd_mtd_stream_configuration: return streamConfiguration(params);
+//                case cmd_mtd_stream_configuration: return streamConfiguration(params);
 
                 case cmd_mtd_artist_info: return artistInfo(params);
                 case cmd_mtd_artists_search: return artistsSearch(params);
@@ -280,7 +356,7 @@ namespace Core {
         virtual QJsonValue streamsByGenre(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamConfigure(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue streamConfiguration(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QVariant streamConfiguration(const QUrlQuery & /*args*/) { return QVariant(); }
 
         virtual QJsonValue artistInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue artistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }

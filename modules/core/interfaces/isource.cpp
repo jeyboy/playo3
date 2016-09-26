@@ -109,23 +109,34 @@ void ISource::openPackageTab() {
     PackagesDialog dialog(this, Settings::obj().anchorWidget());
     if (dialog.exec() == QDialog::Accepted) {
         QString dialog_params = dialog.getParams();
+        QString uid_postfix;
+        QVariant data;
         Cmd cmnd = Cmd(dialog_params); // we should use source type from cmd, because it contains additional flags clarification
 
+        bool source_configurable = cmnd.attrs.hasQueryItem(CMD_SOURCE_CONFIGURABLE);
+        bool stream_configurable = cmnd.attrs.hasQueryItem(CMD_STREAM_CONFIGURABLE);
+        bool feeds_configurable = cmnd.attrs.hasQueryItem(CMD_FEEDS_CONFIGURABLE);
+
         Models::ParamFlags configs = (Models::ParamFlags)(
-            (cmnd.attrs.hasQueryItem(CMD_SOURCE_CONFIGURABLE) ? Models::mpf_source_configurable : Models::mpf_none) |
-            (cmnd.attrs.hasQueryItem(CMD_FEEDS_CONFIGURABLE) ? Models::mpf_feeds_configurable : Models::mpf_none) |
-            (cmnd.attrs.hasQueryItem(CMD_STREAM_CONFIGURABLE) ? Models::mpf_stream_configurable : Models::mpf_none)
+            (source_configurable ? Models::mpf_source_configurable : Models::mpf_none) |
+            (feeds_configurable ? Models::mpf_feeds_configurable : Models::mpf_none) |
+            (stream_configurable ? Models::mpf_stream_configurable : Models::mpf_none)
         );
+
+        if (stream_configurable) {
+            data = streamConfiguration(cmnd.attrs);
+            uid_postfix = Cmd::variantToStr(data);
+        }
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
-                QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
-                uidStr(dialog_params)
+                name() % LSTR(" [") % dialog.getName() % '|' % uid_postfix % ']',
+                uidStr(dialog_params % uid_postfix)
             ),
             Models::Params(
                 (DataSubType)cmnd.source_type,
                 (Models::ParamFlags)(Models::mpf_auto_play_next | configs),
-                dialog_params, rec_set
+                dialog_params, rec_set, data
             ),
             0, true, true
         );

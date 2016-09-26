@@ -3,6 +3,7 @@
 
 #include "modules/core/data_sub_types.h"
 #include <qjsonobject.h>
+#include <qvariant.h>
 
 namespace Models {
     enum ParamFlags : int {
@@ -23,14 +24,16 @@ namespace Models {
     };
 
     struct Params {
-        Params(const Core::DataSubType & dataType = Core::dt_none, const ParamFlags & flags = mpf_auto_play_next, const QString & uniq_id = QString(),
-            Core::RecType rec = Core::rec_none) : flags(flags), uid(uniq_id), rec_type(rec), data_type(dataType) { }
+        Params(const Core::DataSubType & dataType = Core::dt_none, const ParamFlags & flags = mpf_auto_play_next,
+            const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none, const QVariant & data = QVariant()) :
+                flags(flags), uid(uniq_id), rec_type(rec), data_type(dataType), data(data) { }
 
         Params(const QJsonObject & obj) {
             flags = (ParamFlags)obj[QStringLiteral("flags")].toInt();
             data_type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
             rec_type = (Core::RecType)obj[QStringLiteral("rec_type")].toInt();
+            data = obj[QStringLiteral("data")].toVariant();
         }
 
         QJsonObject toJson() {
@@ -42,6 +45,9 @@ namespace Models {
                 obj[QStringLiteral("uid")] = uid;
 
             obj[QStringLiteral("rec_type")] = rec_type;
+
+            if (data.isValid())
+                obj[QStringLiteral("data")] = QJsonValue::fromVariant(data);
 
             return obj;
         }
@@ -65,6 +71,7 @@ namespace Models {
         bool isStreamConfigurable() { return flags & mpf_stream_configurable; }
         bool isFeedsConfigurable() { return flags & mpf_feeds_configurable; }
 
+        QVariant data;
         ParamFlags flags;
         QString uid;
         Core::RecType rec_type;

@@ -79,6 +79,7 @@ namespace Core {
                 }
 
                 void saveAdditionals(QJsonObject & obj) {
+                    setSiteAdditionalToken(QString());
                     Sociable::toJson(obj);
                     Manager::saveCookies(obj, QUrl(baseUrlStr(qst_site_base)));
                 }

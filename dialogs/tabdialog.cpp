@@ -90,19 +90,19 @@ void TabDialog::setSettings(const Models::Params & params) {
 
     if (source) {
         if (settings.isSourceConfigurable()) {
-            QWidget * settings_block = source -> sourceSettingsBlock();
+            QWidget * settings_block = source -> sourceSettingsBlock(params.data);
             if (settings_block)
                 ui -> verticalLayout -> addWidget(settings_block);
         }
 
         if (settings.isFeedsConfigurable()) {
-            QWidget * settings_block = source -> feedsSettingsBlock();
+            QWidget * settings_block = source -> feedsSettingsBlock(params.data);
             if (settings_block)
                 ui -> verticalLayout -> addWidget(settings_block);
         }
 
         if (settings.isStreamConfigurable()) {
-            QWidget * settings_block = source -> streamSettingsBlock();
+            QWidget * settings_block = source -> streamSettingsBlock(params.data);
             if (settings_block)
                 ui -> verticalLayout -> addWidget(settings_block);
         }

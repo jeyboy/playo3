@@ -18,7 +18,9 @@ namespace Core {
         namespace Yandex {
             class Stream : public virtual Base {
             public:
-                QWidget * streamSettingsBlock() { // need to set default values from streamConfiguration
+                QWidget * streamSettingsBlock(const QVariant & data) {
+                    QVariantMap curr_settings = data.toMap();
+
                     QHash<QString, QWidget *> elems;
 
                     QWidget * block = new QWidget();
@@ -29,64 +31,69 @@ namespace Core {
                     layout -> addWidget(new QLabel(LSTR("Calmly"), block), 1, 0);
                     Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(block);
                     mood_slider -> setRange(1, 4);
-                    mood_slider -> setMinimumWidth(100);
                     mood_slider -> setOrientation(Qt::Horizontal);
+                    mood_slider -> setValue(curr_settings[YANEX_STREAM_MOOD].toInt());
                     layout -> addWidget(mood_slider, 1, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("Cheerful"), block), 1, col_span - 1);
-                    elems.insert(LSTR("mood"), mood_slider);
+                    elems.insert(YANEX_STREAM_MOOD, mood_slider);
 
                     layout -> addWidget(new QLabel(LSTR("Energy"), block), 2, 0, 1, col_span, Qt::AlignCenter);
                     layout -> addWidget(new QLabel(LSTR("Less"), block), 3, 0);
                     Controls::ClickableSlider * energy_slider = new Controls::ClickableSlider(block);
                     energy_slider -> setRange(1, 4);
-                    energy_slider -> setMinimumWidth(100);
                     energy_slider -> setOrientation(Qt::Horizontal);
+                    energy_slider -> setValue(curr_settings[YANEX_STREAM_ENERGY].toInt());
                     layout -> addWidget(energy_slider, 3, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("More"), block), 3, col_span - 1);
-                    elems.insert(LSTR("energy"), energy_slider);
-
-                    QGroupBox * lang_group = new QGroupBox(LSTR("Language"));
-                    QHBoxLayout * lang_layout = new QHBoxLayout(lang_group);
-                    QRadioButton * lang_any = new QRadioButton(LSTR("Any"), lang_group);
-                    lang_layout -> addWidget(lang_any);
-                    QRadioButton * lang_rus = new QRadioButton(LSTR("Russian"), lang_group);
-                    lang_layout -> addWidget(lang_rus);
-                    QRadioButton * lang_non_rus = new QRadioButton(LSTR("Non Russian"), lang_group);
-                    lang_layout -> addWidget(lang_non_rus);
-
-                    elems.insert(LSTR("lang_any"), lang_any);
-                    elems.insert(LSTR("lang_rus"), lang_rus);
-                    elems.insert(LSTR("lang_non_rus"), lang_non_rus);
-                    layout -> addWidget(lang_group, 4, 0, 1, col_span);
+                    elems.insert(YANEX_STREAM_ENERGY, energy_slider);
 
 
-                    QGroupBox * diversity_group = new QGroupBox(LSTR("Diversity"));
-                    QHBoxLayout * diversity_layout = new QHBoxLayout(diversity_group);
+                    layout -> addWidget(new QLabel(LSTR("Language"), block), 4, 0, 1, 2, Qt::AlignCenter);
+                    QString curr_lang = curr_settings[YANEX_STREAM_LANG].toString();
+                    QComboBox * lang_select = new QComboBox(block);
+                    int lang_index = 0;
 
-                    QRadioButton * diversity_all = new QRadioButton(LSTR("All"), diversity_group);
-                    diversity_layout -> addWidget(diversity_all);
-                    QRadioButton * diversity_popular = new QRadioButton(LSTR("Popular"), diversity_group);
-                    diversity_layout -> addWidget(diversity_popular);
-                    QRadioButton * diversity_favorite = new QRadioButton(LSTR("Favorite"), diversity_group);
-                    diversity_layout -> addWidget(diversity_favorite);
-                    QRadioButton * diversity_diverse = new QRadioButton(LSTR("Diverse"), diversity_group);
-                    diversity_layout -> addWidget(diversity_diverse);
+                    QHash<QString, QString> langs = {{LSTR("Any"), LSTR("any")}, {LSTR("Russian"), LSTR("russian")},
+                                                     {LSTR("Non Russian"), LSTR("not-russian")}};
+                    for(QHash<QString, QString>::Iterator lang = langs.begin(); lang != langs.end(); lang++) {
+                        lang_select -> addItem(lang.key(), lang.value());
+                        if (curr_lang != lang.value())
+                            lang_index++;
+                    }
+                    lang_select -> setCurrentIndex(lang_index);
+                    elems.insert(YANEX_STREAM_LANG, lang_select);
+                    layout -> addWidget(lang_select, 4, 3, 1, 4);
 
-                    elems.insert(LSTR("diversity_all"), diversity_all);
-                    elems.insert(LSTR("diversity_popular"), diversity_popular);
-                    elems.insert(LSTR("diversity_favorite"), diversity_favorite);
-                    elems.insert(LSTR("diversity_diverse"), diversity_diverse);
-                    layout -> addWidget(diversity_group, 5, 0, 1, col_span);
+
+
+                    layout -> addWidget(new QLabel(LSTR("Diversity"), block), 5, 0, 1, 2, Qt::AlignCenter);
+                    QString curr_diversity = curr_settings[YANEX_STREAM_DIVERSITY].toString();
+                    QComboBox * diversity_select = new QComboBox(block);
+                    int diversity_index = 0;
+
+                    QHash<QString, QString> diversities = {{LSTR("Any"), LSTR("default")}, {LSTR("Popular"), LSTR("popular")},
+                                                           {LSTR("Favorite"), LSTR("favorite")}, {LSTR("Diverse"), LSTR("diverse")}};
+                    for(QHash<QString, QString>::Iterator diversity = diversities.begin(); diversity != diversities.end(); diversity++) {
+                        diversity_select -> addItem(diversity.key(), diversity.value());
+                        if (curr_diversity != diversity.value())
+                            diversity_index++;
+                    }
+                    diversity_select -> setCurrentIndex(lang_index);
+                    elems.insert(YANEX_STREAM_DIVERSITY, diversity_select);
+                    layout -> addWidget(diversity_select, 5, 3, 1, 4);
+
 
                     settings_forms.insert(sst_stream, elems);
-
                     return block;
                 }
 
-                QJsonValue streamConfiguration(const QUrlQuery & args) {
-                    return streamConfiguration(args.queryItemValue(CMD_GENRE));
+                QVariant streamConfiguration(const QUrlQuery & args) {
+                    QJsonObject json = JSON_OBJ(streamConfiguration(args.queryItemValue(CMD_GENRE)).toObject(), LSTR("settings"));
+                    return QVariantMap{
+                        {YANEX_STREAM_LANG, JSON_STR(json, YANEX_STREAM_LANG)}, {YANEX_STREAM_MOOD, JSON_INT(json, YANEX_STREAM_MOOD)},
+                        {YANEX_STREAM_ENERGY, JSON_INT(json, YANEX_STREAM_ENERGY)}, {YANEX_STREAM_DIVERSITY, JSON_STR(json, YANEX_STREAM_DIVERSITY)}
+                    };
                 }
-                // curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/electronics/settings?external-domain=music.yandex.ua&overembed=no&__t=1474603533431' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'Cookie: yandexuid=2190563221452621883; L=WnEJRFAPV0xrQVpRcXN0SEdPV0t6bmtBXl0rEDg8e3p/cg==.1474342480.12659.397393.538aa840261797a55723bf7670f887c4; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Ffeed%22%7D; yabs-vdrf=TR-DN203_mrS1pDnNIW57Yqy0pDnNEmOrC0y1pDnNWG5dJ5C1pDnNDm3LUrK1WDnN5GIw4Am0VjnNDm1Aa5G1hTbN201Z8L819ifNtWF8wa009ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=; Session_id=noauth:1474430260; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1; _ym_visorc_1028356=b' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Pragma: no-cache' -H 'Referer: https://music.yandex.ua/genre/electronic' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Felectronic'
                 QJsonValue streamConfiguration(const QString & genre) {
                     QJsonObject response = sRequest(
                         baseUrlStr(
@@ -98,14 +105,16 @@ namespace Core {
                     return response;
                 }
 
-
+                void applyStreamSettings(const QHash<QString, QWidget *> & data) {
+                    //TODO: write me
+                }
                 QJsonValue streamConfigure(const QUrlQuery & args) {
                     return streamConfigure(
                         args.queryItemValue(CMD_GENRE),
-                        args.queryItemValue(tkn_lang),
-                        args.queryItemValue(tkn_mood),
-                        args.queryItemValue(tkn_energy),
-                        args.queryItemValue(tkn_diversity)
+                        args.queryItemValue(YANEX_STREAM_LANG),
+                        args.queryItemValue(YANEX_STREAM_MOOD),
+                        args.queryItemValue(YANEX_STREAM_ENERGY),
+                        args.queryItemValue(YANEX_STREAM_DIVERSITY)
                     );
                 }
                 //POST /api/v2.1/handlers/radio/genre/trance/settings?__t=1474595765369 HTTP/1.1
@@ -147,31 +156,35 @@ namespace Core {
                         ),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_tracks << tkn_track, call_method_get, headers()
                     );
+                    QString offset = queue;
 
-                    for(QJsonArray::Iterator item = content.begin(); item != content.end(); item++) {
-                        if ((*item).isNull()) continue;
+                    if (!content.isEmpty()) {
+                        if (content[0].isNull()) // sometimes first item is empty / this item broke logic
+                            content.removeAt(0);
 
-                        QJsonObject it = (*item).toObject();
+                        for(QJsonArray::Iterator item = content.begin(); item != content.end(); item++) {
+                            QJsonObject it = (*item).toObject();
 
-                        QJsonObject js = Manager::prepare() -> jsonPost(
-                            baseUrlStr(
-                                qst_site_alt2, LSTR("radio/genre/%1/feedback/trackFinished/%2").arg(genre, YANDEX_ITEM_UID(it)),
-                                {
-                                    {LSTR("timestamp"), QString::number(QDateTime::currentMSecsSinceEpoch())},
-                                    {LSTR("from"), LSTR("web-genre-radio-radio-main")},
-                                    {LSTR("batchId"), JSON_STR(it, LSTR("batchId"))},
-                                    {LSTR("trackId"), JSON_CSTR(it, tkn_id)},
-                                    {LSTR("albumId"), YANDEX_ITEM_ALBUM(it)},
-                                    {LSTR("totalPlayed"), QString::number(JSON_INT(it, LSTR("durationMs")) / 1000 - 3)},
-                                    {LSTR("sign"), siteAdditionalToken()}
-                                }
-                            ), headers()
-                        );
+                            QJsonObject js = Manager::prepare() -> jsonPost(
+                                baseUrlStr(
+                                    qst_site_alt2, LSTR("radio/genre/%1/feedback/trackFinished/%2").arg(genre, YANDEX_ITEM_UID(it)),
+                                    {
+                                        {LSTR("timestamp"), QString::number(QDateTime::currentMSecsSinceEpoch())},
+                                        {LSTR("from"), LSTR("web-genre-radio-radio-main")},
+                                        {LSTR("batchId"), JSON_STR(it, LSTR("batchId"))},
+                                        {LSTR("trackId"), JSON_CSTR(it, tkn_id)},
+                                        {LSTR("albumId"), YANDEX_ITEM_ALBUM(it)},
+                                        {LSTR("totalPlayed"), QString::number(JSON_INT(it, LSTR("durationMs")) / 1000 - 3)},
+                                        {LSTR("sign"), siteAdditionalToken()}
+                                    }
+                                ), headers()
+                            );
 
-                        if (JSON_STR(js, LSTR("result")) != LSTR("ok"))
-                            qCritical() << name() << "radio item finishing failed";
+                            if (JSON_STR(js, LSTR("result")) != LSTR("ok"))
+                                qCritical() << name() << "radio item finishing failed";
+                        }
+                        offset = YANDEX_ITEM_UID(content.first().toObject()) % ',' % YANDEX_ITEM_UID(content.last().toObject());
                     }
-                    QString offset = YANDEX_ITEM_UID(content.first().toObject()) % ',' % YANDEX_ITEM_UID(content.last().toObject());
 
                     return prepareBlock(
                         dmt_audio, prepareTracks(content),

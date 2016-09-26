@@ -5,6 +5,7 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
+//typedef QMap<QString, QVariant> QVariantMap;
 //class StrInitList : public std::initializer_list<std::pair<QString, QString> > {
 
 //};

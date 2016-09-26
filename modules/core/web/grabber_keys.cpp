@@ -28,11 +28,6 @@ namespace Core {
         extern const QString tkn_cmd_parser             = QStringLiteral("cmd_prsr");
         extern const QString tkn_is_empty               = QStringLiteral("is_empty");
 
-        extern const QString tkn_mood                   = QStringLiteral("mood");
-        extern const QString tkn_energy                 = QStringLiteral("energy");
-        extern const QString tkn_lang                   = QStringLiteral("lang");
-        extern const QString tkn_diversity              = QStringLiteral("diversity");
-
         extern const QString tkn_grab_title             = QStringLiteral("gtitle");
         extern const QString tkn_grab_duration          = QStringLiteral("gduration");
         extern const QString tkn_grab_size              = QStringLiteral("gsize");

@@ -18,15 +18,6 @@
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {
         Q_OBJECT
-    protected:
-        enum SourceSettngsType : int {
-            sst_none = 0,
-            sst_source,
-            sst_feeds,
-            sst_stream
-        };
-
-        QHash<int, QHash<QString, QWidget *> > settings_forms;
     public:
         virtual ~ISource() {}
 
@@ -41,7 +32,7 @@ namespace Core {
         void toJson(QJsonObject & hash) {
             QJsonObject root;
 
-            saveAdditionals(root); // sometimes required to change attrs before saving
+            saveAdditionals(root); //INFO: sometimes required to change attrs before saving
             root.insert(ISOURCE_ATTRS_KEY, QJsonObject::fromVariantHash(attrs));
 
             hash.insert(name(), root);
@@ -64,10 +55,20 @@ namespace Core {
         virtual inline QMap<QString, QString> setsList() { return QMap<QString, QString>(); }
 
         QToolButton * initButton(QWidget * parent = 0);
-        virtual QWidget * streamSettingsBlock() { return 0; }
-        virtual QWidget * sourceSettingsBlock() { return 0; }
-        virtual QWidget * feedsSettingsBlock() { return 0; }
-        virtual void applySettings() { settings_forms.clear(); }
+        virtual QWidget * streamSettingsBlock(const QVariant & /*data*/) { return 0; }
+        virtual QWidget * sourceSettingsBlock(const QVariant & /*data*/) { return 0; }
+        virtual QWidget * feedsSettingsBlock(const QVariant & /*data*/) { return 0; }
+
+        void applySettings() {
+            if (settings_forms.contains(sst_source))
+                applySourceSettings(settings_forms.take(sst_source));
+
+            if (settings_forms.contains(sst_feeds))
+                applyFeedsSettings(settings_forms.take(sst_feeds));
+
+            if (settings_forms.contains(sst_stream))
+                applyStreamSettings(settings_forms.take(sst_stream));
+        }
 
     public slots:
         void openTab();
@@ -75,6 +76,19 @@ namespace Core {
         void openRelationTab();
         void openPackageTab();
     protected:
+        enum SourceSettngsType : int {
+            sst_none = 0,
+            sst_source,
+            sst_feeds,
+            sst_stream
+        };
+
+        QHash<int, QHash<QString, QWidget *> > settings_forms;
+
+        virtual void applyStreamSettings(const QHash<QString, QWidget *> & /*data*/) { }
+        virtual void applySourceSettings(const QHash<QString, QWidget *> & /*data*/) { }
+        virtual void applyFeedsSettings(const QHash<QString, QWidget *> & /*data*/) { }
+
         QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content,
             const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
             QJsonObject res = QJsonObject {
