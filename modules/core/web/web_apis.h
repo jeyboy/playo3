@@ -12,15 +12,15 @@ namespace Core {
             static void initiate(const QJsonObject & obj);
 
             static QMap<DataSubType, ISource *> sourcesList() { return sources; }
-            inline static ISource * source(const DataSubType & item_type) { return sources.value(item_type); }
-            inline static QString source_name(const DataSubType & item_type) { return sources_name.value(item_type); }
+            inline static ISource * source(const DataSubType & item_type) { return sources.value(DST_EXTRACT_FLAGS(item_type)); }
+            inline static QString source_name(const DataSubType & item_type) { return sources_name.value(DST_EXTRACT_FLAGS(item_type)); }
 
             static void close(QJsonObject & obj);
 
             static QJsonValue run(const QString & cmd) {
                 Cmd cmnd = Cmd(cmd);
 
-                ISource * source = sources.value((DataSubType)cmnd.source_type);
+                ISource * source = sources.value(DST_EXTRACT_FLAGS(cmnd.source_type));
                 if (source == 0)
                     return QJsonObject();
                 else
@@ -30,7 +30,7 @@ namespace Core {
             static QString restoreUrl(const QString & refreshStr, const DataSubType & itemSubType, const DataMediaType & itemMediaType) {
                 qDebug() << "RESTORING" << itemSubType << itemMediaType << refreshStr;
 
-                ISource * source = sources.value(itemSubType);
+                ISource * source = sources.value(DST_EXTRACT_FLAGS(itemSubType));
                 if (source == 0)
                     return QString();
                 else

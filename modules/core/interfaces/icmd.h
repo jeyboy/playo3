@@ -33,36 +33,36 @@ namespace Core {
                     {
                         QVariantMap map = data.toMap();
                         for(QVariantMap::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ',' % entry.key() % ':' % variantToStr(entry.value());
+                            res += ' ' % ',' % entry.key() % ':' % variantToStr(entry.value());
 
-                        res = res.mid(1);
+                        res = res.mid(2);
 
                     break;}
                 case QVariant::List:
                     {
                         QVariantList map = data.toList();
                         for(QVariantList::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ',' % variantToStr(*entry);
+                            res += ' ' % ',' % variantToStr(*entry);
 
-                        res = res.mid(1);
+                        res = res.mid(2);
 
                     break;}
                 case QVariant::StringList:
                     {
                         QStringList map = data.toStringList();
                         for(QStringList::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ',' % (*entry);
+                            res += ' ' % ',' % (*entry);
 
-                        res = res.mid(1);
+                        res = res.mid(2);
 
                     break;}
                 case QVariant::Hash:
                     {
                         QVariantHash map = data.toHash();
                         for(QVariantHash::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ',' % entry.key() % ':' % variantToStr(entry.value());
+                            res += ' ' % ',' % entry.key() % ':' % variantToStr(entry.value());
 
-                        res = res.mid(1);
+                        res = res.mid(2);
 
                     break;}
 
@@ -222,7 +222,9 @@ namespace Core {
 
             cmd_mtd_albums_info,
             cmd_mtd_albums_search,
-            cmd_mtd_albums_by_artist
+            cmd_mtd_albums_by_artist,
+
+            cmd_mtd_feeds_info
         };
 
         QJsonValue run(const ICmdMethods & cmd, const QUrlQuery & params) {
@@ -292,14 +294,13 @@ namespace Core {
                 case cmd_mtd_albums_search: return albumsSearch(params);
                 case cmd_mtd_albums_by_artist: return albumsByArtist(params);
 
+                case cmd_mtd_feeds_info: return feedsInfo(params);
+
                 default: return QJsonObject();
             }
         }
 
         virtual QJsonValue setByType(const QUrlQuery & /*args*/) { return QJsonObject(); }
-
-//        virtual QJsonValue takeSet(const QString & /*args*/) { return QJsonObject(); }
-//        virtual QJsonValue loadPlaylist(const QVariantMap & /*attrs*/) { return QJsonObject(); } // TODO: rebuild on QString attrs
 
         virtual QJsonValue openSet(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue loadSetData(const QUrlQuery & /*args*/) { return QJsonObject(); } // TODO: rebuild on QString attrs
@@ -365,6 +366,9 @@ namespace Core {
         virtual QJsonValue albumsInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue albumsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue albumsByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+
+        virtual QVariant feedsConfiguration(const QUrlQuery & /*args*/) { return QVariant(); }
+        virtual QJsonValue feedsInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
     };
 }
 

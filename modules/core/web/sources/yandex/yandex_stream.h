@@ -18,10 +18,10 @@ namespace Core {
         namespace Yandex {
             class Stream : public virtual Base {
             public:
-                QWidget * streamSettingsBlock(const QVariant & data) {
-                    QVariantMap curr_settings = data.toMap();
-
+                QWidget * streamSettingsBlock(const QVariant & config) {
                     QHash<QString, QWidget *> elems;
+                    QVariantHash config_hash = config.toHash();
+
 
                     QWidget * block = new QWidget();
                     QGridLayout * layout = new QGridLayout(block);
@@ -32,7 +32,7 @@ namespace Core {
                     Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(block);
                     mood_slider -> setRange(1, 4);
                     mood_slider -> setOrientation(Qt::Horizontal);
-                    mood_slider -> setValue(curr_settings[YANEX_STREAM_MOOD].toInt());
+                    mood_slider -> setValue(config_hash[YANEX_STREAM_MOOD].toInt());
                     layout -> addWidget(mood_slider, 1, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("Cheerful"), block), 1, col_span - 1);
                     elems.insert(YANEX_STREAM_MOOD, mood_slider);
@@ -42,14 +42,14 @@ namespace Core {
                     Controls::ClickableSlider * energy_slider = new Controls::ClickableSlider(block);
                     energy_slider -> setRange(1, 4);
                     energy_slider -> setOrientation(Qt::Horizontal);
-                    energy_slider -> setValue(curr_settings[YANEX_STREAM_ENERGY].toInt());
+                    energy_slider -> setValue(config_hash[YANEX_STREAM_ENERGY].toInt());
                     layout -> addWidget(energy_slider, 3, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("More"), block), 3, col_span - 1);
                     elems.insert(YANEX_STREAM_ENERGY, energy_slider);
 
 
                     layout -> addWidget(new QLabel(LSTR("Language"), block), 4, 0, 1, 2, Qt::AlignCenter);
-                    QString curr_lang = curr_settings[YANEX_STREAM_LANG].toString();
+                    QString curr_lang = config_hash[YANEX_STREAM_LANG].toString();
                     QComboBox * lang_select = new QComboBox(block);
                     int lang_index = 0;
 
@@ -67,7 +67,7 @@ namespace Core {
 
 
                     layout -> addWidget(new QLabel(LSTR("Diversity"), block), 5, 0, 1, 2, Qt::AlignCenter);
-                    QString curr_diversity = curr_settings[YANEX_STREAM_DIVERSITY].toString();
+                    QString curr_diversity = config_hash[YANEX_STREAM_DIVERSITY].toString();
                     QComboBox * diversity_select = new QComboBox(block);
                     int diversity_index = 0;
 

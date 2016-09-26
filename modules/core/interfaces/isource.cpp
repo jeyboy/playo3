@@ -110,10 +110,10 @@ void ISource::openPackageTab() {
     if (dialog.exec() == QDialog::Accepted) {
         QString dialog_params = dialog.getParams();
         QString uid_postfix;
-        QVariant data;
+        QVariantMap params_data;
         Cmd cmnd = Cmd(dialog_params); // we should use source type from cmd, because it contains additional flags clarification
 
-        bool source_configurable = cmnd.attrs.hasQueryItem(CMD_SOURCE_CONFIGURABLE);
+        bool source_configurable = cmnd.attrs.hasQueryItem(CMD_SOURCE_CONFIGURABLE); // INFO: reserved
         bool stream_configurable = cmnd.attrs.hasQueryItem(CMD_STREAM_CONFIGURABLE);
         bool feeds_configurable = cmnd.attrs.hasQueryItem(CMD_FEEDS_CONFIGURABLE);
 
@@ -123,20 +123,23 @@ void ISource::openPackageTab() {
             (stream_configurable ? Models::mpf_stream_configurable : Models::mpf_none)
         );
 
-        if (stream_configurable) {
-            data = streamConfiguration(cmnd.attrs);
-            uid_postfix = Cmd::variantToStr(data);
-        }
+        if (feeds_configurable)
+            params_data.insert(QString::number(Models::mpf_feeds_configurable), feedsConfiguration(cmnd.attrs));
+        if (stream_configurable)
+            params_data.insert(QString::number(Models::mpf_stream_configurable), streamConfiguration(cmnd.attrs));
+
+        if (!params_data.isEmpty())
+            uid_postfix = LSTR(" | ") % Cmd::variantToStr(params_data);
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
-                name() % LSTR(" [") % dialog.getName() % '|' % uid_postfix % ']',
+                name() % LSTR(" [") % dialog.getName() % uid_postfix % ']',
                 uidStr(dialog_params % uid_postfix)
             ),
             Models::Params(
                 (DataSubType)cmnd.source_type,
                 (Models::ParamFlags)(Models::mpf_auto_play_next | configs),
-                dialog_params, rec_set, data
+                dialog_params, rec_set, params_data
             ),
             0, true, true
         );

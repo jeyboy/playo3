@@ -59,7 +59,7 @@ namespace Core {
         virtual QWidget * sourceSettingsBlock(const QVariant & /*data*/) { return 0; }
         virtual QWidget * feedsSettingsBlock(const QVariant & /*data*/) { return 0; }
 
-        void applySettings() {
+        void applySettings(QVariantHash & configs) {
             if (settings_forms.contains(sst_source))
                 applySourceSettings(settings_forms.take(sst_source));
 

@@ -18,6 +18,8 @@ namespace Dialogs {
 
         Models::Params getSettings();
         void setSettings(const Models::Params & hash);
+    protected slots:
+        void accepted();
 
     private:
         Models::Params settings;
