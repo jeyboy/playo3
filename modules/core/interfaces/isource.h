@@ -55,20 +55,9 @@ namespace Core {
         virtual inline QMap<QString, QString> setsList() { return QMap<QString, QString>(); }
 
         QToolButton * initButton(QWidget * parent = 0);
-        virtual QWidget * streamSettingsBlock(const QVariant & /*data*/) { return 0; }
-        virtual QWidget * sourceSettingsBlock(const QVariant & /*data*/) { return 0; }
-        virtual QWidget * feedsSettingsBlock(const QVariant & /*data*/) { return 0; }
 
-        void applySettings(QVariantHash & configs) {
-            if (settings_forms.contains(sst_source))
-                applySourceSettings(settings_forms.take(sst_source));
-
-            if (settings_forms.contains(sst_feeds))
-                applyFeedsSettings(settings_forms.take(sst_feeds));
-
-            if (settings_forms.contains(sst_stream))
-                applyStreamSettings(settings_forms.take(sst_stream));
-        }
+        QWidget * settingsBlock(int block_type, const QVariantMap & configs);
+        void applySettings(QVariantMap & configs);
 
     public slots:
         void openTab();
@@ -85,9 +74,13 @@ namespace Core {
 
         QHash<int, QHash<QString, QWidget *> > settings_forms;
 
-        virtual void applyStreamSettings(const QHash<QString, QWidget *> & /*data*/) { }
-        virtual void applySourceSettings(const QHash<QString, QWidget *> & /*data*/) { }
-        virtual void applyFeedsSettings(const QHash<QString, QWidget *> & /*data*/) { }
+        virtual QWidget * streamSettingsBlock(const QVariant & /*data*/) { return 0; }
+        virtual QWidget * sourceSettingsBlock(const QVariant & /*data*/) { return 0; }
+        virtual QWidget * feedsSettingsBlock(const QVariant & /*data*/) { return 0; }
+
+        virtual void applyStreamSettings(const QHash<QString, QWidget *> & /*data*/, QVariant & /*config*/) { }
+        virtual void applySourceSettings(const QHash<QString, QWidget *> & /*data*/, QVariant & /*config*/) { }
+        virtual void applyFeedsSettings(const QHash<QString, QWidget *> & /*data*/, QVariant & /*config*/) { }
 
         QJsonObject prepareBlock(const DataMediaType & dmt_val, const QJsonValue & block_content,
             const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {

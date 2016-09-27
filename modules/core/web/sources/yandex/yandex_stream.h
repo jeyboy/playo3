@@ -20,8 +20,7 @@ namespace Core {
             public:
                 QWidget * streamSettingsBlock(const QVariant & config) {
                     QHash<QString, QWidget *> elems;
-                    QVariantHash config_hash = config.toHash();
-
+                    QVariantMap config_hash = config.toMap();
 
                     QWidget * block = new QWidget();
                     QGridLayout * layout = new QGridLayout(block);
@@ -51,18 +50,18 @@ namespace Core {
                     layout -> addWidget(new QLabel(LSTR("Language"), block), 4, 0, 1, 2, Qt::AlignCenter);
                     QString curr_lang = config_hash[YANEX_STREAM_LANG].toString();
                     QComboBox * lang_select = new QComboBox(block);
-                    int lang_index = 0;
+                    int lang_index = 0, pos = 0;
 
                     QHash<QString, QString> langs = {{LSTR("Any"), LSTR("any")}, {LSTR("Russian"), LSTR("russian")},
                                                      {LSTR("Non Russian"), LSTR("not-russian")}};
-                    for(QHash<QString, QString>::Iterator lang = langs.begin(); lang != langs.end(); lang++) {
+                    for(QHash<QString, QString>::Iterator lang = langs.begin(); lang != langs.end(); lang++, pos++) {
                         lang_select -> addItem(lang.key(), lang.value());
-                        if (curr_lang != lang.value())
-                            lang_index++;
+                        if (curr_lang == lang.value())
+                            lang_index = pos;
                     }
                     lang_select -> setCurrentIndex(lang_index);
                     elems.insert(YANEX_STREAM_LANG, lang_select);
-                    layout -> addWidget(lang_select, 4, 3, 1, 4);
+                    layout -> addWidget(lang_select, 4, 2, 1, 4);
 
 
 
@@ -70,17 +69,18 @@ namespace Core {
                     QString curr_diversity = config_hash[YANEX_STREAM_DIVERSITY].toString();
                     QComboBox * diversity_select = new QComboBox(block);
                     int diversity_index = 0;
+                    pos = 0;
 
                     QHash<QString, QString> diversities = {{LSTR("Any"), LSTR("default")}, {LSTR("Popular"), LSTR("popular")},
                                                            {LSTR("Favorite"), LSTR("favorite")}, {LSTR("Diverse"), LSTR("diverse")}};
-                    for(QHash<QString, QString>::Iterator diversity = diversities.begin(); diversity != diversities.end(); diversity++) {
+                    for(QHash<QString, QString>::Iterator diversity = diversities.begin(); diversity != diversities.end(); diversity++, pos++) {
                         diversity_select -> addItem(diversity.key(), diversity.value());
-                        if (curr_diversity != diversity.value())
-                            diversity_index++;
+                        if (curr_diversity == diversity.value())
+                            diversity_index = pos;
                     }
                     diversity_select -> setCurrentIndex(lang_index);
                     elems.insert(YANEX_STREAM_DIVERSITY, diversity_select);
-                    layout -> addWidget(diversity_select, 5, 3, 1, 4);
+                    layout -> addWidget(diversity_select, 5, 2, 1, 4);
 
 
                     settings_forms.insert(sst_stream, elems);
@@ -90,6 +90,7 @@ namespace Core {
                 QVariant streamConfiguration(const QUrlQuery & args) {
                     QJsonObject json = JSON_OBJ(streamConfiguration(args.queryItemValue(CMD_GENRE)).toObject(), LSTR("settings"));
                     return QVariantMap{
+                        {YANEX_STREAM_UID, args.queryItemValue(CMD_GENRE)},
                         {YANEX_STREAM_LANG, JSON_STR(json, YANEX_STREAM_LANG)}, {YANEX_STREAM_MOOD, JSON_INT(json, YANEX_STREAM_MOOD)},
                         {YANEX_STREAM_ENERGY, JSON_INT(json, YANEX_STREAM_ENERGY)}, {YANEX_STREAM_DIVERSITY, JSON_STR(json, YANEX_STREAM_DIVERSITY)}
                     };
@@ -105,8 +106,41 @@ namespace Core {
                     return response;
                 }
 
-                void applyStreamSettings(const QHash<QString, QWidget *> & data) {
-                    //TODO: write me
+                void applyStreamSettings(const QHash<QString, QWidget *> & data, QVariant & config) {
+                    QVariantMap config_hash = config.toMap();
+
+                    config_hash.insert(
+                        YANEX_STREAM_MOOD,
+                        ((Controls::ClickableSlider *)data[YANEX_STREAM_MOOD]) -> value()
+                    );
+
+                    config_hash.insert(
+                        YANEX_STREAM_ENERGY,
+                        ((Controls::ClickableSlider *)data[YANEX_STREAM_ENERGY]) -> value()
+                    );
+
+                    config_hash.insert(
+                        YANEX_STREAM_DIVERSITY,
+                        ((QComboBox *)data[YANEX_STREAM_DIVERSITY]) -> currentData()
+                    );
+
+                    config_hash.insert(
+                        YANEX_STREAM_LANG,
+                        ((QComboBox *)data[YANEX_STREAM_LANG]) -> currentData()
+                    );
+
+                    QJsonObject config_response = streamConfigure(
+                        config_hash[YANEX_STREAM_UID].toString(),
+                        config_hash[YANEX_STREAM_LANG].toString(),
+                        QString::number(config_hash[YANEX_STREAM_MOOD].toInt()),
+                        QString::number(config_hash[YANEX_STREAM_ENERGY].toInt()),
+                        config_hash[YANEX_STREAM_DIVERSITY].toString()
+                    ).toObject();
+
+                    int i = 0;
+
+                    if (i == 1)
+                        config = config_hash;
                 }
                 QJsonValue streamConfigure(const QUrlQuery & args) {
                     return streamConfigure(

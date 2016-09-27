@@ -25,7 +25,7 @@ namespace Models {
 
     struct Params {
         Params(const Core::DataSubType & dataType = Core::dt_none, const ParamFlags & flags = mpf_auto_play_next,
-            const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none, const QVariantHash & configs = QVariant()) :
+            const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none, const QVariantMap & configs = QVariantMap()) :
                 flags(flags), uid(uniq_id), rec_type(rec), data_type(dataType), configs(configs) { }
 
         Params(const QJsonObject & obj) {
@@ -33,7 +33,7 @@ namespace Models {
             data_type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
             uid = obj[QStringLiteral("uid")].toString();
             rec_type = (Core::RecType)obj[QStringLiteral("rec_type")].toInt();
-            configs = obj[QStringLiteral("data")].toObject().toVariantHash();
+            configs = obj[QStringLiteral("data")].toObject().toVariantMap();
         }
 
         QJsonObject toJson() {
@@ -46,8 +46,8 @@ namespace Models {
 
             obj[QStringLiteral("rec_type")] = rec_type;
 
-            if (data.isValid())
-                obj[QStringLiteral("data")] = QJsonObject::fromVariantHash(configs);
+            if (!configs.isEmpty())
+                obj[QStringLiteral("data")] = QJsonObject::fromVariantMap(configs);
 
             return obj;
         }
@@ -71,7 +71,7 @@ namespace Models {
         bool isStreamConfigurable() { return flags & mpf_stream_configurable; }
         bool isFeedsConfigurable() { return flags & mpf_feeds_configurable; }
 
-        QVariantHash configs;
+        QVariantMap configs;
         ParamFlags flags;
         QString uid;
         Core::RecType rec_type;

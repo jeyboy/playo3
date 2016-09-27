@@ -15,6 +15,7 @@
 
 #define YANDEX_ITEM_UID(json) JSON_CSTR(json, tkn_id) % ':' % YANDEX_ITEM_ALBUM(json)
 
+#define YANEX_STREAM_UID LSTR("uid")
 #define YANEX_STREAM_LANG LSTR("language")
 #define YANEX_STREAM_MOOD LSTR("mood")
 #define YANEX_STREAM_ENERGY LSTR("energy")

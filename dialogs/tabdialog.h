@@ -3,6 +3,7 @@
 
 #include "base_dialog.h"
 #include "modules/models/model_settings.h"
+#include "qdialogbuttonbox.h"
 
 namespace Ui { class TabDialog; }
 
@@ -18,8 +19,9 @@ namespace Dialogs {
 
         Models::Params getSettings();
         void setSettings(const Models::Params & hash);
-    protected slots:
-        void accepted();
+    public slots:
+        void accepted(); 
+        int exec();
 
     private:
         Models::Params settings;

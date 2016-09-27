@@ -33,7 +33,7 @@ namespace Core {
                     {
                         QVariantMap map = data.toMap();
                         for(QVariantMap::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ' ' % ',' % entry.key() % ':' % variantToStr(entry.value());
+                            res += QStringLiteral(", ") % entry.key() % ':' % variantToStr(entry.value());
 
                         res = res.mid(2);
 
@@ -42,7 +42,7 @@ namespace Core {
                     {
                         QVariantList map = data.toList();
                         for(QVariantList::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ' ' % ',' % variantToStr(*entry);
+                            res += QStringLiteral(", ") % variantToStr(*entry);
 
                         res = res.mid(2);
 
@@ -51,7 +51,7 @@ namespace Core {
                     {
                         QStringList map = data.toStringList();
                         for(QStringList::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ' ' % ',' % (*entry);
+                            res += QStringLiteral(", ") % (*entry);
 
                         res = res.mid(2);
 
@@ -60,7 +60,7 @@ namespace Core {
                     {
                         QVariantHash map = data.toHash();
                         for(QVariantHash::Iterator entry = map.begin(); entry != map.end(); entry++)
-                            res += ' ' % ',' % entry.key() % ':' % variantToStr(entry.value());
+                            res += QStringLiteral(", ") % entry.key() % ':' % variantToStr(entry.value());
 
                         res = res.mid(2);
 

@@ -1,5 +1,7 @@
 #include "tabdialog.h"
 #include "ui_tabdialog.h"
+#include "qdialogbuttonbox.h"
+
 #include "modules/core/web/web_apis.h"
 
 using namespace Dialogs;
@@ -73,22 +75,19 @@ void TabDialog::setSettings(const Models::Params & params) {
 
     if (source) {
         if (settings.isSourceConfigurable()) {
-            QWidget * settings_block = source ->
-                sourceSettingsBlock(params.data[QString::number(Models::mpf_source_configurable)]);
+            QWidget * settings_block = source -> settingsBlock(Models::mpf_source_configurable, params.configs);
             if (settings_block)
                 ui -> verticalLayout -> addWidget(settings_block);
         }
 
         if (settings.isFeedsConfigurable()) {
-            QWidget * settings_block = source ->
-                feedsSettingsBlock(params.data[QString::number(Models::mpf_feeds_configurable)]);
+            QWidget * settings_block = source -> settingsBlock(Models::mpf_feeds_configurable, params.configs);
             if (settings_block)
                 ui -> verticalLayout -> addWidget(settings_block);
         }
 
         if (settings.isStreamConfigurable()) {
-            QWidget * settings_block = source ->
-                streamSettingsBlock(params.data[QString::number(Models::mpf_stream_configurable)]);
+            QWidget * settings_block = source -> settingsBlock(Models::mpf_stream_configurable, params.configs);
             if (settings_block)
                 ui -> verticalLayout -> addWidget(settings_block);
         }
@@ -109,5 +108,19 @@ void TabDialog::accepted() {
 
     Core::ISource * source = Core::Web::Apis::source(settings.data_type);
     if (source)
-        source -> applySettings(settings.data);
+        source -> applySettings(settings.configs);
+}
+
+int TabDialog::exec() {
+    QDialogButtonBox * button_box = new QDialogButtonBox(
+        QDialogButtonBox::Cancel | QDialogButtonBox::Ok,
+        Qt::Horizontal,
+        this
+    );
+    button_box -> setCenterButtons(true);
+    ui -> verticalLayout -> addWidget(button_box);
+    connect(button_box, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(button_box, &QDialogButtonBox::rejected, this, &QDialog::reject);
+
+    return BaseDialog::exec();
 }

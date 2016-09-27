@@ -68,6 +68,50 @@ QToolButton * ISource::initButton(QWidget * parent) {
     return button;
 }
 
+QWidget * ISource::settingsBlock(int block_type, const QVariantMap & configs) {
+    QWidget * block;
+    QString block_title;
+
+    switch(block_type) {
+        case Models::mpf_stream_configurable: {
+            block = streamSettingsBlock(configs[QString::number(block_type)]);
+            block_title = QStringLiteral("Stream Config");
+        break;}
+
+        case Models::mpf_feeds_configurable: {
+            block = feedsSettingsBlock(configs[QString::number(block_type)]);
+            block_title = QStringLiteral("Feeds Config");
+        break;}
+
+        case Models::mpf_source_configurable: {
+            block = sourceSettingsBlock(configs[QString::number(block_type)]);
+            block_title = QStringLiteral("Source Config");
+        break;}
+
+        default: block = 0;
+    }
+
+    if (block) {
+        QGroupBox * group = new QGroupBox(block_title);
+        QHBoxLayout * layout = new QHBoxLayout(group);
+        layout -> addWidget(block);
+        block = group;
+    }
+
+    return block;
+}
+
+void ISource::applySettings(QVariantMap & configs) {
+    if (settings_forms.contains(sst_source))
+        applySourceSettings(settings_forms.take(sst_source), configs[QString::number(Models::mpf_source_configurable)]);
+
+    if (settings_forms.contains(sst_feeds))
+        applyFeedsSettings(settings_forms.take(sst_feeds), configs[QString::number(Models::mpf_feeds_configurable)]);
+
+    if (settings_forms.contains(sst_stream))
+        applyStreamSettings(settings_forms.take(sst_stream), configs[QString::number(Models::mpf_stream_configurable)]);
+}
+
 
 // TODO: update open tab for using icmd as params str
 void ISource::openTab() {
@@ -123,13 +167,16 @@ void ISource::openPackageTab() {
             (stream_configurable ? Models::mpf_stream_configurable : Models::mpf_none)
         );
 
-        if (feeds_configurable)
-            params_data.insert(QString::number(Models::mpf_feeds_configurable), feedsConfiguration(cmnd.attrs));
-        if (stream_configurable)
-            params_data.insert(QString::number(Models::mpf_stream_configurable), streamConfiguration(cmnd.attrs));
-
-        if (!params_data.isEmpty())
-            uid_postfix = LSTR(" | ") % Cmd::variantToStr(params_data);
+        if (feeds_configurable) {
+            QString conf_flag = QString::number(Models::mpf_feeds_configurable);
+            params_data.insert(conf_flag, feedsConfiguration(cmnd.attrs));
+            uid_postfix = LSTR(" | ") % Cmd::variantToStr(params_data[conf_flag]);
+        }
+        if (stream_configurable) {
+            QString conf_flag = QString::number(Models::mpf_stream_configurable);
+            params_data.insert(conf_flag, streamConfiguration(cmnd.attrs));
+            uid_postfix = LSTR(" | ") % Cmd::variantToStr(params_data[conf_flag]);
+        }
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
