@@ -11,9 +11,10 @@
 #include "modules/core/web/grabber_keys.h"
 #include "modules/core/web/interfaces/queriable_response.h"
 
-#define UID_HEAD QStringLiteral("@")
-#define ISOURCE_ATTRS_KEY QStringLiteral("attrs")
-#define OPERATION_BLOCKED QStringLiteral("block")
+#define TITLE_PARAMS_SPLITTER LSTR(" |?| ")
+#define UID_HEAD LSTR("@")
+#define ISOURCE_ATTRS_KEY LSTR("attrs")
+#define OPERATION_BLOCKED LSTR("block")
 
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {

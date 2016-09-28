@@ -78,7 +78,7 @@ namespace Core {
                         if (curr_diversity == diversity.value())
                             diversity_index = pos;
                     }
-                    diversity_select -> setCurrentIndex(lang_index);
+                    diversity_select -> setCurrentIndex(diversity_index);
                     elems.insert(YANEX_STREAM_DIVERSITY, diversity_select);
                     layout -> addWidget(diversity_select, 5, 2, 1, 4);
 
@@ -137,10 +137,9 @@ namespace Core {
                         config_hash[YANEX_STREAM_DIVERSITY].toString()
                     ).toObject();
 
-                    int i = 0;
-
-                    if (i == 1)
+                    if (JSON_BOOL(config_response, LSTR("result")))
                         config = config_hash;
+                    else qCritical() << name() << "Stream settings saving error" << config_response;
                 }
                 QJsonValue streamConfigure(const QUrlQuery & args) {
                     return streamConfigure(

@@ -33,8 +33,8 @@ QString TabDialog::getName() {
     return ui -> tabName -> text();
 }
 
-void TabDialog::setName(const QString & name) {
-    ui -> tabName -> setText(name);
+void TabDialog::setName(const QString & name) {    
+    ui -> tabName -> setText(name/*.section(TITLE_PARAMS_SPLITTER, 0, 0)*/);
     ui -> tabName -> setToolTip(name);
 }
 

@@ -170,17 +170,17 @@ void ISource::openPackageTab() {
         if (feeds_configurable) {
             QString conf_flag = QString::number(Models::mpf_feeds_configurable);
             params_data.insert(conf_flag, feedsConfiguration(cmnd.attrs));
-            uid_postfix = LSTR(" | ") % Cmd::variantToStr(params_data[conf_flag]);
+            uid_postfix = TITLE_PARAMS_SPLITTER % Cmd::variantToStr(params_data[conf_flag]);
         }
         if (stream_configurable) {
             QString conf_flag = QString::number(Models::mpf_stream_configurable);
             params_data.insert(conf_flag, streamConfiguration(cmnd.attrs));
-            uid_postfix = LSTR(" | ") % Cmd::variantToStr(params_data[conf_flag]);
+            uid_postfix = TITLE_PARAMS_SPLITTER % Cmd::variantToStr(params_data[conf_flag]);
         }
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
-                name() % LSTR(" [") % dialog.getName() % uid_postfix % ']',
+                name() % LSTR(" [") % dialog.getName() % ']'/* % uid_postfix*/,
                 uidStr(dialog_params % uid_postfix)
             ),
             Models::Params(
