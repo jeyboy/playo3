@@ -29,7 +29,8 @@ namespace Core {
                         sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
                         sf_content_photo_has | sf_content_news_has |
 
-                        sf_auth_mandatory | sf_prefer_site_object_content | sf_prefer_site_recomendations | sf_prefer_site_packs
+                        sf_auth_mandatory | sf_prefer_site_object_content | sf_prefer_site_packs |
+                        sf_prefer_site_item_recomendations | sf_prefer_site_user_recomendations
                     );
                 }
 
@@ -231,14 +232,16 @@ namespace Core {
                     Permissions perm = permissions(pr_object_content);
 
                     if (perm > perm_none) {
-                        QJsonObject ret = User::sRequest(
-                            User::baseUrlStr(
-                                qst_api, tkn_execute,
-                                {{ tkn_code, query_user_groups_friends(user_id) }}
-                            ),
-                            call_type_json, 0, proc_json_extract
-                        );
-                        procSociables(ret);
+                        if (user_id == userID()) {
+                            QJsonObject ret = User::sRequest(
+                                User::baseUrlStr(
+                                    qst_api, tkn_execute,
+                                    {{ tkn_code, query_user_groups_friends(user_id) }}
+                                ),
+                                call_type_json, 0, proc_json_extract
+                            );
+                            procSociables(ret);
+                        }
 
                         return userMedia(user_id);
                     }

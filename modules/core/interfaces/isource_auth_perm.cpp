@@ -39,10 +39,22 @@ Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
 //            site_flag = sf_site_feeds_auth_only;
 //            site_prefer = sf_prefer_site_feeds;
 //        break;}
-        case pr_recommendations: {
-            api_flag = sf_api_recomendations_auth_only;
-            site_flag = sf_site_recomendations_auth_only;
-            site_prefer = sf_prefer_site_recomendations;
+        case pr_user_recommendations: {
+            api_flag = sf_auth_api_has;
+            site_flag = sf_auth_site_has;
+            site_prefer = sf_prefer_site_user_recomendations;
+        break;}
+
+        case pr_item_recommendations: {
+            api_flag = sf_api_item_recomendations_auth_only;
+            site_flag = sf_site_item_recomendations_auth_only;
+            site_prefer = sf_prefer_site_item_recomendations;
+        break;}
+
+        case pr_artist_recommendations: {
+            api_flag = sf_api_artist_recomendations_auth_only;
+            site_flag = sf_site_artist_recomendations_auth_only;
+            site_prefer = sf_prefer_artist_site_recomendations;
         break;}
 
         case pr_pack: {

@@ -1,5 +1,6 @@
 #include "model_item_delegate.h"
 #include "external_keys.h"
+#include <qstylepainter.h>
 
 using namespace Core;
 
@@ -496,6 +497,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
             QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
             painter -> drawPixmap(rect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
+
             left_offset += rect.width() + 6;
         }
     }

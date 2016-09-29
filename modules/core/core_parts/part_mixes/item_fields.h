@@ -84,7 +84,7 @@ namespace Core {
 
         inline void setCueMap(const QVariant & map)             { attrs[JSON_TYPE_CUE_MAP] = map; }
         inline void setLoadableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_LOADABLE] = data; }
-        inline void setFetchableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_FETCHABLE] = data; }
+        inline void setFetchableAttrs(const QVariant & data)    { attrs[JSON_TYPE_CONTAINER_FETCHABLE] = data; }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
         inline void setOwnerId(const QVariant & new_owner_id)   { attrs[JSON_TYPE_OWNER_ID] = new_owner_id; }

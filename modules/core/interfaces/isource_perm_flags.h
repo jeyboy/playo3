@@ -18,7 +18,10 @@ namespace Core {
         pr_object_content       = 8, // user or group
 //        pr_feed                 = 8,
         pr_pack                 = 16, // charts // tops // etc ...
-        pr_recommendations      = 32
+        pr_user_recommendations = 32,
+        pr_artist_recommendations
+                                = 64,
+        pr_item_recommendations = 128
     };
 }
 

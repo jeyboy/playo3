@@ -18,18 +18,15 @@ namespace Core {
                 inline DataSubType sourceType() const { return dt_web_vk; }
 
                 void userInfoAsync(const QString & user_id, Func * func) {
-                    if (user_id == userID())
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
-                    else
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, user_id, func);
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
                 }
 
-                void trackRecommendationsAsync(const QString & uid, bool randomize, Func * func) {
-                   ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, uid, randomize, func);
+                void trackRecommendationsAsync(const QString & uid, Func * func) {
+                   ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, uid, true, func);
                 }
 
-                void userRecommendationsAsync(const QString & uid, bool randomize, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendations, uid, randomize, func);
+                void userRecommendationsAsync(const QString & uid, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendations, uid, true, func);
                 }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {

@@ -61,13 +61,13 @@ namespace Core {
         sf_recomendable_by_item             = (quint64(1)) << 18, // give recomendations by item
 //        sf_recomendable_by_playlist         = (quint64(1)) << 19, // give recomendations by playlist
         sf_recomendable_by_user             = (quint64(1)) << 20, // give recomendations by user
-        sf_newable                          = (quint64(1)) << 21, // has section with new items
-        sf_populable                        = (quint64(1)) << 22, // has section with popular items
-        sf_taggable                         = (quint64(1)) << 23, // has grouping by tags
-        sf_genreable                        = (quint64(1)) << 24, // has grouping by genres
-        sf_moodable                         = (quint64(1)) << 25, // has grouping by moods
-//        sf_streamable                       = (quint64(1)) << 26,
-//                             = (quint64(1)) << 27,
+        sf_recomendable_by_artist           = (quint64(1)) << 21, // give recomendations by artist
+        sf_newable                          = (quint64(1)) << 22, // has section with new items
+        sf_populable                        = (quint64(1)) << 23, // has section with popular items
+        sf_taggable                         = (quint64(1)) << 24, // has grouping by tags
+        sf_genreable                        = (quint64(1)) << 25, // has grouping by genres
+        sf_moodable                         = (quint64(1)) << 26, // has grouping by moods
+//        sf_streamable                       = (quint64(1)) << 27,
 //                             = (quint64(1)) << 28,
 //                             = (quint64(1)) << 29,
 
@@ -105,22 +105,29 @@ namespace Core {
 //        sf_prefer_site_sociable             = (quint64(1)) << 52,
 //        sf_api_sociable_auth_only           = (quint64(1)) << 53,
 
-        sf_site_recomendations_auth_only    = (quint64(1)) << 54,
-        sf_prefer_site_recomendations       = (quint64(1)) << 55,
-        sf_api_recomendations_auth_only     = (quint64(1)) << 56,
+        sf_site_item_recomendations_auth_only    = (quint64(1)) << 54,
+        sf_prefer_site_item_recomendations       = (quint64(1)) << 55,
+        sf_api_item_recomendations_auth_only     = (quint64(1)) << 56,
 
-//        sf_site_feeds_auth_only             = (quint64(1)) << 57,
-//        sf_prefer_site_feeds                = (quint64(1)) << 58,
-//        sf_api_feeds_auth_only              = (quint64(1)) << 59,
+        sf_site_artist_recomendations_auth_only    = (quint64(1)) << 57,
+        sf_prefer_artist_site_recomendations       = (quint64(1)) << 58,
+        sf_api_artist_recomendations_auth_only     = (quint64(1)) << 59,
+
+
+//        sf_site_feeds_auth_only             = (quint64(1)) << 60,
+//        sf_prefer_site_feeds                = (quint64(1)) << 61,
+//        sf_api_feeds_auth_only              = (quint64(1)) << 62,
+
+        sf_prefer_site_user_recomendations       = (quint64(1)) << 63,
 
         sf_site_auth_mandatory =
             sf_site_search_media_auth_only | sf_site_media_content_auth_only | sf_site_search_objects_auth_only |
             sf_site_object_content_auth_only | sf_site_packs_auth_only | /*sf_site_feeds_auth_only |*/
-            /*sf_site_sociable_auth_only |*/ sf_site_recomendations_auth_only,
+            /*sf_site_sociable_auth_only |*/ sf_site_item_recomendations_auth_only | sf_site_artist_recomendations_auth_only,
         sf_api_auth_mandatory =
             sf_api_search_media_auth_only | sf_api_media_content_auth_only | sf_api_search_objects_auth_only |
             sf_api_object_content_auth_only | sf_api_packs_auth_only | /*sf_api_feeds_auth_only |*/
-            /*sf_api_sociable_auth_only |*/ sf_api_recomendations_auth_only,
+            /*sf_api_sociable_auth_only |*/ sf_api_item_recomendations_auth_only | sf_api_artist_recomendations_auth_only,
 
         sf_auth_mandatory = sf_site_auth_mandatory | sf_api_auth_mandatory
     };

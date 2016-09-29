@@ -118,7 +118,7 @@ namespace Models {
             return QAbstractItemModel::canFetchMore(parent);
         }
 
-        inline bool indexNotRemoved(const QModelIndex & ind) {
+        inline bool indexPersisted(const QModelIndex & ind) {
             return !deleted_items.containsItem(ind.internalPointer());
         }
         inline QModelIndex index(IItem * item) const {

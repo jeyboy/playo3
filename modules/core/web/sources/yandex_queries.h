@@ -19,15 +19,18 @@ namespace Core {
                 inline DataSubType sourceType() const { return dt_web_yandex; }
 
                 void userInfoAsync(const QString & user_id, Func * func) {
-                    if (user_id == userID())
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
-                    else
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, user_id, func);
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
                 }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {
                     ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
+
+                inline void artistRecommendationsAsync(const QString & artist_id, Func * func) {
+                    ThreadUtils::obj().run((Stream *)this, &Stream::streamByArtist, artist_id, QString(), func);
+                }
+
+
 
 //                inline void trackRecommendationsAsync(const QString & track_id, Func * func) {
 //                    ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, track_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);

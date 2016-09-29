@@ -6,159 +6,31 @@ void WebModel::refresh() {
     emit moveInProcess();
     QApplication::processEvents();
 
-    switch(sttngs.data_type) { //TODO: move this to virt funcs in isource
-        case dt_web_vk: {
-            switch(sttngs.rec_type) {
-                case rec_none: {
-                    Vk::Queries::obj().userInfoAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
+    ISource * source = Apis::source(sttngs.data_type);
+    const char * res_slot = SLOT(proceedJson(QJsonValue &));
 
-                case rec_set: {
-                    Vk::Queries::obj().openSetAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
+    switch(sttngs.rec_type) {
+        case rec_none: {
+            source -> userInfoAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
 
-                case rec_user: {
-                    Vk::Queries::obj().userRecommendationsAsync(
-                        sttngs.uid,
-                        true,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
+        case rec_set: {
+            source -> openSetAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
 
-                case rec_song: {
-                    Vk::Queries::obj().trackRecommendationsAsync(
-                        sttngs.uid,
-                        true,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
+        case rec_user: {
+            source -> userRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
 
-                default: {}
-            }
-        break;}
+        case rec_song: {
+            source -> trackRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
 
-        case dt_web_sc: {
-            switch(sttngs.rec_type) {
-                case rec_none: {
-                    Soundcloud::Queries::obj().objectInfoAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
+        case rec_artist: {
+            source -> artistRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
 
-                case rec_song: {
-                    Soundcloud::Queries::obj().trackRecommendationsAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                case rec_set: {
-                    Soundcloud::Queries::obj().openSetAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                case rec_user: {
-                    Soundcloud::Queries::obj().userRecommendationsAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                default: {}
-            }
-        break;}
-
-        case dt_web_od: {
-            switch(sttngs.rec_type) {
-                case rec_none: {
-                    Od::Queries::obj().userInfoAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                case rec_set: {
-                    Od::Queries::obj().openSetAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                case rec_user: {
-                    Od::Queries::obj().userRecommendationsAsync(
-//                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                default: {}
-            }
-        break;}
-
-        case dt_web_fourshared: {
-            switch(sttngs.rec_type) {
-                case rec_none: {
-                    Fourshared::Queries::obj().userInfoAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                case rec_set: {
-                    Fourshared::Queries::obj().openSetAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                default: {}
-            }
-        break;}
-
-        case dt_web_yandex: {
-            switch(sttngs.rec_type) {
-                case rec_none: {
-                    Yandex::Queries::obj().userInfoAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-                case rec_set: {
-                    Yandex::Queries::obj().openSetAsync(
-                        sttngs.uid,
-                        new Func(this, SLOT(proceedJson(QJsonValue &)))
-                    );
-                return;}
-
-    //            case rec_song: {
-    //                Yandex::Queries::obj().trackRecommendationsAsync(
-    //                    sttngs.uid,
-    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
-    //                );
-    //            return;}
-
-    //            case rec_user: {
-    //                Yandex::Queries::obj().userRecommendationsAsync(
-    //                    sttngs.uid,
-    //                    new Func(this, SLOT(proceedJson(QJsonValue &)))
-    //                );
-    //            return;}
-
-                default: {}
-            }
-        break;}
-
-        default:;
+        default: {}
     }
 
     emit moveOutProcess();

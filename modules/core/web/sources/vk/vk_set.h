@@ -53,7 +53,7 @@ namespace Core {
                                                 { QStringLiteral("al"), QStringLiteral("1") },
                                                 { QStringLiteral("album_id"), genre_id },
                                                 { QStringLiteral("offset"), limits.start_offset },
-                                                { QStringLiteral("owner_id"), userID(pr_recommendations) },
+                                                { QStringLiteral("owner_id"), userID() },
                                                 { QStringLiteral("type"), QStringLiteral("popular") }
                                             }
                                         ),

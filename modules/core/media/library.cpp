@@ -97,7 +97,7 @@ bool Library::nextProcItem(const ItemsListType & iType, QModelIndex & ind) { // 
             else if (!list.isEmpty()) {
                 Models::IModel * mdl = (Models::IModel *)*it;
 
-                if (mdl -> indexNotRemoved(list.last()) && listSyncs[*it] -> tryLock()) {
+                if (mdl -> indexPersisted(list.last()) && listSyncs[*it] -> tryLock()) {
                     ind = list.takeLast();
                     return true;
                 }

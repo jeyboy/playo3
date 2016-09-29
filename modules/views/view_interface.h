@@ -124,6 +124,7 @@ namespace Views {
         void openRecomendationsforUser();
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();
+        void openRecomendationsforItemArtist();
         bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = IModel::none, int flags = none);
 
         void downloadSelected();

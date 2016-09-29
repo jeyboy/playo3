@@ -6,7 +6,8 @@ namespace Core {
         rec_none = 0,
         rec_user,
         rec_song,
-        rec_set
+        rec_set,
+        rec_artist
     };
 
     enum DataMediaType : int {

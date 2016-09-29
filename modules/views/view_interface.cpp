@@ -317,7 +317,7 @@ void IView::copyIdsToClipboard() {
 void IView::openRecomendationsforUser() {
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
-    if (src -> respondableTo(pr_recommendations)) {
+    if (src -> respondableTo(pr_user_recommendations)) {
         QString user_uid = settings().uid;
         Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_user);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % user_uid), bar_settings, 0, true, true);
@@ -328,7 +328,7 @@ void IView::openRecomendationsforItemUser() {
     IItem * it = mdl -> item(currentIndex());
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(pr_recommendations)) {
+    if (src -> respondableTo(pr_user_recommendations)) {
         QVariant owner_id = it -> ownerId();
         if (owner_id.isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_user);
@@ -336,12 +336,26 @@ void IView::openRecomendationsforItemUser() {
         }
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }
+void IView::openRecomendationsforItemArtist() {
+    IItem * it = mdl -> item(currentIndex());
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> respondableTo(pr_artist_recommendations)) {
+        QStringList artist_ids = it -> artistIds().toStringList();
+
+        for(QStringList::Iterator artist_id = artist_ids.begin(); artist_id != artist_ids.end(); artist_id++) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, (*artist_id), rec_artist);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for artist ") % (*artist_id)), bar_settings, 0, true, true);
+        }
+    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
+}
+
 // need to use tab type or item type for api identification
 void IView::openRecomendationsforItem() {
     IItem * it = mdl -> item(currentIndex());
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(pr_recommendations)) {
+    if (src -> respondableTo(pr_item_recommendations)) {
         if (it -> id().isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_song);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);

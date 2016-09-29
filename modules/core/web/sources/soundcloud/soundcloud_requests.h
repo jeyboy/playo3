@@ -29,7 +29,7 @@ namespace Core {
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
                         sf_recomendable_by_item | sf_newable | sf_taggable | sf_genreable |
                         sf_recomendable_by_user | sf_api_auth_mandatory |
-                        sf_site_recomendations_auth_only | sf_site_object_content_auth_only
+                        sf_site_object_content_auth_only
                     );
                 }
 

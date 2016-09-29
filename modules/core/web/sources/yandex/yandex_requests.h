@@ -71,7 +71,7 @@ namespace Core {
                         sf_auth_site_has | //sf_site_online_credentials_req |
                         sf_items_serachable | sf_sets_serachable | sf_packable |
                         sf_sociable_users | sf_shareable |
-//                        /*sf_recomendable_by_item |*/ sf_recomendable_by_user |
+                        /*sf_recomendable_by_item | sf_recomendable_by_user | */ sf_recomendable_by_artist |
 //                        /*sf_newable |*/ sf_populable |
 
                         sf_content_audio_has | sf_content_video_has/* | sf_content_news_has*/
@@ -222,9 +222,11 @@ namespace Core {
                     Permissions perm = permissions(pr_object_content);
 
                     if (perm > perm_none) {
-                        clearFriends();
-                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowers(user_id).toObject()));
-                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowings(user_id).toObject()));
+                        if (user_id == userID()) {
+                            clearFriends();
+                            jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowers(user_id).toObject()));
+                            jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowings(user_id).toObject()));
+                        }
 
                         return userMedia(user_id);
                     }

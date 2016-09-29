@@ -93,7 +93,7 @@ namespace Core {
                     );
                 }
                 QJsonValue userRecommendations(const QString & user_id, bool randomize, int offset = 0) { // ~50 per request
-                    Permissions perm = permissions(pr_recommendations);
+                    Permissions perm = permissions(pr_user_recommendations);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -154,7 +154,7 @@ namespace Core {
                     );
                 }
                 QJsonValue trackRecommendations(const QString & track_id, bool randomize, int offset = 0) {
-                    Permissions perm = permissions(pr_recommendations);
+                    Permissions perm = permissions(pr_item_recommendations);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -167,7 +167,7 @@ namespace Core {
                                         { QStringLiteral("al"), QStringLiteral("1") },
                                         { QStringLiteral("album_id"), QString(QStringLiteral("audio") % track_id) },
                                         { QStringLiteral("offset"), offset },
-                                        { QStringLiteral("owner_id"), userID(pr_recommendations) },
+                                        { QStringLiteral("owner_id"), userID(pr_item_recommendations) },
                                         { QStringLiteral("type"), QStringLiteral("recoms") }
                                     }
                                 ),

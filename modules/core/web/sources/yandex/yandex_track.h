@@ -26,6 +26,14 @@ namespace Core {
                     );
                 }
 
+                // track id should be eq to track_id:album_id
+                QString trackLyric(const QString & track_id) {
+                    QJsonObject json = sRequest(
+                        baseUrlStr(qst_site, LSTR("track.jsx"), {{LSTR("track"), track_id}}),
+                        call_type_json, 0, proc_none
+                    );
+                }
+
                 QJsonValue trackInfo(const QString & track_id) {
                     QJsonObject info = tracksInfo(QStringList() << track_id).toObject();
                     QJsonArray content = info.value(tkn_content).toArray();
@@ -33,9 +41,7 @@ namespace Core {
                 }
 
                 QJsonValue tracksInfo(const QUrlQuery & args) {
-                    return tracksInfo(
-                        args.queryItemValue(CMD_ID).split(',')
-                    );
+                    return tracksInfo(args.queryItemValue(CMD_ID).split(','));
                 }
                 QJsonValue tracksInfo(const QStringList & track_ids) {
                     Permissions perm = permissions(pr_media_content);
