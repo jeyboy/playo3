@@ -87,6 +87,7 @@ namespace Presentation {
         DockBar * createLinkedDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool addToView = false, SearchLimitLayers * search_settings = 0, bool refresh = false);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
+        inline IView * playedView() { return view(played); }
         void useVeticalTitles(bool vertical);
 
         inline void setContainer(QMainWindow * ct) { container = ct; }

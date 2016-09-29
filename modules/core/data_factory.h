@@ -54,6 +54,7 @@ namespace Core {
     signals:
         void newPlaylistNeed();
         void likeChanged(bool);
+        void itemFeaturesChanged();
         void playedItemChanged(QString, QString);
 
     public slots:

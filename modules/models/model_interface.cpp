@@ -4,6 +4,7 @@
 #include "modules/core/media/cue/cue.h"
 #include "modules/core/misc/fuzzy_comparison.h"
 #include "dialogs/extension_dialog.h"
+#include "dockbars.h"
 
 using namespace Models;
 using namespace Core::Web;
@@ -672,21 +673,27 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
         if (JSON_HAS_KEY(itm, tkn_media_type))
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
-        QStringList artistUids;
+        QVariantMap artists;
         QString artistStr;
-        QJsonArray artistsAr = JSON_ARR(itm, Yandex::tkn_artists);
-        for(QJsonArray::Iterator artist = artistsAr.begin(); artist != artistsAr.end(); artist++) {
+        QJsonArray artists_arr = JSON_ARR(itm, Yandex::tkn_artists);
+        for(QJsonArray::Iterator artist = artists_arr.begin(); artist != artists_arr.end(); artist++) {
             QJsonObject obj = (*artist).toObject();
-            artistUids << JSON_CSTR(obj, Yandex::tkn_id);
-            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % JSON_STR(obj, Yandex::tkn_name);
+            QString name = JSON_STR(obj, Yandex::tkn_name);
+
+            artists.insert(JSON_CSTR(obj, Yandex::tkn_id), name);
+            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % name;
         };
 
-        QJsonObject album = JSON_OBJ(itm, Yandex::tkn_album);
-        if (album.isEmpty())
-            album = JSON_ARR(itm, Yandex::tkn_albums).first().toObject();
+        QVariantMap albums;
+        QJsonArray albums_arr = JSON_HAS_KEY(itm, Yandex::tkn_album) ? (QJsonArray() << JSON_OBJ(itm, Yandex::tkn_album)) : JSON_ARR(itm, Yandex::tkn_albums);
+        for(QJsonArray::Iterator album = albums_arr.begin(); album != albums_arr.end(); album++) {
+            QJsonObject obj = (*album).toObject();
+
+            albums.insert(JSON_CSTR(obj, Yandex::tkn_id), JSON_STR(obj, Yandex::tkn_name));
+        }
 
 //        QString genre = album.value(Yandex::tkn_genre).toString();
-        QString album_id = JSON_CSTR(album, Yandex::tkn_id);
+        QString album_id = JSON_CSTR(albums_arr.first().toObject(), Yandex::tkn_id);
         QString id = JSON_CSTR(itm, Yandex::tkn_id) % ':' % album_id;
         QString title = QString(artistStr % tkn_dash % JSON_STR(itm, Yandex::tkn_title));
 
@@ -702,8 +709,8 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
             dm_type
         ));
 
-        newItem -> setArtistIds(artistUids);
-        newItem -> setAlbumId(album_id);
+        newItem -> setArtists(artists);
+        newItem -> setAlbums(albums);
 
         //newItem -> setGenre(genre); // need to convert genre to genre id
         if (JSON_HAS_KEY(itm, Yandex::tkn_fileSize))
@@ -921,6 +928,45 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
     delete cue;
     return amount;
 }
+
+
+void IModel::proceedRecomendationsforItemUser(IItem * it) {
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> respondableTo(pr_user_recommendations)) {
+        QVariant owner_id = it -> ownerId();
+        if (owner_id.isValid()) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_user);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for user ") % owner_id.toString()), bar_settings, 0, true, true);
+        }
+    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+void IModel::proceedRecomendationsforItemArtist(IItem * it) {
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> respondableTo(pr_artist_recommendations)) {
+        QVariantMap artists = it -> artistsList();
+
+        for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
+        }
+    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+
+void IModel::proceedRecomendationsforItem(IItem * it) {
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> respondableTo(pr_item_recommendations)) {
+        if (it -> id().isValid()) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_song);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
+        }
+    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+
+
+
 
 bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;

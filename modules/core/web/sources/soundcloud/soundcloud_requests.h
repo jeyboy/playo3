@@ -27,13 +27,15 @@ namespace Core {
                         sf_items_serachable | sf_sets_serachable | sf_users_serachable |
                         sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-                        sf_recomendable_by_item | sf_newable | sf_taggable | sf_genreable |
-                        sf_recomendable_by_user | sf_api_auth_mandatory |
+                        sf_recommendable_by_item | sf_newable | sf_taggable | sf_genreable |
+                        sf_recommendable_by_user | sf_api_auth_mandatory |
                         sf_site_object_content_auth_only
                     );
                 }
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
+//                    if (!isConnected()) takeOfflineCredentials();
+
                     switch(stype) {
                         case qst_api: return url_api_base % predicate % val_default_format;
                         case qst_site: return url_api_base % predicate;

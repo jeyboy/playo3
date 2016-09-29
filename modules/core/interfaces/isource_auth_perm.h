@@ -58,18 +58,18 @@ namespace Core {
         sf_sociable_groups                  = (quint64(1)) << 15, // user content
         sf_shareable                        = (quint64(1)) << 16, // restore item by id
         sf_packable                         = (quint64(1)) << 17, // has charts / tops / etc
-        sf_recomendable_by_item             = (quint64(1)) << 18, // give recomendations by item
-//        sf_recomendable_by_playlist         = (quint64(1)) << 19, // give recomendations by playlist
-        sf_recomendable_by_user             = (quint64(1)) << 20, // give recomendations by user
-        sf_recomendable_by_artist           = (quint64(1)) << 21, // give recomendations by artist
-        sf_newable                          = (quint64(1)) << 22, // has section with new items
-        sf_populable                        = (quint64(1)) << 23, // has section with popular items
-        sf_taggable                         = (quint64(1)) << 24, // has grouping by tags
-        sf_genreable                        = (quint64(1)) << 25, // has grouping by genres
-        sf_moodable                         = (quint64(1)) << 26, // has grouping by moods
-//        sf_streamable                       = (quint64(1)) << 27,
-//                             = (quint64(1)) << 28,
-//                             = (quint64(1)) << 29,
+        sf_recommendable_by_item             = (quint64(1)) << 18, // give recomendations by item
+//        sf_recommendable_by_playlist         = (quint64(1)) << 19, // give recomendations by playlist
+        sf_recommendable_by_user             = (quint64(1)) << 20, // give recomendations by user
+        sf_recommendable_by_artist           = (quint64(1)) << 21, // give recomendations by artist
+        sf_recommendable_by_tag              = (quint64(1)) << 22, // give recomendations by tag
+        sf_recommendable_by_label            = (quint64(1)) << 23, // give recomendations by label
+        sf_newable                          = (quint64(1)) << 24, // has section with new items
+        sf_populable                        = (quint64(1)) << 25, // has section with popular items
+        sf_taggable                         = (quint64(1)) << 26, // has grouping by tags
+        sf_genreable                        = (quint64(1)) << 27, // has grouping by genres
+        sf_moodable                         = (quint64(1)) << 28, // has grouping by moods
+//        sf_streamable                       = (quint64(1)) << 29,
 
 
         sf_content_lyrics_has               = (quint64(1)) << 30,
@@ -217,20 +217,25 @@ namespace Core {
 
         inline bool hasOfflineSociable()    {
             SourceFlags flags = defaultFlags();
-            return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_object_content_auth_only)) ||
-                    (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_object_content_auth_only));
+            return NOT_HAS_FLAG(flags, sf_auth_site_has) || (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_object_content_auth_only)) ||
+                    NOT_HAS_FLAG(flags, sf_auth_api_has) || (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_object_content_auth_only));
         }
         inline bool isShareable()           { return HAS_FLAG(defaultFlags(), sf_shareable); }
 
         inline bool hasPacks()              { return HAS_FLAG(defaultFlags(), sf_packable); }
         inline bool hasOfflinePacks()    {
             SourceFlags flags = defaultFlags();
-            return (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_packs_auth_only)) ||
-                    (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_packs_auth_only));
+            return NOT_HAS_FLAG(flags, sf_auth_site_has) || (HAS_FLAG(flags, sf_auth_site_has) && NOT_HAS_FLAG(flags, sf_site_packs_auth_only)) ||
+                    NOT_HAS_FLAG(flags, sf_auth_api_has) || (HAS_FLAG(flags, sf_auth_api_has) && NOT_HAS_FLAG(flags, sf_api_packs_auth_only));
         }
 
-        inline bool hasItemRecomendations() { return HAS_FLAG(defaultFlags(), sf_recomendable_by_item); }
-        inline bool hasUserRecomendations() { return HAS_FLAG(defaultFlags(), sf_recomendable_by_user); }
+        inline bool hasItemRecommendations() { return HAS_FLAG(defaultFlags(), sf_recommendable_by_item); }
+        inline bool hasUserRecommendations() { return HAS_FLAG(defaultFlags(), sf_recommendable_by_user); }
+        inline bool hasArtistRecommendations() { return HAS_FLAG(defaultFlags(), sf_recommendable_by_artist); }
+        inline bool hasTagRecommendations() { return HAS_FLAG(defaultFlags(), sf_recommendable_by_tag); }
+        inline bool hasLabelRecommendations() { return HAS_FLAG(defaultFlags(), sf_recommendable_by_label); }
+
+
         inline bool hasNewItemsBlock()      { return HAS_FLAG(defaultFlags(), sf_newable); }
         inline bool hasPopularItemsBlock()  { return HAS_FLAG(defaultFlags(), sf_populable); }
         inline bool hasGenres()             { return HAS_FLAG(defaultFlags(), sf_genreable); }

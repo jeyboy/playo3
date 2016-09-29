@@ -279,11 +279,11 @@ void IView::updateSelection(QModelIndex & node) {
     }
 }
 
-void IView::runItemCmd() {
-    IItem * item = mdl -> item(currentIndex());
+void IView::runItemCmd(IItem * it) {
+    IItem * item = it ? it : mdl -> item(currentIndex());
 
     if (item -> isContainer())
-        mdl -> fetchMore(currentIndex());
+        mdl -> fetchMore(index(item));
     else
         mdl -> fetchMore(index(item -> parent()));
 }
@@ -304,7 +304,7 @@ void IView::importIds() {
 
     if (dialog.exec() == QDialog::Accepted)
         mdl -> importIds(
-            dialog.getValue(dialog.text_key).split(QRegularExpression(QStringLiteral("[^\\w\\^]")), QString::SkipEmptyParts)
+            dialog.getValue(dialog.text_key).split(QRegularExpression(LSTR("[^\\w\\^]")), QString::SkipEmptyParts)
         );
 }
 
@@ -313,54 +313,27 @@ void IView::copyIdsToClipboard() {
     mdl -> copyIdsToClipboard(indexes);
 }
 
-// need to use tab type or item type for api identification
 void IView::openRecomendationsforUser() {
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
     if (src -> respondableTo(pr_user_recommendations)) {
         QString user_uid = settings().uid;
         Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_user);
-        Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % user_uid), bar_settings, 0, true, true);
+        Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for YOU")), bar_settings, 0, true, true);
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }
-// need to use tab type or item type for api identification
+
 void IView::openRecomendationsforItemUser() {
     IItem * it = mdl -> item(currentIndex());
-    ISource * src = Web::Apis::source(it -> dataType());
-
-    if (src -> respondableTo(pr_user_recommendations)) {
-        QVariant owner_id = it -> ownerId();
-        if (owner_id.isValid()) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_user);
-            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for user ") % owner_id.toString()), bar_settings, 0, true, true);
-        }
-    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
+    mdl -> proceedRecomendationsforItemUser(it);
 }
 void IView::openRecomendationsforItemArtist() {
     IItem * it = mdl -> item(currentIndex());
-    ISource * src = Web::Apis::source(it -> dataType());
-
-    if (src -> respondableTo(pr_artist_recommendations)) {
-        QStringList artist_ids = it -> artistIds().toStringList();
-
-        for(QStringList::Iterator artist_id = artist_ids.begin(); artist_id != artist_ids.end(); artist_id++) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, (*artist_id), rec_artist);
-            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for artist ") % (*artist_id)), bar_settings, 0, true, true);
-        }
-    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
+    mdl -> proceedRecomendationsforItemArtist(it);
 }
-
-// need to use tab type or item type for api identification
 void IView::openRecomendationsforItem() {
     IItem * it = mdl -> item(currentIndex());
-    ISource * src = Web::Apis::source(it -> dataType());
-
-    if (src -> respondableTo(pr_item_recommendations)) {
-        if (it -> id().isValid()) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_song);
-            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(QStringLiteral("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
-        }
-    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
+    mdl -> proceedRecomendationsforItem(it);
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
@@ -445,7 +418,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
-    if (src && src -> hasUserRecomendations()) {
+    if (src && src -> hasUserRecommendations()) {
         menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
@@ -453,11 +426,15 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     if (ind.isValid()) {
         src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
 
-        if (src && src -> hasUserRecomendations())
+        if (src && src -> hasUserRecommendations())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
 
-        if (src && src -> hasItemRecomendations())
+        if (src && src -> hasItemRecommendations())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
+
+        if (src && src -> hasArtistRecommendations())
+            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item artist"), this, SLOT(openRecomendationsforItemArtist()));
+
         menu.addSeparator();
 
         menu.addAction(QIcon(QStringLiteral(":/copy")), QStringLiteral("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));

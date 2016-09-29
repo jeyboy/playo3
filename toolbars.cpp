@@ -51,6 +51,8 @@ QMenu * ToolBars::createPopupMenu() {
         barsMenu -> addSeparator();
 
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
+            if ((*bar) -> property(toolbar_block_mark).toBool()) continue;
+
             if ((*bar) == spectrum)
                 spectrum -> generateContextMenu(barsMenu);
             else
@@ -81,9 +83,9 @@ QMenu * ToolBars::createPopupMenu() {
 void ToolBars::load(const QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
-        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key
+        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_search_key
                  << toolbar_media_time_key << toolbar_media_pan_key << toolbar_media_volume_key
-                 << toolbar_controls_key << toolbar_search_key << toolbar_settings_key
+                 << toolbar_item_features_key << toolbar_controls_key  << toolbar_settings_key
                  << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
 
         QJsonObject obj, actionObj;
@@ -126,6 +128,8 @@ void ToolBars::save(DataStore * settings) {
         ToolbarUserButton * button;
 
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
+            if ((*bar) -> property(toolbar_block_mark).toBool()) continue;
+
             curr_tab = QJsonObject();
 
             curr_tab.insert(Keys::title, (*bar) -> windowTitle());
@@ -171,6 +175,7 @@ void ToolBars::createToolbars() {
   container -> addToolBar(Qt::TopToolBarArea, createAdditionalMediaBar());
   container -> addToolBar(Qt::TopToolBarArea, createVolumeMediaBar());
   container -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
+  container -> addToolBar(Qt::TopToolBarArea, createItemFeaturesBar());
   container -> addToolBar(Qt::BottomToolBarArea, createToolBar(QStringLiteral("Folder linker 1")));
   container -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
   container -> addToolBarBreak(Qt::BottomToolBarArea);
@@ -178,6 +183,8 @@ void ToolBars::createToolbars() {
   QToolBar * eql = createEqualizerToolBar();
   container -> addToolBar(Qt::BottomToolBarArea, eql);
   eql -> hide();
+
+  item_features -> hide();
 }
 
 void ToolBars::updateBarStyle(QToolBar * bar) {
@@ -199,6 +206,7 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
 
 QToolBar * ToolBars::linkNameToToolbars(const QString & barName) {
     if (barName == toolbar_media_key)                   return createMediaBar();
+    else if (barName == toolbar_item_features_key)      return createItemFeaturesBar();
     else if (barName == toolbar_equalizer_button_key)   return createEqualizerButtonBar();
     else if (barName == toolbar_media_plus_key)         return createAdditionalMediaBar();
     else if (barName == toolbar_media_pos_key)          return createPositionMediaBar();
@@ -248,6 +256,27 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     connect(ptb, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
 
     return ptb;
+}
+
+QToolBar * ToolBars::createItemFeaturesBar() {
+    item_features = precreateToolBar(toolbar_item_features_key);
+    item_features -> setProperty(toolbar_block_mark, true);
+
+    item_features -> addSeparator();
+    more_items_btn = item_features -> addAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Load more"), this, SLOT(loadMoreItem()));
+    item_features -> addSeparator();
+
+    item_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_song")), QStringLiteral("Recommendations for played item"), this, SLOT(openRecomendationsforItem()));
+    item_singer_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer")), QStringLiteral("Recommendations for played item artists"), this, SLOT(openRecomendationsforItemArtist()));
+    item_owner_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_owner")), QStringLiteral("Recommendations for played item owner"), this, SLOT(openRecomendationsforItemUser()));
+    item_tags_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_tag")), QStringLiteral("Recommendations for played item tags"), this, SLOT(openRecomendationsforItemTags()));
+    item_labels_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_label")), QStringLiteral("Recommendations for played item labels"), this, SLOT(openRecomendationsforItemLabel()));
+
+    item_features -> adjustSize();
+
+    connect(&DataFactory::obj(), SIGNAL(itemFeaturesChanged()), this, SLOT(itemFeaturesChanged()));
+
+    return item_features;
 }
 
 QToolBar * ToolBars::createMediaBar() {
@@ -572,6 +601,82 @@ void ToolBars::changeToolbarsMovable() {
     for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
         if (movable || (!movable && !(*bar) -> isFloating()))
             (*bar) -> setMovable(movable);
+}
+
+void ToolBars::itemFeaturesChanged() {
+    IItem * it = DataFactory::obj().playedItem();
+    bool show = false;
+
+    if (it) {
+        ISource * source = Web::Apis::source(it -> dataType());
+
+        if (source) {
+            bool has_more_items = it -> hasMoreItems();
+            more_items_btn -> setVisible(has_more_items);
+
+            bool has_item_recs = source -> hasItemRecommendations();
+            item_song_btn -> setVisible(has_item_recs);
+
+            bool has_owner_recs = source -> hasUserRecommendations();
+            item_owner_btn -> setVisible(has_owner_recs);
+
+            bool has_artist_recs = source -> hasArtistRecommendations();
+            item_singer_btn -> setVisible(has_artist_recs);
+
+            bool has_tags_recs = source -> hasTagRecommendations();
+            item_tags_btn -> setVisible(has_tags_recs);
+
+            bool has_label_recs = source -> hasLabelRecommendations();
+            item_labels_btn -> setVisible(has_label_recs);
+
+            show |= has_more_items || has_item_recs || has_owner_recs ||
+                    has_artist_recs || has_tags_recs || has_label_recs;
+        }
+    }
+
+    item_features -> setHidden(!show);
+}
+
+void ToolBars::loadMoreItem() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            view -> runItemCmd(it);
+    }
+}
+
+void ToolBars::openRecomendationsforItem() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedRecomendationsforItem(it);
+    }
+}
+void ToolBars::openRecomendationsforItemUser() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedRecomendationsforItemUser(it);
+    }
+}
+void ToolBars::openRecomendationsforItemArtist() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedRecomendationsforItemArtist(it);
+    }
+}
+void ToolBars::openRecomendationsforItemTags() {
+
+
+}
+void ToolBars::openRecomendationsforItemLabel() {
+
+
 }
 
 void ToolBars::playerStateChanged(const PlayerState & state) {

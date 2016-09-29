@@ -123,6 +123,8 @@ namespace Core {
             } else playNext(false);
         }
         else player -> setMedia(QUrl());
+
+        emit itemFeaturesChanged();
     }
 
     void DataFactory::playerStatusChanged(const PlayerStatus & status) {

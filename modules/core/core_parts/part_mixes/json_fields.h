@@ -8,16 +8,18 @@ namespace Core {
     const QString JSON_TYPE_MEDIA_TYPE = QStringLiteral("1");
     const QString JSON_TYPE_MEDIA_ART = QStringLiteral("2");
     const QString JSON_TYPE_CONTAINER_FETCHABLE = QStringLiteral("3");
-    const QString JSON_TYPE_ALBUM_ID = QStringLiteral("4");
+    const QString JSON_TYPE_ALBUMS = QStringLiteral("4");
     const QString JSON_TYPE_TAGS = QStringLiteral("5");
+    const QString JSON_TYPE_LABELS = QStringLiteral("6");
+    const QString JSON_TYPE_ARTISTS = QStringLiteral("7");
 
     const QString JSON_TYPE_INFO = QStringLiteral("a");
     const QString JSON_TYPE_BYTES_SIZE = QStringLiteral("b");
     const QString JSON_TYPE_CHILDS = QStringLiteral("c");
     const QString JSON_TYPE_DURATION = QStringLiteral("d");
     const QString JSON_TYPE_EXTENSION = QStringLiteral("e");
-    const QString JSON_TYPE_ARTIST_IDS = QStringLiteral("f");
     const QString JSON_TYPE_GENRE_ID = QStringLiteral("g");
+//    const QString JSON_TYPE_ = QStringLiteral("f");
     const QString JSON_TYPE_ITEM_TYPE = QStringLiteral("i");
     const QString JSON_TYPE_SONG_ID = QStringLiteral("h");
     const QString JSON_TYPE_BPM = QStringLiteral("m");

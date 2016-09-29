@@ -47,6 +47,11 @@
         <file alias="add_yandex">images/elements/add_yandex.png</file>
         <file alias="add_yandex_on">images/elements/add_yandex_on.png</file>
         <file alias="download_on">images/elements/download_on.png</file>
+        <file alias="item_owner">images/elements/item_owner.png</file>
+        <file alias="item_singer">images/elements/item_singer.png</file>
+        <file alias="item_song">images/elements/item_song.png</file>
+        <file alias="item_label">images/elements/item_label.png</file>
+        <file alias="item_tag">images/elements/item_tag.png</file>
     </qresource>
     <qresource prefix="/items">
         <file alias="sc_item">images/items/sc.png</file>

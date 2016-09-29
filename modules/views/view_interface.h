@@ -105,6 +105,8 @@ namespace Views {
 //        void setHeaderText(QString);
 //        void showMessage(QString);
 
+        void runItemCmd(IItem * it = 0);
+
     protected slots:
         void updateRemovingBlockation(bool isBlocked) { block_deletion = isBlocked; }
         inline void onDoubleClick(const QModelIndex node) {
@@ -116,7 +118,6 @@ namespace Views {
                 }
             }
         }
-        void runItemCmd();
         void openLocation();
         void copyToClipboard();
         void copyIdsToClipboard();

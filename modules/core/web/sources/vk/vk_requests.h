@@ -23,7 +23,7 @@ namespace Core {
                         sf_auth_api_has | sf_auth_site_has |
                         sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
                         sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-                        sf_recomendable_by_item | sf_recomendable_by_user |
+                        sf_recommendable_by_item | sf_recommendable_by_user |
                         /*sf_newable |*/ sf_populable |
 
                         sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |

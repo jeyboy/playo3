@@ -45,7 +45,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
             menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
             menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
-            if (hasUserRecomendations())
+            if (hasUserRecommendations())
                 menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
         }
         else

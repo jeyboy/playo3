@@ -66,6 +66,15 @@ namespace Presentation {
         void editPanelButtonTriggered();
 
     protected slots:
+        void itemFeaturesChanged();
+
+        void loadMoreItem();
+        void openRecomendationsforItem();
+        void openRecomendationsforItemUser();
+        void openRecomendationsforItemArtist();
+        void openRecomendationsforItemTags();
+        void openRecomendationsforItemLabel();
+
         void playerStateChanged(const PlayerState &);
         void onFolderDrop(const QString & name, const QString & path);
 
@@ -84,6 +93,8 @@ namespace Presentation {
 
         QToolBar * createToolBar(const QString & name);
         QToolBar * precreateToolBar(const QString & name, bool oriented = false);
+
+        QToolBar * createItemFeaturesBar();
         QToolBar * createMediaBar();
         QToolBar * createAdditionalMediaBar();
         QToolBar * createPositionMediaBar();
@@ -104,6 +115,15 @@ namespace Presentation {
         QAction * pause_btn;
         QAction * stop_btn;
 
+        QToolBar * item_features;
+
+        QAction * more_items_btn;
+        QAction * item_song_btn;
+        QAction * item_singer_btn;
+        QAction * item_owner_btn;
+        QAction * item_tags_btn;
+        QAction * item_labels_btn;
+
         QToolBar * highlighted;
         MetricSlider * slider;
 
@@ -115,6 +135,7 @@ namespace Presentation {
         QPoint lastClickPoint;
         QMainWindow * container;
 
+        const QString toolbar_item_features_key =       LSTR("ItemFeatures");
         const QString toolbar_media_key =               LSTR("Media");
         const QString toolbar_media_plus_key =          LSTR("Media+");
         const QString toolbar_media_pos_key =           LSTR("Media+Position");
@@ -128,6 +149,7 @@ namespace Presentation {
         const QString toolbar_search_key =              LSTR("Search");
         const QString toolbar_settings_key =            LSTR("Settings");
         const char * toolbar_service_mark = "service";
+        const char * toolbar_block_mark = "blocked";
     };
 }
 

@@ -60,17 +60,11 @@ namespace Core {
 
                 Headers headers() {                   
                     return dntHeader().unite({
-                        {LSTR("Origin"), LSTR("https://soundcloud.com")},
-                        {LSTR("Referer"), LSTR("https://soundcloud.com")},
+                        {LSTR("Origin"), url_site_base},
+                        {LSTR("Referer"), url_site_base},
                         {LSTR("Authorization"), LSTR("OAuth ") % siteAdditionalToken()}
                     });
                 }
-
-//                Headers ouath() {
-//                    return {
-//                        {LSTR("Authorization"), LSTR("OAuth ") % Manager::cookie(LSTR("oauth_token"), url_api_base)}
-//                    };
-//                }
 
                 PolyQueryRules rules(
                     int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
@@ -89,20 +83,20 @@ namespace Core {
                     );
                 }
 
-                void prepareStreams(QJsonArray & collections) {
+                void prepareStreams(QJsonArray & streams) {
                     QJsonArray res;
-                    for(QJsonArray::Iterator collection = collections.begin(); collection != collections.end(); collection++) {
-                        QJsonObject collection_obj = (*collection).toObject();
-                        QString uid = JSON_CSTR(collection_obj, tkn_id);
+                    for(QJsonArray::Iterator stream = streams.begin(); stream != streams.end(); stream++) {
+                        QJsonObject stream_obj = (*stream).toObject();
+                        QString uid = JSON_CSTR(stream_obj, tkn_id);
 
-                        collection_obj.insert(
+                        stream_obj.insert(
                             tkn_loadable_cmd,
                             Cmd::build(sourceType(), cmd_mtd_user_recommendations, {{CMD_ID, uid}}).toString()
                         );
-                        res << collection_obj;
+                        res << stream_obj;
                     }
 
-                    collections = res;
+                    streams = res;
                 }
             };
         }
