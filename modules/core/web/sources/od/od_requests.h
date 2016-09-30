@@ -254,21 +254,57 @@ namespace Core {
                     return JSON_INT(chunk_obj, tkn_count) < arg -> per_request_limit;
                 }
             protected:
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        sf_primary_source |
-                        /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
-                        sf_sociable_users /*| sf_sociable_groups*/ | sf_shareable | sf_packable |
-                        /*sf_recommendable_by_item |*/ sf_recommendable_by_user |
-                        /*sf_newable |*/ sf_populable |
+                Requests() {
+                    setSociableLimitations(true, true, true, true);
 
-                        /*sf_content_lyrics_has |*/ sf_content_audio_has | sf_content_video_has |
-                        sf_content_photo_has | sf_content_news_has |
+                    flags = {
+                        {sf_endpoint,
+                            sf_online_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
+                            sf_photo | sf_feed | sf_playlist | sf_compilation | sf_site | sf_site_connectable | sf_sociable
+                        },
 
-                        sf_site_auth_mandatory
-                    );
+                        {sf_feed,                   sf_site},
+
+                        {sf_search,                 sf_site_auth_only},
+
+                        {sf_albums_by_title,        sf_site_auth_only},
+
+                        {sf_popular_artists,        sf_site_auth_only},
+
+                        {sf_popular_tracks,         sf_site_auth_only},
+                        {sf_tracks_by_id,           sf_site_auth_only},
+                        {sf_tracks_by_title,        sf_site_auth_only},
+                        {sf_tracks_by_stream,       sf_site_auth_only},
+                        {sf_tracks_by_artist,       sf_site_auth_only},
+                        {sf_tracks_by_compilation,  sf_site_auth_only},
+                        {sf_tracks_by_playlist,     sf_site_auth_only},
+                        {sf_tracks_by_album,        sf_site_auth_only},
+
+                        {sf_user_tracks,            sf_site_auth_only},
+                        {sf_user_videos,            sf_site_auth_only},
+
+                        {sf_tracks_recs_by_user,    sf_site_auth_only},
+//                        {sf_tracks_recs_by_track,    sf_site_auth_only},
+
+
+
+//                        {sf_popular_videos,     sf_site_not_api_auth},
+//                        {sf_videos_by_title,    sf_site_not_api_auth},
+//                        {sf_videos_by_genre,    sf_site_not_api_auth},
+//                        {sf_videos_by_tag,      sf_site_not_api_auth},
+                    };
                 }
+
+//                inline SourceFlags defaultFlags() {
+//                    return (SourceFlags)(
+
+//                        /*sf_auth_api_has |*/ sf_auth_site_has | sf_site_online_credentials_req |
+//                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
+//                        sf_sociable_users /*| sf_sociable_groups*/ | sf_shareable | sf_packable |
+//                        /*sf_recommendable_by_item |*/ sf_recommendable_by_user |
+//                        /*sf_newable |*/ sf_populable |
+//                    );
+//                }
 
                 void saveAdditionals(QJsonObject & obj) {
                     setSiteHash(QString());
@@ -371,7 +407,6 @@ namespace Core {
                         );
                     }
                 }
-
                 inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
@@ -421,8 +456,6 @@ namespace Core {
                     return linkables;
                 }
             public:
-                Requests() { setSociableLimitations(true, true, true, true); }
-
                 QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
                     switch(item_media_type) {
                         case dmt_audio: return trackUrl(item_id);

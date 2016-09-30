@@ -52,6 +52,7 @@
         <file alias="item_song">images/elements/item_song.png</file>
         <file alias="item_label">images/elements/item_label.png</file>
         <file alias="item_tag">images/elements/item_tag.png</file>
+        <file alias="item_singer_song">images/elements/item_singer_song.png</file>
     </qresource>
     <qresource prefix="/items">
         <file alias="sc_item">images/items/sc.png</file>

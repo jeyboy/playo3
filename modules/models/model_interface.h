@@ -167,6 +167,7 @@ namespace Models {
         void proceedRecomendationsforItemUser(IItem * it);
         void proceedRecomendationsforItemArtist(IItem * it);
         void proceedRecomendationsforItem(IItem * it);
+        void proceedTracksFromSameItemArtist(IItem * it);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());

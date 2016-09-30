@@ -268,9 +268,10 @@ QToolBar * ToolBars::createItemFeaturesBar() {
 
     item_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_song")), QStringLiteral("Recommendations for played item"), this, SLOT(openRecomendationsforItem()));
     item_singer_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer")), QStringLiteral("Recommendations for played item artists"), this, SLOT(openRecomendationsforItemArtist()));
+    item_singer_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer_song")), QStringLiteral("Tracks from played item artists"), this, SLOT(openTracksforItemArtist()));
     item_owner_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_owner")), QStringLiteral("Recommendations for played item owner"), this, SLOT(openRecomendationsforItemUser()));
     item_tags_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_tag")), QStringLiteral("Recommendations for played item tags"), this, SLOT(openRecomendationsforItemTags()));
-    item_labels_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_label")), QStringLiteral("Recommendations for played item labels"), this, SLOT(openRecomendationsforItemLabel()));
+    item_labels_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_label")), QStringLiteral("Tracks from played item labels"), this, SLOT(openRecomendationsforItemLabel()));
 
     item_features -> adjustSize();
 
@@ -670,12 +671,13 @@ void ToolBars::openRecomendationsforItemArtist() {
             ((Models::IModel *)view -> model()) -> proceedRecomendationsforItemArtist(it);
     }
 }
-void ToolBars::openRecomendationsforItemTags() {
+void ToolBars::openTracksforItemArtist() {
 
+}
+void ToolBars::openRecomendationsforItemTags() {
 
 }
 void ToolBars::openRecomendationsforItemLabel() {
-
 
 }
 

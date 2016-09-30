@@ -30,6 +30,10 @@ void WebModel::refresh() {
             source -> artistRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
+        case rec_artist_songs: {
+            source -> tracksFromSameArtistAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
         default: {}
     }
 

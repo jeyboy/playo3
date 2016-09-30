@@ -2,86 +2,27 @@
 
 using namespace Core;
 
-Permissions ISourceAuthPerm::permissions(const PermitRequest & req_perm) {
-    SourceFlags api_flag, site_flag, site_prefer;
 
-//    pr_search_media         = 1,
-//    pr_search_objects       = 2, // user or group
+SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm) {
+    SourceFlags perms = flags.value(req_perm, sf_none);
 
-//    pr_media_content        = 4,
-//    pr_object_content       = 8, // user or group
+    if (perms > 0) {
+        if (HAS_FLAG(perms, sf_site_auth_only)) {
+            if (isSiteConnected()) return sf_site;
+        }
 
+        if (HAS_FLAG(perms, sf_api_auth_only)) {
+            if (isApiConnected()) return sf_api;
+        }
 
-    switch(req_perm) {
-        case pr_search_media: {
-            api_flag = sf_api_search_media_auth_only;
-            site_flag = sf_site_search_media_auth_only;
-            site_prefer = sf_prefer_site_search_media;
-        break;}
-        case pr_media_content: {
-            api_flag = sf_api_media_content_auth_only;
-            site_flag = sf_site_media_content_auth_only;
-            site_prefer = sf_prefer_site_media_content;
-        break;}
+        if (HAS_FLAG(perms, sf_site))
+            return sf_site;
 
-        case pr_search_objects: {
-            api_flag = sf_api_search_objects_auth_only;
-            site_flag = sf_site_search_objects_auth_only;
-            site_prefer = sf_prefer_site_search_objects;
-        break;}
-        case pr_object_content: {
-            api_flag = sf_api_object_content_auth_only;
-            site_flag = sf_site_object_content_auth_only;
-            site_prefer = sf_prefer_site_object_content;
-        break;}
-//        case pr_feed: {
-//            api_flag = sf_api_feeds_auth_only;
-//            site_flag = sf_site_feeds_auth_only;
-//            site_prefer = sf_prefer_site_feeds;
-//        break;}
-        case pr_user_recommendations: {
-            api_flag = sf_auth_api_has;
-            site_flag = sf_auth_site_has;
-            site_prefer = sf_prefer_site_user_recomendations;
-        break;}
-
-        case pr_item_recommendations: {
-            api_flag = sf_api_item_recomendations_auth_only;
-            site_flag = sf_site_item_recomendations_auth_only;
-            site_prefer = sf_prefer_site_item_recomendations;
-        break;}
-
-        case pr_artist_recommendations: {
-            api_flag = sf_api_artist_recomendations_auth_only;
-            site_flag = sf_site_artist_recomendations_auth_only;
-            site_prefer = sf_prefer_artist_site_recomendations;
-        break;}
-
-        case pr_pack: {
-            api_flag = sf_api_packs_auth_only;
-            site_flag = sf_site_packs_auth_only;
-            site_prefer = sf_prefer_site_packs;
-        break;}
-
-        default: return perm_none;
+        if (HAS_FLAG(perms, sf_api))
+            return sf_api;
     }
 
-    SourceFlags flags = defaultFlags();
-    bool api_flag_permit = HAS_FLAG(flags, api_flag);
-    bool site_flag_permit = HAS_FLAG(flags, site_flag);
-
-    Permissions res = perm_none;
-
-    // if respondable to api and did not has limitation by auth or has limitation and we are connected
-    if (HAS_FLAG(flags, sf_auth_api_has) && (!api_flag_permit || api_flag_permit == apiConnected()))
-        res = perm_api;
-
-    if (HAS_FLAG(flags, sf_auth_site_has) && (!site_flag_permit || site_flag_permit == siteConnected())) {
-        if (!res || (res > 0 && HAS_FLAG(flags, site_prefer)))
-            res = perm_site;
-    }
-
-    return res;
+    return perms;
 }
 
 bool ISourceAuthPerm::connectUser() {

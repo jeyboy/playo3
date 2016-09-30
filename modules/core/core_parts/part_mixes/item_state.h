@@ -1,6 +1,8 @@
 #ifndef MODEL_ITEM_STATE_H
 #define MODEL_ITEM_STATE_H
 
+#include "modules/core/flag_ops.h"
+
 namespace Core {
     #define DEFAULT_STATE (ItemState::flag_checked)
     #define DEFAULT_ITEM_STATE (DEFAULT_STATE | ItemState::flag_new_item)

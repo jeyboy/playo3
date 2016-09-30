@@ -60,13 +60,12 @@ namespace Core {
         QWidget * settingsBlock(int block_type, const QVariantMap & configs);
         void applySettings(QVariantMap & configs);
 
-
-
         virtual void userInfoAsync(const QString & /*user_id*/, Func * /*func*/) {}
         virtual void openSetAsync(const QString & /*set_params*/, Func * /*func*/) {}
         virtual void artistRecommendationsAsync(const QString & /*artist_id*/, Func * /*func*/) {}
         virtual void trackRecommendationsAsync(const QString & /*track_id*/, Func * /*func*/) {}
         virtual void userRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
+        virtual void tracksFromSameArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
 
     public slots:
         void openTab();

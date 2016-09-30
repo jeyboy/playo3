@@ -148,18 +148,31 @@ namespace Core {
                 }
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
             protected:
+                Requests() {
+                    flags = {
+                        {sf_endpoint,
+                            sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
+                            sf_site /*| sf_api*/ | sf_site_connectable /*| sf_api_connectable*/
+                        },
+
+                        {sf_search,             sf_site_not_api_auth},
+
+                        {sf_popular_tracks,     sf_site_not_api_auth},
+                        {sf_tracks_by_id,       sf_site_not_api_auth},
+                        {sf_tracks_by_title,    sf_site_not_api_auth},
+                        {sf_tracks_by_genre,    sf_site_not_api_auth},
+                        {sf_tracks_by_tag,      sf_site_not_api_auth},
+                        {sf_tracks_by_artist,   sf_site_not_api_auth},
+                        {sf_tracks_by_album,    sf_site_not_api_auth},
+
+                        {sf_popular_videos,     sf_site_not_api_auth},
+                        {sf_videos_by_title,    sf_site_not_api_auth},
+                        {sf_videos_by_genre,    sf_site_not_api_auth},
+                        {sf_videos_by_tag,      sf_site_not_api_auth},
+                    };
+                }
                 inline virtual ~Requests() {}
 
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        /*sf_auth_api_has | */ sf_auth_site_has |
-                        sf_content_audio_has | sf_content_video_has |
-                        sf_items_serachable |
-                        sf_populable | sf_shareable | sf_packable |
-                        sf_api_object_content_auth_only | sf_api_search_media_auth_only |
-                        sf_site_object_content_auth_only
-                    );
-                }
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     switch(stype) {
                         case qst_api_base: return url_api_base % predicate % val_json_ext;

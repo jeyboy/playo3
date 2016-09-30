@@ -964,7 +964,18 @@ void IModel::proceedRecomendationsforItem(IItem * it) {
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
+void IModel::proceedTracksFromSameItemArtist(IItem * it) {
+    ISource * src = Web::Apis::source(it -> dataType());
 
+    if (src -> respondableTo(pr_artist_recommendations)) {
+        QVariantMap artists = it -> artistsList();
+
+        for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist_songs);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
+        }
+    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
 
 
 

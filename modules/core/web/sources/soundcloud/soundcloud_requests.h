@@ -17,24 +17,28 @@ namespace Core {
                      public Playlist, public Set, public Track, public User
             {
             protected:
-                Requests() { setSociableLimitations(true, true, true, true); }
+                Requests() {
+                    setSociableLimitations(true, true, true, true);
+
+
+                }
                 inline virtual ~Requests() {}
 
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        sf_auth_api_has | /*sf_auth_site_has |*/ sf_site_offline_credentials_req |
-                        sf_content_audio_has |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
-                        sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
-                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-                        sf_recommendable_by_item | sf_newable | sf_taggable | sf_genreable |
-                        sf_recommendable_by_user | sf_api_auth_mandatory |
-                        sf_site_object_content_auth_only
-                    );
-                }
+//                inline SourceFlags defaultFlags() {
+//                    return (SourceFlags)(
+//                        sf_auth_api_has | /*sf_auth_site_has |*/ sf_site_offline_credentials_req |
+//                        sf_content_audio_has |
+//                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
+//                        sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
+//                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
+//                        sf_recommendable_by_item | sf_newable | sf_taggable | sf_genreable |
+//                        sf_recommendable_by_user | sf_api_auth_mandatory |
+//                        sf_site_object_content_auth_only
+//                    );
+//                }
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
-//                    if (!isConnected()) takeOfflineCredentials();
+                    if (!isConnected()) takeOfflineCredentials();
 
                     switch(stype) {
                         case qst_api: return url_api_base % predicate % val_default_format;
@@ -74,7 +78,7 @@ namespace Core {
 
                 void loadAdditionals(QJsonObject & obj) {
                     Sociable::fromJson(obj);
-                    takeOfflineCredentials();
+//                    takeOfflineCredentials();
                 }
                 void saveAdditionals(QJsonObject & obj) { Sociable::toJson(obj); }
                 void clearAdditionals() {
