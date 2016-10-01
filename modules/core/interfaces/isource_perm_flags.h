@@ -72,10 +72,12 @@ namespace Core {
         sf_by_mood                          = (quint64(1)) << 40,
         sf_by_genre                         = (quint64(1)) << 41,
         sf_by_lyric                         = (quint64(1)) << 42,
+        sf_by_user                          = (quint64(1)) << 43,
+        sf_by_group                         = (quint64(1)) << 44,
 
-        sf_section_new                      = (quint64(1)) << 43,
-        sf_section_popular                  = (quint64(1)) << 44,
-    //        sf_section_chart                    = (quint64(1)) << 45,
+        sf_section_new                      = (quint64(1)) << 45,
+        sf_section_popular                  = (quint64(1)) << 46,
+    //        sf_section_chart                    = (quint64(1)) << 47,
 
         //////////// combinations //////////////////////////
         sf_sociable                         = sf_user | sf_group,
@@ -85,95 +87,104 @@ namespace Core {
         sf_site_auth_api_not                = sf_api | sf_site_auth_only,
         sf_site_not_api_auth                = sf_api_auth_only | sf_site,
 
-        sf_track_sets                       = sf_playlist | sf_track,
-        sf_video_sets                       = sf_playlist | sf_video,
-//        sf_feeds                            = sf_playlist | sf_feed,
-        sf_posts                            = sf_playlist | sf_post,
-//        sf_lyrics                           = sf_playlist | sf_lyric,
+        sf_audio_playlist                   = sf_playlist | sf_track,
+        sf_video_playlist                   = sf_playlist | sf_video,
+        sf_blog                             = sf_compilation | sf_post,
+        sf_photo_album                      = sf_compilation | sf_photo,
 
-        sf_tracks_stream                    = sf_stream | sf_track,
-        sf_videos_stream                    = sf_stream | sf_video,
+        sf_track_stream                     = sf_stream | sf_track,
+        sf_video_stream                     = sf_stream | sf_video,
 
-        sf_new_tracks                       = sf_track | sf_section_new,
-        sf_popular_tracks                   = sf_track | sf_section_popular,
-        sf_tracks_by_id                     = sf_track | sf_by_id,
-        sf_tracks_by_title                  = sf_track | sf_by_title,
-        sf_tracks_by_genre                  = sf_track | sf_by_genre,
-        sf_tracks_by_mood                   = sf_track | sf_by_mood,
-        sf_tracks_by_tag                    = sf_track | sf_by_tag,
-        sf_tracks_by_artist                 = sf_track | sf_by_artist,
-        sf_tracks_by_album                  = sf_track | sf_by_album,
-        sf_tracks_by_label                  = sf_track | sf_by_label,
-        sf_tracks_by_compilation            = sf_track | sf_by_compilation,
-        sf_tracks_by_playlist               = sf_track | sf_by_playlist,
-        sf_tracks_by_stream                 = sf_track | sf_by_stream,
+        sf_new_audio                        = sf_track | sf_section_new,
+        sf_popular_audio                    = sf_track | sf_section_popular,
+        sf_audio_by_id                      = sf_track | sf_by_id,
+        sf_audio_by_title                   = sf_track | sf_by_title,
+        sf_audio_by_genre                   = sf_track | sf_by_genre,
+        sf_audio_by_mood                    = sf_track | sf_by_mood,
+        sf_audio_by_tag                     = sf_track | sf_by_tag,
+        sf_audio_by_artist                  = sf_track | sf_by_artist,
+        sf_audio_by_album                   = sf_track | sf_by_album,
+        sf_audio_by_label                   = sf_track | sf_by_label,
+        sf_audio_by_compilation             = sf_track | sf_by_compilation,
+        sf_audio_by_playlist                = sf_track | sf_by_playlist,
+        sf_audio_by_stream                  = sf_track | sf_by_stream,
+        sf_audio_by_user                    = sf_track | sf_by_user,
+        sf_audio_by_group                   = sf_track | sf_by_group,
 
-        sf_popular_artists                  = sf_artist | sf_section_popular,
+        sf_new_artist                       = sf_artist | sf_section_new,
+        sf_popular_artist                   = sf_artist | sf_section_popular,
+        sf_artist_by_id                     = sf_artist | sf_by_id,
+        sf_artist_by_title                  = sf_artist | sf_by_title,
 
-        sf_new_albums                       = sf_album | sf_section_new,
-        sf_popular_albums                   = sf_album | sf_section_popular,
-        sf_albums_by_title                  = sf_album | sf_by_title,
-        sf_albums_by_label                  = sf_album | sf_by_label,
-        sf_albums_by_artist                 = sf_album | sf_by_artist,
+        sf_new_album                        = sf_album | sf_section_new,
+        sf_popular_album                    = sf_album | sf_section_popular,
+        sf_album_by_title                   = sf_album | sf_by_title,
+        sf_album_by_label                   = sf_album | sf_by_label,
+        sf_album_by_artist                  = sf_album | sf_by_artist,
 
-        sf_new_videos                       = sf_video | sf_section_new,
-        sf_popular_videos                   = sf_video | sf_section_popular,
-        sf_videos_by_title                  = sf_video | sf_by_title,
-        sf_videos_by_genre                  = sf_video | sf_by_genre,
-        sf_videos_by_mood                   = sf_video | sf_by_mood,
-        sf_videos_by_tag                    = sf_video | sf_by_tag,
+        sf_new_video                        = sf_video | sf_section_new,
+        sf_popular_video                    = sf_video | sf_section_popular,
+        sf_video_by_title                   = sf_video | sf_by_title,
+        sf_video_by_genre                   = sf_video | sf_by_genre,
+        sf_video_by_mood                    = sf_video | sf_by_mood,
+        sf_video_by_tag                     = sf_video | sf_by_tag,
+        sf_video_by_user                    = sf_video | sf_by_user,
+        sf_video_by_group                   = sf_video | sf_by_group,
 
-        sf_new_lyrics                       = sf_lyric | sf_section_new,
-        sf_popular_lyrics                   = sf_lyric | sf_section_popular,
-        sf_lyrics_search_by_title           = sf_lyric | sf_search | sf_by_title, // rule including search by text part
-        sf_lyrics_search_by_track           = sf_lyric | sf_search | sf_track, // rule including search by track id
-        sf_lyrics_search_by_video           = sf_lyric | sf_search | sf_video, // rule including search by video id
+        sf_audio_playlist_by_user           = sf_audio_playlist | sf_by_user,
+        sf_audio_playlist_by_group           = sf_audio_playlist | sf_by_group,
 
-        sf_users_sociable                   = sf_user | sf_link,
-        sf_user_search_by_title             = sf_user | sf_search | sf_by_title,
-        sf_user_search_by_perma             = sf_user | sf_search | sf_by_perma,
-        sf_user_search_by_id                = sf_user | sf_search | sf_by_id,
-        sf_user_track_sets                  = sf_user | sf_track_sets,
-        sf_user_video_sets                  = sf_user | sf_video_sets,
-        sf_user_feeds                       = sf_user | sf_feed,
-        sf_user_tracks                      = sf_user | sf_track,
-        sf_user_videos                      = sf_user | sf_video,
-        sf_user_photos                      = sf_user | sf_photo,
-        sf_user_posts                       = sf_user | sf_post,
-        sf_user_streams                     = sf_user | sf_stream,
-        sf_user_audio_playlists             = sf_user_tracks | sf_playlist,
-        sf_user_photo_albums                = sf_user_photos | sf_album,
+        sf_video_playlist_by_user           = sf_video_playlist | sf_by_user,
+        sf_video_playlist_by_group          = sf_video_playlist | sf_by_group,
+
+        sf_feed_by_user                     = sf_feed | sf_by_user,
+        sf_feed_by_group                    = sf_feed | sf_by_group,
+
+        sf_stream_by_user                   = sf_stream | sf_by_user,
+        sf_stream_by_group                  = sf_stream | sf_by_group,
+
+        sf_post_by_user                     = sf_post | sf_by_user,
+        sf_post_by_group                    = sf_post | sf_by_group,
+
+        sf_photo_by_user                    = sf_photo | sf_by_user,
+        sf_photo_by_group                   = sf_photo | sf_by_group,
+
+        sf_photo_album_by_user              = sf_photo_album | sf_by_user,
+        sf_photo_album_by_group             = sf_photo_album | sf_by_group,
 
 
-        sf_groups_sociable                  = sf_group | sf_link,
-        sf_group_search_by_title            = sf_group | sf_search | sf_by_title,
-        sf_group_search_by_perma            = sf_group | sf_search | sf_by_perma,
-        sf_group_search_by_id               = sf_group | sf_search | sf_by_id,
-        sf_group_track_sets                 = sf_group | sf_track_sets,
-        sf_group_video_sets                 = sf_group | sf_video_sets,
-        sf_group_feeds                      = sf_group | sf_feed,
-        sf_group_tracks                     = sf_group | sf_track,
-        sf_group_videos                     = sf_group | sf_video,
-        sf_group_photos                     = sf_group | sf_photo,
-        sf_group_posts                      = sf_group | sf_post,
-        sf_group_streams                    = sf_group | sf_stream,
-        sf_group_track_albums               = sf_group_tracks | sf_album,
-        sf_group_photo_albums               = sf_group_photos | sf_album,
+        sf_new_lyric                        = sf_lyric | sf_section_new,
+        sf_popular_lyric                    = sf_lyric | sf_section_popular,
+        sf_lyric_by_title                   = sf_lyric | sf_by_title, // rule including search by text part
+        sf_lyric_by_track                   = sf_lyric | sf_track, // rule including search by track id
+        sf_lyric_by_video                   = sf_lyric | sf_video, // rule including search by video id
 
-        sf_tracks_recs_by_user              = sf_user | sf_track | sf_recommendation, // tracks recs for user or group by id
-        sf_tracks_recs_by_me                = sf_my | sf_tracks_recs_by_user, // tracks recs only for current user
-        sf_videos_recs_by_user              = sf_user | sf_video | sf_recommendation, // videos recs for user or group by id
-        sf_videos_recs_by_me                = sf_my | sf_videos_recs_by_user, // videos recs only for current user
+        sf_user_sociable                    = sf_user | sf_link,
+        sf_user_by_title                    = sf_user | sf_by_title,
+        sf_user_by_perma                    = sf_user | sf_by_perma,
+        sf_user_by_id                       = sf_user | sf_by_id,
 
-        sf_tracks_recs_by_track             = sf_track | sf_recommendation, // tracks recs by one track
-//        sf_tracks_recs_by_tracks            = sf_track_sets | sf_tracks_recs_by_track, // recs by a bunch of tracks
-        sf_tracks_recs_by_playlist          = sf_track | sf_playlist | sf_recommendation, //recs by playlist or set
-        sf_tracks_recs_by_artist            = sf_track | sf_by_artist | sf_recommendation, //recs by playlist or set
 
-        sf_videos_recs_by_video             = sf_video | sf_recommendation, // videos recs by one video
-//        sf_videos_recs_by_videos            = sf_video_sets | sf_videos_recs_by_video, // recs by a bunch of videos
-        sf_videos_recs_by_playlist          = sf_video | sf_playlist | sf_recommendation, //recs by playlist or set
-        sf_videos_recs_by_artist            = sf_video | sf_by_artist | sf_recommendation, //recs by playlist or set
+        sf_group_sociable                   = sf_group | sf_link,
+        sf_group_by_user                    = sf_group | sf_by_user,
+        sf_group_by_title                   = sf_group | sf_by_title,
+        sf_group_by_perma                   = sf_group | sf_by_perma,
+        sf_group_by_id                      = sf_group | sf_by_id,
+
+        sf_track_recs_by_user               = sf_user | sf_track | sf_recommendation, // tracks recs for user or group by id
+        sf_track_recs_by_me                 = sf_my | sf_track_recs_by_user, // tracks recs only for current user
+        sf_video_recs_by_user               = sf_user | sf_video | sf_recommendation, // videos recs for user or group by id
+        sf_video_recs_by_me                 = sf_my | sf_video_recs_by_user, // videos recs only for current user
+
+        sf_track_recs_by_track              = sf_track | sf_recommendation, // tracks recs by one track
+//        sf_track_recs_by_tracks            = sf_track_sets | sf_tracks_recs_by_track, // recs by a bunch of tracks
+        sf_track_recs_by_playlist           = sf_track | sf_playlist | sf_recommendation, //recs by playlist or set
+        sf_track_recs_by_artist             = sf_track | sf_by_artist | sf_recommendation, //recs by playlist or set
+
+        sf_video_recs_by_video              = sf_video | sf_recommendation, // videos recs by one video
+//        sf_video_recs_by_videos            = sf_video_sets | sf_videos_recs_by_video, // recs by a bunch of videos
+        sf_video_recs_by_playlist           = sf_video | sf_playlist | sf_recommendation, //recs by playlist or set
+        sf_video_recs_by_artist             = sf_video | sf_by_artist | sf_recommendation, //recs by playlist or set
     };
 }
 

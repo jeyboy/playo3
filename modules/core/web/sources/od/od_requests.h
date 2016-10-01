@@ -267,7 +267,12 @@ namespace Core {
 
                         {sf_search,                 sf_site_auth_only},
 
+                        {sf_compilation,            sf_site_auth_only},
+
                         {sf_albums_by_title,        sf_site_auth_only},
+
+                        {sf_artists_by_id,          sf_site_auth_only},
+                        {sf_artists_by_title,       sf_site_auth_only},
 
                         {sf_popular_artists,        sf_site_auth_only},
 

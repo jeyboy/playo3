@@ -21,7 +21,6 @@ namespace Core {
                                     qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
                                     {
                                         { QStringLiteral("st.cmd"), QStringLiteral("userGroups") },
-//                                        { QStringLiteral("st._aid"), QStringLiteral("GroupsSubMenu_User_MyGroupsNav_All") },
                                         { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
                                     }
                                 ),
