@@ -96,7 +96,7 @@ namespace Core {
                 }
 
                 QJsonValue groupsById(const QUrlQuery & args) {
-                    return groupsByIdOrPerma(args.queryItemValue(CMD_PREDICATE));
+                    return groupsByIdOrPerma(args.queryItemValue(CMD_ID));
                 }
                 QJsonValue groupsByIdOrPerma(const QString & group_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QString url = Info::isNumber(group_id) ?

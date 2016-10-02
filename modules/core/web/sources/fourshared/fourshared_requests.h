@@ -156,19 +156,20 @@ namespace Core {
                         },
 
                         {sf_search,             sf_site_not_api_auth},
+                        {sf_user_sociable,      sf_both_auth},
 
-                        {sf_popular_tracks,     sf_site_not_api_auth},
-                        {sf_tracks_by_id,       sf_site_not_api_auth},
-                        {sf_tracks_by_title,    sf_site_not_api_auth},
-                        {sf_tracks_by_genre,    sf_site_not_api_auth},
-                        {sf_tracks_by_tag,      sf_site_not_api_auth},
-                        {sf_tracks_by_artist,   sf_site_not_api_auth},
-                        {sf_tracks_by_album,    sf_site_not_api_auth},
+                        {sf_popular_audio,      sf_site_not_api_auth},
+                        {sf_audio_by_id,        sf_site_not_api_auth},
+                        {sf_audio_by_title,     sf_site_not_api_auth},
+                        {sf_audio_by_genre,     sf_site_not_api_auth},
+                        {sf_audio_by_tag,       sf_site_not_api_auth},
+                        {sf_audio_by_artist,    sf_site_not_api_auth},
+                        {sf_audio_by_album,     sf_site_not_api_auth},
 
-                        {sf_popular_videos,     sf_site_not_api_auth},
-                        {sf_videos_by_title,    sf_site_not_api_auth},
-                        {sf_videos_by_genre,    sf_site_not_api_auth},
-                        {sf_videos_by_tag,      sf_site_not_api_auth},
+                        {sf_popular_video,      sf_site_not_api_auth},
+                        {sf_video_by_title,     sf_site_not_api_auth},
+                        {sf_video_by_genre,     sf_site_not_api_auth},
+                        {sf_video_by_tag,       sf_site_not_api_auth},
                     };
                 }
                 inline virtual ~Requests() {}

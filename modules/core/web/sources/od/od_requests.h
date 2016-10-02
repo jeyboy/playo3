@@ -265,38 +265,49 @@ namespace Core {
 
                         {sf_feed,                   sf_site},
 
+                        {sf_feed_by_user,           sf_site_auth_only},
+                        {sf_feed_by_group,          sf_site_auth_only},
+
                         {sf_search,                 sf_site_auth_only},
 
                         {sf_compilation,            sf_site_auth_only},
 
-                        {sf_albums_by_title,        sf_site_auth_only},
+                        {sf_stream_list,            sf_site_auth_only},
 
-                        {sf_artists_by_id,          sf_site_auth_only},
-                        {sf_artists_by_title,       sf_site_auth_only},
+                        {sf_album_by_title,         sf_site_auth_only},
 
-                        {sf_popular_artists,        sf_site_auth_only},
+                        {sf_artist_by_id,           sf_site_auth_only},
+                        {sf_artist_by_title,        sf_site_auth_only},
 
-                        {sf_popular_tracks,         sf_site_auth_only},
-                        {sf_tracks_by_id,           sf_site_auth_only},
-                        {sf_tracks_by_title,        sf_site_auth_only},
-                        {sf_tracks_by_stream,       sf_site_auth_only},
-                        {sf_tracks_by_artist,       sf_site_auth_only},
-                        {sf_tracks_by_compilation,  sf_site_auth_only},
-                        {sf_tracks_by_playlist,     sf_site_auth_only},
-                        {sf_tracks_by_album,        sf_site_auth_only},
+                        {sf_popular_artist,         sf_site_auth_only},
 
-                        {sf_user_tracks,            sf_site_auth_only},
-                        {sf_user_videos,            sf_site_auth_only},
+                        {sf_popular_audio,          sf_site_auth_only},
+                        {sf_audio_by_id,            sf_site_auth_only},
+                        {sf_audio_by_title,         sf_site_auth_only},
+                        {sf_audio_by_stream,        sf_site_auth_only},
+                        {sf_audio_by_artist,        sf_site_auth_only},
+                        {sf_audio_by_compilation,   sf_site_auth_only},
+                        {sf_audio_by_playlist,      sf_site_auth_only},
+                        {sf_audio_by_album,         sf_site_auth_only},
+                        {sf_audio_by_user,          sf_site_auth_only},
+                        {sf_audio_recs_by_user,     sf_site_auth_only},
+//                        {sf_audio_recs_by_track,    sf_site_auth_only},
 
-                        {sf_tracks_recs_by_user,    sf_site_auth_only},
-//                        {sf_tracks_recs_by_track,    sf_site_auth_only},
+                        {sf_audio_playlist_by_id,   sf_site_auth_only},
+
+                        {sf_video_by_id,            sf_site_auth_only},
+                        {sf_video_by_title,         sf_site_auth_only},
+                        {sf_video_by_user,          sf_site_auth_only},
+                        {sf_video_by_category,      sf_site_auth_only},
+                        {sf_video_by_playlist,      sf_site_auth_only},
 
 
+                        {sf_user_by_id,             sf_site_auth_only},
+                        {sf_user_by_title,          sf_site_auth_only},
 
-//                        {sf_popular_videos,     sf_site_not_api_auth},
-//                        {sf_videos_by_title,    sf_site_not_api_auth},
-//                        {sf_videos_by_genre,    sf_site_not_api_auth},
-//                        {sf_videos_by_tag,      sf_site_not_api_auth},
+                        {sf_group_by_user,          sf_site_auth_only},
+                        {sf_group_by_title,         sf_site_auth_only},
+                        {sf_group_by_id,            sf_site_auth_only},
                     };
                 }
 

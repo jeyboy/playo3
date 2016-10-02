@@ -27,40 +27,40 @@ namespace Core {
 
                 QString vplToParam(const VideoPlaylistType & vpl) {
                     switch(vpl) {
-                        case vpl_my_video: return QStringLiteral("myVideo");
-                        case vpl_my_liked: return QStringLiteral("myLiked");
-                        case vpl_my_history: return QStringLiteral("history");
-                        case vpl_my_subscriptions: return QStringLiteral("subscriptions");
-                        case vpl_top: return QStringLiteral("top");
-                        case vpl_new: return QStringLiteral("new");
-                        case vpl_popular: return QStringLiteral("suggestedAlbums");
-                        case vpl_serial: return QStringLiteral("serial");
-                        case vpl_tvshow: return QStringLiteral("tvshow");
-                        case vpl_kino: return QStringLiteral("kino");
-                        case vpl_bloggers: return QStringLiteral("bloggers");
-                        case vpl_children: return QStringLiteral("children");
-                        case vpl_musicchannel: return QStringLiteral("musicchannel");
+                        case vpl_my_video:              return LSTR("myVideo");
+                        case vpl_my_liked:              return LSTR("myLiked");
+                        case vpl_my_history:            return LSTR("history");
+                        case vpl_my_subscriptions:      return LSTR("subscriptions");
+                        case vpl_top:                   return LSTR("top");
+                        case vpl_new:                   return LSTR("new");
+                        case vpl_popular:               return LSTR("suggestedAlbums");
+                        case vpl_serial:                return LSTR("serial");
+                        case vpl_tvshow:                return LSTR("tvshow");
+                        case vpl_kino:                  return LSTR("kino");
+                        case vpl_bloggers:              return LSTR("bloggers");
+                        case vpl_children:              return LSTR("children");
+                        case vpl_musicchannel:          return LSTR("musicchannel");
 
-                        default: return QString();
+                        default:                        return QString();
                     }
                 }
                 QString vplToString(const VideoPlaylistType & vpl) {
                     switch(vpl) {
-                        case vpl_my_video: return QStringLiteral("My Video");
-                        case vpl_my_liked: return QStringLiteral("My Liked Video");
-                        case vpl_my_history: return QStringLiteral("My Video History");
-                        case vpl_my_subscriptions: return QStringLiteral("My Video Subscriptions");
-                        case vpl_top: return QStringLiteral("Top video of the week");
-                        case vpl_new: return QStringLiteral("New Video");
-                        case vpl_popular: return QStringLiteral("Popular Video");
-                        case vpl_serial: return QStringLiteral("Serials");
-                        case vpl_tvshow: return QStringLiteral("TV shows");
-                        case vpl_kino: return QStringLiteral("Moovies");
-                        case vpl_bloggers: return QStringLiteral("Bloggers");
-                        case vpl_children: return QStringLiteral("Children");
-                        case vpl_musicchannel: return QStringLiteral("Music Video");
+                        case vpl_my_video:              return LSTR("My Video");
+                        case vpl_my_liked:              return LSTR("My Liked Video");
+                        case vpl_my_history:            return LSTR("My Video History");
+                        case vpl_my_subscriptions:      return LSTR("My Video Subscriptions");
+                        case vpl_top:                   return LSTR("Top video of the week");
+                        case vpl_new:                   return LSTR("New Video");
+                        case vpl_popular:               return LSTR("Popular Video");
+                        case vpl_serial:                return LSTR("Serials");
+                        case vpl_tvshow:                return LSTR("TV shows");
+                        case vpl_kino:                  return LSTR("Moovies");
+                        case vpl_bloggers:              return LSTR("Bloggers");
+                        case vpl_children:              return LSTR("Children");
+                        case vpl_musicchannel:          return LSTR("Music Video");
 
-                        default: return QStringLiteral("Unknow");
+                        default:                        return LSTR("Unknow");
                     }
                 }
 

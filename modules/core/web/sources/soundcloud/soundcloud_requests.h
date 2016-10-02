@@ -17,25 +17,67 @@ namespace Core {
                      public Playlist, public Set, public Track, public User
             {
             protected:
+                //                inline SourceFlags defaultFlags() {
+                //                    return (SourceFlags)(
+                //                        sf_auth_api_has | /*sf_auth_site_has |*/ |
+                //                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
+                //                        sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
+                //                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
+                //                        sf_recommendable_by_item | sf_newable | sf_taggable | sf_genreable |
+                //                        sf_recommendable_by_user | sf_api_auth_mandatory |
+                //                        sf_site_object_content_auth_only
+                //                    );
+                //                }
+
                 Requests() {
                     setSociableLimitations(true, true, true, true);
 
+                    flags = {
+                        {sf_endpoint,
+                            sf_offline_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track |
+                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable | sf_sociable
+                        },
 
+//                        {sf_feed,                   sf_site},
+
+                        {sf_feed_by_user,               sf_both_auth},
+//                        {sf_feed_by_group,          sf_site_auth_only},
+
+                        {sf_search,                     sf_site_not_api_auth},
+
+                        {sf_compilation,                sf_site_not_api_auth},
+
+//                        {sf_popular_audio,          sf_site_auth_only},
+                        {sf_audio_by_id,                sf_site_not_api_auth},
+                        {sf_audio_by_title,             sf_site_not_api_auth},
+                        {sf_audio_by_genre,             sf_site_not_api_auth},
+                        {sf_audio_by_tag,               sf_site_not_api_auth},
+                        {sf_audio_by_group,             sf_site_not_api_auth},
+                        {sf_audio_by_like,              sf_site_not_api_auth},
+                        {sf_audio_by_user,              sf_site_not_api_auth},
+                        {sf_audio_recs_by_user,         sf_site},
+                        {sf_audio_recs_by_track,        sf_site_not_api_auth},
+
+//                        {sf_audio_playlist_by_id,   sf_site_auth_only},
+                        {sf_audio_playlist_by_title,    sf_site_not_api_auth},
+                        {sf_audio_playlist_by_tag,      sf_site},
+                        {sf_audio_playlist_by_track,    sf_site_not_api_auth},
+                        {sf_audio_playlist_by_user,     sf_site_not_api_auth},
+
+                        {sf_user_sociable,              sf_site_not_api_auth},
+
+                        {sf_user_by_id,                 sf_site_not_api_auth},
+                        {sf_user_by_title,              sf_site_not_api_auth},
+                        {sf_user_by_likes,              sf_site_not_api_auth},
+                        {sf_user_by_audio_repost,       sf_site_not_api_auth},
+
+                        {sf_group_by_user,              sf_site_not_api_auth},
+                        {sf_group_by_title,             sf_site_not_api_auth},
+                        {sf_group_by_id,                sf_site_not_api_auth},
+                        {sf_group_by_track,             sf_site}
+                    };
                 }
                 inline virtual ~Requests() {}
-
-//                inline SourceFlags defaultFlags() {
-//                    return (SourceFlags)(
-//                        sf_auth_api_has | /*sf_auth_site_has |*/ sf_site_offline_credentials_req |
-//                        sf_content_audio_has |
-//                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
-//                        sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
-//                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-//                        sf_recommendable_by_item | sf_newable | sf_taggable | sf_genreable |
-//                        sf_recommendable_by_user | sf_api_auth_mandatory |
-//                        sf_site_object_content_auth_only
-//                    );
-//                }
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     if (!isConnected()) takeOfflineCredentials();
