@@ -17,21 +17,62 @@ namespace Core {
             class Requests : public Sociable, public Auth, public Feed, public Group,
                     public Playlist, public Set, public Track, public User {
             protected:
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        sf_primary_source |
-                        sf_auth_api_has | sf_auth_site_has |
-                        sf_items_serachable | sf_sets_serachable | sf_users_serachable | sf_groups_serachable |
-                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-                        sf_recommendable_by_item | sf_recommendable_by_user |
-                        /*sf_newable |*/ sf_populable |
+                Requests() {
+                    setSociableLimitations(true, true, true, true);
 
-                        sf_content_lyrics_has | sf_content_audio_has | sf_content_video_has |
-                        sf_content_photo_has | sf_content_news_has |
+                    flags = {
+                        {sf_endpoint,
+                            sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
+                            sf_photo | sf_feed | sf_lyric | sf_playlist | sf_compilation | sf_sociable |
+                            sf_site | sf_site_connectable | sf_api | sf_api_connectable
+                        },
 
-                        sf_auth_mandatory | sf_prefer_site_object_content | sf_prefer_site_packs |
-                        sf_prefer_site_item_recomendations | sf_prefer_site_user_recomendations
-                    );
+                        {sf_feed,                       sf_both},
+
+                        {sf_feed_by_user,               sf_both_auth},
+                        {sf_feed_by_group,              sf_both_auth},
+
+                        {sf_search,                     sf_both_auth},
+
+                        {sf_compilation,                sf_both_auth},
+
+//                        {sf_popular_artist,         sf_both_auth},
+
+//                        {sf_popular_audio,          sf_both_auth},
+                        {sf_audio_by_id,                sf_both_auth},
+                        {sf_audio_by_title,             sf_both_auth},
+                        {sf_audio_by_genre,             sf_both_auth},
+//                        {sf_audio_by_stream,        sf_both_auth},
+                        {sf_audio_by_artist,            sf_both_auth},
+//                        {sf_audio_by_compilation,   sf_both_auth},
+                        {sf_audio_by_playlist,          sf_both_auth},
+//                        {sf_audio_by_album,         sf_both_auth},
+                        {sf_audio_by_user,              sf_both_auth},
+                        {sf_audio_recs_by_user,         sf_both_auth},
+                        {sf_audio_recs_by_audio,        sf_both_auth},
+
+//                        {sf_audio_playlist_by_id,   sf_both_auth},
+                        {sf_audio_playlist_by_user,     sf_both_auth},
+
+                        {sf_video_categories,           sf_both_auth},
+                        {sf_video_by_id,                sf_both_auth},
+                        {sf_video_by_title,             sf_both_auth},
+                        {sf_video_by_user,              sf_both_auth},
+                        {sf_video_by_category,          sf_both_auth},
+                        {sf_video_by_playlist,          sf_both_auth},
+
+
+                        {sf_user_by_id,                 sf_both_auth},
+                        {sf_user_by_title,              sf_both_auth},
+                        {sf_user_by_perma,              sf_both_auth},
+
+                        {sf_group_by_user,              sf_both_auth},
+                        {sf_group_by_title,             sf_both_auth},
+                        {sf_group_by_id,                sf_both_auth},
+                        {sf_group_by_perma,             sf_both_auth},
+
+                        {sf_lyric_by_audio,             sf_both_auth}
+                    };
                 }
 
                 inline QString boolToStr(const bool & val) { return val ? val_str_true : val_str_false; }
@@ -214,8 +255,6 @@ namespace Core {
                     return linkables;
                 }
             public:
-                Requests() { setSociableLimitations(true, true, true, true); }
-
                 static QString cleanUrl(const QString & refreshed_url) { return refreshed_url.section('?', 0, 0); }
 
                 QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {

@@ -65,17 +65,77 @@ namespace Core {
                     }
                 }
             protected:
-                inline SourceFlags defaultFlags() {
-                    return (SourceFlags)(
-                        sf_primary_source |
-                        sf_auth_site_has | //sf_site_online_credentials_req |
-                        sf_items_serachable | sf_sets_serachable | sf_packable |
-                        sf_sociable_users | sf_shareable |
-                        /*sf_recommendable_by_item | sf_recommendable_by_user | */ sf_recommendable_by_artist |
-//                        /*sf_newable |*/ sf_populable |
+//                inline SourceFlags defaultFlags() {
+//                    return (SourceFlags)(
+//                        sf_primary_source |
+//                        sf_auth_site_has | //sf_site_online_credentials_req |
+//                        sf_items_serachable | sf_sets_serachable | sf_packable |
+//                        sf_sociable_users | sf_shareable |
+//                        /*sf_recommendable_by_item | sf_recommendable_by_user | */ sf_recommendable_by_artist |
+////                        /*sf_newable |*/ sf_populable |
+//                    );
+//                }
 
-                        sf_content_audio_has | sf_content_video_has/* | sf_content_news_has*/
-                    );
+                Requests() {
+//                    setSociableLimitations(true, true, true, true);
+
+                    flags = {
+                        {sf_endpoint,
+                            sf_is_primary | sf_is_content_shareable | sf_track | sf_video | sf_sociable |
+                            sf_feed | sf_playlist | sf_album | sf_compilation | sf_site | sf_site_connectable
+                        },
+
+                        {sf_feed,                       sf_site},
+
+                        {sf_feed_by_user,               sf_site_auth_only},
+
+                        {sf_search,                     sf_site},
+
+                        {sf_compilation,                sf_site},
+
+//                        {sf_stream_list,            sf_site_auth_only},
+                        {sf_stream_config,              sf_site},
+                        {sf_stream_by_genre,            sf_site},
+                        {sf_stream_by_artist,           sf_site},
+
+                        {sf_album_by_id,                sf_site},
+                        {sf_album_by_title,             sf_site},
+                        {sf_album_by_artist,            sf_site},
+
+                        {sf_artist_by_id,               sf_site},
+                        {sf_artist_by_title,            sf_site},
+                        {sf_audio_recs_by_artist,       sf_site},
+//                        {sf_artist_by_title,        sf_site_auth_only},
+
+//                        {sf_popular_artist,         sf_site_auth_only},
+
+//                        {sf_popular_audio,          sf_site_auth_only},
+                        {sf_audio_by_id,                sf_site},
+                        {sf_audio_by_title,             sf_site},
+//                        {sf_audio_by_stream,        sf_site_auth_only},
+                        {sf_audio_by_artist,            sf_site},
+//                        {sf_audio_by_compilation,   sf_site_auth_only},
+                        {sf_audio_by_playlist,          sf_site},
+                        {sf_audio_by_album,             sf_site},
+                        {sf_audio_by_user,              sf_site_auth_only},
+//                        {sf_audio_recs_by_user,     sf_site_auth_only},
+////                        {sf_audio_recs_by_track,    sf_site_auth_only},
+
+                        {sf_audio_playlist_by_id,       sf_site},
+                        {sf_audio_playlist_by_title,    sf_site},
+                        {sf_audio_playlist_by_user,     sf_site_auth_only},
+
+                        {sf_video_by_id,                sf_site},
+                        {sf_video_by_title,             sf_site},
+//                        {sf_video_by_user,          sf_site_auth_only},
+//                        {sf_video_by_category,      sf_site_auth_only},
+//                        {sf_video_by_playlist,      sf_site_auth_only},
+
+
+                        {sf_user_by_user,               sf_site_auth_only},
+//                        {sf_user_by_id,             sf_site_auth_only},
+//                        {sf_user_by_title,          sf_site_auth_only},
+                    };
                 }
 
                 void saveAdditionals(QJsonObject & obj) {
@@ -177,8 +237,6 @@ namespace Core {
                     }
                 }
             public:
-                Requests() {}
-
                 // here refresh_page must by eq to track id
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
                     switch(itemMediaType) {

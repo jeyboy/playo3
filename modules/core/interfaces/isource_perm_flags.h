@@ -38,50 +38,54 @@ namespace Core {
 
         sf_link                             = (quint64(1)) << 11,
         sf_search                           = (quint64(1)) << 12,
+        sf_config                           = (quint64(1)) << 13,
+        //reserved                           = (quint64(1)) << 14,
+        //reserved                           = (quint64(1)) << 15,
 
-        sf_recommendation                   = (quint64(1)) << 13,
-        sf_my                               = (quint64(1)) << 14,
+        sf_recommendation                   = (quint64(1)) << 16,
+        sf_my                               = (quint64(1)) << 17,
 
-        sf_user                             = (quint64(1)) << 15,
-        sf_group                            = (quint64(1)) << 16,
+        sf_user                             = (quint64(1)) << 18,
+        sf_group                            = (quint64(1)) << 19,
 
-        sf_track                            = (quint64(1)) << 17,
-        sf_video                            = (quint64(1)) << 18,
-        sf_playlist                         = (quint64(1)) << 19, // sets from sociables
-        sf_compilation                      = (quint64(1)) << 20, // include charts and etc
-        sf_album                            = (quint64(1)) << 21,
-        sf_stream                           = (quint64(1)) << 22, // radio and etc
-        sf_photo                            = (quint64(1)) << 23,
-        sf_post                             = (quint64(1)) << 24,
-        sf_feed                             = (quint64(1)) << 25,
-        sf_lyric                            = (quint64(1)) << 26,
-        sf_label                            = (quint64(1)) << 27,
-        sf_artist                           = (quint64(1)) << 28,
+        sf_track                            = (quint64(1)) << 20,
+        sf_video                            = (quint64(1)) << 21,
+        sf_playlist                         = (quint64(1)) << 22, // sets from sociables
+        sf_compilation                      = (quint64(1)) << 23, // include charts and etc
+        sf_album                            = (quint64(1)) << 24,
+        sf_stream                           = (quint64(1)) << 25, // radio and etc
+        sf_photo                            = (quint64(1)) << 26,
+        sf_post                             = (quint64(1)) << 27,
+        sf_feed                             = (quint64(1)) << 28,
+        sf_lyric                            = (quint64(1)) << 29,
+        sf_label                            = (quint64(1)) << 30,
+        sf_artist                           = (quint64(1)) << 31,
 
-        sf_by_label                         = (quint64(1)) << 29,
-        sf_by_perma                         = (quint64(1)) << 30,
-        sf_by_id                            = (quint64(1)) << 31,
-        sf_by_title                         = (quint64(1)) << 32,
-        sf_by_artist                        = (quint64(1)) << 33,
-        sf_by_track                         = (quint64(1)) << 34,
-        sf_by_album                         = (quint64(1)) << 35,
-        sf_by_compilation                   = (quint64(1)) << 36,
-        sf_by_playlist                      = (quint64(1)) << 37,
-        sf_by_stream                        = (quint64(1)) << 38,
-        sf_by_abc                           = (quint64(1)) << 39,
-        sf_by_tag                           = (quint64(1)) << 40,
-        sf_by_mood                          = (quint64(1)) << 41,
-        sf_by_genre                         = (quint64(1)) << 42,
-        sf_by_lyric                         = (quint64(1)) << 43,
-        sf_by_user                          = (quint64(1)) << 44,
-        sf_by_group                         = (quint64(1)) << 45,
-        sf_by_category                      = (quint64(1)) << 46,
-        sf_by_like                          = (quint64(1)) << 47,
-        sf_by_repost                        = (quint64(1)) << 48,
+        sf_by_label                         = (quint64(1)) << 32,
+        sf_by_perma                         = (quint64(1)) << 33,
+        sf_by_id                            = (quint64(1)) << 34,
+        sf_by_title                         = (quint64(1)) << 35,
+        sf_by_artist                        = (quint64(1)) << 36,
+        sf_by_track                         = (quint64(1)) << 37,
+        sf_by_album                         = (quint64(1)) << 38,
+        sf_by_compilation                   = (quint64(1)) << 39,
+        sf_by_playlist                      = (quint64(1)) << 40,
+        sf_by_stream                        = (quint64(1)) << 41,
+        sf_by_abc                           = (quint64(1)) << 42,
+        sf_by_tag                           = (quint64(1)) << 43,
+        sf_by_mood                          = (quint64(1)) << 44,
+        sf_by_genre                         = (quint64(1)) << 45,
+        sf_by_lyric                         = (quint64(1)) << 46,
+        sf_by_user                          = (quint64(1)) << 47,
+        sf_by_group                         = (quint64(1)) << 48,
+        sf_by_category                      = (quint64(1)) << 49,
+        sf_by_like                          = (quint64(1)) << 50,
+        sf_by_repost                        = (quint64(1)) << 51,
 
-        sf_section_new                      = (quint64(1)) << 49,
-        sf_section_popular                  = (quint64(1)) << 50,
-    //        sf_section_chart                    = (quint64(1)) << 51,
+        sf_section_new                      = (quint64(1)) << 52,
+        sf_section_popular                  = (quint64(1)) << 53,
+        sf_section_categories               = (quint64(1)) << 54,
+    //        sf_section_chart                    = (quint64(1)) << 55,
 
         //////////// combinations //////////////////////////
         sf_sociable                         = sf_user | sf_group,
@@ -117,8 +121,7 @@ namespace Core {
         sf_audio_by_like                    = sf_track | sf_by_like,
         sf_audio_recs_by_user               = sf_user | sf_track | sf_recommendation, // tracks recs for user or group by id
         sf_audio_recs_by_me                 = sf_my | sf_audio_recs_by_user, // tracks recs only for current user
-        sf_audio_recs_by_track              = sf_track | sf_recommendation, // tracks recs by one track
-//        sf_audio_recs_by_tracks            = sf_track_sets | sf_tracks_recs_by_track, // recs by a bunch of tracks
+        sf_audio_recs_by_audio              = sf_track | sf_recommendation, // tracks recs by one track
         sf_audio_recs_by_playlist           = sf_track | sf_playlist | sf_recommendation, //recs by playlist or set
         sf_audio_recs_by_artist             = sf_track | sf_by_artist | sf_recommendation, //recs by playlist or set
 
@@ -129,12 +132,14 @@ namespace Core {
 
         sf_new_album                        = sf_album | sf_section_new,
         sf_popular_album                    = sf_album | sf_section_popular,
+        sf_album_by_id                      = sf_album | sf_by_id,
         sf_album_by_title                   = sf_album | sf_by_title,
         sf_album_by_label                   = sf_album | sf_by_label,
         sf_album_by_artist                  = sf_album | sf_by_artist,
 
         sf_new_video                        = sf_video | sf_section_new,
         sf_popular_video                    = sf_video | sf_section_popular,
+        sf_video_categories                 = sf_video | sf_section_categories,
         sf_video_by_id                      = sf_video | sf_by_id,
         sf_video_by_category                = sf_video | sf_by_category,
         sf_video_by_title                   = sf_video | sf_by_title,
@@ -147,7 +152,6 @@ namespace Core {
         sf_video_recs_by_user               = sf_user | sf_video | sf_recommendation, // videos recs for user or group by id
         sf_video_recs_by_me                 = sf_my | sf_video_recs_by_user, // videos recs only for current user
         sf_video_recs_by_video              = sf_video | sf_recommendation, // videos recs by one video
-//        sf_video_recs_by_videos            = sf_video_sets | sf_videos_recs_by_video, // recs by a bunch of videos
         sf_video_recs_by_playlist           = sf_video | sf_playlist | sf_recommendation, //recs by playlist or set
         sf_video_recs_by_artist             = sf_video | sf_by_artist | sf_recommendation, //recs by playlist or set
 
@@ -167,8 +171,11 @@ namespace Core {
         sf_feed_by_group                    = sf_feed | sf_by_group,
 
         sf_stream_list                      = sf_stream | sf_compilation,
+        sf_stream_config                    = sf_stream | sf_config,
         sf_stream_by_user                   = sf_stream | sf_by_user,
         sf_stream_by_group                  = sf_stream | sf_by_group,
+        sf_stream_by_genre                  = sf_stream | sf_by_genre,
+        sf_stream_by_artist                 = sf_stream | sf_by_artist,
 
         sf_post_by_user                     = sf_post | sf_by_user,
         sf_post_by_group                    = sf_post | sf_by_group,
@@ -183,7 +190,7 @@ namespace Core {
         sf_new_lyric                        = sf_lyric | sf_section_new,
         sf_popular_lyric                    = sf_lyric | sf_section_popular,
         sf_lyric_by_title                   = sf_lyric | sf_by_title, // rule including search by text part
-        sf_lyric_by_track                   = sf_lyric | sf_track, // rule including search by track id
+        sf_lyric_by_audio                   = sf_lyric | sf_track, // rule including search by track id
         sf_lyric_by_video                   = sf_lyric | sf_video, // rule including search by video id
 
         sf_user_sociable                    = sf_user | sf_link,
@@ -192,6 +199,7 @@ namespace Core {
         sf_user_by_id                       = sf_user | sf_by_id,
         sf_user_by_likes                    = sf_user | sf_by_like,
         sf_user_by_audio_repost             = sf_user | sf_by_repost | sf_track,
+        sf_user_by_user                     = sf_user | sf_by_user,
 
 
         sf_group_sociable                   = sf_group | sf_link,
