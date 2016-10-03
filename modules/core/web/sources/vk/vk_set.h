@@ -35,13 +35,13 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
-                    SourceFlags perm = permissions(pr_pack);
+                    SourceFlags perm = permissions(sf_compilation);
                     QJsonArray block_content;
 
                     switch(set_type) {
                         case set_popular_tracks: {
                             switch(perm) {
-                                case perm_site: {
+                                case sf_site: {
                                     QString genre_id = (limits.in_foreign() ? QStringLiteral("foreign") : QString())
                                             % limits.genre; // 0 is eql to all genres
 
@@ -66,7 +66,7 @@ namespace Core {
                                     return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                                 break;}
 
-                                case perm_api: {
+                                case sf_api: {
                                     QString genre_id = limits.genre;
 
                                     block_content = saRequest(

@@ -91,7 +91,7 @@ namespace Core {
 
                         stream_obj.insert(
                             tkn_loadable_cmd,
-                            Cmd::build(sourceType(), cmd_mtd_user_recommendations, {{CMD_ID, uid}}).toString()
+                            Cmd::build(sourceType(), cmd_mtd_user_audio_recommendations, {{CMD_ID, uid}}).toString()
                         );
                         res << stream_obj;
                     }

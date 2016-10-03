@@ -636,7 +636,7 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
                 if (parent -> createPlaylist(folder, wType, pid, name))
                     update_amount++;
 
-                QJsonObject items_block = Od::Queries::obj().tracksByPlaylist(pid).toObject();
+                QJsonObject items_block = Od::Queries::obj().audioByPlaylist(pid).toObject();
                 int sub_update_amount = 0;
                 int amount = proceedOdList(items_block, folder, sub_update_amount, dmt_type);
                 folder -> updateItemsCountInBranch(amount);
@@ -753,7 +753,7 @@ int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int &
 //            if (parent -> createPlaylist(folder, wType, pid, name))
 //                update_amount++;
 
-//            QJsonObject items_block = Yandex::Queries::obj().tracksByPlaylist(pid).toObject();
+//            QJsonObject items_block = Yandex::Queries::obj().audioByPlaylist(pid).toObject();
 //            int sub_update_amount = 0;
 //            int amount = proceedOdList(items_block, folder, sub_update_amount, dmt_type);
 //            folder -> updateItemsCountInBranch(amount);
@@ -936,7 +936,7 @@ void IModel::proceedRecomendationsforItemUser(IItem * it) {
     if (src -> respondableTo(pr_user_recommendations)) {
         QVariant owner_id = it -> ownerId();
         if (owner_id.isValid()) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_user);
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_audio_user);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for user ") % owner_id.toString()), bar_settings, 0, true, true);
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";

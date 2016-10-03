@@ -63,8 +63,9 @@ namespace Core {
         virtual void userInfoAsync(const QString & /*user_id*/, Func * /*func*/) {}
         virtual void openSetAsync(const QString & /*set_params*/, Func * /*func*/) {}
         virtual void artistRecommendationsAsync(const QString & /*artist_id*/, Func * /*func*/) {}
-        virtual void trackRecommendationsAsync(const QString & /*track_id*/, Func * /*func*/) {}
-        virtual void userRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
+        virtual void audioRecommendationsAsync(const QString & /*track_id*/, Func * /*func*/) {}
+        virtual void userAudioRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
+        virtual void userVideoRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
         virtual void tracksFromSameArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
 
     public slots:

@@ -9,11 +9,11 @@ namespace Core {
             class User : public Base {
             public:
                 QJsonObject userStatus(const QString & user_id) { // deactivated: 'deleted', id, first_name, last_name, counters
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_user_status);
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             QUrlQuery query;
                             setParam(query, tkn_fields, tkn_counters);
                             setParam(query, tkn_user_ids, user_id);
@@ -39,12 +39,12 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByIdOrPerma(const QString & id) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_user_by_id);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             block_content = saRequest(
                                 baseUrlStr(
                                     qst_api, path_user_info,
@@ -71,12 +71,12 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByName(const QString & uname, int offset = 0, int count = 100) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_user_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_api, path_users_search,

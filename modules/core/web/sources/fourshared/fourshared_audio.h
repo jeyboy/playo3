@@ -1,27 +1,27 @@
-#ifndef FOURSHARED_TRACK
-#define FOURSHARED_TRACK
+#ifndef FOURSHARED_AUDIO
+#define FOURSHARED_AUDIO
 
 #include "fourshared_defines.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Track : public Base {
+            class Audio : public Base {
             public:
-                QString trackUrlFromId(const QString & id) {
+                QString audioUrlFromId(const QString & id) {
                     QUrl url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % id);
                     QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
                     Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
                     return res;
                 }
 
-                QString trackUrlFromPath(const QString & path) {
+                QString audioUrlFromPath(const QString & path) {
                     Html::Document doc = Web::Manager::prepare() -> getFollowed(path) -> toHtml();
                     return doc.find("input.jsD1PreviewUrl").value();
                 }
 
-                QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
-                QJsonValue tracksSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
+                QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue audioSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     SourceFlags perm = permissions(sf_audio_by_title);
                     QueriableResponse response;
 
@@ -56,11 +56,11 @@ namespace Core {
                         default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits, block_params);
+                    return prepareBlock(dmt_audio, cmd_mtd_audio_search, response, limits, block_params);
                 }
             };
         }
     }
 }
 
-#endif // FOURSHARED_TRACK
+#endif // FOURSHARED_AUDIO

@@ -3,14 +3,14 @@
 
 #include "fourshared_auth.h"
 #include "fourshared_item.h"
-#include "fourshared_track.h"
+#include "fourshared_audio.h"
 #include "fourshared_video.h"
 #include "fourshared_set.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Requests : public Auth, public Item, public Set, public Track, public Video {
+            class Requests : public Auth, public Item, public Set, public Audio, public Video {
                 QJsonValue procJson(const QJsonValue & json, const AdditionalProc & /*proc*/) {
                     QJsonObject user_data = json.toObject();
 
@@ -150,9 +150,9 @@ namespace Core {
             protected:
                 Requests() {
                     flags = {
-                        {sf_endpoint,
-                            sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
-                            sf_site /*| sf_api*/ | sf_site_connectable /*| sf_api_connectable*/
+                        {sf_endpoint, (SourceFlags)
+                            (sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
+                            sf_site /*| sf_api*/ | sf_site_connectable /*| sf_api_connectable*/)
                         },
 
                         {sf_search,             sf_site_not_api_auth},
@@ -169,7 +169,7 @@ namespace Core {
                         {sf_popular_video,      sf_site_not_api_auth},
                         {sf_video_by_title,     sf_site_not_api_auth},
                         {sf_video_by_genre,     sf_site_not_api_auth},
-                        {sf_video_by_tag,       sf_site_not_api_auth},
+                        {sf_video_by_tag,       sf_site_not_api_auth}
                     };
                 }
                 inline virtual ~Requests() {}
@@ -216,7 +216,7 @@ namespace Core {
                     QJsonArray blocks;
 
                     if (limits.include_audio())
-                        blocks << tracksSearch(limits);
+                        blocks << audioSearch(limits);
 
                     if (limits.include_video())
                         blocks << videoSearch(limits);
@@ -237,7 +237,7 @@ namespace Core {
                 }
 
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
-                    if (!permissions(pr_media_content)) return QString();
+                    if (!permissions(sf_audio_by_id)) return QString();
 
                     QUrl url(refresh_page);
                     bool is_uid = url.host().isEmpty(); // get link from uid
@@ -246,9 +246,9 @@ namespace Core {
                     switch(itemMediaType) {
                         case dmt_audio: {
                             if (is_uid)
-                                res = trackUrlFromId(refresh_page);
+                                res = audioUrlFromId(refresh_page);
                             else
-                                res = trackUrlFromPath(refresh_page);
+                                res = audioUrlFromPath(refresh_page);
                         break;}
 
                         case dmt_video: {

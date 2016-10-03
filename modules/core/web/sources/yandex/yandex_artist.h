@@ -1,13 +1,13 @@
 #ifndef YANDEX_ARTIST_H
 #define YANDEX_ARTIST_H
 
-#include "yandex_track.h"
+#include "yandex_audio.h"
 #include "yandex_album.h"
 
 namespace Core {
     namespace Web {
         namespace Yandex {
-            class Artist : public virtual Track, public virtual Album {
+            class Artist : public virtual Audio, public virtual Album {
             protected:
                 QJsonValue artistInfo(const QUrlQuery & args) {
                     return artistInfo(args.queryItemValue(CMD_ID));
@@ -15,7 +15,7 @@ namespace Core {
                 QJsonValue artistInfo(const QString & artist_id) {
                     QJsonArray blocks;
 
-                    blocks << tracksByArtist(artist_id, {{tkn_dir_name, LSTR("Tracks")}});
+                    blocks << audioByArtist(artist_id, {{tkn_dir_name, LSTR("Tracks")}});
                     QueriableArg::arrAppend(blocks, albumsByArtist(artist_id).toArray());
 
                     blocks << artistRecommendations(artist_id, {{tkn_dir_name, LSTR("Similar")}});

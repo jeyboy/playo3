@@ -8,21 +8,21 @@ namespace Core {
         namespace Vk {
             class Playlist : public Base {
             public:
-                QJsonValue tracksPlaylistsByUser(const QUrlQuery & args) {
-                    return tracksPlaylistsByUser(
+                QJsonValue audioPlaylistsByUser(const QUrlQuery & args) {
+                    return audioPlaylistsByUser(
                         args.queryItemValue(CMD_ID),
                         0,
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0, int count = 10) {
-                    SourceFlags perm = permissions(pr_media_content);
+                QJsonValue audioPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0, int count = 10) {
+                    SourceFlags perm = permissions(sf_audio_playlist_by_user);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,
@@ -37,7 +37,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_set, cmd_mtd_tracks_playlists_by_user, response, {}, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_set, cmd_mtd_audio_playlists_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
 //                QJsonValue videoPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0) {

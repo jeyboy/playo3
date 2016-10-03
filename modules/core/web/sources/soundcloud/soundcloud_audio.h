@@ -1,12 +1,12 @@
-#ifndef SOUNDCLOUD_TRACK
-#define SOUNDCLOUD_TRACK
+#ifndef SOUNDCLOUD_AUDIO
+#define SOUNDCLOUD_AUDIO
 
 #include "soundcloud_defines.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Track : public Base {
+            class Audio : public Base {
             public:
                 // add station and track to listened
                 // curl 'https://api-v2.soundcloud.com/me/play-history?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1472842846' -X POST -H 'Accept: application/json, text/javascript, */*; q=0.1' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'Content-Length: 94' -H 'Content-Type: application/json' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'origin: https://soundcloud.com'
@@ -17,7 +17,7 @@ namespace Core {
                 // like station
                 // curl 'https://api-v2.soundcloud.com/me/play-history?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1472842846' -X POST -H 'Accept: application/json, text/javascript, */*; q=0.1' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'Content-Length: 94' -H 'Content-Type: application/json' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'origin: https://soundcloud.com'
 
-                QString trackUrl(const QString & track_id) {
+                QString audioUrl(const QString & track_id) {
                     SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -42,7 +42,7 @@ namespace Core {
 
                     return QString();
                 }
-                bool likeTrack(const QString & user_id, const QString & track_id) {
+                bool likeAudio(const QString & user_id, const QString & track_id) {
                     SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -71,7 +71,7 @@ namespace Core {
                     return false;
                 }
 
-                QJsonObject trackInfo(const QString & track_id) {
+                QJsonObject audioInfo(const QString & track_id) {
                     SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
@@ -97,7 +97,7 @@ namespace Core {
 
                 //"id": 142370360,
                 //"permalink": "sam-smith-stay-with-me"
-                QJsonValue tracksInfo(const QStringList & track_ids) {
+                QJsonValue audioInfo(const QStringList & track_ids) {
                     SourceFlags perm = permissions(pr_media_content);
                     QJsonArray response;
                     QJsonObject obj;
@@ -130,14 +130,14 @@ namespace Core {
                     return prepareBlock(dmt_audio, response);
                 }
 
-                QJsonValue trackRecommendations(const QUrlQuery & args) {
-                    return trackRecommendations(
+                QJsonValue audioRecommendations(const QUrlQuery & args) {
+                    return audioRecommendations(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue audioRecommendations(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -163,8 +163,8 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_track_recommendations, response, {}, {{CMD_ID, track_id}});
                 }
 
-                QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
-                QJsonValue tracksSearch(const SearchLimit & limits) {
+                QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue audioSearch(const SearchLimit & limits) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -203,14 +203,14 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
                 }
 
-                QJsonValue tracksByTag(const QUrlQuery & args) {
-                    return tracksByTag(
+                QJsonValue audioByTag(const QUrlQuery & args) {
+                    return audioByTag(
                         args.queryItemValue(CMD_PREDICATE),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue audioByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -242,14 +242,14 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_tracks_by_tag, response, {}, {{CMD_PREDICATE, tag}});
                 }
 
-                QJsonValue tracksByGroup(const QUrlQuery & args) {
-                    return tracksByGroup(
+                QJsonValue audioByGroup(const QUrlQuery & args) {
+                    return audioByGroup(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByGroup(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue audioByGroup(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -273,17 +273,17 @@ namespace Core {
                             Logger::obj().write(name(), "TRACK BY GROUP is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_group, response, {}, {{CMD_ID, group_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_audio_by_group, response, {}, {{CMD_ID, group_id}});
                 }
 
-                QJsonValue tracksByUser(const QUrlQuery & args) {
-                    return tracksByUser(
+                QJsonValue audioByUser(const QUrlQuery & args) {
+                    return audioByUser(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue audioByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -309,17 +309,17 @@ namespace Core {
                         default: Logger::obj().write(name(), "TRACK BY USER is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user, response, {}, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_audio_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue tracksByUserLikes(const QUrlQuery & args) {
-                    return tracksByUserLikes(
+                QJsonValue audioByUserLikes(const QUrlQuery & args) {
+                    return audioByUserLikes(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue tracksByUserLikes(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue audioByUserLikes(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -343,11 +343,11 @@ namespace Core {
                         default: Logger::obj().write(name(), "TRACK BY USER LIKES is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_by_user_likes, response, {}, {{CMD_ID, user_id}});
+                    return prepareBlock(dmt_audio, cmd_mtd_audio_by_user_likes, response, {}, {{CMD_ID, user_id}});
                 }
             };
         }
     }
 }
 
-#endif // SOUNDCLOUD_TRACK
+#endif // SOUNDCLOUD_AUDIO

@@ -260,7 +260,6 @@ HEADERS += \
     modules/core/web/sources/soundcloud/soundcloud_playlist.h \
     modules/core/web/sources/soundcloud/soundcloud_requests.h \
     modules/core/web/sources/soundcloud/soundcloud_set.h \
-    modules/core/web/sources/soundcloud/soundcloud_track.h \
     modules/core/web/sources/soundcloud/soundcloud_user.h \
     modules/core/web/sources/vk/vk_auth.h \
     modules/core/web/sources/vk/vk_defines.h \
@@ -270,7 +269,6 @@ HEADERS += \
     modules/core/web/sources/vk/vk_playlist.h \
     modules/core/web/sources/vk/vk_requests.h \
     modules/core/web/sources/vk/vk_set.h \
-    modules/core/web/sources/vk/vk_track.h \
     modules/core/web/sources/vk/vk_user.h \
     modules/core/web/sources/vk/vk_video.h \
     modules/core/web/sources/fourshared/fourshared_defines.h \
@@ -297,7 +295,6 @@ HEADERS += \
     modules/core/web/sources/fourshared/fourshared_auth.h \
     modules/core/web/sources/od/od_auth.h \
     modules/core/web/sources/od/od_defines.h \
-    modules/core/web/sources/od/od_track.h \
     modules/core/web/sources/od/od_artist.h \
     modules/core/web/sources/od/od_set.h \
     modules/core/web/sources/od/od_video.h \
@@ -314,7 +311,6 @@ HEADERS += \
     modules/core/web/sources/od/od_tuner.h \
     modules/core/interfaces/icmd.h \
     modules/core/interfaces/icmd_fields.h \
-    modules/core/web/sources/fourshared/fourshared_track.h \
     modules/core/web/sources/fourshared/fourshared_video.h \
     modules/core/web/sources/fourshared/fourshared_keys.h \
     modules/core/web/interfaces/queriable_response.h \
@@ -336,9 +332,13 @@ HEADERS += \
     modules/core/web/sources/yandex_queries.h \
     modules/core/web/sources/yandex/yandex_user.h \
     modules/core/web/sources/yandex/yandex_auth.h \
-    modules/core/web/sources/yandex/yandex_track.h \
     modules/core/web/sources/yandex/yandex_video.h \
-    modules/core/web/sources/yandex/yandex_stream.h
+    modules/core/web/sources/yandex/yandex_stream.h \
+    modules/core/web/sources/fourshared/fourshared_audio.h \
+    modules/core/web/sources/od/od_audio.h \
+    modules/core/web/sources/soundcloud/soundcloud_audio.h \
+    modules/core/web/sources/vk/vk_audio.h \
+    modules/core/web/sources/yandex/yandex_audio.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

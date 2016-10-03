@@ -164,11 +164,12 @@ namespace Core {
 
             cmd_mtd_users_by_id,
             cmd_mtd_users_by_name,
-            cmd_mtd_users_by_track_likes,
-            cmd_mtd_users_by_track_reposting,
+            cmd_mtd_users_by_audio_likes,
+            cmd_mtd_users_by_audio_reposting,
             cmd_mtd_user_followings,
             cmd_mtd_user_followers,
-            cmd_mtd_user_recommendations,
+            cmd_mtd_user_audio_recommendations,
+            cmd_mtd_user_video_recommendations,
 
             cmd_mtd_groups_by_id,
             cmd_mtd_groups_by_track,
@@ -178,20 +179,21 @@ namespace Core {
             cmd_mtd_items_search, // search of items with mixed types
             cmd_mtd_items_by_collection, // get items with mixed types
 
-            cmd_mtd_tracks_info,
-            cmd_mtd_tracks_search,
-            cmd_mtd_track_recommendations,
-            cmd_mtd_tracks_by_artist,
-            cmd_mtd_tracks_by_tag,
-            cmd_mtd_tracks_by_group,
-            cmd_mtd_tracks_by_user,
-            cmd_mtd_tracks_by_user_likes,
-            cmd_mtd_tracks_by_album,
-            cmd_mtd_tracks_by_playlist,
-            cmd_mtd_tracks_by_collection,
-            cmd_mtd_tracks_by_tuner,
+            cmd_mtd_audio_info,
+            cmd_mtd_audio_search,
+            cmd_mtd_audio_recommendations,
+            cmd_mtd_audio_by_artist,
+            cmd_mtd_audio_by_tag,
+            cmd_mtd_audio_by_group,
+            cmd_mtd_audio_by_user,
+            cmd_mtd_audio_by_user_likes,
+            cmd_mtd_audio_by_album,
+            cmd_mtd_audio_by_playlist,
+            cmd_mtd_audio_by_collection,
+            cmd_mtd_audio_by_tuner,
 
             cmd_mtd_video_search,
+            cmd_mtd_video_recommendations,
             cmd_mtd_video_by_user,
             cmd_mtd_video_by_playlist,
             cmd_mtd_video_by_category,
@@ -200,12 +202,12 @@ namespace Core {
             cmd_mtd_playlists_info,
             cmd_mtd_playlists_search,
             cmd_mtd_playlists_by_tag,
-            cmd_mtd_playlists_by_track,
+            cmd_mtd_playlists_by_audio,
             cmd_mtd_playlists_by_predicate,
             cmd_mtd_playlists_by_user,
 
-            cmd_mtd_tracks_playlists_by_user,
-            cmd_mtd_tracks_playlists_by_group,
+            cmd_mtd_audio_playlists_by_user,
+            cmd_mtd_audio_playlists_by_group,
 
             cmd_mtd_video_playlists_by_user,
             cmd_mtd_video_categories,
@@ -214,7 +216,7 @@ namespace Core {
             cmd_mtd_streams_by_genre,
             cmd_mtd_stream_by_artist,
             cmd_mtd_stream_configure,
-//            cmd_mtd_stream_configuration,
+//            cmd_mtd_stream_config,
 
             cmd_mtd_artist_info,
             cmd_mtd_artists_search,
@@ -235,11 +237,12 @@ namespace Core {
 
                 case cmd_mtd_users_by_id: return usersById(params);
                 case cmd_mtd_users_by_name: return usersByName(params);
-                case cmd_mtd_users_by_track_likes: return usersByTrackLikes(params);
-                case cmd_mtd_users_by_track_reposting: return usersByTrackReposting(params);
+                case cmd_mtd_users_by_audio_likes: return usersByAudioLikes(params);
+                case cmd_mtd_users_by_audio_reposting: return usersByAudioReposting(params);
                 case cmd_mtd_user_followings: return userFollowings(params);
                 case cmd_mtd_user_followers: return userFollowers(params);
-                case cmd_mtd_user_recommendations: return userRecommendations(params);
+                case cmd_mtd_user_audio_recommendations: return userAudioRecommendations(params);
+                case cmd_mtd_user_video_recommendations: return userVideoRecommendations(params);
 
                 case cmd_mtd_groups_by_id: return groupsById(params);
                 case cmd_mtd_groups_by_track: return groupsByTrack(params);
@@ -249,18 +252,18 @@ namespace Core {
                 case cmd_mtd_items_search: return itemsSearch(params);
                 case cmd_mtd_items_by_collection: return itemsByCollection(params);
 
-                case cmd_mtd_tracks_info:  return tracksInfo(params);
-                case cmd_mtd_tracks_search:  return tracksSearch(params);
-                case cmd_mtd_track_recommendations: return trackRecommendations(params);
-                case cmd_mtd_tracks_by_artist: return tracksByArtist(params);
-                case cmd_mtd_tracks_by_tag: return tracksByTag(params);
-                case cmd_mtd_tracks_by_group: return tracksByGroup(params);
-                case cmd_mtd_tracks_by_user: return tracksByUser(params);
-                case cmd_mtd_tracks_by_user_likes: return tracksByUserLikes(params);
-                case cmd_mtd_tracks_by_album: return tracksByAlbum(params);
-                case cmd_mtd_tracks_by_playlist: return tracksByPlaylist(params);
-                case cmd_mtd_tracks_by_collection: return tracksByCollection(params);
-                case cmd_mtd_tracks_by_tuner: return tracksByTuner(params);
+                case cmd_mtd_audio_info: return audioInfo(params);
+                case cmd_mtd_audio_search: return audioSearch(params);
+                case cmd_mtd_audio_recommendations: return audioRecommendations(params);
+                case cmd_mtd_audio_by_artist: return audioByArtist(params);
+                case cmd_mtd_audio_by_tag: return audioByTag(params);
+                case cmd_mtd_audio_by_group: return audioByGroup(params);
+                case cmd_mtd_audio_by_user: return audioByUser(params);
+                case cmd_mtd_audio_by_user_likes: return audioByUserLikes(params);
+                case cmd_mtd_audio_by_album: return audioByAlbum(params);
+                case cmd_mtd_audio_by_playlist: return audioByPlaylist(params);
+                case cmd_mtd_audio_by_collection: return audioByCollection(params);
+                case cmd_mtd_audio_by_tuner: return audioByTuner(params);
 
                 case cmd_mtd_video_search: return videoSearch(params);
                 case cmd_mtd_video_by_user: return videoByUser(params);
@@ -270,12 +273,12 @@ namespace Core {
                 case cmd_mtd_playlists_info: return playlistsInfo(params);
                 case cmd_mtd_playlists_search: return playlistsSearch(params);
                 case cmd_mtd_playlists_by_tag: return playlistsByTag(params);
-                case cmd_mtd_playlists_by_track: return playlistsByTrack(params);
+                case cmd_mtd_playlists_by_audio: return playlistsByAudio(params);
                 case cmd_mtd_playlists_by_predicate: return playlistsByPredicate(params);
                 case cmd_mtd_playlists_by_user: return playlistsByUser(params);
 
-                case cmd_mtd_tracks_playlists_by_user: return tracksPlaylistsByUser(params);
-                case cmd_mtd_tracks_playlists_by_group: return tracksPlaylistsByGroup(params);
+                case cmd_mtd_audio_playlists_by_user: return audioPlaylistsByUser(params);
+                case cmd_mtd_audio_playlists_by_group: return audioPlaylistsByGroup(params);
 
                 case cmd_mtd_video_playlists_by_user: return videoPlaylistsByUser(params);
                 case cmd_mtd_video_categories: return videoCategories(params);
@@ -307,11 +310,12 @@ namespace Core {
 
         virtual QJsonValue usersById(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue usersByName(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue usersByTrackLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue usersByTrackReposting(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue usersByAudioLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue usersByAudioReposting(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue userFollowings(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue userFollowers(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue userRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue userAudioRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue userVideoRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue groupsById(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue groupsByTrack(const QUrlQuery & /*args*/) { return QJsonObject(); }
@@ -321,18 +325,18 @@ namespace Core {
         virtual QJsonValue itemsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue itemsByCollection(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue tracksInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue trackRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByTag(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByUserLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByAlbum(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByPlaylist(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByCollection(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksByTuner(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByTag(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByUserLikes(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByAlbum(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByPlaylist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByCollection(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioByTuner(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue videoSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
@@ -343,12 +347,12 @@ namespace Core {
         virtual QJsonValue playlistsInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsSearch(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsByTag(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue playlistsByTrack(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue playlistsByAudio(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsByPredicate(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue playlistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
-        virtual QJsonValue tracksPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue tracksPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue audioPlaylistsByGroup(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         virtual QJsonValue videoPlaylistsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoCategories(const QUrlQuery & /*args*/) { return QJsonObject(); }

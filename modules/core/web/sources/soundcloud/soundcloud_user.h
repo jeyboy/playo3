@@ -81,14 +81,14 @@ namespace Core {
                     return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
                 }
 
-                QJsonValue usersByTrackLikes(const QUrlQuery & args) {
-                    return usersByTrackLikes(
+                QJsonValue usersByAudioLikes(const QUrlQuery & args) {
+                    return usersByAudioLikes(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue usersByTrackLikes(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue usersByAudioLikes(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -114,14 +114,14 @@ namespace Core {
                     return prepareBlock(dmt_user, cmd_mtd_users_by_track_likes, response, {}, {{CMD_ID, track_id}});
                 }
 
-                QJsonValue usersByTrackReposting(const QUrlQuery & args) {
-                    return usersByTrackReposting(
+                QJsonValue usersByAudioReposting(const QUrlQuery & args) {
+                    return usersByAudioReposting(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue usersByTrackReposting(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue usersByAudioReposting(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
@@ -208,14 +208,14 @@ namespace Core {
                     return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {}, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue userRecommendations(const QUrlQuery & args) {
-                    return userRecommendations(
+                QJsonValue userAudioRecommendations(const QUrlQuery & args) {
+                    return userAudioRecommendations(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue userRecommendations(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue userAudioRecommendations(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 

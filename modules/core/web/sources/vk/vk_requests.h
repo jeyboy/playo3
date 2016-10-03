@@ -6,7 +6,7 @@
 #include "vk_group.h"
 #include "vk_playlist.h"
 #include "vk_set.h"
-#include "vk_track.h"
+#include "vk_audio.h"
 #include "vk_user.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -15,22 +15,22 @@ namespace Core {
     namespace Web {
         namespace Vk {
             class Requests : public Sociable, public Auth, public Feed, public Group,
-                    public Playlist, public Set, public Track, public User {
+                    public Playlist, public Set, public Audio, public User {
             protected:
                 Requests() {
                     setSociableLimitations(true, true, true, true);
 
                     flags = {
-                        {sf_endpoint,
+                        {sf_endpoint, (SourceFlags)(
                             sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
                             sf_photo | sf_feed | sf_lyric | sf_playlist | sf_compilation | sf_sociable |
-                            sf_site | sf_site_connectable | sf_api | sf_api_connectable
+                            sf_site | sf_site_connectable | sf_api | sf_api_connectable)
                         },
 
-                        {sf_feed,                       sf_both},
+                        {sf_feed,                       sf_both_auth},
 
-                        {sf_feed_by_user,               sf_both_auth},
-                        {sf_feed_by_group,              sf_both_auth},
+//                        {sf_feed_by_user,               sf_both_auth},
+//                        {sf_feed_by_group,              sf_both_auth},
 
                         {sf_search,                     sf_both_auth},
 
@@ -61,7 +61,7 @@ namespace Core {
                         {sf_video_by_category,          sf_both_auth},
                         {sf_video_by_playlist,          sf_both_auth},
 
-
+                        {sf_user_status,                sf_api},
                         {sf_user_by_id,                 sf_both_auth},
                         {sf_user_by_title,              sf_both_auth},
                         {sf_user_by_perma,              sf_both_auth},
@@ -113,7 +113,7 @@ namespace Core {
                         QJsonArray res;
 
                         if (limits.include_audio())
-                            res << tracksSearch(limits);
+                            res << audioSearch(limits);
 
                         if (limits.include_video())
                             res << videoSearch(limits);
@@ -205,7 +205,7 @@ namespace Core {
                     QString id = query.queryItemValue(CMD_ID);
 
                     switch(query.queryItemValue(CMD_MEDIA_TYPE).toInt()) {
-                        case dmt_audio: return tracksByPlaylist(id);
+                        case dmt_audio: return audioByPlaylist(id);
                         case dmt_video: return videoByPlaylist(id);
                         default: qDebug() << "VK LOAD SET UNKNOWN TYPE";
                     }
@@ -259,7 +259,7 @@ namespace Core {
 
                 QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {
                     switch(itemMediaType) {
-                        case dmt_audio: return cleanUrl(trackUrl(item_uid));
+                        case dmt_audio: return cleanUrl(audioUrl(item_uid));
                         case dmt_video: return videoUrl(item_uid);
                         default:;
                     }
@@ -268,9 +268,9 @@ namespace Core {
                 }
 
                 QJsonValue userInfo(const QString & user_id) {
-                    SourceFlags perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(sf_user_by_id);
 
-                    if (perm > perm_none) {
+                    if (perm > sf_none) {
                         if (user_id == userID()) {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
@@ -289,10 +289,10 @@ namespace Core {
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
-                    SourceFlags perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(sf_audio_by_user);
 
                     switch(perm) {
-                        case perm_site: {
+                        case sf_site: {
                             Response * response = Manager::prepare() -> postFollowed(
                                 IQueriable::baseUrlStr(
                                     qst_site, LSTR("al_audio.php"),
@@ -310,7 +310,7 @@ namespace Core {
                             QJsonArray tracks_res, items = JSON_ARR(RESPONSE_TO_JSON_OBJECT(response), LSTR("list"));
                             QHash<QString, QJsonArray> albums;
 
-                            Track::prepareTracks(items, tracks_res, &albums);
+                            Audio::prepareTracks(items, tracks_res, &albums);
                             /////////////////////////////////////
 
                             QJsonArray playlists_res;
@@ -332,7 +332,7 @@ namespace Core {
                             return res;
                         break;}
 
-                        case perm_api: {
+                        case sf_api: {
                             QJsonObject ret = User::sRequest(
                                 User::baseUrlStr(
                                     qst_api, tkn_execute,
@@ -345,7 +345,7 @@ namespace Core {
 
                             if (!ret.value(tkn_albums_finished).toBool()) {
                                 QJsonArray ar = ret.value(block_sets_audio).toArray();
-                                tracksPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
+                                audioPlaylistsByUser(user_id, &ar, ret.value(tkn_albums_offset).toInt());
                                 ret.insert(block_sets_audio, ar);
                             }
 
@@ -361,12 +361,12 @@ namespace Core {
                     return QJsonArray();
                 }
 
-                QJsonValue userRecommendations(const QString & user_id, bool randomize) {
-                    return QJsonArray() << Track::userRecommendations(user_id, randomize);
+                QJsonValue userAudioRecommendations(const QString & user_id, bool randomize) {
+                    return QJsonArray() << Audio::userAudioRecommendations(user_id, randomize);
                 }
 
-                QJsonValue trackRecommendations(const QString & track_id, bool randomize) {
-                    return QJsonArray() << Track::trackRecommendations(track_id, randomize);
+                QJsonValue audioRecommendations(const QString & track_id, bool randomize) {
+                    return QJsonArray() << Audio::audioRecommendations(track_id, randomize);
                 }
             };
         }

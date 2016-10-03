@@ -37,14 +37,14 @@ namespace Core {
                     return prepareBlock(dmt_set, cmd_mtd_playlists_by_tag, response, {}, {{CMD_PREDICATE, tag}});
                 }
 
-                QJsonValue playlistsByTrack(const QUrlQuery & args) {
-                    return playlistsByTrack(
+                QJsonValue playlistsByAudio(const QUrlQuery & args) {
+                    return playlistsByAudio(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET).toInt(),
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue playlistsByTrack(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue playlistsByAudio(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 

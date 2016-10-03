@@ -22,11 +22,11 @@ namespace Core {
                 }
 
                 void trackRecommendationsAsync(const QString & uid, Func * func) {
-                   ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, uid, true, func);
+                   ThreadUtils::obj().run((Requests *)this, &Requests::audioRecommendations, uid, true, func);
                 }
 
-                void userRecommendationsAsync(const QString & uid, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendations, uid, true, func);
+                void userAudioRecommendationsAsync(const QString & uid, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userAudioRecommendations, uid, true, func);
                 }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {

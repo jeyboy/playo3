@@ -26,7 +26,7 @@ namespace Core {
         sf_link                             = (quint64(1)) << 11,
         sf_search                           = (quint64(1)) << 12,
         sf_config                           = (quint64(1)) << 13,
-        //reserved                           = (quint64(1)) << 14,
+        sf_status                           = (quint64(1)) << 14,
         //reserved                           = (quint64(1)) << 15,
 
         sf_recommendation                   = (quint64(1)) << 16,
@@ -180,6 +180,7 @@ namespace Core {
         sf_lyric_by_audio                   = sf_lyric | sf_track, // rule including search by track id
         sf_lyric_by_video                   = sf_lyric | sf_video, // rule including search by video id
 
+        sf_user_status                      = sf_user | sf_status,
         sf_user_sociable                    = sf_user | sf_link,
         sf_user_by_title                    = sf_user | sf_by_title,
         sf_user_by_perma                    = sf_user | sf_by_perma,

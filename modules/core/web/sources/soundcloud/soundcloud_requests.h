@@ -5,7 +5,7 @@
 #include "soundcloud_group.h"
 #include "soundcloud_playlist.h"
 #include "soundcloud_set.h"
-#include "soundcloud_track.h"
+#include "soundcloud_audio.h"
 #include "soundcloud_user.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -186,12 +186,12 @@ namespace Core {
                     }
                 }
 
-                QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
-                    return QJsonArray() << Track::trackRecommendations(track_id, offset, amount);
+                QJsonValue audioRecommendations(const QString & track_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
+                    return QJsonArray() << Audio::audioRecommendations(track_id, offset, amount);
                 }
 
                 QJsonValue userRecommendationsAsync(const QString & user_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
-                    return QJsonArray() << User::userRecommendations(user_id, offset, amount);
+                    return QJsonArray() << User::userAudioRecommendations(user_id, offset, amount);
                 }
 
                 QJsonValue objectInfo(const QString & oid) {
@@ -202,17 +202,17 @@ namespace Core {
                 }
 
                 QJsonValue groupInfo(const QString & group_id) {
-                    return tracksByGroup(group_id);
+                    return audioByGroup(group_id);
                 }
 
                 QJsonValue userInfo(const QString & user_id) {
                     QJsonArray blocks;
 
-                    QJsonObject json = tracksByUser(user_id).toObject();
+                    QJsonObject json = audioByUser(user_id).toObject();
                     json.insert(tkn_dir_name, LSTR("Tracks"));
                     blocks << json;
 
-                    json = tracksByUserLikes(user_id).toObject();
+                    json = audioByUserLikes(user_id).toObject();
                     json.insert(tkn_dir_name, LSTR("Likes"));
                     blocks << json;
 

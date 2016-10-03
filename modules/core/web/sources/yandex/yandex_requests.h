@@ -261,7 +261,7 @@ namespace Core {
                                 blocks << artistsSearch(limits);
 
                             if (limits.by_songs_name() || limits.by_titles())
-                                blocks << tracksSearch(limits);
+                                blocks << audioSearch(limits);
 
                             if (limits.by_sets()) {
                                 blocks << albumsSearch(limits);
@@ -297,7 +297,7 @@ namespace Core {
                     QJsonArray blocks;
 
                     if (perm > perm_none) {
-                        QJsonObject tracks = tracksByUser(user_id).toObject();
+                        QJsonObject tracks = audioByUser(user_id).toObject();
                         tracks.insert(tkn_dir_name, LSTR("Tracks"));
                         blocks << tracks;
 

@@ -69,7 +69,7 @@ namespace Core {
                         collection_obj.insert(
                             tkn_loadable_cmd,
                              Cmd::build(
-                                sourceType(), cmd_mtd_tracks_by_collection,
+                                sourceType(), cmd_mtd_audio_by_collection,
                                 {{CMD_ID, uid}}
                              ).toString()
                         );
@@ -88,7 +88,7 @@ namespace Core {
                         album_obj.insert(
                             tkn_loadable_cmd,
                              Cmd::build(
-                                sourceType(), cmd_mtd_tracks_by_album,
+                                sourceType(), cmd_mtd_audio_by_album,
                                 {{CMD_ID, uid}}
                              ).toString()
                         );
@@ -107,7 +107,7 @@ namespace Core {
                         artist_obj.insert(
                             tkn_loadable_cmd,
                              Cmd::build(
-                                sourceType(), cmd_mtd_tracks_by_artist,
+                                sourceType(), cmd_mtd_audio_by_artist,
                                 {{CMD_ID, uid}}
                              ).toString()
                         );
@@ -141,7 +141,7 @@ namespace Core {
                             {tkn_name, name},
                             {tkn_loadable_cmd,
                                  Cmd::build(
-                                    source_id, cmd_mtd_tracks_by_tuner,
+                                    source_id, cmd_mtd_audio_by_tuner,
                                     {{CMD_ID, uid}}
                                  ).toString()
                             }

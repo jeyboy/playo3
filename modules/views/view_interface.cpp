@@ -313,12 +313,12 @@ void IView::copyIdsToClipboard() {
     mdl -> copyIdsToClipboard(indexes);
 }
 
-void IView::openRecomendationsforUser() {
+void IView::openAudioRecomendationsforUser() {
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
     if (src -> respondableTo(pr_user_recommendations)) {
         QString user_uid = settings().uid;
-        Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_user);
+        Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_audio_user);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for YOU")), bar_settings, 0, true, true);
     } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
 }

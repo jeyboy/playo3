@@ -32,8 +32,8 @@ namespace Core {
 
 
 
-//                inline void trackRecommendationsAsync(const QString & track_id, Func * func) {
-//                    ThreadUtils::obj().run((Requests *)this, &Requests::trackRecommendations, track_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
+//                inline void audioRecommendationsAsync(const QString & track_id, Func * func) {
+//                    ThreadUtils::obj().run((Requests *)this, &Requests::audioRecommendations, track_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
 //                }
 
 //                inline void userRecommendationsAsync(const QString & user_id, Func * func) {

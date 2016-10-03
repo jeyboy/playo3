@@ -53,12 +53,12 @@ namespace Core {
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_video_by_title);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             block_content = saRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,
@@ -102,11 +102,11 @@ namespace Core {
                     );
                 }
                 QJsonValue videoByUser(const QString & user_id, int offset = 0) {
-                    SourceFlags perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(sf_video_by_user);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site: {
+                        case sf_site: {
                             Response * req_response = Manager::prepare() -> postFollowed(
                                 IQueriable::baseUrlStr(
                                     qst_site, QStringLiteral("al_video.php"),
@@ -165,7 +165,7 @@ namespace Core {
                                 << prepareBlock(dmt_video, cmd_mtd_video_by_user, response, {{tkn_dir_name, QStringLiteral("Videos")}}, {{CMD_ID, user_id}});
                         break;}
 
-                        case perm_api: {
+                        case sf_api: {
                             QJsonObject content = sRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,
@@ -210,14 +210,14 @@ namespace Core {
                     return videoByPlaylist(args.queryItemValue(CMD_ID));
                 }
                 QJsonValue videoByPlaylist(const QString & playlist_id) { // not finished
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_video_by_playlist);
                     QJsonArray block_content;
 
                     QStringList parts = playlist_id.split('_');
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             block_content = saRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,
@@ -244,7 +244,7 @@ namespace Core {
                             );
                         break;}
 
-                        default: Logger::obj().write(name(), "tracksByPlaylist is not accessable", Logger::log_error);
+                        default: Logger::obj().write(name(), "videoByPlaylist is not accessable", Logger::log_error);
                     }
 
                     return prepareBlock(dmt_video, block_content);
@@ -275,12 +275,12 @@ namespace Core {
                     return QJsonObject();
                 }
                 QJsonValue videoByCategory(const QString & category_id, const QString & offset_token) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_video_by_category);
                     QJsonObject response;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             response = sRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,
@@ -317,12 +317,12 @@ namespace Core {
                     return videoCategories(args.queryItemValue(CMD_OFFSET));
                 }
                 QJsonValue videoCategories(const QString & offset_token = QString()) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_video_categories);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             saRequest(
                                 baseUrlStr(
                                     qst_api, tkn_execute,

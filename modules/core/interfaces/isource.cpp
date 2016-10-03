@@ -130,7 +130,7 @@ void ISource::openRecomendations() {
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Models::Params(sourceType(), Models::mpf_none, user_id, rec_user), 0, true, true
+        Models::Params(sourceType(), Models::mpf_none, user_id, rec_audio_user), 0, true, true
     );
 }
 

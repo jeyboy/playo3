@@ -20,12 +20,12 @@ namespace Core {
                     return groupsByIdOrPerma(ids.join(QStringLiteral(",")));
                 }
                 QJsonValue groupsByIdOrPerma(const QString & id, int offset = 0, int count = 100) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_group_by_id);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
 //                            block_content = saRequest(
 //                                baseUrlStr(
 //                                    qst_api, path_groups_by_id,
@@ -57,12 +57,12 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsByName(const QString & gname, int offset = 0, int count = 100) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_group_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
 //                            return saRequest(
 //                                baseUrlStr(
 //                                    qst_api, path_groups_search,

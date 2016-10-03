@@ -18,8 +18,12 @@ void WebModel::refresh() {
             source -> openSetAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
-        case rec_user: {
-            source -> userRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        case rec_audio_user: {
+            source -> userAudioRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
+        case rec_video_user: {
+            source -> userVideoRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
         case rec_song: {

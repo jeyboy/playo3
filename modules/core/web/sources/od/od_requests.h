@@ -6,7 +6,7 @@
 #include "od_auth.h"
 #include "od_playlist.h"
 #include "od_set.h"
-#include "od_track.h"
+#include "od_audio.h"
 #include "od_video.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -15,7 +15,7 @@ namespace Core {
     namespace Web {
         namespace Od {
             class Requests : public Sociable, public User, public Auth, public Group,
-                    public Playlist, public Set, public Track, public Video {
+                    public Playlist, public Set, public Audio, public Video {
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
 
@@ -257,10 +257,10 @@ namespace Core {
                 Requests() {
                     setSociableLimitations(true, true, true, true);
 
-                    flags = {
-                        {sf_endpoint,
+                    flags = QHash<SourceFlags, SourceFlags>{
+                        {sf_endpoint, (SourceFlags)(
                             sf_online_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
-                            sf_photo | sf_feed | sf_playlist | sf_compilation | sf_site | sf_site_connectable | sf_sociable
+                            sf_photo | sf_feed | sf_playlist | sf_compilation | sf_site | sf_site_connectable | sf_sociable)
                         },
 
                         {sf_feed,                   sf_site},
@@ -398,7 +398,7 @@ namespace Core {
                 }
 
                 QJsonValue loadSetData(const QString & attrs) {
-                    return tracksByPlaylist(QUrlQuery(attrs).queryItemValue(CMD_ID));
+                    return audioByPlaylist(QUrlQuery(attrs).queryItemValue(CMD_ID));
                 }
 
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
@@ -463,7 +463,7 @@ namespace Core {
             public:
                 QString refresh(const QString & item_id, const DataMediaType & item_media_type) {
                     switch(item_media_type) {
-                        case dmt_audio: return trackUrl(item_id);
+                        case dmt_audio: return audioUrl(item_id);
                         case dmt_video: return videoUrl(item_id);
                         default:;
                     }
@@ -485,7 +485,7 @@ namespace Core {
                     QJsonArray blocks;
 
                     if (limits.include_audio())
-                        blocks << tracksSearch(limits);
+                        blocks << audioSearch(limits);
 
                     if (limits.include_video())
                         blocks << videoSearch(limits);
