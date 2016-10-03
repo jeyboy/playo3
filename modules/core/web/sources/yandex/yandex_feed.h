@@ -17,7 +17,7 @@ namespace Core {
                 // personal feeds // curl 'https://music.yandex.ua/handlers/feed.jsx?nocheck=&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.328420764991853' -H 'Host: music.yandex.ua' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Referer: https://music.yandex.ua/feed' -H 'X-Current-UID: 363617853' -H 'X-Retpath-Y: https://music.yandex.ua/feed' -H 'X-Requested-With: XMLHttpRequest'
 
 //                QJsonValue feedsBySource(const QStringList & sources = QStringList()) { // not finished
-//                    Permissions perm = permissions(pr_media_content);
+//                    SourceFlags perm = permissions(pr_media_content);
 //                    QJsonArray block_content;
 
 //                    switch(perm) {

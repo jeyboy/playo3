@@ -101,13 +101,13 @@ namespace Core {
         inline bool hasGroups()                                         { return HAS_FLAG(flags[sf_endpoint], sf_group); }
         inline bool hasCompilations()                                   { return HAS_FLAG(flags[sf_endpoint], sf_compilation); }
 
-        inline bool hasSimillarTracksByTrack()                          { return respondableTo(sf_tracks_recs_by_track); }
-        inline bool hasSimillarTracksByUser()                           { return respondableTo(sf_tracks_recs_by_user); }
-        inline bool hasSimillarTracksByArtist()                         { return respondableTo(sf_tracks_recs_by_artist); }
-        inline bool hasSimillarTracksByTag()                            { return respondableTo(sf_tracks_by_tag); }
-        inline bool hasTracksFromSameLabel()                            { return respondableTo(sf_tracks_by_label); }
-        inline bool hasTracksFromSameArtist()                           { return respondableTo(sf_tracks_by_artist); }
-        inline bool hasAlbumsFromSameArtist()                           { return respondableTo(sf_albums_by_artist); }
+        inline bool hasSimillarTracksByTrack()                          { return respondableTo(sf_audio_recs_by_audio); }
+        inline bool hasSimillarTracksByUser()                           { return respondableTo(sf_audio_recs_by_user); }
+        inline bool hasSimillarTracksByArtist()                         { return respondableTo(sf_audio_recs_by_artist); }
+        inline bool hasSimillarTracksByTag()                            { return respondableTo(sf_audio_by_tag); }
+        inline bool hasTracksFromSameLabel()                            { return respondableTo(sf_audio_by_label); }
+        inline bool hasTracksFromSameArtist()                           { return respondableTo(sf_audio_by_artist); }
+        inline bool hasAlbumsFromSameArtist()                           { return respondableTo(sf_album_by_artist); }
 
 
 //        inline bool hasNewItemsBlock()      { return HAS_FLAG(defaultFlags(), sf_newable); }
@@ -120,7 +120,7 @@ namespace Core {
         inline bool requireOnlineCredentials()                          { return HAS_FLAG(flags[sf_endpoint], sf_online_credentials_req); }
 
 
-        inline bool respondableToSocial()                               { return respondableTo(sf_users_sociable) || respondableTo(sf_groups_sociable); }
+        inline bool respondableToSocial()                               { return respondableTo(sf_user_sociable) || respondableTo(sf_group_sociable); }
         inline bool respondableToCompilations()                         { return respondableTo(sf_compilation); }
 
     public slots:

@@ -9,7 +9,7 @@ namespace Core {
             class User : public Base {
             public:
                 QJsonObject userStatus(const QString & user_id) { // deactivated: 'deleted', id, first_name, last_name, counters
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_site:
@@ -39,7 +39,7 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByIdOrPerma(const QString & id) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -71,7 +71,7 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByName(const QString & uname, int offset = 0, int count = 100) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

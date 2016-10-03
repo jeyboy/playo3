@@ -19,7 +19,7 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
-                    Permissions perm = permissions(pr_search_media);
+                    SourceFlags perm = permissions(sf_compilation);
                     QueriableResponse response;
                     DataMediaType dmt_val = dmt_unknow;
 
@@ -28,7 +28,7 @@ namespace Core {
                             dmt_val = dmt_audio;
 
                             switch(perm) {
-                                case perm_api: {
+                                case sf_api: {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_api_search, tkn_files,
@@ -40,7 +40,7 @@ namespace Core {
                                     );
                                 break;}
 
-                                case perm_site: {
+                                case sf_site: {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
@@ -61,7 +61,7 @@ namespace Core {
                             dmt_val = dmt_video;
 
                             switch(perm) {
-                                case perm_api: {
+                                case sf_api: {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_api_search, tkn_files,
@@ -73,7 +73,7 @@ namespace Core {
                                     );
                                 break;}
 
-                                case perm_site: {
+                                case sf_site: {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,

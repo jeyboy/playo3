@@ -268,7 +268,7 @@ namespace Core {
                 }
 
                 QJsonValue userInfo(const QString & user_id) {
-                    Permissions perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(pr_object_content);
 
                     if (perm > perm_none) {
                         if (user_id == userID()) {
@@ -289,7 +289,7 @@ namespace Core {
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
-                    Permissions perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(pr_object_content);
 
                     switch(perm) {
                         case perm_site: {

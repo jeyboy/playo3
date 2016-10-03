@@ -16,7 +16,7 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -45,7 +45,7 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsByTrack(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -79,7 +79,7 @@ namespace Core {
                 }
                 // predicate is used for search in title - genre - tags - permalinks
                 QJsonValue playlistsByPredicate(const QString & predicate, int offset = 0, int count = 10) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -120,7 +120,7 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

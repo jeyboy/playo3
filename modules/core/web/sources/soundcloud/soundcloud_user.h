@@ -16,7 +16,7 @@ namespace Core {
                     );
                 }
                 QJsonValue usersById(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -49,7 +49,7 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByName(const QString & uname, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -89,7 +89,7 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByTrackLikes(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -122,7 +122,7 @@ namespace Core {
                     );
                 }
                 QJsonValue usersByTrackReposting(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -150,7 +150,7 @@ namespace Core {
                     );
                 }
                 QJsonValue userFollowings(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -183,7 +183,7 @@ namespace Core {
                     );
                 }
                 QJsonValue userFollowers(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -216,7 +216,7 @@ namespace Core {
                     );
                 }
                 QJsonValue userRecommendations(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

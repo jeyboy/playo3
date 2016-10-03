@@ -10,7 +10,7 @@ namespace Core {
             public:
                 // https://new.vk.com/dev/newsfeed.getRecommended
                 QJsonValue feedsBySource(const QStringList & sources = QStringList()) { // not finished
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {

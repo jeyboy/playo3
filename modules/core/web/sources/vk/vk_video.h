@@ -53,7 +53,7 @@ namespace Core {
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -102,7 +102,7 @@ namespace Core {
                     );
                 }
                 QJsonValue videoByUser(const QString & user_id, int offset = 0) {
-                    Permissions perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(pr_object_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -210,7 +210,7 @@ namespace Core {
                     return videoByPlaylist(args.queryItemValue(CMD_ID));
                 }
                 QJsonValue videoByPlaylist(const QString & playlist_id) { // not finished
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     QStringList parts = playlist_id.split('_');
@@ -275,7 +275,7 @@ namespace Core {
                     return QJsonObject();
                 }
                 QJsonValue videoByCategory(const QString & category_id, const QString & offset_token) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonObject response;
 
                     switch(perm) {
@@ -317,7 +317,7 @@ namespace Core {
                     return videoCategories(args.queryItemValue(CMD_OFFSET));
                 }
                 QJsonValue videoCategories(const QString & offset_token = QString()) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {

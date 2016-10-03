@@ -35,7 +35,7 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
-                    Permissions perm = permissions(pr_pack);
+                    SourceFlags perm = permissions(pr_pack);
                     QJsonArray block_content;
 
                     switch(set_type) {

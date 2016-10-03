@@ -22,11 +22,11 @@ namespace Core {
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
-                    Permissions perm = permissions(pr_search_media);
+                    SourceFlags perm = permissions(sf_audio_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_api_search, tkn_files,
@@ -41,7 +41,7 @@ namespace Core {
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_search,

@@ -16,7 +16,7 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsInfo(const QString & owner_uid, const QString & playlist_ids) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -45,7 +45,7 @@ namespace Core {
 
                 QJsonValue playlistsSearch(const QUrlQuery & args) { return playlistsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue playlistsSearch(const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

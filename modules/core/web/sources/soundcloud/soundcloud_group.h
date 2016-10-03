@@ -10,7 +10,7 @@ namespace Core {
             class Group : public Base {
             public:
                 QJsonObject groupInfo(const QString & group_id) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_api: {
@@ -41,7 +41,7 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsById(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     if (!Info::isNumber(group_id))
                         return groupsByName(group_id, count, offset);
@@ -78,7 +78,7 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsByTrack(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -104,7 +104,7 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -140,7 +140,7 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsByName(const QString & gname, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

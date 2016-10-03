@@ -16,7 +16,7 @@ namespace Core {
                 }
 
                 QString trackLyric(const QString & lyrics_id) { //TODO: finish me // not tested
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_site:
@@ -43,7 +43,7 @@ namespace Core {
                 }
 
                 QJsonValue tracksInfo(const QStringList & track_ids) {
-                    Permissions perm = permissions(pr_object_content); // pr_media_content
+                    SourceFlags perm = permissions(pr_object_content); // pr_media_content
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -93,7 +93,7 @@ namespace Core {
                     );
                 }
                 QJsonValue userRecommendations(const QString & user_id, bool randomize, int offset = 0) { // ~50 per request
-                    Permissions perm = permissions(pr_user_recommendations);
+                    SourceFlags perm = permissions(pr_user_recommendations);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -154,7 +154,7 @@ namespace Core {
                     );
                 }
                 QJsonValue trackRecommendations(const QString & track_id, bool randomize, int offset = 0) {
-                    Permissions perm = permissions(pr_item_recommendations);
+                    SourceFlags perm = permissions(pr_item_recommendations);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -234,7 +234,7 @@ namespace Core {
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits, QJsonArray * arr = 0, bool autoFix = false) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -285,7 +285,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksByPlaylist(const QString & playlist_id) { // not finished
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {

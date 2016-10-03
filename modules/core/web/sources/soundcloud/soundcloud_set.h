@@ -72,7 +72,7 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

@@ -18,7 +18,7 @@ namespace Core {
                 // curl 'https://api-v2.soundcloud.com/me/play-history?client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1472842846' -X POST -H 'Accept: application/json, text/javascript, */*; q=0.1' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'Content-Length: 94' -H 'Content-Type: application/json' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'origin: https://soundcloud.com'
 
                 QString trackUrl(const QString & track_id) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_api: {
@@ -43,7 +43,7 @@ namespace Core {
                     return QString();
                 }
                 bool likeTrack(const QString & user_id, const QString & track_id) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_api: {
@@ -72,7 +72,7 @@ namespace Core {
                 }
 
                 QJsonObject trackInfo(const QString & track_id) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
 
                     switch(perm) {
                         case perm_api: {
@@ -98,7 +98,7 @@ namespace Core {
                 //"id": 142370360,
                 //"permalink": "sam-smith-stay-with-me"
                 QJsonValue tracksInfo(const QStringList & track_ids) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray response;
                     QJsonObject obj;
 
@@ -138,7 +138,7 @@ namespace Core {
                     );
                 }
                 QJsonValue trackRecommendations(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -165,7 +165,7 @@ namespace Core {
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -211,7 +211,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -250,7 +250,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksByGroup(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -284,7 +284,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -320,7 +320,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksByUserLikes(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

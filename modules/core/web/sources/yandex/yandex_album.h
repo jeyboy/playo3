@@ -12,7 +12,7 @@ namespace Core {
                     return albumsInfo(args.queryItemValue(CMD_ID).split(','));
                 }
                 QJsonValue albumsInfo(const QStringList & album_ids) {// not tested
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -60,7 +60,7 @@ namespace Core {
 
                 QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue albumsSearch(const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

@@ -27,11 +27,13 @@ namespace Core {
                 }
 
                 // track id should be eq to track_id:album_id
-                QString trackLyric(const QString & track_id) {
+                QString trackLyric(const QString & track_id) { //TODO: write me
                     QJsonObject json = sRequest(
                         baseUrlStr(qst_site, LSTR("track.jsx"), {{LSTR("track"), track_id}}),
                         call_type_json, 0, proc_none
                     );
+
+                    return QString();
                 }
 
                 QJsonValue trackInfo(const QString & track_id) {
@@ -44,7 +46,7 @@ namespace Core {
                     return tracksInfo(args.queryItemValue(CMD_ID).split(','));
                 }
                 QJsonValue tracksInfo(const QStringList & track_ids) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QJsonArray block_content;
 
                     switch(perm) {
@@ -73,7 +75,7 @@ namespace Core {
 
                 QJsonValue tracksSearch(const QUrlQuery & args) { return tracksSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue tracksSearch(const SearchLimit & limits) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {

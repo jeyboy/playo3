@@ -2,20 +2,7 @@
 #define ISOURCE_PERM_FLAGS
 
 namespace Core {
-//    #define NOT_HAS_FLAG(flags, flag) ((flags & flag) != flag)
     #define HAS_FLAG(flags, flag) ((flags & flag) == flag)
-//    #define APPEND_FLAG(flags, flag) flags = (SourceFlags)(flags | flag)
-//    #define REJECT_FLAG(flags, flag) flags &= (~(flag))
-
-//    #define IS_OFFLINE_FLAG(flags, flag) (flags.contains(flag) && (HAS_FLAG(flags.value(flag), perm_site) || HAS_FLAG(flags.value(flag), perm_api)))
-//    #define IS_AUTH_ACCEPTABLE_PERM(perm, site_auth, api_auth) \
-//        (HAS_FLAG(perm, perm_api) || HAS_FLAG(perm, perm_site) || \
-//            HAS_FLAG(perm, perm_site_auth_only) == site_auth || \
-//            HAS_FLAG(perm, perm_api_auth_only) == api_auth)
-
-//    #define IS_AUTH_EQ_FLAG(flags, flag, site_auth, api_auth) \
-//        (flags.contains(flag) && IS_AUTH_ACCEPTABLE_PERM(flags.value(flag), site_auth, api_auth))
-
 
     enum SourceFlags : quint64 {
         sf_none = 0,
@@ -208,7 +195,7 @@ namespace Core {
         sf_group_by_perma                   = sf_group | sf_by_perma,
         sf_group_by_id                      = sf_group | sf_by_id,
         sf_group_by_track                   = sf_group | sf_by_track
-    };
+    } ;
 }
 
 #endif // ISOURCE_PERM_FLAGS

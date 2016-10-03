@@ -17,7 +17,7 @@ namespace Core {
                     );
                 }
                 QJsonValue tracksPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0, int count = 10) {
-                    Permissions perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(pr_media_content);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -41,7 +41,7 @@ namespace Core {
                 }
 
 //                QJsonValue videoPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0) {
-//                    Permissions perm = permissions(pr_media_content);
+//                    SourceFlags perm = permissions(pr_media_content);
 
 //                    switch(perm) {
 //                        case perm_site:
