@@ -72,12 +72,12 @@ namespace Core {
                 }
 
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_compilation);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api:
-                        case perm_site: {
+                        case sf_api:
+                        case sf_site: {
                             switch(set_type) {
                                 case set_popular: {
                                     response = pRequest(

@@ -16,12 +16,12 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_playlist_by_tag);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api:
-                        case perm_site: {
+                        case sf_api:
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("playlists/discovery"),
@@ -45,11 +45,11 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsByAudio(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_playlist_by_audio);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(qst_api, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
@@ -57,7 +57,7 @@ namespace Core {
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
@@ -67,7 +67,7 @@ namespace Core {
 
                         default: Logger::obj().write(name(), "PLAYLIST BY TRACKS is not accessable", Logger::log_error);
                     }
-                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_track, response, {}, {{CMD_ID, track_id}});
+                    return prepareBlock(dmt_set, cmd_mtd_playlists_by_audio, response, {}, {{CMD_ID, track_id}});
                 }
 
                 QJsonValue playlistsByPredicate(const QUrlQuery & args) {
@@ -79,11 +79,11 @@ namespace Core {
                 }
                 // predicate is used for search in title - genre - tags - permalinks
                 QJsonValue playlistsByPredicate(const QString & predicate, int offset = 0, int count = 10) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_playlist_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(qst_api, path_playlists, {{tkn_q, predicate}}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
@@ -91,7 +91,7 @@ namespace Core {
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("search/playlists"),
@@ -120,18 +120,18 @@ namespace Core {
                     );
                 }
                 QJsonValue playlistsByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_playlist_by_user);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(qst_api, path_user_playlists.arg(user_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET), 0, proc_json_patch
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/playlists").arg(user_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET), 0, proc_json_patch,

@@ -48,6 +48,7 @@ namespace Core {
                         {sf_compilation,                sf_site_not_api_auth},
 
 //                        {sf_popular_audio,          sf_site_auth_only},
+                        {sf_like_audio,                 sf_both_auth},
                         {sf_audio_by_id,                sf_site_not_api_auth},
                         {sf_audio_by_title,             sf_site_not_api_auth},
                         {sf_audio_by_genre,             sf_site_not_api_auth},

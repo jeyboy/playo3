@@ -92,6 +92,7 @@ namespace Core {
 
         sf_new_audio                        = sf_track | sf_section_new,
         sf_popular_audio                    = sf_track | sf_section_popular,
+        sf_like_audio                       = sf_track | sf_status | sf_by_like,
         sf_audio_by_id                      = sf_track | sf_by_id,
         sf_audio_by_title                   = sf_track | sf_by_title,
         sf_audio_by_genre                   = sf_track | sf_by_genre,
@@ -148,7 +149,7 @@ namespace Core {
         sf_audio_playlist_by_user           = sf_audio_playlist | sf_by_user,
         sf_audio_playlist_by_group          = sf_audio_playlist | sf_by_group,
         sf_audio_playlist_by_tag            = sf_audio_playlist | sf_by_tag,
-        sf_audio_playlist_by_track          = sf_audio_playlist | sf_by_track,
+        sf_audio_playlist_by_audio          = sf_audio_playlist | sf_by_track,
 
         sf_video_playlist_by_id             = sf_video_playlist | sf_by_id,
         sf_video_playlist_by_user           = sf_video_playlist | sf_by_user,
@@ -163,6 +164,7 @@ namespace Core {
         sf_stream_by_group                  = sf_stream | sf_by_group,
         sf_stream_by_genre                  = sf_stream | sf_by_genre,
         sf_stream_by_artist                 = sf_stream | sf_by_artist,
+        sf_stream_by_audio                  = sf_stream | sf_by_track,
 
         sf_post_by_user                     = sf_post | sf_by_user,
         sf_post_by_group                    = sf_post | sf_by_group,
@@ -195,7 +197,7 @@ namespace Core {
         sf_group_by_title                   = sf_group | sf_by_title,
         sf_group_by_perma                   = sf_group | sf_by_perma,
         sf_group_by_id                      = sf_group | sf_by_id,
-        sf_group_by_track                   = sf_group | sf_by_track
+        sf_group_by_audio                   = sf_group | sf_by_track
     } ;
 }
 
