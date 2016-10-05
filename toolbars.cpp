@@ -269,6 +269,7 @@ QToolBar * ToolBars::createItemFeaturesBar() {
     item_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_song")), QStringLiteral("Recommendations for played item"), this, SLOT(openRecomendationsforItem()));
     item_singer_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer")), QStringLiteral("Recommendations for played item artists"), this, SLOT(openRecomendationsforItemArtist()));
     item_singer_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer_song")), QStringLiteral("Tracks from played item artists"), this, SLOT(openTracksforItemArtist()));
+    item_singer_album_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer_album")), QStringLiteral("Albums from played item artists"), this, SLOT(openAlbumsforItemArtist()));
     item_owner_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_owner")), QStringLiteral("Recommendations for played item owner"), this, SLOT(openRecomendationsforItemUser()));
     item_tags_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_tag")), QStringLiteral("Recommendations for played item tags"), this, SLOT(openRecomendationsforItemTags()));
     item_labels_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_label")), QStringLiteral("Tracks from played item labels"), this, SLOT(openRecomendationsforItemLabel()));
@@ -615,23 +616,30 @@ void ToolBars::itemFeaturesChanged() {
             bool has_more_items = it -> hasMoreItems();
             more_items_btn -> setVisible(has_more_items);
 
-            bool has_item_recs = source -> hasItemRecommendations();
+            bool has_item_recs = source -> hasSimillarAudioByAudio();
             item_song_btn -> setVisible(has_item_recs);
 
-            bool has_owner_recs = source -> hasUserRecommendations();
+            bool has_owner_recs = source -> hasSimillarAudioByUser();
             item_owner_btn -> setVisible(has_owner_recs);
 
-            bool has_artist_recs = source -> hasArtistRecommendations();
+            bool has_artist_recs = source -> hasSimillarAudioByArtist();
             item_singer_btn -> setVisible(has_artist_recs);
 
-            bool has_tags_recs = source -> hasTagRecommendations();
+            bool has_artist_songs = source -> hasAudioFromSameArtist();
+            item_singer_song_btn -> setVisible(has_artist_songs);
+
+            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
+            item_singer_album_btn -> setVisible(has_artist_albums);
+
+            bool has_tags_recs = source -> hasSimillarAudioByTag();
             item_tags_btn -> setVisible(has_tags_recs);
 
-            bool has_label_recs = source -> hasLabelRecommendations();
+            bool has_label_recs = source -> hasAudioFromSameLabel();
             item_labels_btn -> setVisible(has_label_recs);
 
             show |= has_more_items || has_item_recs || has_owner_recs ||
-                    has_artist_recs || has_tags_recs || has_label_recs;
+                    has_artist_recs || has_tags_recs || has_label_recs ||
+                    has_artist_albums || has_artist_songs;
         }
     }
 
@@ -670,6 +678,9 @@ void ToolBars::openRecomendationsforItemArtist() {
         if (it)
             ((Models::IModel *)view -> model()) -> proceedRecomendationsforItemArtist(it);
     }
+}
+void ToolBars::openAlbumsforItemArtist() {
+
 }
 void ToolBars::openTracksforItemArtist() {
 

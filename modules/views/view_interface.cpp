@@ -313,10 +313,10 @@ void IView::copyIdsToClipboard() {
     mdl -> copyIdsToClipboard(indexes);
 }
 
-void IView::openAudioRecomendationsforUser() {
+void IView::openRecomendationsforUser() {
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
-    if (src -> respondableTo(pr_user_recommendations)) {
+    if (src -> respondableTo(sf_audio_recs_by_user)) {
         QString user_uid = settings().uid;
         Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_audio_user);
         Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for YOU")), bar_settings, 0, true, true);
@@ -418,7 +418,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
-    if (src && src -> hasUserRecommendations()) {
+    if (src && src -> hasSimillarAudioByUser()) {
         menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
         menu.addSeparator();
     }
@@ -426,13 +426,13 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     if (ind.isValid()) {
         src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
 
-        if (src && src -> hasUserRecommendations())
+        if (src && src -> hasSimillarAudioByUser())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
 
-        if (src && src -> hasItemRecommendations())
+        if (src && src -> hasSimillarAudioByAudio())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
 
-        if (src && src -> hasArtistRecommendations())
+        if (src && src -> hasSimillarAudioByArtist())
             menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item artist"), this, SLOT(openRecomendationsforItemArtist()));
 
         menu.addSeparator();

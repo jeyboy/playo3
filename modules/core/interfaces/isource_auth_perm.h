@@ -101,12 +101,12 @@ namespace Core {
         inline bool hasGroups()                                         { return HAS_FLAG(flags[sf_endpoint], sf_group); }
         inline bool hasCompilations()                                   { return HAS_FLAG(flags[sf_endpoint], sf_compilation); }
 
-        inline bool hasSimillarTracksByTrack()                          { return respondableTo(sf_audio_recs_by_audio); }
-        inline bool hasSimillarTracksByUser()                           { return respondableTo(sf_audio_recs_by_user); }
-        inline bool hasSimillarTracksByArtist()                         { return respondableTo(sf_audio_recs_by_artist); }
-        inline bool hasSimillarTracksByTag()                            { return respondableTo(sf_audio_by_tag); }
-        inline bool hasTracksFromSameLabel()                            { return respondableTo(sf_audio_by_label); }
-        inline bool hasTracksFromSameArtist()                           { return respondableTo(sf_audio_by_artist); }
+        inline bool hasSimillarAudioByAudio()                           { return respondableTo(sf_audio_recs_by_audio); }
+        inline bool hasSimillarAudioByUser()                            { return respondableTo(sf_audio_recs_by_user); }
+        inline bool hasSimillarAudioByArtist()                          { return respondableTo(sf_audio_recs_by_artist); }
+        inline bool hasSimillarAudioByTag()                             { return respondableTo(sf_audio_by_tag); }
+        inline bool hasAudioFromSameLabel()                             { return respondableTo(sf_audio_by_label); }
+        inline bool hasAudioFromSameArtist()                            { return respondableTo(sf_audio_by_artist); }
         inline bool hasAlbumsFromSameArtist()                           { return respondableTo(sf_album_by_artist); }
 
 

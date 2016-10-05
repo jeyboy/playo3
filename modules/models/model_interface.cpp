@@ -933,7 +933,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 void IModel::proceedRecomendationsforItemUser(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(pr_user_recommendations)) {
+    if (src -> respondableTo(sf_audio_recs_by_user)) {
         QVariant owner_id = it -> ownerId();
         if (owner_id.isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_audio_user);
@@ -944,7 +944,7 @@ void IModel::proceedRecomendationsforItemUser(IItem * it) {
 void IModel::proceedRecomendationsforItemArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(pr_artist_recommendations)) {
+    if (src -> respondableTo(sf_audio_recs_by_artist)) {
         QVariantMap artists = it -> artistsList();
 
         for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
@@ -957,7 +957,7 @@ void IModel::proceedRecomendationsforItemArtist(IItem * it) {
 void IModel::proceedRecomendationsforItem(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(pr_item_recommendations)) {
+    if (src -> respondableTo(sf_audio_recs_by_audio)) {
         if (it -> id().isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_song);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
@@ -967,7 +967,7 @@ void IModel::proceedRecomendationsforItem(IItem * it) {
 void IModel::proceedTracksFromSameItemArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(pr_artist_recommendations)) {
+    if (src -> respondableTo(sf_audio_by_artist)) {
         QVariantMap artists = it -> artistsList();
 
         for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {

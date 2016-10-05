@@ -72,6 +72,7 @@ namespace Presentation {
         void openRecomendationsforItem();
         void openRecomendationsforItemUser();
         void openRecomendationsforItemArtist();
+        void openAlbumsforItemArtist();
         void openTracksforItemArtist();
         void openRecomendationsforItemTags();
         void openRecomendationsforItemLabel();
@@ -122,6 +123,7 @@ namespace Presentation {
         QAction * item_song_btn;
         QAction * item_singer_btn;
         QAction * item_singer_song_btn;
+        QAction * item_singer_album_btn;
         QAction * item_owner_btn;
         QAction * item_tags_btn;
         QAction * item_labels_btn;
