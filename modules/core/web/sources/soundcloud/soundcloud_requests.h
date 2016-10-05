@@ -14,7 +14,7 @@ namespace Core {
     namespace Web {
         namespace Soundcloud {
             class Requests : public Sociable, public Auth, public Group,
-                     public Playlist, public Set, public Track, public User
+                     public Playlist, public Set, public Audio, public User
             {
             protected:
                 //                inline SourceFlags defaultFlags() {

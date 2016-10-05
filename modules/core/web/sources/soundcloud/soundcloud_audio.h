@@ -250,18 +250,18 @@ namespace Core {
                     );
                 }
                 QJsonValue audioByGroup(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_by_group);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(qst_api, path_group_tracks.arg(group_id), {{tkn_types, val_audio_types}}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(qst_site, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
                                 call_type_json, rules(offset, count), 0,
@@ -284,18 +284,18 @@ namespace Core {
                     );
                 }
                 QJsonValue audioByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_by_user);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(qst_api, path_user_tracks.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1, QStringLiteral("users/%1/tracks").arg(user_id),
@@ -320,18 +320,18 @@ namespace Core {
                     );
                 }
                 QJsonValue audioByUserLikes(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_by_like);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api: {
+                        case sf_api: {
                             response = pRequest(
                                 baseUrlStr(qst_api, path_user_favorites.arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
 
-                        case perm_site: {
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/likes").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0,
