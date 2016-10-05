@@ -24,12 +24,12 @@ namespace Core {
                     ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
 
-                inline void trackRecommendationsAsync(const QString & track_id, Func * func) {
+                inline void audioRecommendationsAsync(const QString & track_id, Func * func) {
                     ThreadUtils::obj().run((Requests *)this, &Requests::audioRecommendations, track_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
                 }
 
-                inline void userRecommendationsAsync(const QString & user_id, Func * func) {
-                    ThreadUtils::obj().run((Requests *)this, &Requests::userRecommendationsAsync, user_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
+                inline void userAudioRecommendationsAsync(const QString & user_id, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userAudioRecommendationsAsync, user_id, 0, SOUNDCLOUD_ITEMS_LIMIT, func);
                 }
 
             protected:

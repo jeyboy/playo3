@@ -66,7 +66,7 @@ namespace Core {
         virtual void audioRecommendationsAsync(const QString & /*track_id*/, Func * /*func*/) {}
         virtual void userAudioRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
         virtual void userVideoRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
-        virtual void tracksFromSameArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void audioFromSameArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
 
     public slots:
         void openTab();

@@ -32,7 +32,7 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     ui -> errorStr -> setVisible(false);
     default_btn = ui -> cancelButton;
 
-    if (currApi -> isUsersSociable()) {
+    if (currApi -> hasUsers()) {
         prepareLinkablesList(api -> friendsList(), ui -> friendsList);
         ui -> friendsList -> sortItems();
 
@@ -48,7 +48,7 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
     }
     else ui -> tabWidget -> setTabEnabled(0, false);
 
-    if (currApi -> isGroupsSociable()) {
+    if (currApi -> hasGroups()) {
         prepareLinkablesList(api -> groupsList(), ui -> groupsList);
         ui -> groupsList -> sortItems();
 

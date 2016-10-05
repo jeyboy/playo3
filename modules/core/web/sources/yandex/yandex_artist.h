@@ -70,12 +70,12 @@ namespace Core {
 
                 QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue artistsSearch(const SearchLimit & limits) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_artist_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api:
-                        case perm_site: {
+                        case sf_api:
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(qst_site, LSTR("music-search.jsx"),
                                      {

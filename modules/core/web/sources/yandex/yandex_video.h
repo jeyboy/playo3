@@ -34,12 +34,12 @@ namespace Core {
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_video_by_id);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api:
-                        case perm_site: {
+                        case sf_api:
+                        case sf_site: {
 //                            response = pRequest(
 //                                baseUrlStr(qst_site, LSTR("music-search.jsx"),
 //                                     {
@@ -57,7 +57,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "VIDEO SEARCH is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
+                    return prepareBlock(dmt_audio, cmd_mtd_audio_search, response, limits);
                 }
 
             };

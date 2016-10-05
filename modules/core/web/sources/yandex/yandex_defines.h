@@ -70,7 +70,7 @@ namespace Core {
 
                         tracks_block.insert(
                             Web::tkn_more_cmd,
-                            Cmd::build(sourceType(), cmd_mtd_tracks_info, {{CMD_ID, ids}}).toString()
+                            Cmd::build(sourceType(), cmd_mtd_audio_info, {{CMD_ID, ids}}).toString()
                         );
                     }
 
@@ -183,7 +183,7 @@ namespace Core {
                         playlist_obj.insert(
                             tkn_loadable_cmd,
                              Cmd::build(
-                                sourceType(), cmd_mtd_tracks_by_playlist,
+                                sourceType(), cmd_mtd_audio_by_playlist,
                                 {
                                     {CMD_ID, JSON_CSTR(playlist_obj, tkn_kind)},
                                     {CMD_OWNER, JSON_CSTR2(playlist_obj, tkn_owner, tkn_login)}
@@ -205,7 +205,7 @@ namespace Core {
                         album_obj.insert(
                             tkn_loadable_cmd,
                              Cmd::build(
-                                sourceType(), cmd_mtd_tracks_by_album,
+                                sourceType(), cmd_mtd_audio_by_album,
                                 {{CMD_ID, JSON_CSTR(album_obj, tkn_id)}}
                              ).toString()
                         );

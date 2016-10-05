@@ -12,12 +12,12 @@ namespace Core {
                     return albumsInfo(args.queryItemValue(CMD_ID).split(','));
                 }
                 QJsonValue albumsInfo(const QStringList & album_ids) {// not tested
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_album_by_id);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             int limiter = album_ids.size() / YANDEX_IDS_PER_REQUEST + (int)(album_ids.size() % YANDEX_IDS_PER_REQUEST != 0);
                             for(int step = 0; step < limiter; step++) {
                                 std::initializer_list<std::pair<QString, QVariant> > params = {
@@ -60,12 +60,12 @@ namespace Core {
 
                 QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue albumsSearch(const SearchLimit & limits) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_album_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
-                        case perm_api:
-                        case perm_site: {
+                        case sf_api:
+                        case sf_site: {
                             response = pRequest(
                                 baseUrlStr(qst_site, LSTR("music-search.jsx"),
                                      {

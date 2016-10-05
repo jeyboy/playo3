@@ -80,9 +80,9 @@ namespace Core {
 //                    setSociableLimitations(true, true, true, true);
 
                     flags = {
-                        {sf_endpoint,
+                        {sf_endpoint, (SourceFlags) (
                             sf_is_primary | sf_is_content_shareable | sf_track | sf_video | sf_sociable |
-                            sf_feed | sf_playlist | sf_album | sf_compilation | sf_site | sf_site_connectable
+                            sf_feed | sf_playlist | sf_album | sf_compilation | sf_site | sf_site_connectable)
                         },
 
                         {sf_feed,                       sf_site},
@@ -240,7 +240,7 @@ namespace Core {
                 // here refresh_page must by eq to track id
                 QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
                     switch(itemMediaType) {
-                        case dmt_audio: return trackUrl(refresh_page);
+                        case dmt_audio: return audioUrl(refresh_page);
                         case dmt_video: return videoUrl(refresh_page);
                         default: return QString();
                     }
@@ -277,9 +277,9 @@ namespace Core {
                 }
 
                 QJsonValue userInfo(const QString & user_id) {
-                    SourceFlags perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(sf_user_by_id);
 
-                    if (perm > perm_none) {
+                    if (perm > sf_none) {
                         if (user_id == userID()) {
                             clearFriends();
                             jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowers(user_id).toObject()));
@@ -293,10 +293,10 @@ namespace Core {
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
-                    SourceFlags perm = permissions(pr_object_content);
+                    SourceFlags perm = permissions(sf_audio_by_user);
                     QJsonArray blocks;
 
-                    if (perm > perm_none) {
+                    if (perm > sf_none) {
                         QJsonObject tracks = audioByUser(user_id).toObject();
                         tracks.insert(tkn_dir_name, LSTR("Tracks"));
                         blocks << tracks;

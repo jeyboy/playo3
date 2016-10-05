@@ -33,9 +33,9 @@ namespace Core {
                     setSociableLimitations(true, true, true, true);
 
                     flags = {
-                        {sf_endpoint,
+                        {sf_endpoint, (SourceFlags)(
                             sf_offline_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track |
-                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable | sf_sociable
+                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable | sf_sociable)
                         },
 
 //                        {sf_feed,                   sf_site},
@@ -57,12 +57,12 @@ namespace Core {
                         {sf_audio_by_like,              sf_site_not_api_auth},
                         {sf_audio_by_user,              sf_site_not_api_auth},
                         {sf_audio_recs_by_user,         sf_site},
-                        {sf_audio_recs_by_track,        sf_site_not_api_auth},
+                        {sf_audio_recs_by_audio,        sf_site_not_api_auth},
 
 //                        {sf_audio_playlist_by_id,   sf_site_auth_only},
                         {sf_audio_playlist_by_title,    sf_site_not_api_auth},
                         {sf_audio_playlist_by_tag,      sf_site},
-                        {sf_audio_playlist_by_track,    sf_site_not_api_auth},
+                        {sf_audio_playlist_by_audio,    sf_site_not_api_auth},
                         {sf_audio_playlist_by_user,     sf_site_not_api_auth},
 
                         {sf_user_sociable,              sf_site_not_api_auth},
@@ -75,7 +75,7 @@ namespace Core {
                         {sf_group_by_user,              sf_site_not_api_auth},
                         {sf_group_by_title,             sf_site_not_api_auth},
                         {sf_group_by_id,                sf_site_not_api_auth},
-                        {sf_group_by_track,             sf_site}
+                        {sf_group_by_audio,             sf_site}
                     };
                 }
                 inline virtual ~Requests() {}
@@ -173,7 +173,7 @@ namespace Core {
                 // curl 'https://api-v2.soundcloud.com/search?q=dubstep&sc_a_id=184de48a-5c8d-4ef7-908a-b4602d2a667d&facet=model&user_id=301086-912545-767108-258358&client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&limit=10&offset=0&linked_partitioning=1&app_version=1466770454' -H 'Host: api-v2.soundcloud.com' -H 'DNT: 1' -H 'Referer: https://soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Connection: keep-alive' -H 'Pragma: no-cache' -H 'Cache-Control: no-cache'
 
                 QString refresh(const QString & track_id, const DataMediaType & /*itemMediaType*/) {
-                    return trackUrl(track_id);
+                    return audioUrl(track_id);
                 }
 
                 inline QUrlQuery genDefaultParams(const QuerySourceType & stype = qst_api) {
@@ -191,7 +191,7 @@ namespace Core {
                     return QJsonArray() << Audio::audioRecommendations(track_id, offset, amount);
                 }
 
-                QJsonValue userRecommendationsAsync(const QString & user_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
+                QJsonValue userAudioRecommendationsAsync(const QString & user_id, int offset = 0, int amount = SOUNDCLOUD_ITEMS_LIMIT) {
                     return QJsonArray() << User::userAudioRecommendations(user_id, offset, amount);
                 }
 

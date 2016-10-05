@@ -21,7 +21,7 @@ namespace Core {
                     ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
                 }
 
-                void trackRecommendationsAsync(const QString & uid, Func * func) {
+                void audioRecommendationsAsync(const QString & uid, Func * func) {
                    ThreadUtils::obj().run((Requests *)this, &Requests::audioRecommendations, uid, true, func);
                 }
 

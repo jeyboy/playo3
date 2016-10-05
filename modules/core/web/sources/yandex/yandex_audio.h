@@ -46,12 +46,12 @@ namespace Core {
                     return audioInfo(args.queryItemValue(CMD_ID).split(','));
                 }
                 QJsonValue audioInfo(const QStringList & track_ids) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_by_id);
                     QJsonArray block_content;
 
                     switch(perm) {
-                        case perm_site:
-                        case perm_api: {
+                        case sf_site:
+                        case sf_api: {
                             int limiter = track_ids.size() / YANDEX_IDS_PER_REQUEST + (int)(track_ids.size() % YANDEX_IDS_PER_REQUEST != 0);
                             for(int step = 0; step < limiter; step++) {
                                 std::initializer_list<std::pair<QString, QVariant> > params = {
@@ -75,7 +75,7 @@ namespace Core {
 
                 QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue audioSearch(const SearchLimit & limits) {
-                    SourceFlags perm = permissions(pr_media_content);
+                    SourceFlags perm = permissions(sf_audio_by_title);
                     QueriableResponse response;
 
                     switch(perm) {
@@ -98,7 +98,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "TRACK SEARCH is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_tracks_search, response, limits);
+                    return prepareBlock(dmt_audio, cmd_mtd_audio_search, response, limits);
                 }
 
                 QJsonValue audioByArtist(const QUrlQuery & args) { return audioByArtist(args.queryItemValue(CMD_ID)); }
