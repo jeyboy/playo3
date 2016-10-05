@@ -151,9 +151,11 @@ namespace Core {
                 Requests() {
                     flags = {
                         {sf_endpoint, (SourceFlags)
-                            (sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
+                            (sf_is_primary | sf_is_content_shareable | sf_track | sf_video | sf_compilation |
                             sf_site /*| sf_api*/ | sf_site_connectable /*| sf_api_connectable*/)
                         },
+
+                        {sf_compilation,        sf_site_not_api_auth},
 
                         {sf_search,             sf_site_not_api_auth},
                         {sf_user_sociable,      sf_both_auth},

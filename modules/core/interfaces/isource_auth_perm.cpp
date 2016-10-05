@@ -22,7 +22,7 @@ SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm) {
             return sf_api;
     }
 
-    return perms;
+    return sf_none;
 }
 
 bool ISourceAuthPerm::connectUser() {
