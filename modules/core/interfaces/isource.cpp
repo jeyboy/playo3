@@ -8,15 +8,7 @@
 using namespace Core;
 
 QToolButton * ISource::initButton(QWidget * parent) {
-    bool is_sociable = isSociable();
-    bool is_packable = hasPacks();
-
-    bool offline_sociable = is_sociable && hasOfflineSociable();
-    bool offline_packable = is_packable && hasOfflinePacks();
-
-    bool offline_respondable = offline_sociable || offline_packable;
-
-    if (!isConnectable() && !offline_respondable) return button;
+//    if (!isConnectable() && !offline_respondable) return button;
 
     if (button == 0) {
         if (!parent) {
@@ -29,7 +21,12 @@ QToolButton * ISource::initButton(QWidget * parent) {
         disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
     }
 
+    bool is_connectable = isConnectable();
+    bool is_sociable = respondableToSocial();
+    bool is_packable = respondableToCompilations();
+    bool offline_respondable = is_sociable || is_packable;
     bool is_connected = isConnected();
+
     button -> setEnabled(true);
     button -> setIcon(QIcon(QStringLiteral(":/add_%1").arg(name().toLower())));
 
@@ -45,10 +42,10 @@ QToolButton * ISource::initButton(QWidget * parent) {
             menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
             menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
-            if (hasUserRecommendations())
+            if (hasSimillarAudioByUser())
                 menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
         }
-        else
+        else if (is_connectable)
             menu -> addAction(QStringLiteral("Connect"), this, SLOT(openTab()));
 
         if (is_sociable)
@@ -60,7 +57,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
         button -> setToolTip(name());
         button -> setPopupMode(QToolButton::InstantPopup);
         button -> setMenu(menu);
-    } else {
+    } else if (is_connectable) {
         button -> setToolTip(QStringLiteral("Connect to %1").arg(name()));
         connect(button, SIGNAL(clicked()), this, SLOT(openTab()));
     }
@@ -126,7 +123,7 @@ void ISource::openTab() {
 }
 
 void ISource::openRecomendations() {
-    QString user_id = userID(pr_media_content);
+    QString user_id = userID(sf_audio_recs_by_me);
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),

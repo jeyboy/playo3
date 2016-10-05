@@ -31,12 +31,12 @@ bool ISourceAuthPerm::connectUser() {
     button -> setIcon(QIcon(QStringLiteral(":/items/process")));
     button -> setEnabled(false);
 
-    if (!apiConnected() && hasApiConnection()) {
+    if (!isApiConnected() && hasApiConnection()) {
         res &= connectUserApi();
         if (res) attrs[SOURCE_API_AUTH_JSON] = true;
     }
 
-    if (res && !siteConnected() && hasSiteConnection()) {
+    if (res && !isSiteConnected() && hasSiteConnection()) {
         res &= requireOfflineCredentials() == takeOfflineCredentials();
 
         res &= connectUserSite();
@@ -44,7 +44,7 @@ bool ISourceAuthPerm::connectUser() {
             attrs[SOURCE_SITE_AUTH_JSON] = true;
     }
 
-    if (siteConnected()) { // take / refresh online attrs
+    if (isSiteConnected()) { // take / refresh online attrs
         res &= requireOnlineCredentials() == takeOnlineCredentials();
         if (!res) qCritical() << "Site req on online credentials";
     }
