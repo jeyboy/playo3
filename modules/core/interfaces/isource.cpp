@@ -8,7 +8,12 @@
 using namespace Core;
 
 QToolButton * ISource::initButton(QWidget * parent) {
-//    if (!isConnectable() && !offline_respondable) return button;
+    bool is_connectable = isConnectable();
+    bool is_sociable = respondableToSocial();
+    bool is_packable = respondableToCompilations();
+    bool offline_respondable = is_sociable || is_packable;
+
+    if (!isConnectable() && !offline_respondable) return button;
 
     if (button == 0) {
         if (!parent) {
@@ -21,10 +26,6 @@ QToolButton * ISource::initButton(QWidget * parent) {
         disconnect(button, SIGNAL(clicked()), this, SLOT(openTab()));
     }
 
-    bool is_connectable = isConnectable();
-    bool is_sociable = respondableToSocial();
-    bool is_packable = respondableToCompilations();
-    bool offline_respondable = is_sociable || is_packable;
     bool is_connected = isConnected();
 
     button -> setEnabled(true);
@@ -39,7 +40,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
         if (is_connected) {
             button -> setIcon(QIcon(QStringLiteral(":/add_%1_on").arg(name().toLower())));
 
-            menu -> addAction(QStringLiteral("Disconect"), this, SLOT(disconnectUser()));
+            menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser()));
             menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
             if (hasSimillarAudioByUser())

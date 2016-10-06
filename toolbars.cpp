@@ -427,10 +427,34 @@ QToolBar * ToolBars::createControlToolBar() {
     connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));
     ptb -> addWidget(listBtn);
 
+    QMenu * menu = new QMenu();
+
     QMap<DataSubType, ISource *> apis = Web::Apis::sourcesList();
     for(QMap<DataSubType, ISource *>::Iterator api = apis.begin(); api != apis.end(); api++) {
         QToolButton * btn = api.value() -> initButton(container);
-        if (btn) ptb -> addWidget(btn);
+        if (btn) {
+            if (api.value() -> isPrimary())
+                ptb -> addWidget(btn);
+            else { // TODO: not tested
+                if (btn -> menu())
+                    menu -> addMenu(new QMenu(btn -> menu()));
+                else menu -> addAction(QStringLiteral("Connect"), api.value(), SLOT(openTab()));
+
+                btn -> deleteLater();
+            }
+        }
+    }
+
+    if (menu -> actions().isEmpty())
+        menu -> deleteLater();
+    else {
+        QToolButton * other_button = new QToolButton(ptb);
+        other_button -> setToolTip(LSTR("Other sources"));
+        other_button -> setPopupMode(QToolButton::InstantPopup);
+        other_button -> setMenu(menu);
+        menu -> setParent(other_button);
+
+        ptb -> addWidget(other_button);
     }
 
     ptb -> adjustSize();
