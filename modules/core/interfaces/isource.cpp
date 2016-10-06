@@ -40,7 +40,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
         if (is_connected) {
             button -> setIcon(QIcon(QStringLiteral(":/add_%1_on").arg(name().toLower())));
 
-            menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser())) -> set;
+            menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser()));
             menu -> addSeparator();
             menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
