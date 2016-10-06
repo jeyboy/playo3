@@ -128,7 +128,7 @@ void ToolBars::save(DataStore * settings) {
         ToolbarUserButton * button;
 
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
-            if ((*bar) -> property(toolbar_block_mark).toBool()) continue;
+//            if ((*bar) -> property(toolbar_block_mark).toBool()) continue;
 
             curr_tab = QJsonObject();
 
