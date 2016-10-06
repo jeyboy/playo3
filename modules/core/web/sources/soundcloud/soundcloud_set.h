@@ -139,21 +139,21 @@ namespace Core {
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
                         res.insert(
                             new_hot_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_new_hot) },
+                                    { CMD_SET_TYPE, set_new_hot },
                                     { CMD_GENRE, opt.value() }
                                 }
-                            ) -> toString()
+                            )
                         );
                         res.insert(
                             top_50_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_top_50) },
+                                    { CMD_SET_TYPE, set_top_50 },
                                     { CMD_GENRE, opt.value() }
                                 }
-                            ) -> toString()
+                            )
                         );
 
                         QStringList parts = opt.key().split('&', QString::SkipEmptyParts);
@@ -161,48 +161,48 @@ namespace Core {
                         if (parts.size() == 1)
                             res.insert(
                                 popular_title % opt.key(),
-                                cmd_tmpl.setAttrs(
+                                cmd_tmpl.setAttrsAsStr(
                                     {
-                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_SET_TYPE, set_popular },
                                         { CMD_GENRE, opt.value() }
                                     }
-                                ) -> toString()
+                                )
                             );
                         else {
                             res.insert(
                                 popular_title % parts.first(),
-                                cmd_tmpl.setAttrs(
+                                cmd_tmpl.setAttrsAsStr(
                                     {
-                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_SET_TYPE, set_popular },
                                         { CMD_GENRE, parts.first() }
                                     }
-                                ) -> toString()
+                                )
                             );
                             res.insert(
                                 popular_title % parts.last(),
-                                cmd_tmpl.setAttrs(
+                                cmd_tmpl.setAttrsAsStr(
                                     {
-                                        { CMD_SET_TYPE, QString::number(set_popular) },
+                                        { CMD_SET_TYPE, set_popular },
                                         { CMD_GENRE, parts.last() }
                                     }
-                                ) -> toString()
+                                )
                             );
                         }
                     }
 
                     res.insert(
                         popular_title % PACKAGE_REPLACE_FRAGMENT_TITLE,
-                        cmd_tmpl.setAttrs(
+                        cmd_tmpl.setAttrsAsStr(
                             {
-                                { CMD_SET_TYPE, QString::number(set_popular) },
+                                { CMD_SET_TYPE, set_popular },
                                 { CMD_GENRE, PACKAGE_REPLACE_FRAGMENT }
                             }
-                        ) -> toString()
+                        )
                     );
 
                     res.insert(
                         setTypeToStr(set_recommended_artists),
-                        cmd_tmpl.setAttrs({{ CMD_SET_TYPE, QString::number(set_recommended_artists) }}) -> toString()
+                        cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_recommended_artists }})
                     );
 
                     return res;

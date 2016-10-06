@@ -156,31 +156,33 @@ namespace Core {
                 }
 
                 inline QMap<QString, QString> setsList() {
+                    Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
+
                     return {
-                        {setTypeToStr(set_popular_tracks),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_tracks))},
-                        {setTypeToStr(set_popular_artists),     QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_artists))},
-                        {setTypeToStr(set_popular_tuners),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_tuners))},
-                        {setTypeToStr(set_popular_collections), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_collections))},
-                        {setTypeToStr(set_popular_albums),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_albums))},
-                        {setTypeToStr(set_listened),            QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_listened))},
-                        {setTypeToStr(set_downloaded),          QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_downloaded))},
+                        {setTypeToStr(set_popular_tracks), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_tracks }})},
+                        {setTypeToStr(set_popular_artists), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_artists }})},
+                        {setTypeToStr(set_popular_tuners), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_tuners }})},
+                        {setTypeToStr(set_popular_collections), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_collections }})},
+                        {setTypeToStr(set_popular_albums), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_albums }})},
+                        {setTypeToStr(set_listened), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_listened }})},
+                        {setTypeToStr(set_downloaded), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_downloaded }})},
 
-                        {setTypeToStr(set_of_collections),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_of_collections))},
-                        {setTypeToStr(set_of_radio),            QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_of_radio))},
+                        {setTypeToStr(set_of_collections), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_of_collections }})},
+                        {setTypeToStr(set_of_radio), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_of_radio }})},
 
-                        {setTypeToStr(set_video_my),            QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_my))},
-                        {setTypeToStr(set_video_my_liked),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_my_liked))},
-                        {setTypeToStr(set_video_my_history),    QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_my_history))},
-                        {setTypeToStr(set_video_my_subscriptions),    QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_my_subscriptions))},
-                        {setTypeToStr(set_video_week_top),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_week_top))},
-                        {setTypeToStr(set_video_new),           QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_new))},
-                        {setTypeToStr(set_video_popular),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_popular))},
-                        {setTypeToStr(set_video_serial),        QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_serial))},
-                        {setTypeToStr(set_video_tv_show),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_tv_show))},
-                        {setTypeToStr(set_video_kino),          QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_kino))},
-                        {setTypeToStr(set_video_bloggers),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_bloggers))},
-                        {setTypeToStr(set_video_children),      QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_children))},
-                        {setTypeToStr(set_video_music),         QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_video_music))},
+                        {setTypeToStr(set_video_my), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my }})},
+                        {setTypeToStr(set_video_my_liked), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_liked }})},
+                        {setTypeToStr(set_video_my_history), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_history }})},
+                        {setTypeToStr(set_video_my_subscriptions), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_subscriptions }})},
+                        {setTypeToStr(set_video_week_top), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_week_top }})},
+                        {setTypeToStr(set_video_new), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_new }})},
+                        {setTypeToStr(set_video_popular), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_popular }})},
+                        {setTypeToStr(set_video_serial), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_serial }})},
+                        {setTypeToStr(set_video_tv_show), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_tv_show }})},
+                        {setTypeToStr(set_video_kino), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_kino }})},
+                        {setTypeToStr(set_video_bloggers), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_bloggers }})},
+                        {setTypeToStr(set_video_children), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_children }})},
+                        {setTypeToStr(set_video_music), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_music }})}
                     };
                 }
 

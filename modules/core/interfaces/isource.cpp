@@ -40,14 +40,17 @@ QToolButton * ISource::initButton(QWidget * parent) {
         if (is_connected) {
             button -> setIcon(QIcon(QStringLiteral(":/add_%1_on").arg(name().toLower())));
 
-            menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser()));
+            menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser())) -> set;
+            menu -> addSeparator();
             menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
             if (hasSimillarAudioByUser())
                 menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
         }
-        else if (is_connectable)
+        else if (is_connectable) {
             menu -> addAction(QStringLiteral("Connect"), this, SLOT(openTab()));
+            menu -> addSeparator();
+        }
 
         if (is_sociable)
             menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
@@ -118,7 +121,7 @@ void ISource::openTab() {
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(user_id)),
-            Models::Params(sourceType(), Models::mpf_none, user_id), 0, true, true, 0, true
+            Models::Params(sourceType(), Models::mpf_auto_play_next, user_id), 0, true, true, 0, true
         );
     }
 }
@@ -128,7 +131,7 @@ void ISource::openRecomendations() {
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Models::Params(sourceType(), Models::mpf_none, user_id, rec_audio_user), 0, true, true
+        Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_audio_user), 0, true, true
     );
 }
 

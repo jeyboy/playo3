@@ -244,58 +244,58 @@ namespace Core {
                         if (opt.value() != LSTR("all")) {
                             res.insert(
                                 stream_title % opt.key(),
-                                stream_cmd_tmpl.setAttrs(
+                                stream_cmd_tmpl.setAttrsAsStr(
                                     {
-                                        { CMD_SET_TYPE, QString::number(set_genre_stream) },
+                                        { CMD_SET_TYPE, set_genre_stream },
                                         { CMD_GENRE, opt.value() },
                                         { CMD_STREAM_CONFIGURABLE, LSTR("t") }
                                     }
-                                ) -> toString()
+                                )
                             );
                         }
 
                         res.insert(
                             pop_tracks_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_popular_tracks) },
+                                    { CMD_SET_TYPE, set_popular_tracks },
                                     { CMD_GENRE, opt.value() },
                                     { CMD_PREDICATE, LSTR("tracks") }
                                 }
-                            ) -> toString()
+                            )
                         );
 
                         res.insert(
                             pop_artists_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_popular_artists) },
+                                    { CMD_SET_TYPE, set_popular_artists },
                                     { CMD_GENRE, opt.value() },
                                     { CMD_PREDICATE, LSTR("artists") }
                                 }
-                            ) -> toString()
+                            )
                         );
 
                         res.insert(
                             pop_promos_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_popular_promotions) },
+                                    { CMD_SET_TYPE, set_popular_promotions },
                                     { CMD_GENRE, opt.value() },
                                     { CMD_PREDICATE, LSTR("promotions") }
                                 }
-                            ) -> toString()
+                            )
                         );
 
                         res.insert(
                             new_albums_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_new_albums) },
+                                    { CMD_SET_TYPE, set_new_albums },
                                     { CMD_GENRE, opt.value() },
                                     { CMD_PREDICATE, LSTR("albums") }
                                 }
-                            ) -> toString()
+                            )
                         );
                     }
 
@@ -303,23 +303,23 @@ namespace Core {
                     for(QMap<QString, QString>::Iterator opt = compilations.begin(); opt != compilations.end(); opt++) {
                         res.insert(
                             compilations_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_compilations) },
+                                    { CMD_SET_TYPE, set_compilations },
                                     { CMD_GENRE, opt.value() }
                                 }
-                            ) -> toString()
+                            )
                         );
                     }
 
 //                    res.insert(
 //                        popular_title % PACKAGE_REPLACE_FRAGMENT_TITLE,
-//                        cmd_tmpl.setAttrs(
+//                        cmd_tmpl.set_video_music(
 //                            {
-//                                { CMD_SET_TYPE, QString::number(set_popular) },
+//                                { CMD_SET_TYPE, set_popular },
 //                                { CMD_GENRE, PACKAGE_REPLACE_FRAGMENT }
 //                            }
-//                        ) -> toString()
+//                        )
 //                    );
 
                     return res;
