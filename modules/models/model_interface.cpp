@@ -281,7 +281,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
                 break;}
                 default:
                     proc_func = &IModel::proceedGrabberList;
-                    proc_set_func = 0;
+                    proc_set_func = &IModel::proceedGrabberList;
             }
 
             if (dmt_type != dmt_any && dmt_type & dmt_set)
@@ -929,8 +929,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
     return amount;
 }
 
-
-void IModel::proceedRecomendationsforItemUser(IItem * it) {
+void IModel::proceedRecsForUser(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
     if (src -> respondableTo(sf_audio_recs_by_user)) {
@@ -941,7 +940,7 @@ void IModel::proceedRecomendationsforItemUser(IItem * it) {
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
-void IModel::proceedRecomendationsforItemArtist(IItem * it) {
+void IModel::proceedRecsForArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
     if (src -> respondableTo(sf_audio_recs_by_artist)) {
@@ -953,8 +952,7 @@ void IModel::proceedRecomendationsforItemArtist(IItem * it) {
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
-
-void IModel::proceedRecomendationsforItem(IItem * it) {
+void IModel::proceedRecsForItem(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
     if (src -> respondableTo(sf_audio_recs_by_audio)) {
@@ -964,7 +962,17 @@ void IModel::proceedRecomendationsforItem(IItem * it) {
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
-void IModel::proceedTracksFromSameItemArtist(IItem * it) {
+void IModel::proceedRecsForTags(IItem * it) {
+//    ISource * src = Web::Apis::source(it -> dataType());
+
+//    if (src -> respondableTo(sf_audio_recs_by_audio)) {
+//        if (it -> id().isValid()) {
+//            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_song);
+//            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
+//        }
+//    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+void IModel::proceedTracksFromSameArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
     if (src -> respondableTo(sf_audio_by_artist)) {
@@ -976,8 +984,42 @@ void IModel::proceedTracksFromSameItemArtist(IItem * it) {
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
+void IModel::proceedAlbumsFromSameArtist(IItem * it) {
+//    ISource * src = Web::Apis::source(it -> dataType());
 
+//    if (src -> respondableTo(sf_audio_by_artist)) {
+//        QVariantMap artists = it -> artistsList();
 
+//        for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+//            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist_songs);
+//            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
+//        }
+//    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+void IModel::proceedTracksFromSameLabel(IItem * it) {
+//    ISource * src = Web::Apis::source(it -> dataType());
+
+//    if (src -> respondableTo(sf_audio_by_artist)) {
+//        QVariantMap artists = it -> artistsList();
+
+//        for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+//            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist_songs);
+//            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
+//        }
+//    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+void IModel::proceedAlbumsFromSameLabel(IItem * it) {
+//    ISource * src = Web::Apis::source(it -> dataType());
+
+//    if (src -> respondableTo(sf_audio_by_artist)) {
+//        QVariantMap artists = it -> artistsList();
+
+//        for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
+//            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist_songs);
+//            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
+//        }
+//    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
 
 bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
     if (list.isEmpty()) return false;

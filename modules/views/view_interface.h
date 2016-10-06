@@ -122,11 +122,16 @@ namespace Views {
         void copyToClipboard();
         void copyIdsToClipboard();
         void importIds();
-        void openRecomendationsforUser();
-        void openRecomendationsforItem();
-        void openRecomendationsforItemUser();
-        void openRecomendationsforItemArtist();
         bool removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate = IModel::none, int flags = none);
+
+        void openRecsForItemUser();
+        void openRecsForArtist();
+        void openRecsForItem();
+        void openRecsForTag();
+        void openTracksFromSameArtist();
+        void openAlbumsFromSameArtist();
+        void openTracksFromSameLabel();
+        void openAlbumsFromSameLabel();
 
         void downloadSelected();
         void downloadChecked(QString & path, Playlist * root = 0);

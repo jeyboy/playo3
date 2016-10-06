@@ -313,27 +313,37 @@ void IView::copyIdsToClipboard() {
     mdl -> copyIdsToClipboard(indexes);
 }
 
-void IView::openRecomendationsforUser() {
-    ISource * src = Web::Apis::source(mdl -> playlistType());
-
-    if (src -> respondableTo(sf_audio_recs_by_user)) {
-        QString user_uid = settings().uid;
-        Params bar_settings(mdl -> playlistType(), mpf_auto_play_next, user_uid, rec_audio_user);
-        Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for YOU")), bar_settings, 0, true, true);
-    } else QMessageBox::warning(this, "Permissions required", "This action required on some additional permissions or this service not respondable to this action");
-}
-
-void IView::openRecomendationsforItemUser() {
+void IView::openRecsForItemUser() {
     IItem * it = mdl -> item(currentIndex());
-    mdl -> proceedRecomendationsforItemUser(it);
+    mdl -> proceedRecsForUser(it);
 }
-void IView::openRecomendationsforItemArtist() {
+void IView::openRecsForArtist() {
     IItem * it = mdl -> item(currentIndex());
-    mdl -> proceedRecomendationsforItemArtist(it);
+    mdl -> proceedRecsForArtist(it);
 }
-void IView::openRecomendationsforItem() {
+void IView::openRecsForItem() {
     IItem * it = mdl -> item(currentIndex());
-    mdl -> proceedRecomendationsforItem(it);
+    mdl -> proceedRecsForItem(it);
+}
+void IView::openRecsForTag() {
+    IItem * it = mdl -> item(currentIndex());
+    mdl -> proceedRecsForTags(it);
+}
+void IView::openTracksFromSameArtist() {
+    IItem * it = mdl -> item(currentIndex());
+    mdl -> proceedTracksFromSameArtist(it);
+}
+void IView::openAlbumsFromSameArtist() {
+    IItem * it = mdl -> item(currentIndex());
+    mdl -> proceedAlbumsFromSameArtist(it);
+}
+void IView::openTracksFromSameLabel() {
+    IItem * it = mdl -> item(currentIndex());
+    mdl -> proceedTracksFromSameLabel(it);
+}
+void IView::openAlbumsFromSameLabel() {
+    IItem * it = mdl -> item(currentIndex());
+    mdl -> proceedAlbumsFromSameLabel(it);
 }
 
 void IView::drawRow(QPainter * painter, const QStyleOptionViewItem & options, const QModelIndex & index) const {
@@ -418,24 +428,37 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
     ISource * src = Web::Apis::source(mdl -> playlistType());
 
-    if (src && src -> hasSimillarAudioByUser()) {
-        menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for you"), this, SLOT(openRecomendationsforUser()));
-        menu.addSeparator();
-    }
-
     if (ind.isValid()) {
         src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
 
-        if (src && src -> hasSimillarAudioByUser())
-            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecomendationsforItemUser()));
+        if (src) {
+            if (src -> hasSimillarAudioByUser())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecsForItemUser()));
 
-        if (src && src -> hasSimillarAudioByAudio())
-            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecomendationsforItem()));
+            if (src -> hasSimillarAudioByAudio())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecsForItem()));
 
-        if (src && src -> hasSimillarAudioByArtist())
-            menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item artist"), this, SLOT(openRecomendationsforItemArtist()));
+            if (src -> hasSimillarAudioByArtist())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item artist"), this, SLOT(openRecsForArtist()));
 
-        menu.addSeparator();
+            if (src -> hasSimillarAudioByTag())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item tags"), this, SLOT(openRecsForTag()));
+
+            if (src -> hasAudioFromSameArtist())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Tracks from same artist"), this, SLOT(openTracksFromSameArtist()));
+
+            if (src -> hasAlbumsFromSameArtist())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Albums from same artist"), this, SLOT(openAlbumsFromSameArtist()));
+
+
+            if (src -> hasAudioFromSameLabel())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Tracks from same label"), this, SLOT(openTracksFromSameLabel()));
+
+            if (src -> hasAlbumsFromSameLabel())
+                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Albums from same label"), this, SLOT(openAlbumsFromSameLabel()));
+
+            menu.addSeparator();
+        }
 
         menu.addAction(QIcon(QStringLiteral(":/copy")), QStringLiteral("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
         menu.addSeparator();

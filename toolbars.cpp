@@ -263,16 +263,17 @@ QToolBar * ToolBars::createItemFeaturesBar() {
     item_features -> setProperty(toolbar_block_mark, true);
 
     item_features -> addSeparator();
-    more_items_btn = item_features -> addAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Load more"), this, SLOT(loadMoreItem()));
+    more_items_btn = item_features -> addAction(QIcon(LSTR(":/download")), LSTR("Load more"), this, SLOT(loadMoreItem()));
     item_features -> addSeparator();
 
-    item_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_song")), QStringLiteral("Recommendations for played item"), this, SLOT(openRecomendationsforItem()));
-    item_singer_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer")), QStringLiteral("Recommendations for played item artists"), this, SLOT(openRecomendationsforItemArtist()));
-    item_singer_song_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer_song")), QStringLiteral("Tracks from played item artists"), this, SLOT(openTracksforItemArtist()));
-    item_singer_album_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_singer_album")), QStringLiteral("Albums from played item artists"), this, SLOT(openAlbumsforItemArtist()));
-    item_owner_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_owner")), QStringLiteral("Recommendations for played item owner"), this, SLOT(openRecomendationsforItemUser()));
-    item_tags_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_tag")), QStringLiteral("Recommendations for played item tags"), this, SLOT(openRecomendationsforItemTags()));
-    item_labels_btn = item_features -> addAction(QIcon(QStringLiteral(":/item_label")), QStringLiteral("Tracks from played item labels"), this, SLOT(openRecomendationsforItemLabel()));
+    item_song_btn = item_features -> addAction(QIcon(LSTR(":/item_song")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
+    item_singer_btn = item_features -> addAction(QIcon(LSTR(":/item_singer")), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist()));
+    item_singer_song_btn = item_features -> addAction(QIcon(LSTR(":/item_singer_song")), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist()));
+    item_singer_album_btn = item_features -> addAction(QIcon(LSTR(":/item_singer_album")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
+    item_owner_btn = item_features -> addAction(QIcon(LSTR(":/item_owner")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
+    item_tags_btn = item_features -> addAction(QIcon(LSTR(":/item_tag")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
+    item_labels_song_btn = item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
+    item_labels_album_btn = item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openAlbumsForLabel()));
 
     item_features -> adjustSize();
 
@@ -658,12 +659,15 @@ void ToolBars::itemFeaturesChanged() {
             bool has_tags_recs = source -> hasSimillarAudioByTag();
             item_tags_btn -> setVisible(has_tags_recs);
 
-            bool has_label_recs = source -> hasAudioFromSameLabel();
-            item_labels_btn -> setVisible(has_label_recs);
+            bool has_label_song_recs = source -> hasAudioFromSameLabel();
+            item_labels_song_btn -> setVisible(has_label_song_recs);
+
+            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
+            item_labels_album_btn -> setVisible(has_label_album_recs);
 
             show |= has_more_items || has_item_recs || has_owner_recs ||
-                    has_artist_recs || has_tags_recs || has_label_recs ||
-                    has_artist_albums || has_artist_songs;
+                    has_artist_recs || has_tags_recs || has_label_song_recs ||
+                    has_artist_albums || has_artist_songs || has_label_album_recs;
         }
     }
 
@@ -679,41 +683,69 @@ void ToolBars::loadMoreItem() {
     }
 }
 
-void ToolBars::openRecomendationsforItem() {
+void ToolBars::openRecsforItem() {
     IView * view = Dockbars::obj().playedView();
     if (view) {
         IItem * it = DataFactory::obj().playedItem();
         if (it)
-            ((Models::IModel *)view -> model()) -> proceedRecomendationsforItem(it);
+            ((Models::IModel *)view -> model()) -> proceedRecsForItem(it);
     }
 }
-void ToolBars::openRecomendationsforItemUser() {
+void ToolBars::openRecsforItemUser() {
     IView * view = Dockbars::obj().playedView();
     if (view) {
         IItem * it = DataFactory::obj().playedItem();
         if (it)
-            ((Models::IModel *)view -> model()) -> proceedRecomendationsforItemUser(it);
+            ((Models::IModel *)view -> model()) -> proceedRecsForUser(it);
     }
 }
-void ToolBars::openRecomendationsforItemArtist() {
+void ToolBars::openRecsforItemArtist() {
     IView * view = Dockbars::obj().playedView();
     if (view) {
         IItem * it = DataFactory::obj().playedItem();
         if (it)
-            ((Models::IModel *)view -> model()) -> proceedRecomendationsforItemArtist(it);
+            ((Models::IModel *)view -> model()) -> proceedRecsForArtist(it);
     }
 }
-void ToolBars::openAlbumsforItemArtist() {
-
+void ToolBars::openTracksforArtist() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedTracksFromSameArtist(it);
+    }
 }
-void ToolBars::openTracksforItemArtist() {
-
+void ToolBars::openAlbumsForArtist() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedAlbumsFromSameArtist(it);
+    }
 }
-void ToolBars::openRecomendationsforItemTags() {
-
+void ToolBars::openRecsForItemTags() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedRecsForTags(it);
+    }
 }
-void ToolBars::openRecomendationsforItemLabel() {
-
+void ToolBars::openTracksForLabel() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedTracksFromSameLabel(it);
+    }
+}
+void ToolBars::openAlbumsForLabel() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedAlbumsFromSameLabel(it);
+    }
 }
 
 void ToolBars::playerStateChanged(const PlayerState & state) {

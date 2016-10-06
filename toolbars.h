@@ -69,13 +69,14 @@ namespace Presentation {
         void itemFeaturesChanged();
 
         void loadMoreItem();
-        void openRecomendationsforItem();
-        void openRecomendationsforItemUser();
-        void openRecomendationsforItemArtist();
-        void openAlbumsforItemArtist();
-        void openTracksforItemArtist();
-        void openRecomendationsforItemTags();
-        void openRecomendationsforItemLabel();
+        void openRecsforItem();
+        void openRecsforItemUser();
+        void openRecsforItemArtist();
+        void openTracksforArtist();
+        void openAlbumsForArtist();
+        void openRecsForItemTags();
+        void openTracksForLabel();
+        void openAlbumsForLabel();
 
         void playerStateChanged(const PlayerState &);
         void onFolderDrop(const QString & name, const QString & path);
@@ -126,7 +127,8 @@ namespace Presentation {
         QAction * item_singer_album_btn;
         QAction * item_owner_btn;
         QAction * item_tags_btn;
-        QAction * item_labels_btn;
+        QAction * item_labels_song_btn;
+        QAction * item_labels_album_btn;
 
         QToolBar * highlighted;
         MetricSlider * slider;
