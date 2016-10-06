@@ -139,6 +139,11 @@ namespace Core {
             return this;
         }
 
+        QString setAttrsAsStr(const std::initializer_list<std::pair<QString, QVariant> > & params) {
+            attrs = paramsToQuery(params);
+            return toString();
+        }
+
         QString toString() {
             return QStringLiteral("%1/%2?%3").arg(
                 QString::number(source_type),

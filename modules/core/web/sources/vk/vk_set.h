@@ -139,21 +139,20 @@ namespace Core {
                     for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
                         res.insert(
                             popular_title % opt.key(),
-                            cmd_tmpl.setAttrs(
+                            cmd_tmpl.setAttrsAsStr(
                                 {
-                                    { CMD_SET_TYPE, QString::number(set_popular_tracks) },
+                                    { CMD_SET_TYPE, set_popular_tracks },
                                     { CMD_GENRE, opt.value() }
                                 }
-                            ) -> toString()
+                            )
                         );
                     }
 
-                    //FIXME: move template to macro
-                    res.insert(setTypeToStr(set_popular_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_video)));
-                    res.insert(setTypeToStr(set_feed_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_feed_video)));
-                    res.insert(setTypeToStr(set_top_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_top_video)));
-                    res.insert(setTypeToStr(set_series_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_series_video)));
-                    res.insert(setTypeToStr(set_other_video), QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_other_video)));
+                    res.insert(setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }}));
+                    res.insert(setTypeToStr(set_feed_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_feed_video }}));
+                    res.insert(setTypeToStr(set_top_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_top_video }}));
+                    res.insert(setTypeToStr(set_series_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_series_video }}));
+                    res.insert(setTypeToStr(set_other_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_other_video }}));
 
                     return res;
                 }

@@ -12,9 +12,9 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_popular_audio: return QStringLiteral("Popular audio");
-                        case set_popular_video: return QStringLiteral("Popular video");
-                        default: return QStringLiteral("Unknown");
+                        case set_popular_audio: return LSTR("Popular audio");
+                        case set_popular_video: return LSTR("Popular video");
+                        default: return LSTR("Unknown");
                     }
                 }
 
@@ -44,7 +44,7 @@ namespace Core {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
-                                            QStringLiteral("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                            LSTR("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                                             {}
                                         ),
                                         call_type_html,
@@ -77,7 +77,7 @@ namespace Core {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
-                                            QStringLiteral("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                            LSTR("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                                             {}
                                         ),
                                         call_type_html,
@@ -102,9 +102,11 @@ namespace Core {
                 }
 
                 inline QMap<QString, QString> setsList() {
+                    Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
+
                     return {
-                        {setTypeToStr(set_popular_audio),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_audio))},
-                        {setTypeToStr(set_popular_video),       QStringLiteral("%1=%2").arg(CMD_SET_TYPE, QString::number(set_popular_video))}
+                        {setTypeToStr(set_popular_audio), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_audio }})},
+                        {setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }})}
                     };
                 }
                 QJsonValue openSet(const QUrlQuery & attrs) {
