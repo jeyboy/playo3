@@ -97,7 +97,8 @@ namespace Presentation {
         QToolBar * createToolBar(const QString & name);
         QToolBar * precreateToolBar(const QString & name, bool oriented = false);
 
-        QToolBar * createItemFeaturesBar();
+        QToolBar * createSelectedItemFeaturesBar();
+        QToolBar * createPlayedItemFeaturesBar();
         QToolBar * createMediaBar();
         QToolBar * createAdditionalMediaBar();
         QToolBar * createPositionMediaBar();
@@ -118,17 +119,18 @@ namespace Presentation {
         QAction * pause_btn;
         QAction * stop_btn;
 
-        QToolBar * item_features;
+        QToolBar * pl_item_features;
+//        QToolBar * sl_item_features;
 
-        QAction * more_items_btn;
-        QAction * item_song_btn;
-        QAction * item_singer_btn;
-        QAction * item_singer_song_btn;
-        QAction * item_singer_album_btn;
-        QAction * item_owner_btn;
-        QAction * item_tags_btn;
-        QAction * item_labels_song_btn;
-        QAction * item_labels_album_btn;
+        QAction * pl_more_items_btn;
+        QAction * pl_item_song_btn;
+        QAction * pl_item_singer_btn;
+        QAction * pl_item_singer_song_btn;
+        QAction * pl_item_singer_album_btn;
+        QAction * pl_item_owner_btn;
+        QAction * pl_item_tags_btn;
+        QAction * pl_item_labels_song_btn;
+        QAction * pl_item_labels_album_btn;
 
         QToolBar * highlighted;
         MetricSlider * slider;
@@ -141,7 +143,8 @@ namespace Presentation {
         QPoint lastClickPoint;
         QMainWindow * container;
 
-        const QString toolbar_item_features_key =       LSTR("ItemFeatures");
+        const QString toolbar_pl_item_features_key =    LSTR("PlayedItemFeatures");
+        const QString toolbar_sl_item_features_key =    LSTR("SelectedItemFeatures");
         const QString toolbar_media_key =               LSTR("Media");
         const QString toolbar_media_plus_key =          LSTR("Media+");
         const QString toolbar_media_pos_key =           LSTR("Media+Position");

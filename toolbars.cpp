@@ -16,25 +16,25 @@ QMenu * ToolBars::createPopupMenu() {
     underMouseButton = qobject_cast<ToolbarUserButton *>(currentHover);
     bool isStatic = !qobject_cast<ToolBar *>(underMouseBar);
 
-    menu -> addAction(QIcon(QStringLiteral(":panel_add")), QStringLiteral("Add panel"), this, SLOT(addPanelTriggered())/*, QKeySequence("Ctrl+P")*/);
-    menu -> addAction(QIcon(QStringLiteral(":panel_remove")), QStringLiteral("Remove panel"), this, SLOT(removePanelTriggered())/*, QKeySequence("Ctrl+Shift+P")*/) -> setEnabled(!isStatic);
+    menu -> addAction(QIcon(LSTR(":panel_add")), LSTR("Add panel"), this, SLOT(addPanelTriggered())/*, QKeySequence("Ctrl+P")*/);
+    menu -> addAction(QIcon(LSTR(":panel_remove")), LSTR("Remove panel"), this, SLOT(removePanelTriggered())/*, QKeySequence("Ctrl+Shift+P")*/) -> setEnabled(!isStatic);
     menu -> addSeparator();
 
     if (underMouseBar) {
         if (underMouseBar -> isMovable()) {
-            menu -> addAction(QIcon(QStringLiteral(":locked")), QStringLiteral("Lock bar"), this, SLOT(changeToolbarMovable())/*, QKeySequence("Ctrl+L")*/);
-            menu -> addAction(QIcon(QStringLiteral(":locked")), QStringLiteral("Lock all bars"), this, SLOT(changeToolbarsMovable())/*, QKeySequence("Ctrl+O")*/);
+            menu -> addAction(QIcon(LSTR(":locked")), LSTR("Lock bar"), this, SLOT(changeToolbarMovable())/*, QKeySequence("Ctrl+L")*/);
+            menu -> addAction(QIcon(LSTR(":locked")), LSTR("Lock all bars"), this, SLOT(changeToolbarsMovable())/*, QKeySequence("Ctrl+O")*/);
         } else {
-            menu -> addAction(QIcon(QStringLiteral(":unlocked")), QStringLiteral("Unlock bar"), this, SLOT(changeToolbarMovable())/*, QKeySequence("Ctrl+L")*/);
-            menu -> addAction(QIcon(QStringLiteral(":unlocked")), QStringLiteral("Unlock all bars"), this, SLOT(changeToolbarsMovable())/*, QKeySequence("Ctrl+L")*/);
+            menu -> addAction(QIcon(LSTR(":unlocked")), LSTR("Unlock bar"), this, SLOT(changeToolbarMovable())/*, QKeySequence("Ctrl+L")*/);
+            menu -> addAction(QIcon(LSTR(":unlocked")), LSTR("Unlock all bars"), this, SLOT(changeToolbarsMovable())/*, QKeySequence("Ctrl+L")*/);
         }
 
         menu -> addSeparator();
     }
 
-    menu -> addAction(QIcon(QStringLiteral(":drop_add")), QStringLiteral("Add drop point"), this, SLOT(addPanelButtonTriggered())/*, QKeySequence("Ctrl+F")*/) -> setEnabled(!isStatic && underMouseBar);
-    menu -> addAction(QIcon(QStringLiteral(":drop_remove")), QStringLiteral("Remove drop point"), this, SLOT(removePanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
-    menu -> addAction(QIcon(QStringLiteral(":edit_remove")), QStringLiteral("Edit drop point"), this, SLOT(editPanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
+    menu -> addAction(QIcon(LSTR(":drop_add")), LSTR("Add drop point"), this, SLOT(addPanelButtonTriggered())/*, QKeySequence("Ctrl+F")*/) -> setEnabled(!isStatic && underMouseBar);
+    menu -> addAction(QIcon(LSTR(":drop_remove")), LSTR("Remove drop point"), this, SLOT(removePanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
+    menu -> addAction(QIcon(LSTR(":edit_remove")), LSTR("Edit drop point"), this, SLOT(editPanelButtonTriggered())/*, QKeySequence("Ctrl+Shift+F")*/) -> setEnabled(underMouseButton);
 
     QList<QToolBar *> bars = toolbars();
     QList<DockBar *> docs = Dockbars::obj().dockbars();
@@ -44,10 +44,10 @@ QMenu * ToolBars::createPopupMenu() {
         menu -> addSeparator();
 
     if (hasBars) {
-        QMenu * barsMenu = menu -> addMenu(QStringLiteral("Tool bars"));
+        QMenu * barsMenu = menu -> addMenu(LSTR("Tool bars"));
 
-        barsMenu -> addAction(QStringLiteral("Show all"), this, SLOT(showAll()));
-        barsMenu -> addAction(QStringLiteral("Hide all"), this, SLOT(hideAll()));
+        barsMenu -> addAction(LSTR("Show all"), this, SLOT(showAll()));
+        barsMenu -> addAction(LSTR("Hide all"), this, SLOT(hideAll()));
         barsMenu -> addSeparator();
 
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
@@ -66,10 +66,10 @@ QMenu * ToolBars::createPopupMenu() {
     if (hasDocs) {
         QMenu * docsMenu = menu -> addMenu(QStringLiteral("Tabs"));
 
-        docsMenu -> addAction(QStringLiteral("Show all"), &Dockbars::obj(), SLOT(showAll()));
-        docsMenu -> addAction(QStringLiteral("Hide all"), &Dockbars::obj(), SLOT(hideAll()));
+        docsMenu -> addAction(LSTR("Show all"), &Dockbars::obj(), SLOT(showAll()));
+        docsMenu -> addAction(LSTR("Hide all"), &Dockbars::obj(), SLOT(hideAll()));
         docsMenu -> addSeparator();
-        docsMenu -> addAction(QStringLiteral("Close all"), &Dockbars::obj(), SLOT(closeAll()));
+        docsMenu -> addAction(LSTR("Close all"), &Dockbars::obj(), SLOT(closeAll()));
         docsMenu -> addSeparator();
 
 
@@ -85,7 +85,7 @@ void ToolBars::load(const QJsonArray & bars) {
         QList<QString> barsList;
         barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_search_key
                  << toolbar_media_time_key << toolbar_media_pan_key << toolbar_media_volume_key
-                 << toolbar_item_features_key << toolbar_controls_key  << toolbar_settings_key
+                 << toolbar_pl_item_features_key << toolbar_controls_key  << toolbar_settings_key
                  << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
 
         QJsonObject obj, actionObj;
@@ -143,7 +143,7 @@ void ToolBars::save(DataStore * settings) {
                     QJsonObject curr_act;
 
                     for(QList<QAction*>::Iterator act = actions.begin(); act != actions.end(); act++) {
-                        if ((*act) -> objectName() != QStringLiteral("*Title") && QString((*act) -> metaObject() -> className()) == QStringLiteral("QWidgetAction")) {
+                        if ((*act) -> objectName() != LSTR("*Title") && QString((*act) -> metaObject() -> className()) == LSTR("QWidgetAction")) {
                             curr_act = QJsonObject();
                             button = (ToolbarUserButton *) (*bar) -> widgetForAction((*act));
 
@@ -175,8 +175,8 @@ void ToolBars::createToolbars() {
   container -> addToolBar(Qt::TopToolBarArea, createAdditionalMediaBar());
   container -> addToolBar(Qt::TopToolBarArea, createVolumeMediaBar());
   container -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
-  container -> addToolBar(Qt::TopToolBarArea, createItemFeaturesBar());
-  container -> addToolBar(Qt::BottomToolBarArea, createToolBar(QStringLiteral("Folder linker 1")));
+  container -> addToolBar(Qt::TopToolBarArea, createPlayedItemFeaturesBar());
+  container -> addToolBar(Qt::BottomToolBarArea, createToolBar(LSTR("Folder linker 1")));
   container -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
   container -> addToolBarBreak(Qt::BottomToolBarArea);
 
@@ -184,7 +184,8 @@ void ToolBars::createToolbars() {
   container -> addToolBar(Qt::BottomToolBarArea, eql);
   eql -> hide();
 
-  item_features -> hide();
+  pl_item_features -> hide();
+//  sl_item_features -> hide();
 }
 
 void ToolBars::updateBarStyle(QToolBar * bar) {
@@ -206,7 +207,7 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
 
 QToolBar * ToolBars::linkNameToToolbars(const QString & barName) {
     if (barName == toolbar_media_key)                   return createMediaBar();
-    else if (barName == toolbar_item_features_key)      return createItemFeaturesBar();
+    else if (barName == toolbar_pl_item_features_key)   return createPlayedItemFeaturesBar();
     else if (barName == toolbar_equalizer_button_key)   return createEqualizerButtonBar();
     else if (barName == toolbar_media_plus_key)         return createAdditionalMediaBar();
     else if (barName == toolbar_media_pos_key)          return createPositionMediaBar();
@@ -225,7 +226,7 @@ QToolBar * ToolBars::createToolBar(const QString & name) {
     ToolBar * ptb = new ToolBar(name, container);
 
     ptb -> setFloatable(false);
-    Settings::currentStyle -> applyProperty(ptb, "state", QStringLiteral("movable"));
+    Settings::currentStyle -> applyProperty(ptb, "state", LSTR("movable"));
 
     ptb -> setMinimumSize(60, 60);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
@@ -258,46 +259,46 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     return ptb;
 }
 
-QToolBar * ToolBars::createItemFeaturesBar() {
-    item_features = precreateToolBar(toolbar_item_features_key);
-    item_features -> setProperty(toolbar_block_mark, true);
+QToolBar * ToolBars::createPlayedItemFeaturesBar() {
+    pl_item_features = precreateToolBar(toolbar_pl_item_features_key);
+    pl_item_features -> setProperty(toolbar_block_mark, true);
 
-    item_features -> addSeparator();
-    more_items_btn = item_features -> addAction(QIcon(LSTR(":/download")), LSTR("Load more"), this, SLOT(loadMoreItem()));
-    item_features -> addSeparator();
+    pl_item_features -> addSeparator();
+    pl_more_items_btn = pl_item_features -> addAction(QIcon(LSTR(":/download")), LSTR("Load more"), this, SLOT(loadMoreItem()));
+    pl_item_features -> addSeparator();
 
-    item_song_btn = item_features -> addAction(QIcon(LSTR(":/item_song")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
-    item_singer_btn = item_features -> addAction(QIcon(LSTR(":/item_singer")), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist()));
-    item_singer_song_btn = item_features -> addAction(QIcon(LSTR(":/item_singer_song")), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist()));
-    item_singer_album_btn = item_features -> addAction(QIcon(LSTR(":/item_singer_album")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
-    item_owner_btn = item_features -> addAction(QIcon(LSTR(":/item_owner")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
-    item_tags_btn = item_features -> addAction(QIcon(LSTR(":/item_tag")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
-    item_labels_song_btn = item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
-    item_labels_album_btn = item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openAlbumsForLabel()));
+    pl_item_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_song")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
+    pl_item_singer_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer")), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist()));
+    pl_item_singer_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer_song")), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist()));
+    pl_item_singer_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer_album")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
+    pl_item_owner_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_owner")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
+    pl_item_tags_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tag")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
+    pl_item_labels_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
+    pl_item_labels_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openAlbumsForLabel()));
 
-    item_features -> adjustSize();
+    pl_item_features -> adjustSize();
 
     connect(&DataFactory::obj(), SIGNAL(itemFeaturesChanged()), this, SLOT(itemFeaturesChanged()));
 
-    return item_features;
+    return pl_item_features;
 }
 
 QToolBar * ToolBars::createMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_key);
 
-    play_btn = ptb -> addAction(QIcon(QStringLiteral(":/play")), QStringLiteral("Play"));
+    play_btn = ptb -> addAction(QIcon(LSTR(":/play")), LSTR("Play"));
     PlayerFactory::obj().registerCallback(call_in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
 
-    pause_btn = ptb -> addAction(QIcon(QStringLiteral(":/pause")), QStringLiteral("Pause"));
+    pause_btn = ptb -> addAction(QIcon(LSTR(":/pause")), LSTR("Pause"));
     PlayerFactory::obj().registerCallback(call_in, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
     pause_btn -> setVisible(false);
 
-    stop_btn = ptb -> addAction(QIcon(QStringLiteral(":/stop")), QStringLiteral("Stop"));
+    stop_btn = ptb -> addAction(QIcon(LSTR(":/stop")), LSTR("Stop"));
     PlayerFactory::obj().registerCallback(call_in, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
     stop_btn -> setVisible(false);
 
 
-    QAction * act = ptb -> addAction(QIcon(QStringLiteral(":/cycling")), QStringLiteral("Looping current track"));
+    QAction * act = ptb -> addAction(QIcon(LSTR(":/cycling")), LSTR("Looping current track"));
     act -> setCheckable(true);
     PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
 
@@ -313,18 +314,18 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_plus_key);
 
     //TODO: add del versions od buttons
-    ptb -> addAction(QIcon(QStringLiteral(":/prev")), QStringLiteral("Prev track"), &Dockbars::obj(), SLOT(playPrev()));
+    ptb -> addAction(QIcon(LSTR(":/prev")), LSTR("Prev track"), &Dockbars::obj(), SLOT(playPrev()));
 
     QIcon ico;
-    ico.addPixmap(QPixmap(QStringLiteral(":/like")), QIcon::Normal);
-    ico.addPixmap(QPixmap(QStringLiteral(":/unlike")), QIcon::Normal, QIcon::On);
+    ico.addPixmap(QPixmap(LSTR(":/like")), QIcon::Normal);
+    ico.addPixmap(QPixmap(LSTR(":/unlike")), QIcon::Normal, QIcon::On);
 
-    QAction * act = ptb -> addAction(ico, QStringLiteral("Liked"));
+    QAction * act = ptb -> addAction(ico, LSTR("Liked"));
     act -> setCheckable(true);
     connect(act, SIGNAL(triggered(bool)), &DataFactory::obj(), SLOT(changeLikeStatus(bool)));
     connect(&DataFactory::obj(), SIGNAL(likeChanged(bool)), act, SLOT(setChecked(bool)));
 
-    ptb -> addAction(QIcon(QStringLiteral(":/next")), QStringLiteral("Next track"), &Dockbars::obj(), SLOT(playNext()));
+    ptb -> addAction(QIcon(LSTR(":/next")), LSTR("Next track"), &Dockbars::obj(), SLOT(playNext()));
     ptb -> setMinimumWidth(55);
     ptb -> adjustSize();
 
@@ -377,7 +378,7 @@ QToolBar * ToolBars::createPanMediaBar() {
 QToolBar * ToolBars::createTimeMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_time_key);
 
-    TimeLabel * timeLabel = new TimeLabel(QStringLiteral("After click invert showing time") , QString(), ptb);
+    TimeLabel * timeLabel = new TimeLabel(LSTR("After click invert showing time") , QString(), ptb);
     Settings::currentStyle -> applyProperty(timeLabel, "timer", true);
     ptb -> addWidget(timeLabel);
 
@@ -393,15 +394,15 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_volume_key, true);
 
     QIcon ico;
-    ico.addPixmap(QPixmap(QStringLiteral(":/mute")), QIcon::Normal);
-    ico.addPixmap(QPixmap(QStringLiteral(":/volume")), QIcon::Normal, QIcon::On);
+    ico.addPixmap(QPixmap(LSTR(":/mute")), QIcon::Normal);
+    ico.addPixmap(QPixmap(LSTR(":/volume")), QIcon::Normal, QIcon::On);
 
-    QAction * act = ptb -> addAction(ico, QStringLiteral("Mute"));
+    QAction * act = ptb -> addAction(ico, LSTR("Mute"));
     act -> setCheckable(true);
     PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
     PlayerFactory::obj().registerCallback(call_out, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
 
-    ClickableSlider * slider = new ClickableSlider(ptb, QStringLiteral("volume"));
+    ClickableSlider * slider = new ClickableSlider(ptb, LSTR("volume"));
 
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
@@ -422,7 +423,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 QToolBar * ToolBars::createControlToolBar() {
     QToolBar * ptb = precreateToolBar(toolbar_controls_key);
 
-    ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(QStringLiteral(":/add")), ptb);
+    ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(LSTR(":/add")), ptb);
     listBtn -> setToolTip(LSTR("Create new tab"));
     connect(listBtn, SIGNAL(clicked(bool)), &Dockbars::obj(), SLOT(createNewBar()));
     connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));
@@ -439,7 +440,7 @@ QToolBar * ToolBars::createControlToolBar() {
             else { // TODO: not tested
                 if (btn -> menu())
                     menu -> addMenu(new QMenu(btn -> menu()));
-                else menu -> addAction(QStringLiteral("Connect"), api.value(), SLOT(openTab()));
+                else menu -> addAction(LSTR("Connect"), api.value(), SLOT(openTab()));
 
                 btn -> deleteLater();
             }
@@ -466,7 +467,7 @@ QToolBar * ToolBars::createControlToolBar() {
 QToolBar * ToolBars::createSearchButtonBar() {
     QToolBar * ptb = precreateToolBar(toolbar_search_key);
 
-    ptb -> addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Search"), container, SLOT(showSearchDialog()));
+    ptb -> addAction(QIcon(LSTR(":/search")), LSTR("Search"), container, SLOT(showSearchDialog()));
     ptb -> adjustSize();
 
     return ptb;
@@ -475,7 +476,7 @@ QToolBar * ToolBars::createSearchButtonBar() {
 QToolBar * ToolBars::createSettingsButtonBar() {
     QToolBar * ptb = precreateToolBar(toolbar_settings_key);
 
-    ptb -> addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("Common setting"), container, SLOT(showSettingsDialog()));
+    ptb -> addAction(QIcon(LSTR(":/settings")), LSTR("Common setting"), container, SLOT(showSettingsDialog()));
     ptb -> adjustSize();
 
     return ptb;
@@ -498,7 +499,7 @@ QToolBar * ToolBars::createEqualizerButtonBar() {
 
     QToolBar * bar = (QToolBar *)equalizer -> parent();
     QAction * act = bar -> toggleViewAction();
-    act -> setIcon(QIcon(QStringLiteral(":/equalizer")));
+    act -> setIcon(QIcon(LSTR(":/equalizer")));
     act -> setCheckable(true);
     act -> setChecked(bar -> isVisible());
     ptb -> addAction(act);
@@ -538,7 +539,7 @@ void ToolBars::panelHighlight(QAction * action) {
     }
 
     if (highlighted)
-        Settings::currentStyle -> applyProperty(highlighted, "state", QStringLiteral("lighted"));
+        Settings::currentStyle -> applyProperty(highlighted, "state", LSTR("lighted"));
 }
 
 void ToolBars::removePanelHighlight() {
@@ -639,31 +640,31 @@ void ToolBars::itemFeaturesChanged() {
 
         if (source) {
             bool has_more_items = it -> hasMoreItems();
-            more_items_btn -> setVisible(has_more_items);
+            pl_more_items_btn -> setVisible(has_more_items);
 
             bool has_item_recs = source -> hasSimillarAudioByAudio();
-            item_song_btn -> setVisible(has_item_recs);
+            pl_item_song_btn -> setVisible(has_item_recs);
 
             bool has_owner_recs = source -> hasSimillarAudioByUser();
-            item_owner_btn -> setVisible(has_owner_recs);
+            pl_item_owner_btn -> setVisible(has_owner_recs);
 
             bool has_artist_recs = source -> hasSimillarAudioByArtist();
-            item_singer_btn -> setVisible(has_artist_recs);
+            pl_item_singer_btn -> setVisible(has_artist_recs);
 
             bool has_artist_songs = source -> hasAudioFromSameArtist();
-            item_singer_song_btn -> setVisible(has_artist_songs);
+            pl_item_singer_song_btn -> setVisible(has_artist_songs);
 
             bool has_artist_albums = source -> hasAlbumsFromSameArtist();
-            item_singer_album_btn -> setVisible(has_artist_albums);
+            pl_item_singer_album_btn -> setVisible(has_artist_albums);
 
             bool has_tags_recs = source -> hasSimillarAudioByTag();
-            item_tags_btn -> setVisible(has_tags_recs);
+            pl_item_tags_btn -> setVisible(has_tags_recs);
 
             bool has_label_song_recs = source -> hasAudioFromSameLabel();
-            item_labels_song_btn -> setVisible(has_label_song_recs);
+            pl_item_labels_song_btn -> setVisible(has_label_song_recs);
 
             bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
-            item_labels_album_btn -> setVisible(has_label_album_recs);
+            pl_item_labels_album_btn -> setVisible(has_label_album_recs);
 
             show |= has_more_items || has_item_recs || has_owner_recs ||
                     has_artist_recs || has_tags_recs || has_label_song_recs ||
@@ -671,7 +672,7 @@ void ToolBars::itemFeaturesChanged() {
         }
     }
 
-    item_features -> setHidden(!show);
+    pl_item_features -> setHidden(!show);
 }
 
 void ToolBars::loadMoreItem() {
