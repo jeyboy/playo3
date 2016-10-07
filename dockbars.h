@@ -102,7 +102,7 @@ namespace Presentation {
 
         inline void createNewBar() { showViewSettingsDialog(); }
         inline void createNewBar(QString name, QUrl url) {
-            DockBar * bar = createDocBar(name, Params(dt_tree));
+            DockBar * bar = createDocBar(name, Params(Settings::obj().openDropPointInTabType()));
             QList<QUrl> urls; urls << url;
             view(bar) -> appendRows(urls);
             container -> addDockWidget(Qt::RightDockWidgetArea, bar);
