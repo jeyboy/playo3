@@ -965,10 +965,12 @@ void IModel::proceedRecsForItem(IItem * it) {
 void IModel::proceedRecsForTags(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
+    bool is_audio = it -> isAudio();
+
     if (src -> respondableTo(sf_audio_by_tag)) {
         if (it -> id().isValid()) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> tagsList().join(','), rec_tags);
-            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> tagsList().join(','), is_audio ? rec_tag_audio : rec_tag_video);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for ") % (is_audio ? LSTR("song ") : LSTR("video ")) % it -> title().toString()), bar_settings, 0, true, true);
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
@@ -1003,22 +1005,22 @@ void IModel::proceedAudioFromSameLabel(IItem * it) {
         QVariantMap labels = it -> labelsList();
 
         for(QVariantMap::Iterator label = labels.begin(); label != labels.end(); label++) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_label_audio);
-            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, label.key(), rec_label_audio);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Audio for label ") % label.value().toString()), bar_settings, 0, true, true);
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
 void IModel::proceedAlbumsFromSameLabel(IItem * it) {
-//    ISource * src = Web::Apis::source(it -> dataType());
+    ISource * src = Web::Apis::source(it -> dataType());
 
-//    if (src -> respondableTo(sf_audio_by_artist)) {
-//        QVariantMap artists = it -> artistsList();
+    if (src -> respondableTo(sf_album_by_label)) {
+        QVariantMap labels = it -> labelsList();
 
-//        for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
-//            Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist_songs);
-//            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for artist ") % artist.value().toString()), bar_settings, 0, true, true);
-//        }
-//    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+        for(QVariantMap::Iterator label = labels.begin(); label != labels.end(); label++) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, label.key(), rec_label_album);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Albums for label ") % label.value().toString()), bar_settings, 0, true, true);
+        }
+    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
 }
 
 bool IModel::insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {

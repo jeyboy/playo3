@@ -657,7 +657,7 @@ void ToolBars::itemFeaturesChanged() {
             bool has_artist_albums = source -> hasAlbumsFromSameArtist();
             pl_item_singer_album_btn -> setVisible(has_artist_albums);
 
-            bool has_tags_recs = source -> hasSimillarAudioByTag();
+            bool has_tags_recs = it -> isAudio() ? source -> hasSimillarAudioByTag() : source -> hasSimillarVideoByTag();
             pl_item_tags_btn -> setVisible(has_tags_recs);
 
             bool has_label_song_recs = source -> hasAudioFromSameLabel();
@@ -713,7 +713,7 @@ void ToolBars::openTracksforArtist() {
     if (view) {
         IItem * it = DataFactory::obj().playedItem();
         if (it)
-            ((Models::IModel *)view -> model()) -> proceedTracksFromSameArtist(it);
+            ((Models::IModel *)view -> model()) -> proceedAudioFromSameArtist(it);
     }
 }
 void ToolBars::openAlbumsForArtist() {
@@ -737,7 +737,7 @@ void ToolBars::openTracksForLabel() {
     if (view) {
         IItem * it = DataFactory::obj().playedItem();
         if (it)
-            ((Models::IModel *)view -> model()) -> proceedTracksFromSameLabel(it);
+            ((Models::IModel *)view -> model()) -> proceedAudioFromSameLabel(it);
     }
 }
 void ToolBars::openAlbumsForLabel() {

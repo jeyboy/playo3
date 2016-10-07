@@ -78,7 +78,8 @@ namespace Core {
 
     public slots:
         void openTab();
-        void openRecomendations();
+        void openAudioRecs();
+        void openVideoRecs();
         void openRelationTab();
         void openPackageTab();
     protected:

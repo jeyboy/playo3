@@ -151,7 +151,7 @@ DockBar * Dockbars::commonBar() {
 }
 
 DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs,
-        bool closable, bool addToView, SearchLimitLayers * search_settings, bool refresh)
+        bool closable, bool add_to_view, SearchLimitLayers * search_settings, bool refresh)
 {
     bool with_head = names.linkable_uid.startsWith(UID_HEAD);
     QString identifier = with_head ? names.linkable_uid : UID_HEAD % names.linkable_uid;
@@ -159,7 +159,7 @@ DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Mod
     DockBar * bar = linkedTabs.value(identifier, 0);
 
     if (!bar) {
-        bar = createDocBar(names, settings, attrs, closable, addToView, search_settings);
+        bar = createDocBar(names, settings, attrs, closable, add_to_view, search_settings);
         if (!with_head) {
             QList<QUrl> urls;
             urls << QUrl::fromLocalFile(names.linkable_uid.mid(0, names.linkable_uid.length() - 1));// remove backslash and head symbol
@@ -176,7 +176,7 @@ DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Mod
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs, bool closable, bool addToView, SearchLimitLayers * search_settings) {
+DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs, bool closable, bool add_to_view, SearchLimitLayers * search_settings) {
     DockBar * bar = createDocBar(names, closable);
     IView * view = ViewFactory::build(bar, settings, attrs);
 
@@ -190,7 +190,7 @@ DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::P
             ((SearchView *)view) -> search(*search_settings);
     }
 
-    if (addToView)
+    if (add_to_view)
         container -> addDockWidget(Qt::TopDockWidgetArea, bar);
 
     return bar;

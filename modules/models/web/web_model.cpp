@@ -30,12 +30,20 @@ void WebModel::refresh() {
             source -> audioRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
+        case rec_video: {
+            source -> videoRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
         case rec_artist: {
             source -> artistRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
         case rec_artist_audio: {
             source -> audioByArtistAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
+        case rec_artist_video: {
+            source -> videoByArtistAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
         case rec_artist_album: {
@@ -48,6 +56,14 @@ void WebModel::refresh() {
 
         case rec_label_album: {
             source -> albumByLabelAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
+        case rec_tag_audio: {
+            source -> tagsAudioRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
+        case rec_tag_video: {
+            source -> tagsVideoRecommendationsAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
         default: {}

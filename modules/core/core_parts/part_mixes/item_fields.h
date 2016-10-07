@@ -79,6 +79,8 @@ namespace Core {
         inline QVariant titlesCache() const                     { return attrs.value(JSON_TYPE_TITLE_CACHES); }
         inline QVariant error() const                           { return attrs.value(JSON_TYPE_ERROR); }
 
+        inline bool isAudio()                                   { return (attrs.value(JSON_TYPE_MEDIA_TYPE, dmt_unknow).toInt() & dmt_audio) > 0; }
+
         inline DataMediaType mediaType() const                  { return (DataMediaType)attrs.value(JSON_TYPE_MEDIA_TYPE, dmt_unknow).toInt(); }
         inline void setDataMediaType(const DataMediaType & media_type)
                                                                 { attrs[JSON_TYPE_MEDIA_TYPE] = media_type; }

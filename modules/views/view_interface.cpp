@@ -331,7 +331,7 @@ void IView::openRecsForTag() {
 }
 void IView::openTracksFromSameArtist() {
     IItem * it = mdl -> item(currentIndex());
-    mdl -> proceedTracksFromSameArtist(it);
+    mdl -> proceedAudioFromSameArtist(it);
 }
 void IView::openAlbumsFromSameArtist() {
     IItem * it = mdl -> item(currentIndex());
@@ -339,7 +339,7 @@ void IView::openAlbumsFromSameArtist() {
 }
 void IView::openTracksFromSameLabel() {
     IItem * it = mdl -> item(currentIndex());
-    mdl -> proceedTracksFromSameLabel(it);
+    mdl -> proceedAudioFromSameLabel(it);
 }
 void IView::openAlbumsFromSameLabel() {
     IItem * it = mdl -> item(currentIndex());

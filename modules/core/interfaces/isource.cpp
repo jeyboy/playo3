@@ -45,7 +45,10 @@ QToolButton * ISource::initButton(QWidget * parent) {
             menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
 
             if (hasSimillarAudioByUser())
-                menu -> addAction(QStringLiteral("Open recommendations"), this, SLOT(openRecomendations()));
+                menu -> addAction(QStringLiteral("Open audio recommendations"), this, SLOT(openAudioRecs()));
+
+            if (hasSimillarVideoByUser())
+                menu -> addAction(QStringLiteral("Open video recommendations"), this, SLOT(openVideoRecs()));
         }
         else if (is_connectable) {
             menu -> addAction(QStringLiteral("Connect"), this, SLOT(openTab()));
@@ -126,12 +129,21 @@ void ISource::openTab() {
     }
 }
 
-void ISource::openRecomendations() {
+void ISource::openAudioRecs() {
     QString user_id = userID(sf_audio_recs_by_me);
 
     Presentation::Dockbars::obj().createDocBar(
         QStringLiteral("Rec for YOU"),
-        Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_audio_user), 0, true, true
+        Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_user_audio), 0, true, true
+    );
+}
+
+void ISource::openVideoRecs() {
+    QString user_id = userID(sf_video_recs_by_me);
+
+    Presentation::Dockbars::obj().createDocBar(
+        QStringLiteral("Rec for YOU"),
+        Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_user_video), 0, true, true
     );
 }
 
