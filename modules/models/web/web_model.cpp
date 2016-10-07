@@ -42,6 +42,14 @@ void WebModel::refresh() {
             source -> albumByArtistAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 
+        case rec_label_audio: {
+            source -> audioByLabelAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
+        case rec_label_album: {
+            source -> albumByLabelAsync(sttngs.uid, new Func(this, res_slot));
+        return;}
+
         default: {}
     }
 
