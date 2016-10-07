@@ -1,8 +1,6 @@
 #ifndef VK_QUERIES_H
 #define VK_QUERIES_H
 
-// http://vk.com/support
-
 #include "vk/vk_requests.h"
 #include "modules/core/interfaces/singleton.h"
 

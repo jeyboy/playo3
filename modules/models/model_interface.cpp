@@ -208,7 +208,19 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
 
     recalcParentIndex(parent, pos, res -> eIndex, res -> eRow, url);
     res -> limitRow = res -> eRow + (parent == res -> eIndex ? list.length() - 1 : 0);
+
+    ///////////// for spoiling /////////////
+    Playlist * playlist = item<Playlist>(parent);
+    IItem * it = pos < 0 ? playlist -> lastChild() : playlist -> child(pos);
+    ///////////////////////////////////////
+
     dropProcession(parent, pos, list);
+
+    ///////////// for spoiling /////////////
+    if (it)
+        emit spoilNeeded(index(it));
+    ///////////////////////////////////////
+
     Logger::obj().endMark("Drop", "new files");
 
     return res;
