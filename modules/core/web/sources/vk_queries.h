@@ -29,11 +29,11 @@ namespace Core {
                     ThreadUtils::obj().run((Requests *)this, &Requests::userAudioRecommendations, uid, true, func);
                 }
 
-                inline void openSetAsync(const QString & cutomParams, Func * func) {
+                void openSetAsync(const QString & cutomParams, Func * func) {
                     ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
 
-                virtual void audioByArtistAsync(const QString & artist, Func * func) {
+                void audioByArtistAsync(const QString & artist, Func * func) {
                     ThreadUtils::obj().run((Requests *)this, &Requests::audioByArtist, artist, func);
                 }
             };

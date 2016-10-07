@@ -980,6 +980,11 @@ void IModel::proceedAudioFromSameArtist(IItem * it) {
     if (src -> respondableTo(sf_audio_by_artist)) {
         QVariantMap artists = it -> artistsList();
 
+        if (artists.isEmpty()) {
+            QString var_artist = it -> title().toString().split('-').first();
+            artists.insert(var_artist, var_artist);
+        }
+
         for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, artist.key(), rec_artist_audio);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Tracks from artist ") % artist.value().toString()), bar_settings, 0, true, true);
