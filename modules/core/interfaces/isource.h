@@ -62,11 +62,16 @@ namespace Core {
 
         virtual void userInfoAsync(const QString & /*user_id*/, Func * /*func*/) {}
         virtual void openSetAsync(const QString & /*set_params*/, Func * /*func*/) {}
-        virtual void artistRecommendationsAsync(const QString & /*artist_id*/, Func * /*func*/) {}
         virtual void audioRecommendationsAsync(const QString & /*track_id*/, Func * /*func*/) {}
+        virtual void videoRecommendationsAsync(const QString & /*track_id*/, Func * /*func*/) {}
         virtual void userAudioRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
         virtual void userVideoRecommendationsAsync(const QString & /*user_id*/, Func * /*func*/) {}
-        virtual void audioFromSameArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void artistRecommendationsAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void audioByArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void albumByArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void audioByLabelAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void albumByLabelAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+
 
     public slots:
         void openTab();

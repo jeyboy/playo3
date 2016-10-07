@@ -51,6 +51,8 @@ namespace Core {
         inline QVariant songId() const                          { return attrs.value(JSON_TYPE_SONG_ID); }
         inline QVariant albums() const                          { return attrs.value(JSON_TYPE_ALBUMS); }
         inline QVariantMap albumsList() const                   { return attrs.value(JSON_TYPE_ALBUMS).toMap(); }
+        inline QVariant labels() const                          { return attrs.value(JSON_TYPE_LABELS); }
+        inline QVariantMap labelsList() const                   { return attrs.value(JSON_TYPE_LABELS).toMap(); }
         inline QVariant genreId() const                         { return attrs.value(JSON_TYPE_GENRE_ID, -1); }
         inline QVariant tags()                                  { return attrs.value(JSON_TYPE_TAGS); }
         inline QStringList tagsList()                           { return attrs.value(JSON_TYPE_TAGS).toStringList(); }
@@ -99,6 +101,7 @@ namespace Core {
         inline void setArtists(const QVariantMap & ids)         { attrs[JSON_TYPE_ARTISTS] = ids; }
         inline void setSongId(const QVariant & new_song_id)     { attrs[JSON_TYPE_SONG_ID] = new_song_id; }
         inline void setAlbums(const QVariantMap & albums)       { attrs[JSON_TYPE_ALBUMS] = albums; }
+        inline void setLabels(const QVariantMap & labels)       { attrs[JSON_TYPE_LABELS] = labels; }
         inline void setGenreId(const QVariant & new_genre_id)   { attrs[JSON_TYPE_GENRE_ID] = new_genre_id; }
 
         inline void addTag(const QString & tag)                 { attrs[JSON_TYPE_TAGS] = attrs[JSON_TYPE_TAGS].toStringList() << tag; }

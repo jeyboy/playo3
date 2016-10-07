@@ -97,7 +97,7 @@ namespace Presentation {
         QToolBar * createToolBar(const QString & name);
         QToolBar * precreateToolBar(const QString & name, bool oriented = false);
 
-        QToolBar * createSelectedItemFeaturesBar();
+//        QToolBar * createSelectedItemFeaturesBar();
         QToolBar * createPlayedItemFeaturesBar();
         QToolBar * createMediaBar();
         QToolBar * createAdditionalMediaBar();

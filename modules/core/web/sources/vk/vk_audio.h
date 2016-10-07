@@ -41,7 +41,6 @@ namespace Core {
                     QJsonArray content = info.value(tkn_content).toArray();
                     return content.isEmpty() ? QJsonObject() : content[0].toObject();
                 }
-
                 QJsonValue audioInfo(const QStringList & track_ids) {
                     SourceFlags perm = permissions(sf_audio_by_id);
                     QJsonArray block_content;
@@ -307,6 +306,10 @@ namespace Core {
                     }
 
                     return prepareBlock(dmt_audio, block_content);
+                }
+
+                QJsonValue audioByArtist(const QString & artist) {
+                    return audioSearch(SearchLimit(dmt_audio, sp_artist, artist, QString()));
                 }
             };
         }

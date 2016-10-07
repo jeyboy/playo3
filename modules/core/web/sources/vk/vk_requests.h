@@ -368,6 +368,10 @@ namespace Core {
                 QJsonValue audioRecommendations(const QString & track_id, bool randomize) {
                     return QJsonArray() << Audio::audioRecommendations(track_id, randomize);
                 }
+
+                QJsonValue audioByArtist(const QString & artist) {
+                    return QJsonArray() << Audio::audioByArtist(artist);
+                }
             };
         }
     }

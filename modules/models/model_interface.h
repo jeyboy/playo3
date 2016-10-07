@@ -168,9 +168,9 @@ namespace Models {
         void proceedRecsForArtist(IItem * it);
         void proceedRecsForItem(IItem * it);
         void proceedRecsForTags(IItem * it);
-        void proceedTracksFromSameArtist(IItem * it);
+        void proceedAudioFromSameArtist(IItem * it);
         void proceedAlbumsFromSameArtist(IItem * it);
-        void proceedTracksFromSameLabel(IItem * it);
+        void proceedAudioFromSameLabel(IItem * it);
         void proceedAlbumsFromSameLabel(IItem * it);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
