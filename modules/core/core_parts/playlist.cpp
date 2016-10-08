@@ -65,14 +65,14 @@ Playlist::~Playlist() {
 void Playlist::accumulateUids(QHash<QString, IItem *> & store) {
     if (!store.isEmpty()) return;
 
-    QString item_uid;
+    QVariant item_uid;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
         if ((*it) -> isRemote()) {
             if (!(*it) -> isContainer()) {
                 item_uid = (*it) -> id();
-                if (!item_uid.isEmpty())
-                    store.insert(UID_CAT((*it), item_uid), (*it));
+                if (item_uid.isValid())
+                    store.insert(UID_CAT((*it), item_uid.toString()), (*it));
             }
         }
     }
@@ -89,9 +89,9 @@ QStringList Playlist::childrenUids(int position, int count) {
     for (int row = 0; row < count; ++row) {
         it = children.at(position);
         if (it -> isRemote()) {
-            QString item_uid = it -> toUid();
-            if (!item_uid.isEmpty())
-                uids << UID_CAT((*it), item_uid);
+            QVariant item_uid = it -> id();
+            if (item_uid.isValid())
+                uids << UID_CAT(it, item_uid.toString());
         }
     }
 
