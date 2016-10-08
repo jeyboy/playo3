@@ -63,6 +63,8 @@ Playlist::~Playlist() {
 //}
 
 void Playlist::accumulateUids(QHash<QString, IItem *> & store) {
+    if (!store.isEmpty()) return;
+
     QString item_uid;
 
     for(QList<IItem *>::Iterator it = children.begin(); it != children.end(); it++) {
