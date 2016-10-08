@@ -369,7 +369,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
 
         if (items.isEmpty()) {
             items_amount++;
-            IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
+            IItem * new_item = new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
                 JSON_HAS_KEY(itm, Vk::tkn_artist) ? JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title) : JSON_STR(itm, Vk::tkn_title),
                 owner, id,
@@ -377,11 +377,13 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
                 dm_type
             )/*, pos*/);
 
+            stores[parent].insert(uid, new_item);
+
             if (dm_type == dmt_video)
-                newItem -> setArtPath(JSON_STR(itm, Vk::tkn_video_art));
+                new_item -> setArtPath(JSON_STR(itm, Vk::tkn_video_art));
 
 //                if (itm.contains(Vk::genre_id_key))
-//                    newItem -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
+//                    new_item -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
         } else {
             for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
                 (*it_it) -> setPath(uri);
@@ -492,7 +494,7 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
 
         if (items.isEmpty()) {
             itemsAmount++;
-            IItem * newItem = new IItem(
+            IItem * new_item = new IItem(
                 parent,
                 SC_ITEM_ATTRS(id, uri,
                     JSON_STR(itm, Soundcloud::tkn_title),
@@ -503,13 +505,15 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
                 )
             );
 
+            stores[parent].insert(uid, new_item);
+
 //            Genre::instance() -> toInt(fileIterObj.value("genre").toString())
 
 //            if (itm.contains(Soundcloud::tkn_video_url))
-//                newItem -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
+//                new_item -> setVideoPath(itm.value(Soundcloud::tkn_video_url).toString());
 
             if (JSON_HAS_KEY(itm, Soundcloud::tkn_genre_id))
-                newItem -> setGenreId(JSON_INT(itm, Soundcloud::tkn_genre_id));
+                new_item -> setGenreId(JSON_INT(itm, Soundcloud::tkn_genre_id));
         } else {
             QList<IItem *>::Iterator it_it = items.begin();
 
@@ -605,7 +609,7 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
                     JSON_STR(itm, Od::tkn_name);
 
             items_amount++;
-            new IItem(parent, OD_ITEM_ATTRS(
+            IItem * new_item = new IItem(parent, OD_ITEM_ATTRS(
                 id,
                 title,
                 id,
@@ -613,6 +617,8 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
                 JSON_INT(itm, Od::tkn_size),
                 dm_type
             ));
+
+            stores[parent].insert(uid, new_item);
         } else {
             for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
                 (*it_it) -> setRefreshPath(id);
@@ -731,19 +737,21 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
                 title = title % ' ' % '(' % version % ')';
 
             items_amount++;
-            IItem * newItem = new IItem(parent, YANDEX_ITEM_ATTRS(id,
+            IItem * new_item = new IItem(parent, YANDEX_ITEM_ATTRS(id,
                 title,
                 id,
                 Duration::fromMillis(JSON_INT(itm, Yandex::tkn_duration_ms)),
                 dm_type
             ));
 
-            newItem -> setArtists(artists);
-            newItem -> setAlbums(albums);
+            stores[parent].insert(uid, new_item);
 
-            //newItem -> setGenre(genre); // need to convert genre to genre id
+            new_item -> setArtists(artists);
+            new_item -> setAlbums(albums);
+
+            //new_item -> setGenre(genre); // need to convert genre to genre id
             if (JSON_HAS_KEY(itm, Yandex::tkn_fileSize))
-                newItem -> setSize(JSON_INT(itm, Yandex::tkn_fileSize));
+                new_item -> setSize(JSON_INT(itm, Yandex::tkn_fileSize));
         }
     }
 
@@ -827,10 +835,12 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
 
         if (items.isEmpty()) {
             items_amount++;
-            IItem * newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
+            IItem * new_item = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
                 JSON_STR(snippet, LSTR("title")),
                 id
             ));
+
+            stores[parent].insert(uid, new_item);
 
             //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
 
@@ -851,8 +861,8 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
             if (!snippet.isEmpty()) {
                 qint64 durMillis = Duration::ISO8601StrtoMillis(JSON_CSTR(snippet, LSTR("duration")));
                 if (durMillis > 1200000) // 20 min
-                    newItem -> setError(ItemErrors::warn_not_permitted);
-                newItem -> setDuration(Duration::fromMillis(durMillis));
+                    new_item -> setError(ItemErrors::warn_not_permitted);
+                new_item -> setDuration(Duration::fromMillis(durMillis));
             }
         }
     }
@@ -924,34 +934,36 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
                 QString refresh_url = JSON_STR(itm, tkn_grab_refresh);
 
                 items_amount++;
-                IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
+                IItem * new_item = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
                     JSON_STR(itm, tkn_grab_title),
                     wType, refresh_url,
                     JSON_STR_DEF(itm, tkn_grab_extension, val_def_extension),
                     dm_type
                 ));
 
+                stores[parent].insert(uid, new_item);
+
                 //CHECKME: some shit written here
                 if (JSON_HAS_KEY(itm, tkn_grab_duration)) {
                     if (JSON_VAL(itm, tkn_grab_duration).isDouble())
-                        newItem -> setDuration(Duration::fromMillis(JSON_INT(itm, tkn_grab_duration)));
+                        new_item -> setDuration(Duration::fromMillis(JSON_INT(itm, tkn_grab_duration)));
                     else
-                        newItem -> setDuration(JSON_VAL(itm, tkn_grab_duration));
+                        new_item -> setDuration(JSON_VAL(itm, tkn_grab_duration));
                 }
 
                 if (JSON_HAS_KEY(itm, tkn_grab_genre_id))
-                    newItem -> setGenreId(JSON_INT(itm, tkn_grab_genre_id));
+                    new_item -> setGenreId(JSON_INT(itm, tkn_grab_genre_id));
 
                 if (JSON_HAS_KEY(itm, tkn_grab_bpm))
-                    newItem -> setBpm(JSON_INT(itm, tkn_grab_bpm));
+                    new_item -> setBpm(JSON_INT(itm, tkn_grab_bpm));
 
                 if (JSON_HAS_KEY(itm, tkn_grab_size))
-                    newItem -> setSize(Info::fromUnits(JSON_CSTR(itm, tkn_grab_size)));
+                    new_item -> setSize(Info::fromUnits(JSON_CSTR(itm, tkn_grab_size)));
 
                 if (!JSON_HAS_KEY(itm, tkn_skip_info))
-                    newItem -> setInfo(Info::str(
+                    new_item -> setInfo(Info::str(
                             JSON_STR_DEF(itm, tkn_grab_size, LSTR("?")),
-                            newItem -> extension().toString(),
+                            new_item -> extension().toString(),
                             JSON_STR_DEF(itm, tkn_grab_bitrate, LSTR("?")),
                             JSON_STR_DEF(itm, tkn_grab_discretion_rate, LSTR("?")),
                             JSON_STR_DEF(itm, tkn_grab_channels, LSTR("?"))
