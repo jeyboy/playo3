@@ -11,7 +11,7 @@ using namespace Core::Web;
 
 bool IModel::restoreUrl(IItem * itm) {
     qDebug() << "RESTORE" << itm -> title();
-    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType(), itm -> mediaType());
+    QString newUrl = Web::Apis::restoreUrl(itm -> refresh_path(), itm -> dataType(), itm -> dataMediaType());
 
     qDebug() << itm -> refresh_path() << newUrl;
     if (!newUrl.isEmpty() && newUrl != OPERATION_BLOCKED && itm -> path().toString() != newUrl) {
@@ -454,7 +454,7 @@ int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & upd
     return items_amount;
 }
 
-int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
@@ -573,7 +573,7 @@ int IModel::proceedScSet(const QJsonObject & block, Playlist * parent, int & upd
     return items_amount;
 }
 
-int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     // {"albumId":82297694950393,"duration":160,"ensemble":"Kaka 47","id":82297702323201,"masterArtistId":82297693897464,"name":"Бутылек (Cover Макс Корж)","size":6435304,"version":""}
     // {"albumId":-544493822,"duration":340,"ensemble":"Unity Power feat. Rozlyne Clarke","id":51059525931389,"imageUrl":"http://mid.odnoklassniki.ru/getImage?photoId=144184&type=2","masterArtistId":-1332246915,"name":"Eddy Steady Go (House Vocal Attack)","size":11004741}
 
@@ -678,7 +678,7 @@ int IModel::proceedOdSet(const QJsonObject & block, Playlist * parent, int & upd
     return items_amount;
 }
 
-int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
@@ -803,11 +803,12 @@ int IModel::proceedYandexSet(const QJsonObject & block, Playlist * parent, int &
 }
 
 
-int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & /*stores*/, const DataMediaType & /*fdmtype*/, const DataSubType & /*wType*/) {
+int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
     int items_amount = 0;
+    DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
 
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
@@ -859,7 +860,7 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
     return items_amount;
 }
 
-int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<QString, IItem *> * /*store*/, const DataMediaType & fdmtype, const DataSubType & wType) {
+int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
@@ -877,7 +878,6 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
 
         if (JSON_HAS_KEY(itm, tkn_media_type))
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
-
 
 
         if (dm_type & dmt_set) {
