@@ -333,7 +333,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
-    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+    QString uid_prefix = UID_CAT_EXT(wType, dm_type, QString());
 
 //    int pos = parent -> playlistsAmount();
 //    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
@@ -468,7 +468,7 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
-    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+    QString uid_prefix = UID_CAT_EXT(wType, dm_type, QString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -587,7 +587,7 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
     DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
     int items_amount = 0;
 
-    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+    QString uid_prefix = UID_CAT_EXT(wType, dm_type, QString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -694,7 +694,7 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
-    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+    QString uid_prefix = UID_CAT_EXT(wType, dm_type, QString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -821,7 +821,7 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
-    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+    QString uid_prefix = UID_CAT_EXT(wType, dm_type, QString());
 
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -925,7 +925,7 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
                 folder -> setStates(IItem::flag_not_expanded);
         } else {
             QString id = JSON_CSTR(itm, tkn_grab_id);
-            QString uid = UID_CAT_EXT(dm_type, wType, id);
+            QString uid = UID_CAT_EXT(wType, dm_type, id);
 
             QList<IItem *> items = stores[parent].values(uid);
 

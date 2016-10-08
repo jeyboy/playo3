@@ -57,8 +57,9 @@ namespace Core {
             {JSON_TYPE_STATE, DEFAULT_CONTAINER_STATE} \
         }
 
-    #define LOADABLE_CONTAINER_ATTRS(name, loadable_attrs) \
+    #define LOADABLE_CONTAINER_ATTRS(id, name, loadable_attrs) \
         {\
+            {JSON_TYPE_ID, id}, \
             {JSON_TYPE_ITEM_TYPE, dt_playlist}, \
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_CONTAINER_LOADABLE, loadable_attrs}, \

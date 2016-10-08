@@ -69,7 +69,7 @@ namespace Core {
                 curr -> setLoadableAttrs(attrs);
                 return false;
             } else {
-                curr = new Playlist(LOADABLE_CONTAINER_ATTRS(name, attrs), this, pos);
+                curr = new Playlist(LOADABLE_CONTAINER_ATTRS(uid, name, attrs), this, pos);
                 if (!uid.isEmpty())
                     curr -> setId(uid);
 
