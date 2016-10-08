@@ -27,19 +27,16 @@ namespace Core {
                         if (dir_obj.value(QStringLiteral("canPlay")).toBool()) { // check on audio fides only :(
                             QJsonObject set_obj;
 
-//                            set_obj.insert(tkn_grab_is_set, true);
+                            QString id = JSON_CSTR(dir_obj, tkn_id);
+
+                            set_obj.insert(tkn_grab_id, id);
                             set_obj.insert(tkn_media_type, dmt_any);
+                            set_obj.insert(tkn_grab_title, JSON_STR(dir_obj, tkn_name));
 
                             set_obj.insert(
                                 tkn_loadable_cmd,
-                                Cmd::build(
-                                    sourceType(), cmd_mtd_load_set_data,
-                                    {{CMD_ID, JSON_CSTR(dir_obj, LSTR("id"))}}
-                                ).toString()
+                                Cmd::build(sourceType(), cmd_mtd_load_set_data, {{CMD_ID, id}}).toString()
                             );
-
-                            set_obj.insert(tkn_grab_title, JSON_STR(dir_obj, LSTR("name")));
-//                            set_obj.insert(tkn_grab_refresh, dir_obj.value(LSTR("id")).toString());
 
                             res.append(set_obj);
                         }
@@ -55,14 +52,17 @@ namespace Core {
                         if (isAudio || isVideo) {
                             QJsonObject item_obj;
 
-                            QString name = JSON_STR(file_obj, LSTR("name")), ext;
+                            QString id = JSON_STR(file_obj, tkn_id);
+
+                            QString name = JSON_STR(file_obj, tkn_name), ext;
                             Extensions::obj().extractExtension(name, ext);
 
                             if (JSON_HAS_KEY(file_obj, LSTR("prStyle")))
                                 item_obj.insert(tkn_grab_art_url, JSON_STR(file_obj, LSTR("prStyle")));
 
+                            item_obj.insert(tkn_grab_id, id);
                             item_obj.insert(tkn_skip_info, true);
-                            item_obj.insert(tkn_grab_refresh, JSON_STR(file_obj, LSTR("id")));
+                            item_obj.insert(tkn_grab_refresh, id);
                             item_obj.insert(tkn_grab_title, name);
                             item_obj.insert(tkn_grab_extension, ext);
 

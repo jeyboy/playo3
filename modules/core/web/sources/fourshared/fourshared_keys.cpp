@@ -10,6 +10,7 @@ namespace Core {
             extern const QString tkn_category           = QStringLiteral("category");
             extern const QString tkn_query              = QStringLiteral("query");
             extern const QString tkn_download_page      = QStringLiteral("downloadPage");
+            extern const QString tkn_id                 = QStringLiteral("id");
             extern const QString tkn_name               = QStringLiteral("name");
             extern const QString tkn_size               = QStringLiteral("size");
             extern const QString tkn_genre              = QStringLiteral("genre");
