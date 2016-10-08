@@ -13,7 +13,8 @@
         tkn_id \
     )
 
-#define YANDEX_ITEM_UID(json) JSON_CSTR(json, tkn_id) % ':' % YANDEX_ITEM_ALBUM(json)
+#define YANDEX_ITEM_UID_ALB(json, album_id) JSON_CSTR(json, Yandex::tkn_id) % ':' % album_id
+#define YANDEX_ITEM_UID(json) YANDEX_ITEM_UID_ALB(json, YANDEX_ITEM_ALBUM(json))
 
 #define YANEX_STREAM_UID LSTR("uid")
 #define YANEX_STREAM_LANG LSTR("language")

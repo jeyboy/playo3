@@ -103,14 +103,14 @@ bool ItemFields::isShareable() const                         {
 
 bool ItemFields::isRemote() const { return DST_IS_WEB(dataType()); }
 
-QString ItemFields::toUid() {
-    switch(dataType()) {
-        case dt_web_vk:
-//            case dt_playlist_vk:
-            return toUid(ownerId(), id());
-        default: return id().toString();
-    }
-}
+//QString ItemFields::toUid() {
+//    switch(dataType()) {
+//        case dt_web_vk:
+////            case dt_playlist_vk:
+//            return toUid(ownerId(), id());
+//        default: return id().toString();
+//    }
+//}
 
 QString ItemFields::fullPath() const {
     return

@@ -323,7 +323,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
     return items_amount;
 }
 
-int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & /*wType*/) {
+int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
@@ -332,6 +332,8 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
 
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
+
+    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
 
 //    int pos = parent -> playlistsAmount();
 //    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
@@ -343,9 +345,10 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
         if (JSON_HAS_KEY(itm, tkn_media_type))
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
-        QString id = JSON_CSTR(itm, Vk::tkn_id);
         QString owner = JSON_CSTR(itm, Vk::tkn_owner_id);
-        QString uid = IItem::toUid(owner, id);
+        QString id = ID_TOKEN(owner, JSON_CSTR(itm, Vk::tkn_id), '_');
+        QString uid = uid_prefix % id;
+
         if (ignoreListContainUid(uid)) continue;
 
         QVariant uri;
@@ -369,7 +372,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
             IItem * newItem = new IItem(parent, VK_ITEM_ATTRS(
                 id, uri,
                 JSON_HAS_KEY(itm, Vk::tkn_artist) ? JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title) : JSON_STR(itm, Vk::tkn_title),
-                owner, uid,
+                owner, id,
                 Duration::fromSeconds(JSON_INT(itm, Vk::tkn_duration)),
                 dm_type
             )/*, pos*/);
@@ -463,6 +466,8 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
+    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
@@ -471,9 +476,10 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
         bool original = true;
-        QString id = JSON_CSTR(itm, Soundcloud::tkn_id);
         QString owner = JSON_CSTR(itm, Soundcloud::tkn_user_id);
-        QString uid = IItem::toUid(owner, id);
+        QString id = ID_TOKEN(owner, JSON_CSTR(itm, Soundcloud::tkn_id), '_');
+        QString uid = uid_prefix % id;
+
         if (ignoreListContainUid(uid)) continue;
 
         QString uri = JSON_STR(itm, Soundcloud::tkn_download_url);
@@ -577,6 +583,8 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
     DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
     int items_amount = 0;
 
+    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
@@ -585,9 +593,10 @@ int IModel::proceedOdList(const QJsonObject & block, Playlist * parent, int & /*
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
         QString id = JSON_CSTR(itm, Od::tkn_id);
-        if ((id.length() == 1 && id[0] == '0') || ignoreListContainUid(id)) continue;
+        QString uid = uid_prefix % id;
+        if ((id.length() == 1 && id[0] == '0') || ignoreListContainUid(uid)) continue;
 
-        QList<IItem *> items = stores[parent].values(id);
+        QList<IItem *> items = stores[parent].values(uid);
 
         if (items.isEmpty()) {
             QString title =
@@ -679,6 +688,8 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
+    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
         if (itm.isEmpty()) continue;
@@ -707,9 +718,10 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
 
 //        QString genre = album.value(Yandex::tkn_genre).toString();
         QString album_id = JSON_CSTR(albums_arr.first().toObject(), Yandex::tkn_id);
-        QString id = JSON_CSTR(itm, Yandex::tkn_id) % ':' % album_id;
+        QString id = YANDEX_ITEM_UID_ALB(itm, album_id); // JSON_CSTR(itm, Yandex::tkn_id) % ':' % album_id;
+        QString uid = uid_prefix % id;
 
-        QList<IItem *> items = stores[parent].values(id);
+        QList<IItem *> items = stores[parent].values(uid);
 
         if (items.isEmpty()) {
             QString title = QString(artistStr % tkn_dash % JSON_STR(itm, Yandex::tkn_title));
@@ -800,40 +812,47 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
+    QString uid_prefix = UID_CAT_EXT(dm_type, wType, QString());
+
     for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
         QJsonObject snippet = JSON_OBJ(itm, LSTR("snippet"));
         QJsonValue idVal = JSON_VAL(itm, LSTR("id"));
         QString id = idVal.isString() ? idVal.toString() : JSON_CSTR(idVal.toObject(), LSTR("videoId"));
+        QString uid = uid_prefix % id;
 
-        items_amount++;
-        IItem * newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
-            JSON_STR(snippet, LSTR("title")),
-            id
-        ));
+        QList<IItem *> items = stores[parent].values(uid);
 
-        //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
+        if (items.isEmpty()) {
+            items_amount++;
+            IItem * newItem = new IItem(parent, YOUTUBE_ITEM_ATTRS(id,
+                JSON_STR(snippet, LSTR("title")),
+                id
+            ));
+
+            //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
 
 
-        snippet = JSON_OBJ(itm, LSTR("contentDetails"));
-//        "contentDetails": {
-//            "duration": "PT3M48S",
-//            "dimension": "2d",
-//            "definition": "hd",
-//            "caption": "false",
-//            "licensedContent": true,
-//            "regionRestriction": {
-//             "blocked": [
-//              "DE"
-//             ]
-//            }
-//           }
-        if (!snippet.isEmpty()) {
-            qint64 durMillis = Duration::ISO8601StrtoMillis(JSON_CSTR(snippet, LSTR("duration")));
-            if (durMillis > 1200000) // 20 min
-                newItem -> setError(ItemErrors::warn_not_permitted);
-            newItem -> setDuration(Duration::fromMillis(durMillis));
+            snippet = JSON_OBJ(itm, LSTR("contentDetails"));
+    //        "contentDetails": {
+    //            "duration": "PT3M48S",
+    //            "dimension": "2d",
+    //            "definition": "hd",
+    //            "caption": "false",
+    //            "licensedContent": true,
+    //            "regionRestriction": {
+    //             "blocked": [
+    //              "DE"
+    //             ]
+    //            }
+    //           }
+            if (!snippet.isEmpty()) {
+                qint64 durMillis = Duration::ISO8601StrtoMillis(JSON_CSTR(snippet, LSTR("duration")));
+                if (durMillis > 1200000) // 20 min
+                    newItem -> setError(ItemErrors::warn_not_permitted);
+                newItem -> setDuration(Duration::fromMillis(durMillis));
+            }
         }
     }
 
@@ -859,6 +878,8 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
         if (JSON_HAS_KEY(itm, tkn_media_type))
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
+
+
         if (dm_type & dmt_set) {
             QString pid = JSON_STR(itm, tkn_grab_id);
             QString ptitle = JSON_STR(itm, tkn_grab_title);
@@ -877,9 +898,10 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
                     update_amount++;
 
                 int sub_update_amount = 0;
+                folder -> accumulateUids(stores[folder]);
                 int taked_amount = proceedGrabberList(
                     QJsonObject {{tkn_content, itm.value(tkn_content)}},
-                    folder, sub_update_amount, EXTRACT_MEDIA_TYPE(dm_type), wType
+                    folder, sub_update_amount, stores, EXTRACT_MEDIA_TYPE(dm_type), wType
                 );
 
                 if (JSON_HAS_KEY(itm, tkn_more_cmd))
@@ -893,43 +915,49 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
                 folder -> setStates(IItem::flag_not_expanded);
         } else {
             QString id = JSON_CSTR(itm, tkn_grab_id);
-            QString uri = JSON_STR(itm, tkn_grab_url);
-            QString refresh_url = JSON_STR(itm, tkn_grab_refresh);
+            QString uid = UID_CAT_EXT(dm_type, wType, id);
 
-            items_amount++;
-            IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
-                JSON_STR(itm, tkn_grab_title),
-                wType, refresh_url,
-                JSON_STR_DEF(itm, tkn_grab_extension, val_def_extension),
-                dm_type
-            ));
+            QList<IItem *> items = stores[parent].values(uid);
 
-            //CHECKME: some shit written here
-            if (JSON_HAS_KEY(itm, tkn_grab_duration)) {
-                if (JSON_VAL(itm, tkn_grab_duration).isDouble())
-                    newItem -> setDuration(Duration::fromMillis(JSON_INT(itm, tkn_grab_duration)));
-                else
-                    newItem -> setDuration(JSON_VAL(itm, tkn_grab_duration));
+            if (items.isEmpty()) {
+                QString uri = JSON_STR(itm, tkn_grab_url);
+                QString refresh_url = JSON_STR(itm, tkn_grab_refresh);
+
+                items_amount++;
+                IItem * newItem = new IItem(parent, WEB_ITEM_ATTRS(id, uri,
+                    JSON_STR(itm, tkn_grab_title),
+                    wType, refresh_url,
+                    JSON_STR_DEF(itm, tkn_grab_extension, val_def_extension),
+                    dm_type
+                ));
+
+                //CHECKME: some shit written here
+                if (JSON_HAS_KEY(itm, tkn_grab_duration)) {
+                    if (JSON_VAL(itm, tkn_grab_duration).isDouble())
+                        newItem -> setDuration(Duration::fromMillis(JSON_INT(itm, tkn_grab_duration)));
+                    else
+                        newItem -> setDuration(JSON_VAL(itm, tkn_grab_duration));
+                }
+
+                if (JSON_HAS_KEY(itm, tkn_grab_genre_id))
+                    newItem -> setGenreId(JSON_INT(itm, tkn_grab_genre_id));
+
+                if (JSON_HAS_KEY(itm, tkn_grab_bpm))
+                    newItem -> setBpm(JSON_INT(itm, tkn_grab_bpm));
+
+                if (JSON_HAS_KEY(itm, tkn_grab_size))
+                    newItem -> setSize(Info::fromUnits(JSON_CSTR(itm, tkn_grab_size)));
+
+                if (!JSON_HAS_KEY(itm, tkn_skip_info))
+                    newItem -> setInfo(Info::str(
+                            JSON_STR_DEF(itm, tkn_grab_size, LSTR("?")),
+                            newItem -> extension().toString(),
+                            JSON_STR_DEF(itm, tkn_grab_bitrate, LSTR("?")),
+                            JSON_STR_DEF(itm, tkn_grab_discretion_rate, LSTR("?")),
+                            JSON_STR_DEF(itm, tkn_grab_channels, LSTR("?"))
+                        )
+                    );
             }
-
-            if (JSON_HAS_KEY(itm, tkn_grab_genre_id))
-                newItem -> setGenreId(JSON_INT(itm, tkn_grab_genre_id));
-
-            if (JSON_HAS_KEY(itm, tkn_grab_bpm))
-                newItem -> setBpm(JSON_INT(itm, tkn_grab_bpm));
-
-            if (JSON_HAS_KEY(itm, tkn_grab_size))
-                newItem -> setSize(Info::fromUnits(JSON_CSTR(itm, tkn_grab_size)));
-
-            if (!JSON_HAS_KEY(itm, tkn_skip_info))
-                newItem -> setInfo(Info::str(
-                        JSON_STR_DEF(itm, tkn_grab_size, LSTR("?")),
-                        newItem -> extension().toString(),
-                        JSON_STR_DEF(itm, tkn_grab_bitrate, LSTR("?")),
-                        JSON_STR_DEF(itm, tkn_grab_discretion_rate, LSTR("?")),
-                        JSON_STR_DEF(itm, tkn_grab_channels, LSTR("?"))
-                    )
-                );
         }
     }
 
@@ -974,7 +1002,7 @@ void IModel::proceedRecsForItem(IItem * it) {
 
     if (src -> respondableTo(sf_audio_recs_by_audio)) {
         if (it -> id().isValid()) {
-            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> toUid(), rec_audio);
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> id().toString(), rec_audio);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
         }
     } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
@@ -1209,9 +1237,9 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     for(QModelIndexList::const_iterator it = indexes.begin(); it != indexes.end(); it++) {
         IItem * itm = item(*it);
         if (itm -> isShareable()) {
-            QVariant uid = itm -> toUid();
+            QVariant uid = itm -> id();
             if (uid.isValid())
-                ret = ret % QStringLiteral(" ") % QString::number(itm -> dataType()) % SHARE_DELIMITER % uid.toString();
+                ret = ret % QStringLiteral(" ") % UID_CAT(itm, uid.toString());
         }
     }
 
@@ -1221,7 +1249,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     QApplication::clipboard() -> setText(ret);
 }
 
-void IModel::importIds(const QStringList & ids) {
+void IModel::importIds(const QStringList & ids) { //TODO: fix me
     emit moveInBackgroundProcess();
     QHash<int, QStringList> uidsMap;
 

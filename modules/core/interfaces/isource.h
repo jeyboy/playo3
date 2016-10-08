@@ -16,6 +16,8 @@
 #define ISOURCE_ATTRS_KEY LSTR("attrs")
 #define OPERATION_BLOCKED LSTR("block")
 
+#define ID_TOKEN(token1, token2, sep) token1 % sep % token2
+
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {
         Q_OBJECT
@@ -74,8 +76,6 @@ namespace Core {
         virtual void albumByArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
         virtual void audioByLabelAsync(const QString & /*artist_id*/, Func * /*func*/) {}
         virtual void albumByLabelAsync(const QString & /*artist_id*/, Func * /*func*/) {}
-
-
     public slots:
         void openTab();
         void openAudioRecs();

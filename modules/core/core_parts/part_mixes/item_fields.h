@@ -11,13 +11,12 @@
 #include "modules/core/misc/file_utils/filename_conversions.h"
 #include "modules/core/misc/format.h"
 
+#define UID_CAT_EXT(data_type, media_type, uid) QString::number(data_type) % SHARE_DELIMITER % QString::number(media_type) % SHARE_DELIMITER % uid
+#define UID_CAT(item, uid) UID_CAT_EXT(item -> dataType(), item -> dataMediaType(), uid)
+
 namespace Core {
     class ItemFields : public ItemState {
     public:
-        static inline QString toUid(const QVariant & owner, const QVariant & id) {
-            return /*owner.isValid() &&*/ id.isValid() ? owner.toString() % QStringLiteral("_") % id.toString() : QString();
-        }
-
         inline ItemFields() {}
         inline virtual ~ItemFields() {}
 
@@ -140,7 +139,7 @@ namespace Core {
         bool isShareable() const;
         bool isRemote() const;
 
-        QString toUid();
+//        QString toUid();
         QUrl toUrl() const;
 
         QString fullPath() const;
