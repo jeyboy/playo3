@@ -10,13 +10,15 @@ namespace Core {
             public:
                 QString videoUrlFromId(const QString & id) {
                     return videoUrlFromPath(
-                        QStringLiteral("http://www.4shared.com/web/account/videoPreview?fileID=") % id
+                        baseUrlStr(
+                            qst_site_base, LSTR("web/account/videoPreview?fileID=") % id, {}
+                        )
                     );
                 }
 
                 QString videoUrlFromPath(const QString & path) {
                     QString res = Manager::prepare() -> getFollowed(path, siteHeaders()) -> toText();
-                    return Info::extractLimitedBy(res, QStringLiteral("file: \""), QStringLiteral("\""));
+                    return Info::extractLimitedBy(res, LSTR("file: \""), LSTR("\""));
                 }
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
@@ -44,7 +46,7 @@ namespace Core {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_search,
-                                    QStringLiteral("q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
+                                    LSTR("q/CCQD/%1/video/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
                                 ),
                                 call_type_html,
                                 rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),

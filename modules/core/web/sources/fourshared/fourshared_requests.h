@@ -267,7 +267,7 @@ namespace Core {
                         default: ;
                     }
 
-                    return res.isEmpty() ? res : res % QStringLiteral("\r\n") % cookies();
+                    return res.isEmpty() ? res : res % LSTR("\r\n") % cookies();
                 }
             };
         }
