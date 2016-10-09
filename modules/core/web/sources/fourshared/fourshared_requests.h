@@ -100,6 +100,7 @@ namespace Core {
                                 if (img)
                                     track_obj.insert(tkn_grab_art_url, img -> src());
 
+                                track_obj.insert(tkn_grab_id, name_tag -> link().section('/', 4, 4));
                                 track_obj.insert(tkn_grab_url, url);
                                 track_obj.insert(tkn_grab_refresh, name_tag -> link());
                                 track_obj.insert(tkn_skip_info, true);
@@ -129,7 +130,10 @@ namespace Core {
                                 if (img)
                                     track_obj.insert(tkn_grab_art_url, img -> src());
 
-                                track_obj.insert(tkn_grab_refresh, name_tag -> link());
+                                QString link = name_tag -> link();
+
+                                track_obj.insert(tkn_grab_id, link.section('/', 4, 4));
+                                track_obj.insert(tkn_grab_refresh, link);
                                 track_obj.insert(tkn_skip_info, true);
                                 track_obj.insert(tkn_grab_title, name);
                                 track_obj.insert(tkn_grab_extension, ext);
@@ -158,7 +162,7 @@ namespace Core {
                         {sf_compilation,        sf_site_not_api_auth},
 
                         {sf_search,             sf_site_not_api_auth},
-                        {sf_user_sociable,      sf_both_auth},
+//                        {sf_user_sociable,      sf_both_auth},
 
                         {sf_popular_audio,      sf_site_not_api_auth},
                         {sf_audio_by_id,        sf_site_not_api_auth},
