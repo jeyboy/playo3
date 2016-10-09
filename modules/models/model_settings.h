@@ -26,7 +26,7 @@ namespace Models {
     struct Params {
         Params(const Core::DataSubType & dataType = Core::dt_none, const ParamFlags & flags = mpf_auto_play_next,
             const QString & uniq_id = QString(), Core::RecType rec = Core::rec_none, const QVariantMap & configs = QVariantMap()) :
-                flags(flags), uid(uniq_id), rec_type(rec), data_type(dataType), configs(configs) { }
+                data_type(dataType), flags(flags), uid(uniq_id), rec_type(rec), configs(configs) { }
 
         Params(const QJsonObject & obj) {
             flags = (ParamFlags)obj[QStringLiteral("flags")].toInt();
@@ -71,11 +71,11 @@ namespace Models {
         bool isStreamConfigurable() { return flags & mpf_stream_configurable; }
         bool isFeedsConfigurable() { return flags & mpf_feeds_configurable; }
 
-        QVariantMap configs;
+        Core::DataSubType data_type;
         ParamFlags flags;
         QString uid;
         Core::RecType rec_type;
-        Core::DataSubType data_type;
+        QVariantMap configs;
     };
 }
 

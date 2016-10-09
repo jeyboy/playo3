@@ -639,7 +639,7 @@ void ToolBars::itemFeaturesChanged() {
         ISource * source = Web::Apis::source(it -> dataType());
 
         if (source) {
-            bool has_more_items = it -> hasMoreItems();
+            bool has_more_items = it -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
             pl_more_items_btn -> setVisible(has_more_items);
 
             bool has_item_recs = source -> hasSimillarAudioByAudio();
