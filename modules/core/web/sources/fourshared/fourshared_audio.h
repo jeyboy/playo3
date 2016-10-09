@@ -9,7 +9,11 @@ namespace Core {
             class Audio : public Base {
             public:
                 QString audioUrlFromId(const QString & id) {
-                    QUrl url = QUrl(QStringLiteral("http://www.4shared.com/web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % id);
+                    QString url = baseUrlStr(
+                        qst_site_base,
+                        LSTR("web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % id, {}
+                    );
+
                     QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
                     Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
                     return res;
@@ -45,7 +49,7 @@ namespace Core {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_search,
-                                    QStringLiteral("q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
+                                    LSTR("q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
                                 ),
                                 call_type_html,
                                 rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
