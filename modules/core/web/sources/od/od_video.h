@@ -38,6 +38,9 @@ namespace Core {
                     return QString();
                 }
 
+                QJsonValue videoSearch(const QUrlQuery & args) {
+                    return videoSearch(SearchLimit::fromICmdParams(args));
+                }
                 QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         baseUrlStr(
@@ -60,7 +63,7 @@ namespace Core {
                                 //{ LSTR("st.vqt"),       LSTR("on") }
                             }
                         ),
-                        call_type_html, pageRules(LSTR("st.page"), qMin(limits.start_offset, 1), limits.requests_limit), 0, proc_video3, QStringList(),
+                        call_type_html, pageRules(LSTR("st.page"), qMax(limits.start_offset, 1), limits.requests_limit), 0, proc_video3, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
                     );
 
