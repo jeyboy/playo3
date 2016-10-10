@@ -75,15 +75,15 @@ namespace Core {
                     QString vpl = vplToParam(pl_type);
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_video, QStringLiteral("video/%1").arg(vpl),
+                            qst_site_video, LSTR("video/%1").arg(vpl),
                             {
-                                { QStringLiteral("cmd"), QStringLiteral("VideoVitrinaMain") },
-                                { QStringLiteral("st.cmd"), QStringLiteral("userMain") },
-                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
-                                { QStringLiteral("st.vv_ft"), vpl }
+                                { LSTR("cmd"),          LSTR("VideoVitrinaMain") },
+                                { LSTR("st.cmd"),       LSTR("userMain") },
+                                { LSTR("st.vpl.mini"),  LSTR("false") },
+                                { LSTR("st.vv_ft"),     vpl }
                             }
                         ),
-                        call_type_html, tokenRules(QStringLiteral("st.lastelem"), offset_token, pages_limit), 0, proc_video1, QStringList(),
+                        call_type_html, tokenRules(LSTR("st.lastelem"), offset_token, pages_limit), 0, proc_video1, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
@@ -105,16 +105,16 @@ namespace Core {
                 QJsonValue videoByPlaylist(const QString & album_id, int pages_limit = 1, const QString & offset_token = QString(), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_video, QStringLiteral("video/%1").arg(album_id),
+                            qst_site_video, LSTR("video/%1").arg(album_id),
                             {
-                                { QStringLiteral("cmd"), QStringLiteral("VideoVitrinaMain") },
-                                { QStringLiteral("st.cmd"), QStringLiteral("userMain") },
-                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
-                                { QStringLiteral("st.vv_albumId"), album_id },
-                                { QStringLiteral("st.vv_ft"), QStringLiteral("album") }
+                                { LSTR("cmd"),              LSTR("VideoVitrinaMain") },
+                                { LSTR("st.cmd"),           LSTR("userMain") },
+                                { LSTR("st.vpl.mini"),      LSTR("false") },
+                                { LSTR("st.vv_albumId"),    album_id },
+                                { LSTR("st.vv_ft"),         LSTR("album") }
                             }
                         ),
-                        call_type_html, tokenRules(QStringLiteral("st.lastelem"), offset_token, pages_limit), 0, proc_video1, QStringList(),
+                        call_type_html, tokenRules(LSTR("st.lastelem"), offset_token, pages_limit), 0, proc_video1, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );

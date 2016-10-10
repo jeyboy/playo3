@@ -16,13 +16,13 @@ namespace Core {
 
                     QJsonArray videos = saRequest(
                         baseUrlStr(
-                            qst_site_video, QStringLiteral("video/%1").arg(uid),
+                            qst_site_video, LSTR("video/%1").arg(uid),
                             {
-                                { QStringLiteral("cmd"), QStringLiteral("PopLayerVideo") },
-                                { QStringLiteral("st.cmd"), QStringLiteral("userMain") },
-                                { QStringLiteral("st.vpl.id"), uid },
-                                { QStringLiteral("st.vpl.mi"), QStringLiteral("3") },
-                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") }
+                                { LSTR("cmd"),          LSTR("PopLayerVideo") },
+                                { LSTR("st.cmd"),       LSTR("userMain") },
+                                { LSTR("st.vpl.id"),    uid },
+                                { LSTR("st.vpl.mi"),    LSTR("3") },
+                                { LSTR("st.vpl.mini"),  LSTR("false") }
                             }
                         ),
                         call_type_html, 0, proc_video2, QStringList(),
@@ -32,16 +32,37 @@ namespace Core {
                     if (!videos.isEmpty()) {
                         int size = videos.size();
                         int video_index = size / 2 + (size > 1 ? size % 2 : 0);
-                        return videos[video_index].toObject().value(QStringLiteral("url")).toString();
+                        return videos[video_index].toObject().value(LSTR("url")).toString();
                     }
 
                     return QString();
                 }
 
                 QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
-                    QueriableResponse response;
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(
+                            qst_site_group, LSTR("search"),
+                            {
+                                { LSTR("cmd"),          LSTR("PortalSearchResults") },
+                                { LSTR("st.cmd"),       LSTR("searchResult") },
+                                { LSTR("st.mode"),      LSTR("Movie") },
+                                { LSTR("st.grmode"),    LSTR("Groups") },
+                                { LSTR("st.query"),     name },
+                                { LSTR("st.posted"),    LSTR("set") },
 
-                    //TODO: finish me
+                                // mode // VideoCompilation // 	Live
+//                                { LSTR("st.vmode"),    LSTR("VideoCompilation") },
+
+                                // duration limitations // LONG // SHORT
+//                                { LSTR("st.vln"),    LSTR("LONG") },
+
+                                // high quality
+                                //{ LSTR("st.vqt"),       LSTR("on") }
+                            }
+                        ),
+                        call_type_html, pageRules(LSTR("st.page"), qMin(limits.start_offset, 1), limits.requests_limit), 0, proc_video3, QStringList(),
+                        call_method_post, tknHeaders().unite(dntHeader())
+                    );
 
                     return prepareBlock(dmt_video, cmd_mtd_video_search, response, limits, block_params);
                 }

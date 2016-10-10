@@ -34,14 +34,14 @@ namespace Core {
                                 QString id_text = (*group) -> findFirst(".section .o") -> link();
 
                                 group_obj.insert(tkn_perma, id_text.split('/', QString::SkipEmptyParts).first());
-                                group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
+                                group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, LSTR("st.groupId="), LSTR("&")));
                                 group_obj.insert(tkn_name, (*group) -> findFirst(".caption a") -> text());
                                 Html::Tag * img = (*group) -> findFirst(".section img");
                                 if (img) {
                                     QString img_url = img -> src();
 
-                                    if (img_url.startsWith(QStringLiteral("//")))
-                                        img_url = QStringLiteral("http:") % img_url;
+                                    if (img_url.startsWith(LSTR("//")))
+                                        img_url = LSTR("http:") % img_url;
 
                                     group_obj.insert(tkn_art_url, img_url);
                                 }
@@ -62,16 +62,16 @@ namespace Core {
 
                                 QString id_text = name_link -> link();
 
-                                group_obj.insert(tkn_perma, Info::extractLimitedBy(id_text, QStringLiteral("st.referenceName="), QStringLiteral("&")));
-                                group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.groupId="), QStringLiteral("&")));
+                                group_obj.insert(tkn_perma, Info::extractLimitedBy(id_text, LSTR("st.referenceName="), LSTR("&")));
+                                group_obj.insert(tkn_id, Info::extractLimitedBy(id_text, LSTR("st.groupId="), LSTR("&")));
                                 group_obj.insert(tkn_name, name_link -> text());
 
                                 Html::Tag * img = (*group) -> findFirst(".ucard-b_img img");
                                 if (img) {
                                     QString img_url = img -> src();
 
-                                    if (img_url.startsWith(QStringLiteral("//")))
-                                        img_url = QStringLiteral("http:") % img_url;
+                                    if (img_url.startsWith(LSTR("//")))
+                                        img_url = LSTR("http:") % img_url;
 
                                     group_obj.insert(tkn_art_url, img_url);
                                 }
@@ -90,15 +90,15 @@ namespace Core {
 
                                 QString link = doc.findFirst(".media-text_a") -> link();
 
-                                group_obj.insert(tkn_id, Info::extractLimitedBy(link, QStringLiteral("st.groupId="), QStringLiteral("&")));
+                                group_obj.insert(tkn_id, Info::extractLimitedBy(link, LSTR("st.groupId="), LSTR("&")));
                                 group_obj.insert(tkn_perma, link.split('/', QString::SkipEmptyParts).first());
                                 group_obj.insert(tkn_name, doc.findFirst(".mctc_name_tx") -> text());
                                 Html::Tag * img = doc.findFirst(".add-happening_poster_img");
                                 if (img) {
                                     QString img_url = img -> src();
 
-                                    if (img_url.startsWith(QStringLiteral("//")))
-                                        img_url = QStringLiteral("http:") % img_url;
+                                    if (img_url.startsWith(LSTR("//")))
+                                        img_url = LSTR("http:") % img_url;
 
                                     group_obj.insert(tkn_art_url, img_url);
                                 }
@@ -117,15 +117,15 @@ namespace Core {
 
                                 QString id_text = name_link -> link(); // link also contains perma
 
-                                user_obj.insert(tkn_id, Info::extractLimitedBy(id_text, QStringLiteral("st.friendId="), QStringLiteral("&")));
+                                user_obj.insert(tkn_id, Info::extractLimitedBy(id_text, LSTR("st.friendId="), LSTR("&")));
                                 user_obj.insert(tkn_full_name, name_link -> text());
 
                                 Html::Tag * img = (*user) -> findFirst(".section img");
                                 if (img) {
                                     QString img_url = img -> src();
 
-                                    if (img_url.startsWith(QStringLiteral("//")))
-                                        img_url = QStringLiteral("http:") % img_url;
+                                    if (img_url.startsWith(LSTR("//")))
+                                        img_url = LSTR("http:") % img_url;
 
                                     user_obj.insert(tkn_art_url, img_url);
                                 }
@@ -150,8 +150,8 @@ namespace Core {
                                 if (img) {
                                     QString img_url = img -> src();
 
-                                    if (img_url.startsWith(QStringLiteral("//")))
-                                        img_url = QStringLiteral("http:") % img_url;
+                                    if (img_url.startsWith(LSTR("//")))
+                                        img_url = LSTR("http:") % img_url;
 
                                     user_obj.insert(tkn_art_url, img_url);
                                 }
@@ -165,7 +165,7 @@ namespace Core {
                             Html::Tag * container = doc.findFirst(".loader-container");
 
                             if (container) {
-                                QString id = container -> data(QStringLiteral("last-element"));
+                                QString id = container -> data(LSTR("last-element"));
 
                                 if (id.isEmpty())
                                    qDebug() << "OD: token is missed for token based requests";
@@ -173,9 +173,9 @@ namespace Core {
                                     arg -> prepareRequestUrlByToken(id);
                             } else {
                                 if (!doc.findFirst("#vv_main_content"))
-                                    message = QStringLiteral("OD: video loader is missed");
+                                    message = LSTR("OD: video loader is missed");
                                 else
-                                    message = QStringLiteral("OD: do not have any content");
+                                    message = LSTR("OD: do not have any content");
                             }
                             ////////////////////////////////////////////
 
@@ -184,10 +184,10 @@ namespace Core {
                             for(Html::Set::Iterator vid = video.begin(); vid != video.end(); vid++) {
                                 QJsonObject vid_obj;
 
-                                QString oid = (*vid) -> data(QStringLiteral("id"));
+                                QString oid = (*vid) -> data(tkn_id);
 
                                 if (oid.isEmpty()) { // if id is missed - then obj is set
-                                    QString album_id = (*vid) -> findFirst(".vid-card_cnt") -> data(QStringLiteral("id"));
+                                    QString album_id = (*vid) -> findFirst(".vid-card_cnt") -> data(tkn_id);
 
                                     vid_obj.insert(
                                         tkn_loadable_cmd,
@@ -199,8 +199,8 @@ namespace Core {
                                 }
 
                                 QString img_url = (*vid) -> findFirst("img") -> src();
-                                if (img_url.startsWith(QStringLiteral("//")))
-                                    img_url = QStringLiteral("http:") % img_url;
+                                if (img_url.startsWith(LSTR("//")))
+                                    img_url = LSTR("http:") % img_url;
                                 vid_obj.insert(tkn_art_url, img_url);
 
                                 vid_obj.insert(tkn_name, (*vid) -> findFirst(".vid-card_n") -> text());
@@ -215,16 +215,42 @@ namespace Core {
                             Html::Tag * video_box = doc.findFirst(".vp_video .vid-card_cnt");
 
                             if ((result = !!video_box)) {
-                                QString options = video_box -> data(QStringLiteral("options"));
+                                QString options = video_box -> data(LSTR("options"));
                                 QJsonObject opts_json = QJsonDocument::fromJson(options.toUtf8()).object();
                                 QString metadata =
-                                    opts_json.value(QStringLiteral("flashvars")).toObject()
-                                        .value(QStringLiteral("metadata")).toString();
+                                    opts_json.value(LSTR("flashvars")).toObject()
+                                        .value(LSTR("metadata")).toString();
 
                                 QJsonObject metadata_json = QJsonDocument::fromJson(metadata.toUtf8()).object();
-                                QJsonArray videos = metadata_json.value(QStringLiteral("videos")).toArray();
+                                QJsonArray videos = metadata_json.value(LSTR("videos")).toArray();
                                 arg -> append(videos);
                             }
+                        break;}
+
+                        case proc_video3: {
+                            Html::Set video = doc.find(".video-card");
+
+                            for(Html::Set::Iterator vid = video.begin(); vid != video.end(); vid++) {
+//                                qDebug() << (*(*vid));
+
+                                if (!(*vid) -> hasClass(LSTR("__channel"))) { // ignore channels
+                                    QJsonObject vid_obj;
+
+                                    vid_obj.insert(tkn_id, (*vid) -> data(tkn_id));
+
+                                    vid_obj.insert(tkn_duration, Duration::toSecs((*vid) -> findFirst(".video-card_duration") -> text()));
+
+                                    QString img_url = (*vid) -> findFirst("img") -> src();
+                                    if (img_url.startsWith(LSTR("//")))
+                                        img_url = LSTR("http:") % img_url;
+                                    vid_obj.insert(tkn_art_url, img_url);
+
+                                    vid_obj.insert(tkn_name, (*vid) -> findFirst(".video-card_n") -> text());
+                                    arg -> append(vid_obj, vid + 1 == video.end());
+                                }
+                            }
+
+                            result = !video.isEmpty();
                         break;}
 
                         default: ;
@@ -348,7 +374,7 @@ namespace Core {
                                 setSiteHash(Auth::grabHash(add_token));
                                 setSiteAdditionalToken(add_token);
                             }
-                            return QUrlQuery((QStringLiteral("gwt.requested=") % siteHash()));
+                            return QUrlQuery((LSTR("gwt.requested=") % siteHash()));
                         }
                     }
                 }
@@ -515,13 +541,13 @@ namespace Core {
                     QJsonArray artists = response.value(tkn_artists).toArray();
                     if (!artists.isEmpty()) {
                         Artist::prepareArtists(artists);
-                        blocks << prepareBlock(dmt_audio_set, artists, {{tkn_dir_name, QStringLiteral("Artists")}});
+                        blocks << prepareBlock(dmt_audio_set, artists, {{tkn_dir_name, LSTR("Artists")}});
                     }
 
                     QJsonArray albums = response.value(tkn_albums).toArray();
                     if (!albums.isEmpty()) {
                         Album::prepareAlbums(albums);
-                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, QStringLiteral("Albums")}});
+                        blocks << prepareBlock(dmt_audio_set, albums, {{tkn_dir_name, LSTR("Albums")}});
                     }
 
                     blocks << prepareBlock(dmt_audio_set, response.value(tkn_playlists));

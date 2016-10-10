@@ -16,7 +16,7 @@ namespace Core {
 
                     QJsonArray tracks = res.value(tkn_tracks).toArray();
                     if (tracks.isEmpty()) {
-                        int totalTracks = res.value(QStringLiteral("totalTracks")).toInt();
+                        int totalTracks = res.value(LSTR("totalTracks")).toInt();
                         if (totalTracks > 0) {
                             QJsonObject media = userMedia(JSON_CSTR(res, tkn_me)).toObject();
                             tracks = JSON_ARR(media, tkn_tracks);
@@ -71,17 +71,17 @@ namespace Core {
                         baseUrlStr(
                             qst_site_user, QStringLiteral("search"),
                             {
-                                { QStringLiteral("cmd"), QStringLiteral("PortalSearchResults") },
-                                { QStringLiteral("st.cmd"), QStringLiteral("searchResult") },
-                                { QStringLiteral("st.mode"), QStringLiteral("Users") },
-                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
-                                { QStringLiteral("st.grmode"), QStringLiteral("Groups") },
-                                { QStringLiteral("st.posted"), QStringLiteral("set") },
-                                { QStringLiteral("st.query"), name },
-                                { QStringLiteral("fetch"), QStringLiteral("false") },
+                                { LSTR("cmd"),          LSTR("PortalSearchResults") },
+                                { LSTR("st.cmd"),       LSTR("searchResult") },
+                                { LSTR("st.mode"),      LSTR("Users") },
+                                { LSTR("st.vpl.mini"),  LSTR("false") },
+                                { LSTR("st.grmode"),    LSTR("Groups") },
+                                { LSTR("st.posted"),    LSTR("set") },
+                                { LSTR("st.query"),     name },
+                                { LSTR("fetch"),        LSTR("false") },
                             }
                         ),
-                        call_type_html, pageRules(QStringLiteral("st.page"), offset, pages_limit), 0, proc_user1, QStringList(),
+                        call_type_html, pageRules(LSTR("st.page"), offset, pages_limit), 0, proc_user1, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
@@ -91,7 +91,7 @@ namespace Core {
 
                 QJsonValue usersById(const QString & user_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray block_content = saRequest(
-                        baseUrlStr(qst_site, QStringLiteral("profile/") % user_id, {}),
+                        baseUrlStr(qst_site, LSTR("profile/") % user_id, {}),
                         call_type_html, 0, proc_user2
                     );
 

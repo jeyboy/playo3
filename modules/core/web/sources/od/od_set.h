@@ -29,22 +29,22 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_of_collections: return QStringLiteral("Some random collections");
-                        case set_of_radio: return QStringLiteral("List of channels");
+                        case set_of_collections:        return LSTR("Some random collections");
+                        case set_of_radio:              return LSTR("List of channels");
 
-                        case set_popular_tracks: return QStringLiteral("Popular tracks");
-                        case set_popular_artists: return QStringLiteral("Popular artists");
-                        case set_popular_tuners: return QStringLiteral("Popular channels");
-                        case set_popular_collections: return QStringLiteral("Popular collections");
-                        case set_popular_albums: return QStringLiteral("Popular albums");
-                        case set_listened: return QStringLiteral("Listened");
-                        case set_downloaded: return QStringLiteral("Downloaded");
+                        case set_popular_tracks:        return LSTR("Popular tracks");
+                        case set_popular_artists:       return LSTR("Popular artists");
+                        case set_popular_tuners:        return LSTR("Popular channels");
+                        case set_popular_collections:   return LSTR("Popular collections");
+                        case set_popular_albums:        return LSTR("Popular albums");
+                        case set_listened:              return LSTR("Listened");
+                        case set_downloaded:            return LSTR("Downloaded");
 
                         default:
                             if (stype >= set_video_my)
                                 return vplToString((VideoPlaylistType)stype);
 
-                            return QStringLiteral("Unknown");
+                            return LSTR("Unknown");
                     }
                 }
 
@@ -66,7 +66,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ QStringLiteral("locale"), QStringLiteral("ru") }}
+                                    {{ LSTR("locale"), LSTR("ru") }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_artists
@@ -80,10 +80,10 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ QStringLiteral("locale"), QStringLiteral("ru") }}
+                                    {{ LSTR("locale"), LSTR("ru") }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
-                                proc_json_extract, QStringList() << QStringLiteral("tuners")
+                                proc_json_extract, QStringList() << LSTR("tuners")
                             );
 
                             prepareTuners(response.content);
@@ -94,7 +94,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ QStringLiteral("locale"), QStringLiteral("ru") }}
+                                    {{ LSTR("locale"), LSTR("ru") }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_collections
@@ -108,7 +108,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ QStringLiteral("locale"), QStringLiteral("ru") }}
+                                    {{ LSTR("locale"), LSTR("ru") }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums

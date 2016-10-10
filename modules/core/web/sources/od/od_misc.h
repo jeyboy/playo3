@@ -22,22 +22,22 @@ namespace Core {
                     inline QUrl authSidUrl() { return QUrl(baseUrlStr(qst_site, path_sid)); }
 
                     inline QString dataPageUrl() {
-                        return baseUrlStr(qst_site, QString()/*QStringLiteral("search?st.mode=Movie&st.posted=set")*/);
+                        return baseUrlStr(qst_site, QString()/*LSTR("search?st.mode=Movie&st.posted=set")*/);
                     }
 
                     inline bool hasError(const QJsonObject & obj) { return obj.contains(tkn_error); }
 
                     inline bool retryRequired(const QJsonObject & obj, QString & message) {
                         message = obj.value(tkn_error).toString();
-                        return message == QStringLiteral("error.notloggedin");
+                        return message == LSTR("error.notloggedin");
                     }
 
                     void initSession() {
                         Manager::prepare() -> postFollowed(
                             baseUrlStr(
-                                qst_site, QStringLiteral("push"),
+                                qst_site, LSTR("push"),
                                 {
-                                    { QStringLiteral("cmd"), QStringLiteral("PeriodicManager") }
+                                    { LSTR("cmd"), LSTR("PeriodicManager") }
                                 }
                             )
                         ) -> deleteLater();
@@ -61,21 +61,21 @@ namespace Core {
 
                     inline QString grabAdditionalToken(const QString & html) {
                         QRegularExpressionMatch match;
-                        if (html.indexOf(QRegularExpression(QStringLiteral("OK.tkn.set\\('([\\w-]+)'\\);")), 0, &match) > -1) {
+                        if (html.indexOf(QRegularExpression(LSTR("OK.tkn.set\\('([\\w-]+)'\\);")), 0, &match) > -1) {
                             return match.captured(1);
                         } else return QString();
                     }
 
                     inline QString grabNewAdditionalToken() {
                         return Manager::prepare() -> postFollowed(
-                            baseUrlStr(qst_site, QStringLiteral("gwtlog"), {})
+                            baseUrlStr(qst_site, LSTR("gwtlog"), {})
                         ) -> toHeader(tkn_header);
                     }
 
                     inline QString grabHash(QString & add_token) {
                         QString html = Manager::prepare() -> getFollowed(dataPageUrl()) -> toText();
                         QRegularExpressionMatch match;
-                        if (html.indexOf(QRegularExpression(QStringLiteral("gwtHash:\"(\\w+)\"")), 0, &match) > -1) {
+                        if (html.indexOf(QRegularExpression(LSTR("gwtHash:\"(\\w+)\"")), 0, &match) > -1) {
                             add_token = grabAdditionalToken(html);
                             return match.captured(1);
                         } else return QString();

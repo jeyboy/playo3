@@ -18,13 +18,13 @@ namespace Core {
                 QJsonValue groupsByUser(const QString & user_id, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                                 baseUrlStr(
-                                    qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
+                                    qst_site_group, LSTR("profile/%1/groups/mine").arg(user_id),
                                     {
-                                        { QStringLiteral("st.cmd"), QStringLiteral("userGroups") },
-                                        { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
+                                        { LSTR("st.cmd"), LSTR("userGroups") },
+                                        { LSTR("st.vpl.mini"), LSTR("false") },
                                     }
                                 ),
-                        call_type_html, pageRules(QStringLiteral("st.page"), offset, pages_limit), 0, proc_group1, QStringList(),
+                        call_type_html, pageRules(LSTR("st.page"), offset, pages_limit), 0, proc_group1, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
@@ -75,19 +75,19 @@ namespace Core {
 
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_group, QStringLiteral("search"),
+                            qst_site_group, LSTR("search"),
                             {
-                                { QStringLiteral("cmd"), QStringLiteral("PortalSearchResults") },
-                                { QStringLiteral("st.cmd"), QStringLiteral("searchResult") },
-                                { QStringLiteral("st.mode"), QStringLiteral("Groups") },
-                                { QStringLiteral("st.vpl.mini"), QStringLiteral("false") },
-                                { QStringLiteral("st.grmode"), QStringLiteral("Groups") },
-                                { QStringLiteral("st.posted"), QStringLiteral("set") },
-                                { QStringLiteral("st.query"),  name },
-                                { QStringLiteral("fetch"), QStringLiteral("false") }
+                                { LSTR("cmd"),          LSTR("PortalSearchResults") },
+                                { LSTR("st.cmd"),       LSTR("searchResult") },
+                                { LSTR("st.mode"),      LSTR("Groups") },
+                                { LSTR("st.vpl.mini"),  LSTR("false") },
+                                { LSTR("st.grmode"),    LSTR("Groups") },
+                                { LSTR("st.posted"),    LSTR("set") },
+                                { LSTR("st.query"),     name },
+                                { LSTR("fetch"),        LSTR("false") }
                             }
                         ),
-                        call_type_html, pageRules(QStringLiteral("st.page"), offset, pages_limit), 0, proc_group2, QStringList(),
+                        call_type_html, pageRules(LSTR("st.page"), offset, pages_limit), 0, proc_group2, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
 
                     );
@@ -100,7 +100,7 @@ namespace Core {
                 }
                 QJsonValue groupsByIdOrPerma(const QString & group_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QString url = Info::isNumber(group_id) ?
-                        baseUrlStr(qst_site, QStringLiteral("group/") % group_id, {}) :
+                        baseUrlStr(qst_site, LSTR("group/") % group_id, {}) :
                         baseUrlStr(qst_site, group_id, {});
 
                     QJsonArray block_content = saRequest(url, call_type_html, 0, proc_group3);
