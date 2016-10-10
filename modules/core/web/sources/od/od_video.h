@@ -47,7 +47,7 @@ namespace Core {
                                 { LSTR("st.cmd"),       LSTR("searchResult") },
                                 { LSTR("st.mode"),      LSTR("Movie") },
                                 { LSTR("st.grmode"),    LSTR("Groups") },
-                                { LSTR("st.query"),     name },
+                                { LSTR("st.query"),     limits.predicate },
                                 { LSTR("st.posted"),    LSTR("set") },
 
                                 // mode // VideoCompilation // 	Live
