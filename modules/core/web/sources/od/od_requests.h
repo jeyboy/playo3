@@ -328,9 +328,11 @@ namespace Core {
                         {sf_video_by_playlist,      sf_site_auth_only},
 
 
+                        {sf_user_sociable,          sf_site_auth_only},
                         {sf_user_by_id,             sf_site_auth_only},
                         {sf_user_by_title,          sf_site_auth_only},
 
+                        {sf_group_sociable,         sf_site_auth_only},
                         {sf_group_by_user,          sf_site_auth_only},
                         {sf_group_by_title,         sf_site_auth_only},
                         {sf_group_by_id,            sf_site_auth_only},

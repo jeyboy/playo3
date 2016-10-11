@@ -66,6 +66,7 @@ namespace Core {
                         {sf_audio_playlist_by_user,     sf_site_not_api_auth},
 
                         {sf_user_sociable,              sf_site_not_api_auth},
+                        {sf_group_sociable,             sf_site_not_api_auth},
 
                         {sf_user_by_id,                 sf_site_not_api_auth},
                         {sf_user_by_title,              sf_site_not_api_auth},
