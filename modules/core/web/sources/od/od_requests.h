@@ -432,6 +432,9 @@ namespace Core {
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
+
+                        if (JSON_HAS_KEY(obj, Web::tkn_error)) continue;
+
                         linkables << Linkable(
                             obj.value(tkn_id).toString(),
                             obj.value(tkn_full_name).toString(),
@@ -443,6 +446,8 @@ namespace Core {
                 inline void jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr) {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
+
+                        if (JSON_HAS_KEY(obj, Web::tkn_error)) continue;
 
                         linkables << Linkable(
                             obj.value(tkn_id).toString(),
