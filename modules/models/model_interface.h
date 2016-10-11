@@ -80,24 +80,29 @@ namespace Models {
             if (playlist -> hasMoreItems() && !playlist -> is(IItem::flag_in_proc)) {
                 emit moveInBackgroundProcess();
 
-                QString cmd = playlist -> isLoadable() ?  playlist -> loadableCmd() :  playlist -> fetchableCmd();
-                playlist -> setStates(IItem::flag_in_proc);
+                QVariant cmds = playlist -> isLoadable() ?  playlist -> loadableCmd() :  playlist -> fetchableCmd();
+                QVariantMap cmds_list = VAR_TO_MAP(cmds);
 
-                if (in_background) {
-                    Func * func = new Func(
-                        this,
-                        SLOT(finishSetLoading(const QJsonValue&, void*)),
-                        playlist
-                    );
+                for(QVariantMap::Iterator cmd = cmds_list.begin(); cmd != cmds_list.end(); cmd++) {
+                    playlist -> setStates(IItem::flag_in_proc);
+                    QPair<Playlist *, QString> * params = new QPair<Playlist *, QString>(playlist, cmd.key());
 
-                    ThreadUtils::obj().run(
-                        (IModel *)this,
-                        &IModel::proceedLoadable,
-                        cmd, func
-                    );
+                    if (in_background) {
+                        Func * func = new Func(
+                            this,
+                            SLOT(finishSetLoading(const QJsonValue&, void*)),
+                            params
+                        );
+
+                        ThreadUtils::obj().run(
+                            (IModel *)this,
+                            &IModel::proceedLoadable,
+                            cmd.key(), func
+                        );
+                    }
+                    else
+                        finishSetLoading(proceedLoadable(cmd.key()), params);
                 }
-                else
-                    finishSetLoading(proceedLoadable(cmd), playlist);
             }
 
             QAbstractItemModel::fetchMore(parent);

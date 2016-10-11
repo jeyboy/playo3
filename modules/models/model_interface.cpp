@@ -1383,10 +1383,14 @@ void IModel::finishingItemsAdding() {
     delete res;
 }
 
-void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
-    if (!deleted_items.containsItem(_playlist)) {
-        Playlist * playlist = (Playlist *)_playlist;
+void IModel::finishSetLoading(const QJsonValue & json, void * params) {
+    QPair<Playlist *, QString> * pars = (QPair<Playlist *, QString> *)params;
+    Playlist * playlist = pars -> first;
+    QString cmd = pars -> second;
 
+    delete pars;
+
+    if (!deleted_items.containsItem(playlist)) {
         IItem * temp_item = playlist -> child(0);
         QJsonArray blocks = json.isArray() ? json.toArray() : QJsonArray() << json.toObject();
         QString err_str = EXTRACT_ITEMS(blocks.first().toObject()).first().toObject().value(tkn_error).toString();
@@ -1394,7 +1398,7 @@ void IModel::finishSetLoading(const QJsonValue & json, void * _playlist) {
         QModelIndex pind = index(playlist);
 
         if (no_errors) {
-            playlist -> removeLoader(); // remove old loader before blocks proc
+            playlist -> removeLoader(cmd); // remove old loader before blocks proc
 
             proceedBlocks(blocks, playlist);
 

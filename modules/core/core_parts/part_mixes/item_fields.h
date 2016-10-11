@@ -14,6 +14,8 @@
 #define UID_CAT_EXT(data_type, media_type, uid) QString::number(data_type) % SHARE_DELIMITER % QString::number(media_type) % SHARE_DELIMITER % uid
 #define UID_CAT(item, uid) UID_CAT_EXT(item -> dataType(), item -> dataMediaType(), uid)
 
+#define VAR_TO_MAP(var) var.type() == QVariant::String ? QVariantMap{{var.toString(), true}} : var.toMap();
+
 namespace Core {
     class ItemFields : public ItemState {
     public:
@@ -25,23 +27,43 @@ namespace Core {
         ItemFields(const DataSubType & subType, int state = DEFAULT_ITEM_STATE);
 
         inline bool hasMoreItems() const                        { return isLoadable() || isFetchable(); }
-        inline void removeLoader()                              { //INFO: remove first valid loader
+        inline void removeLoader(const QString & cmd)           { //INFO: remove first valid loader
             if (isLoadable())
-                removeLoadability();
+                removeLoadability(cmd);
             else if (isFetchable())
-                removeFetchability();
+                removeFetchability(cmd);
         }
 
         inline QVariantMap cueMap()                             { return attrs[JSON_TYPE_CUE_MAP].toMap(); }
         inline QVariantMap takeCueMap()                         { return attrs.take(JSON_TYPE_CUE_MAP).toMap(); }
 
         inline bool isLoadable() const                          { return attrs.contains(JSON_TYPE_CONTAINER_LOADABLE); }
-        inline bool removeLoadability()                         { return attrs.remove(JSON_TYPE_CONTAINER_LOADABLE); }
-        inline QString loadableCmd()                            { return attrs[JSON_TYPE_CONTAINER_LOADABLE].toString(); }
+        inline bool removeLoadability(const QString & cmd)      {
+            QVariant cmds = attrs[JSON_TYPE_CONTAINER_LOADABLE];
+            if (cmds.type() == QVariant::String || cmds.toMap().size() == 1)
+                return attrs.remove(JSON_TYPE_CONTAINER_LOADABLE);
+
+            QVariantMap cmd_list = cmds.toMap();
+            bool res = cmd_list.remove(cmd);
+            attrs[JSON_TYPE_CONTAINER_LOADABLE] = cmd_list;
+
+            return res;
+        }
+        inline QVariant loadableCmd()                           { return attrs[JSON_TYPE_CONTAINER_LOADABLE]; }
 
         inline bool isFetchable() const                         { return attrs.contains(JSON_TYPE_CONTAINER_FETCHABLE); }
-        inline bool removeFetchability()                        { return attrs.remove(JSON_TYPE_CONTAINER_FETCHABLE); }
-        inline QString fetchableCmd()                           { return attrs[JSON_TYPE_CONTAINER_FETCHABLE].toString(); }
+        inline bool removeFetchability(const QString & cmd)     {
+            QVariant cmds = attrs[JSON_TYPE_CONTAINER_FETCHABLE];
+            if (cmds.type() == QVariant::String || cmds.toMap().size() == 1)
+                return attrs.remove(JSON_TYPE_CONTAINER_FETCHABLE);
+
+            QVariantMap cmd_list = cmds.toMap();
+            bool res = cmd_list.remove(cmd);
+            attrs[JSON_TYPE_CONTAINER_FETCHABLE] = cmd_list;
+
+            return res;
+        }
+        inline QVariant fetchableCmd()                          { return attrs[JSON_TYPE_CONTAINER_FETCHABLE]; }
 
         inline QVariant id() const                              { return attrs.value(JSON_TYPE_ID); }
         inline QVariant ownerId() const                         { return attrs.value(JSON_TYPE_OWNER_ID); }
@@ -88,8 +110,22 @@ namespace Core {
         inline void setDatatype(const DataSubType & data_type)  { attrs[JSON_TYPE_ITEM_TYPE] = data_type; }
 
         inline void setCueMap(const QVariant & map)             { attrs[JSON_TYPE_CUE_MAP] = map; }
-        inline void setLoadableAttrs(const QVariant & data)     { attrs[JSON_TYPE_CONTAINER_LOADABLE] = data; }
-        inline void setFetchableAttrs(const QVariant & data)    { attrs[JSON_TYPE_CONTAINER_FETCHABLE] = data; }
+        inline void setLoadableAttrs(const QString & data)      {
+            if (attrs.contains(JSON_TYPE_CONTAINER_LOADABLE)) {
+                QVariantMap cmds = VAR_TO_MAP(attrs[JSON_TYPE_CONTAINER_LOADABLE]);
+                cmds.insert(data, true);
+                attrs[JSON_TYPE_CONTAINER_LOADABLE] = cmds;
+            }
+            else attrs[JSON_TYPE_CONTAINER_LOADABLE] = data;
+        }
+        inline void setFetchableAttrs(const QString & data)    {
+            if (attrs.contains(JSON_TYPE_CONTAINER_FETCHABLE)) {
+                QVariantMap cmds = VAR_TO_MAP(attrs[JSON_TYPE_CONTAINER_FETCHABLE]);
+                cmds.insert(data, true);
+                attrs[JSON_TYPE_CONTAINER_FETCHABLE] = cmds;
+            }
+            else attrs[JSON_TYPE_CONTAINER_FETCHABLE] = data;
+        }
 
         inline void setId(const QVariant & newId)               { attrs[JSON_TYPE_ID] = newId; }
         inline void setOwnerId(const QVariant & new_owner_id)   { attrs[JSON_TYPE_OWNER_ID] = new_owner_id; }
