@@ -18,18 +18,15 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType sourceType() const { return dt_web_od; }
 
-                inline void userAudioRecommendationsAsync(Func * func) {
+                void userAudioRecommendationsAsync(const QString & /*user_id*/, Func * func) {
                     ThreadUtils::obj().run((Audio *)this, &Audio::userAudioRecommendations, func);
                 }
 
-                void userInfoAsync(const QString & uid, Func * func) {
-                    if (uid == userID())
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, func);
-                    else
-                        ThreadUtils::obj().run((Requests *)this, &Requests::userMedia, uid, func);
+                void userInfoAsync(const QString & user_id, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
                 }
 
-                inline void openSetAsync(const QString & cutomParams, Func * func) {
+                void openSetAsync(const QString & cutomParams, Func * func) {
                     ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
                 }
             };

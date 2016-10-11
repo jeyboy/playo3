@@ -526,19 +526,22 @@ namespace Core {
                     return blocks;
                 }
 
-                QJsonValue userInfo() {
-                    QJsonObject res = User::userInfo().toObject();
+                QJsonValue userInfo(const QString & user_id) {
+                    if (user_id == userID()) {
+                        QJsonObject res = User::userInfo().toObject();
 
-                    clearFriends();
-                    jsonToUsers(Friendable::linkables, res.value(tkn_friends).toArray());
+                        clearFriends();
+                        jsonToUsers(Friendable::linkables, res.value(tkn_friends).toArray());
 
-                    clearGroups();
-                    QJsonObject groups_res = groupsByUser(userID()).toObject();
-                    jsonToGroups(Groupable::linkables, EXTRACT_ITEMS(groups_res));
+                        clearGroups();
+                        QJsonObject groups_res = groupsByUser(userID()).toObject();
+                        jsonToGroups(Groupable::linkables, EXTRACT_ITEMS(groups_res));
 
-                    return QJsonArray()
-                        << prepareBlock(dmt_audio_set, res.value(tkn_playlists))
-                        << prepareBlock(dmt_audio, res.value(tkn_tracks));
+                        return QJsonArray()
+                            << prepareBlock(dmt_audio_set, res.value(tkn_playlists))
+                            << prepareBlock(dmt_audio, res.value(tkn_tracks));
+                    }
+                    else return userMedia(user_id);
                 }
 
                 QJsonValue userMedia(const QString & user_id) {
