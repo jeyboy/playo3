@@ -16,7 +16,7 @@ namespace Core {
                 inline QString name() const { return val_name; }
                 inline DataSubType sourceType() const { return dt_web_sc; }
 
-                inline void objectInfoAsync(const QString & oid, Func * func) {
+                inline void userInfoAsync(const QString & oid, Func * func) {
                     ThreadUtils::obj().run((Requests *)this, &Requests::objectInfo, oid, func);
                 }
 

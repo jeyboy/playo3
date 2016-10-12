@@ -4,6 +4,7 @@
 namespace Core {
     enum RecType {
         rec_none = 0,
+        rec_obj_info,
         rec_user_audio,
         rec_user_video,
         rec_audio,

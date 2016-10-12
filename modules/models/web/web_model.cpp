@@ -10,7 +10,7 @@ void WebModel::refresh() {
     const char * res_slot = SLOT(proceedJson(QJsonValue &));
 
     switch(sttngs.rec_type) {
-        case rec_none: {
+        case rec_obj_info: {
             source -> userInfoAsync(sttngs.uid, new Func(this, res_slot));
         return;}
 

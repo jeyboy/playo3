@@ -157,7 +157,7 @@ void ISource::openRelationTab() {
                 QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
                 uidStr(dialog_params)
             ),
-            Models::Params(sourceType(), Models::mpf_auto_play_next, dialog_params), 0, true, true
+            Models::Params(sourceType(), Models::mpf_auto_play_next, dialog_params, rec_obj_info), 0, true, true
         );
     }
 }
