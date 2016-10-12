@@ -7,6 +7,8 @@
 #include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/sociable/sociable.h"
 
+#define EMPTY_RESULT_MESSAGE LSTR("Did not found anything")
+
 namespace Ui { class RelationsDialog; }
 using namespace Core;
 

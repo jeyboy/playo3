@@ -99,7 +99,7 @@ void RelationsDialog::on_friendById_clicked() {
     QList<Linkable> friends = api -> findFriendsById(ui -> friendId -> text());
     if (friends.isEmpty()) {
         ui -> errorStr -> setVisible(true);
-        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+        ui -> errorStr -> setText(EMPTY_RESULT_MESSAGE);
     }
     else prepareLinkablesList(friends, ui -> friendsList);
 }
@@ -111,7 +111,7 @@ void RelationsDialog::on_friendByName_clicked() {
 
     if (friends.isEmpty()) {
         ui -> errorStr -> setVisible(true);
-        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+        ui -> errorStr -> setText(EMPTY_RESULT_MESSAGE);
     }
     else prepareLinkablesList(friends, ui -> friendsList);
 }
@@ -123,7 +123,7 @@ void RelationsDialog::on_groupById_clicked() {
 
     if (groups.isEmpty()) {
         ui -> errorStr -> setVisible(true);
-        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+        ui -> errorStr -> setText(EMPTY_RESULT_MESSAGE);
     }
     else prepareLinkablesList(groups, ui -> groupsList);
 }
@@ -134,7 +134,7 @@ void RelationsDialog::on_groupByName_clicked() {
     QList<Linkable> groups = api -> findGroupsByName(ui -> groupName -> text());
     if (groups.isEmpty()) {
         ui -> errorStr -> setVisible(true);
-        ui -> errorStr -> setText(QStringLiteral("Not found anything"));
+        ui -> errorStr -> setText(EMPTY_RESULT_MESSAGE);
     }
     else prepareLinkablesList(groups, ui -> groupsList);
 }
