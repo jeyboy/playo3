@@ -15,7 +15,7 @@ namespace Controls {
     class MetricSlider : public ClickableSlider {
         Q_OBJECT
     public:
-        MetricSlider(QWidget * parent = 0, bool showPosition = true);
+        MetricSlider(QWidget * parent = 0, bool showPosition = true, int default_value = -1);
 
         inline void setMinimum(int min) {
             ClickableSlider::setMinimum(min);

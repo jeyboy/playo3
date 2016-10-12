@@ -2,6 +2,8 @@
 #define CLICKABLE_SLIDER_H
 
 #include <qslider.h>
+#include <qmenu.h>
+#include <qevent.h>
 
 #include "modules/controls/slider_style.h"
 
@@ -11,8 +13,12 @@ namespace Controls {
 
         SliderStyle * slider_style;
         QString rule;
+
+        int default_value;
+    protected:
+        void contextMenuEvent(QContextMenuEvent * event);
     public:
-        ClickableSlider(QWidget * parent = 0, QString css_rule = QString());
+        ClickableSlider(int default_value = -1, QWidget * parent = 0, const QString & css_rule = QString());
         ~ClickableSlider() { delete slider_style; }
     public slots:
         void setValueSilently(int val) {
@@ -22,6 +28,7 @@ namespace Controls {
         }
     protected slots:
         void valieChanged(int newVal);
+        void toDefault();
     };
 }
 

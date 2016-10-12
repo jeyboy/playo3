@@ -5,7 +5,7 @@
 
 using namespace Controls;
 
-MetricSlider::MetricSlider(QWidget * parent, bool showPosition) : ClickableSlider(parent)
+MetricSlider::MetricSlider(QWidget * parent, bool showPosition, int default_value) : ClickableSlider(default_value, parent)
   , show_position(showPosition), show_mini_progress(true)
   , spacing(30), point_radius(2) {
 

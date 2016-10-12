@@ -28,20 +28,22 @@ namespace Core {
 
                     layout -> addWidget(new QLabel(LSTR("Mood"), block), 0, 0, 1, col_span, Qt::AlignCenter);
                     layout -> addWidget(new QLabel(LSTR("Calmly"), block), 1, 0);
-                    Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(block);
+                    int curr_mood = config_hash[YANEX_STREAM_MOOD].toInt();
+                    Controls::ClickableSlider * mood_slider = new Controls::ClickableSlider(curr_mood, block);
                     mood_slider -> setRange(1, 4);
                     mood_slider -> setOrientation(Qt::Horizontal);
-                    mood_slider -> setValue(config_hash[YANEX_STREAM_MOOD].toInt());
+                    mood_slider -> setValue(curr_mood);
                     layout -> addWidget(mood_slider, 1, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("Cheerful"), block), 1, col_span - 1);
                     elems.insert(YANEX_STREAM_MOOD, mood_slider);
 
                     layout -> addWidget(new QLabel(LSTR("Energy"), block), 2, 0, 1, col_span, Qt::AlignCenter);
                     layout -> addWidget(new QLabel(LSTR("Less"), block), 3, 0);
-                    Controls::ClickableSlider * energy_slider = new Controls::ClickableSlider(block);
+                    int curr_energy = config_hash[YANEX_STREAM_ENERGY].toInt();
+                    Controls::ClickableSlider * energy_slider = new Controls::ClickableSlider(curr_energy, block);
                     energy_slider -> setRange(1, 4);
                     energy_slider -> setOrientation(Qt::Horizontal);
-                    energy_slider -> setValue(config_hash[YANEX_STREAM_ENERGY].toInt());
+                    energy_slider -> setValue(curr_energy);
                     layout -> addWidget(energy_slider, 3, 1, 1, 4);
                     layout -> addWidget(new QLabel(LSTR("More"), block), 3, col_span - 1);
                     elems.insert(YANEX_STREAM_ENERGY, energy_slider);

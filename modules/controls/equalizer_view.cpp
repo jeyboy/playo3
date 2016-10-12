@@ -44,7 +44,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
         layout -> addWidget(dbLabel, 0, num, Qt::AlignCenter);
         dbOutput << dbLabel;
 
-        ClickableSlider * slider = new ClickableSlider(this);
+        ClickableSlider * slider = new ClickableSlider(0, this);
         slider -> setOrientation(Qt::Vertical);
         slider -> setMinimum(EQ_MIN_INTERVAL); slider -> setMaximum(EQ_MAX_INTERVAL);
         slider -> setProperty("num", num);
@@ -173,10 +173,9 @@ void EqualizerView::presetTypeChanged() {
 void EqualizerView::presetChanged(QString name) {
     presetChanging = true;
     QList<ClickableSlider *> sliders = findChildren<ClickableSlider *>();
-    QList<ClickableSlider *>::Iterator slider = sliders.begin();
     QMap<int, int> gains = presets.value(name);
 
-    for(; slider != sliders.end(); slider++)
+    for(QList<ClickableSlider *>::Iterator slider = sliders.begin(); slider != sliders.end(); slider++)
         (*slider) -> setValue(gains.value((*slider) -> property("num").toInt()));
     presetChanging = false;
 }
