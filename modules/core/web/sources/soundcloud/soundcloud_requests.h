@@ -30,12 +30,12 @@ namespace Core {
                 //                }
 
                 Requests() {
-                    setSociableLimitations(true, true, true, true);
+                    setSociableLimitations(true, true, false, false/*true, true*/);
 
                     flags = {
                         {sf_endpoint, (SourceFlags)(
                             sf_offline_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track |
-                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable | sf_sociable)
+                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable | sf_user/*sf_sociable*/)
                         },
 
 //                        {sf_feed,                   sf_site},
@@ -66,17 +66,17 @@ namespace Core {
                         {sf_audio_playlist_by_user,     sf_site_not_api_auth},
 
                         {sf_user_sociable,              sf_site_not_api_auth},
-                        {sf_group_sociable,             sf_site_not_api_auth},
+//                        {sf_group_sociable,             sf_site_not_api_auth},
 
                         {sf_user_by_id,                 sf_site_not_api_auth},
                         {sf_user_by_title,              sf_site_not_api_auth},
                         {sf_user_by_likes,              sf_site_not_api_auth},
                         {sf_user_by_audio_repost,       sf_site_not_api_auth},
 
-                        {sf_group_by_user,              sf_site_not_api_auth},
-                        {sf_group_by_title,             sf_site_not_api_auth},
-                        {sf_group_by_id,                sf_site_not_api_auth},
-                        {sf_group_by_audio,             sf_site}
+//                        {sf_group_by_user,              sf_site_not_api_auth},
+//                        {sf_group_by_title,             sf_site_not_api_auth},
+//                        {sf_group_by_id,                sf_site_not_api_auth},
+//                        {sf_group_by_audio,             sf_site}
                     };
                 }
                 inline virtual ~Requests() {}

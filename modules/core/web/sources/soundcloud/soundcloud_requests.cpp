@@ -8,14 +8,13 @@ void Requests::jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) 
     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
         QJsonObject obj = (*obj_iter).toObject();
 
-        QString full_name = obj.value(tkn_full_name).toString();
-        QString perma = obj.value(tkn_permalink).toString();
+        QString full_name = JSON_STR(obj, tkn_full_name);
 
         linkables << Linkable(
-            QString::number(obj.value(tkn_id).toInt()),
-            full_name.isEmpty() ? obj.value(tkn_username).toString() : full_name,
-            perma,
-            obj.value(tkn_avatar_url).toString()
+            JSON_CSTR(obj, tkn_id),
+            full_name.isEmpty() ? JSON_STR(obj, tkn_username) : full_name,
+            JSON_STR(obj, tkn_permalink),
+            JSON_STR(obj, tkn_avatar_url)
         );
     }
 }
@@ -27,10 +26,10 @@ void Requests::jsonToGroups(QList<Linkable> & linkables, const QJsonArray & arr)
         QJsonObject obj = (*obj_iter).toObject();
 
         linkables << Linkable(
-            QString::number(obj.value(tkn_id).toInt()),
-            obj.value(QStringLiteral("name")).toString(),
-            obj.value(tkn_permalink).toString(),
-            obj.value(tkn_artwork_url).toString()
+            JSON_CSTR(obj, tkn_id),
+            JSON_STR(obj, LSTR("name")),
+            JSON_STR(obj, tkn_permalink),
+            JSON_STR(obj, tkn_artwork_url)
         );
     }
 }
