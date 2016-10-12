@@ -37,9 +37,11 @@ public:
 
 public slots:
 //    void outputActiveItem(ModelItem *, ModelItem *);
-    void receiveMessage(QString);
+    void receiveMessage(const QString &);
 
 private slots:
+     void playedItemChanged(const QString &, const QString &);
+
     void messa(const QString & str) {
         qDebug() << "MESSA" << str;
     }
@@ -63,6 +65,7 @@ private:
     Ui::Playo * ui;
 
     Core::DataStore * settings;
+    Tray * tray;
 };
 
 #endif // PLAYO_H

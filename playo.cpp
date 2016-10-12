@@ -34,6 +34,8 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //safe usage of pointers
 //    QPointer dlg = new SomeDialog( this );
+
+
 }
 
 Playo::~Playo() {
@@ -43,11 +45,12 @@ Playo::~Playo() {
 
 void Playo::activation() {
     Settings::obj().anchorWidget(this);
-    new Tray(this);
+    tray = new Tray(this);
     UserDialogBox::obj(); // link dialog with current thread
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
     PlayerFactory::obj().build(this, bass_player); // initiate default player for correct settings initialization
+    connect(&DataFactory::obj(), SIGNAL(playedItemChanged(QString,QString)), this, SLOT(playedItemChanged(QString,QString)));
 }
 
 void Playo::initialization() {
@@ -88,7 +91,6 @@ void Playo::initialization() {
     if (objState.isValid())
         restoreState(objState.toByteArray());
     ///////////////////////////////////////////////////////////
-//    connect(Player::instance(), SIGNAL(itemChanged(ModelItem *, ModelItem *)), this, SLOT(outputActiveItem(ModelItem *, ModelItem *)));
     Dockbars::obj().updateActiveTabIcon();
 
     if (stateSettings.value(SETTINGS_WINDOW_MAXIMIZED_KEY).toBool()) {
@@ -167,7 +169,7 @@ void Playo::dropEvent(QDropEvent * event) {
 ///SLOTS
 /////////////////////////////////////////////////////////////////////////////////////
 
-void Playo::receiveMessage(QString message) {
+void Playo::receiveMessage(const QString & message) {
     Logger::obj().write(LSTR("Main"), LSTR("receiveMessage"));
     QStringList list = message.split('|', QString::SkipEmptyParts);
     QList<QUrl> urls;
@@ -205,17 +207,20 @@ void Playo::showSettingsDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         ToolBars::obj().updateMetricSliders();
         ToolBars::obj().setIconsSize(Settings::obj().toolIconSize());
-        ToolBars::obj().getSpectrum() -> updateColors();
-        ToolBars::obj().getSpectrum() -> changeBandCount();
-        ToolBars::obj().getSpectrum() -> changeHeight(Settings::obj().spectrumHeight());
-        ToolBars::obj().getSpectrum() -> changeType(Settings::obj().spectrumType());
+        ToolBars::obj().getSpectrum() -> updateSettings();
         DataFactory::obj().currPlayer() -> spectrumFreq(Settings::obj().spectrumFreqRate());
         setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
         Dockbars::obj().updateAllViews();
     }
 }
 
-//void MainWindow::outputActiveItem(ModelItem *, ModelItem * to) {
-//    if (to && !this -> isActiveWindow())
-//        m_tray.showMessage("(" + QString::number(ui -> tabber -> currentTab() -> getView() -> itemsCount()) + ") Now played:", to -> data(TITLEID).toString(), QSystemTrayIcon::Information, 20000);
-//}
+void Playo::playedItemChanged(const QString & prev, const QString & next) {
+    // "(" + QString::number(ui -> tabber -> currentTab() -> getView() -> itemsCount()) + ")
+    if (!next.isEmpty() && !isActiveWindow())
+        tray -> showMessage(
+            prev.isEmpty() ? QString() : LSTR("End playing: ") % prev,
+            (prev.isEmpty() ? LSTR("Playing: ") : LSTR("Next: ")) % next,
+            QSystemTrayIcon::Information,
+            20000
+        );
+}

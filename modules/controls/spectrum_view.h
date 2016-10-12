@@ -25,6 +25,13 @@ namespace Controls  {
         inline void setBarsView()      { changeType(bars); }
         inline void setSplitBarsView() { changeType(split_bars); }
 
+        void updateSettings() {
+            updateColors();
+            changeBandCount();
+            changeHeight(Settings::obj().spectrumHeight());
+            changeType(Settings::obj().spectrumType());
+        }
+
         void updateColors();
         void changeType(SpectrumType);
         void changeBandCount();

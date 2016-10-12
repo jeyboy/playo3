@@ -20,10 +20,7 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));
 
-    updateColors();
-    changeBandCount();
-    changeHeight(Settings::obj().spectrumHeight());
-    changeType(Settings::obj().spectrumType());
+    updateSettings();
     onMovableChanged(isMovable());
 }
 
