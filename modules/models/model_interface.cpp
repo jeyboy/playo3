@@ -479,7 +479,8 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
 
         bool original = true;
         QString owner = JSON_CSTR(itm, Soundcloud::tkn_user_id);
-        QString id = ID_TOKEN(owner, JSON_CSTR(itm, Soundcloud::tkn_id), '_');
+        QString refresh_id = JSON_CSTR(itm, Soundcloud::tkn_id);
+        QString id = ID_TOKEN(owner, refresh_id, '_');
         QString uid = uid_prefix % id;
 
         if (ignoreListContainUid(uid)) continue;
@@ -496,7 +497,7 @@ int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*
             itemsAmount++;
             IItem * new_item = new IItem(
                 parent,
-                SC_ITEM_ATTRS(id, uri,
+                SC_ITEM_ATTRS(id, refresh_id, uri,
                     JSON_STR(itm, Soundcloud::tkn_title),
                     owner,
                     Duration::fromMillis(JSON_INT(itm, Soundcloud::tkn_duration)),

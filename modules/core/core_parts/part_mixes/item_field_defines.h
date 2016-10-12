@@ -140,7 +140,7 @@ namespace Core {
             {JSON_TYPE_MEDIA_TYPE, dmt_video} \
         }
 
-    #define SC_ITEM_ATTRS(id, uri, name, owner, duration, extension, media_type) \
+    #define SC_ITEM_ATTRS(id, refresh_path, uri, name, owner, duration, extension, media_type) \
         {\
             {JSON_TYPE_TITLE, name}, \
             {JSON_TYPE_ID, id}, \
@@ -151,7 +151,7 @@ namespace Core {
             {JSON_TYPE_DURATION, duration}, \
             {JSON_TYPE_EXTENSION, extension}, \
             {JSON_TYPE_MEDIA_TYPE, media_type}, \
-            {JSON_TYPE_REFRESH_PATH, id} \
+            {JSON_TYPE_REFRESH_PATH, refresh_path} \
         }
 
     #define OD_ITEM_ATTRS(id, name, refresh, duration, size, media_type) \
