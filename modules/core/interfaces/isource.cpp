@@ -133,7 +133,7 @@ void ISource::openAudioRecs() {
     QString user_id = userID(sf_audio_recs_by_me);
 
     Presentation::Dockbars::obj().createDocBar(
-        QStringLiteral("Rec for YOU"),
+        LSTR("Audio Rec for YOU"),
         Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_user_audio), 0, true, true
     );
 }
@@ -142,7 +142,7 @@ void ISource::openVideoRecs() {
     QString user_id = userID(sf_video_recs_by_me);
 
     Presentation::Dockbars::obj().createDocBar(
-        QStringLiteral("Rec for YOU"),
+        LSTR("Video Rec for YOU"),
         Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_user_video), 0, true, true
     );
 }
@@ -154,7 +154,7 @@ void ISource::openRelationTab() {
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(
-                QString(name() % " [") % dialog.getName() % QStringLiteral("]"),
+                name() % LSTR(" [") % dialog.getName() % ']',
                 uidStr(dialog_params)
             ),
             Models::Params(sourceType(), Models::mpf_auto_play_next, dialog_params, rec_obj_info), 0, true, true

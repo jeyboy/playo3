@@ -221,7 +221,8 @@ void Playo::playedItemChanged(const QString & prev, const QString & next) {
 
         if (show)
             tray -> showMessage(
-                prev.isEmpty() ? QString() : LSTR("End playing: ") % prev,
+                QString(),
+                prev.isEmpty() ? QString() : LSTR("End playing: ") % prev % '\n' %
                 (prev.isEmpty() ? LSTR("Playing: ") : LSTR("Next: ")) % next,
                 QSystemTrayIcon::Information,
                 Settings::obj().showTrayMessageTime()
