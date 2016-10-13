@@ -258,6 +258,9 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 
 
 void SettingsDialog::initGlobalSettings() {
+    ui -> tray_notify_played -> setCheckState((Qt::CheckState)Settings::obj().showPlayedInTrayMessage());
+    ui -> tray_notify_period -> setValue(Settings::obj().showTrayMessageTime() / 1000);
+
     QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> deviceList();
     QString current_device = Settings::obj().outputDevice();
     ui -> outputDeviceSelect -> insertItems(0, devices.keys());
@@ -309,8 +312,6 @@ void SettingsDialog::initGlobalSettings() {
     ui -> dropPointTabTypeSelect -> insertItems(0, tab_types);
     ui -> dropPointTabTypeSelect -> setCurrentIndex(ind);
 
-    ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
-
     ui -> toolIconSize -> setValue(Settings::obj().toolIconSize());
 
     QStringList schemas;
@@ -321,12 +322,12 @@ void SettingsDialog::initGlobalSettings() {
     ui -> colorScheme -> insertItems(0, schemas);
     ui -> colorScheme -> setCurrentIndex(Settings::obj().colorScheme() - 1);
 }
-
 void SettingsDialog::initApisSettings() {
     ui -> ignoreCaptcha -> setChecked(Settings::obj().isIgnoreCaptcha());
 }
-
 void SettingsDialog::initItemsSettings() {
+    ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
+
     ui -> useGradientCheck -> setChecked(Settings::obj().isUseGradient());
 
     ui -> itemFontSize -> setValue(Settings::obj().itemFontSize());
@@ -431,7 +432,6 @@ void SettingsDialog::initSpectrumSettings() {
     ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
     ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::obj().spectrumType());
 }
-
 void SettingsDialog::initLibrarySettings() {
     ui -> libSaveFreq -> setValue(Settings::obj().saveLibDelay() / 1000.0);
     ui -> remoteItemProcDelay -> setValue(Settings::obj().remoteItemsProcDelay() / 1000.0);
@@ -439,7 +439,6 @@ void SettingsDialog::initLibrarySettings() {
     on_initiateOnPlaying_clicked(Settings::obj().isInitiateOnPlaying());
     ui -> showInfo -> setChecked(Settings::obj().isShowInfo());
 }
-
 void SettingsDialog::initExtensions() {
     extDialog = new ExtensionDialog(this);
     extDialog -> convertToWidget();
@@ -449,6 +448,8 @@ void SettingsDialog::initExtensions() {
 
 void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setAutorun(ui -> autorunned -> isChecked());
+    Settings::obj().setShowPlayedInTrayMessage(ui -> tray_notify_played -> checkState());
+    Settings::obj().setShowTrayMessageTime(ui -> tray_notify_period -> value() * 1000);
 
     Settings::obj().setShowDownloadingOnStart(ui -> showDownload -> isChecked());
     Settings::obj().setDefaultDownloadPath(ui -> downloadPath -> text());
@@ -469,7 +470,6 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setOpenDropPointInTabType((Core::DataSubType)(ind));
 
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
-    Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 
     qDebug() << "!!!" << ui -> outputDeviceSelect -> currentText() << Settings::obj().outputDevice();
@@ -479,12 +479,12 @@ void SettingsDialog::saveGlobalSettings() {
             Settings::obj().setOutputDevice(ui -> outputDeviceSelect -> currentText());
     }
 }
-
 void SettingsDialog::saveApisSettings() {
     Settings::obj().setIgnoreCaptcha(ui -> ignoreCaptcha -> isChecked());
 }
-
 void SettingsDialog::saveItemsSettings() {
+    Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());
+
     Settings::obj().setItemHeight(ui -> itemHeightSize -> value());
 
     Settings::obj().setUseGradient(ui -> useGradientCheck -> isChecked());

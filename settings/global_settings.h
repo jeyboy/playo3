@@ -15,14 +15,21 @@
 #define SETTINGS_SAVE_COMMON_TAB_KEY QStringLiteral("save_common_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
-#define SETTINGS_OPEN_TIMEOUT_KEY QStringLiteral("open_time_out_key")
 #define SETTINGS_COLOR_SCHEME_KEY QStringLiteral("color_scheme")
 #define SETTINGS_TOOL_ICON_SIZE_KEY QStringLiteral("tool_icon_size")
 #define SETTINGS_OUTPUT_DEVICE_KEY QStringLiteral("output_device")
 #define SETTINGS_SHOW_DOWNLOAD_KEY QStringLiteral("show_download")
+#define SETTINGS_TRAY_SHOW_PLAYED_KEY QStringLiteral("tray_show_played")
+#define SETTINGS_TRAY_SHOW_PERIOD_KEY QStringLiteral("tray_show_period")
 
 class GlobalSettings {
 public:
+    enum TrayShowInfo : uint {
+        tsi_none = 0,
+        tsi_inform = 1, // only if main window inactive
+        tsi_show = 2
+    };
+
     void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
@@ -56,15 +63,17 @@ public:
     inline int toolIconSize() { return _toolIconSize; }
     inline void setToolIconSize(int newIconSize) { _toolIconSize = newIconSize; }
 
-    inline float openTimeOut() { return _openTimeOut; }
-    inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
-
     inline int colorScheme() { return _colorScheme; }
     inline void setColorScheme(int newColorScheme) { _colorScheme = newColorScheme; }
 
     inline QString outputDevice() { return _output_device; }
     inline void setOutputDevice(const QString & newDevice) { _output_device = newDevice; }
 
+    inline int showPlayedInTrayMessage() { return _tray_show_played; }
+    inline void setShowPlayedInTrayMessage(int new_state) { _tray_show_played = new_state; }
+
+    inline int showTrayMessageTime() { return _tray_show_period; }
+    inline void setShowTrayMessageTime(int new_period) { _tray_show_period = new_period; }
 protected:
     QString _output_device;
     QString _defaultDownloadPath;
@@ -80,7 +89,8 @@ protected:
     int _colorScheme;
     int _toolIconSize;
 
-    float _openTimeOut;
+    int _tray_show_played;
+    int _tray_show_period;
 };
 
 #endif // GLOBAL_SETTINGS

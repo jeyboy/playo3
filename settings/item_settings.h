@@ -6,6 +6,7 @@
 #include <qbrush.h>
 #include <qjsonobject.h>
 
+#define SETTINGS_OPEN_TIMEOUT_KEY QStringLiteral("open_time_out_key")
 #define SETTINGS_USE_GRADIENT_KEY QStringLiteral("use_gradient")
 #define SETTINGS_ITEM_HEIGHT_KEY QStringLiteral("item_height")
 #define SETTINGS_DEFAULT_ITEM_COLOR_KEY QStringLiteral("default_color")
@@ -97,11 +98,15 @@ public:
 
     inline QFont itemFont() { return QFont(itemFontName(), itemFontSize(), QFont::Normal); }
     inline QFont itemInfoFont() { return QFont(itemInfoFontName(), itemInfoFontSize(), QFont::Bold); }
+
+    inline float openTimeOut() { return _openTimeOut; }
+    inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
 protected:
     bool _useGradient;
     int _itemHeight;
     QColor _defaultItemColor, _listenedItemColor, _likedItemColor, _playedItemColor, _folderItemColor, _itemColor;
     ItemTextAttrs __title, __info;
+    float _openTimeOut;
 };
 
 #endif // ITEM_SETTINGS

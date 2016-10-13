@@ -216,11 +216,17 @@ void Playo::showSettingsDialog() {
 
 void Playo::playedItemChanged(const QString & prev, const QString & next) {
     // "(" + QString::number(ui -> tabber -> currentTab() -> getView() -> itemsCount()) + ")
-    if (!next.isEmpty() && !isActiveWindow())
-        tray -> showMessage(
-            prev.isEmpty() ? QString() : LSTR("End playing: ") % prev,
-            (prev.isEmpty() ? LSTR("Playing: ") : LSTR("Next: ")) % next,
-            QSystemTrayIcon::Information,
-            20000
-        );
+
+    if (!next.isEmpty()) {
+        int show_tray_flag = Settings::obj().showPlayedInTrayMessage();
+        bool show = show_tray_flag == Settings::tsi_show || (show_tray_flag == Settings::tsi_inform && !isActiveWindow());
+
+        if (show)
+            tray -> showMessage(
+                prev.isEmpty() ? QString() : LSTR("End playing: ") % prev,
+                (prev.isEmpty() ? LSTR("Playing: ") : LSTR("Next: ")) % next,
+                QSystemTrayIcon::Information,
+                Settings::obj().showTrayMessageTime()
+            );
+    }
 }

@@ -1,6 +1,8 @@
 #include "item_settings.h"
 
 void ItemSettings::fromJson(const QJsonObject & json) {
+    _openTimeOut = json.value(SETTINGS_OPEN_TIMEOUT_KEY).toInt(15);
+
     _useGradient = json.value(SETTINGS_USE_GRADIENT_KEY).toBool(true);
     _itemHeight = json.value(SETTINGS_ITEM_HEIGHT_KEY).toInt(18);
 
@@ -38,6 +40,8 @@ void ItemSettings::fromJson(const QJsonObject & json) {
 }
 
 void ItemSettings::toJson(QJsonObject & json) {
+    json.insert(SETTINGS_OPEN_TIMEOUT_KEY, QJsonValue::fromVariant(_openTimeOut));
+
     json.insert(SETTINGS_USE_GRADIENT_KEY, QJsonValue::fromVariant(_useGradient));
     json.insert(SETTINGS_ITEM_HEIGHT_KEY, QJsonValue::fromVariant(_itemHeight));
 
