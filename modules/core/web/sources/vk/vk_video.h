@@ -14,7 +14,7 @@ namespace Core {
 
                 QString videoUrl(const QString & video_id) { // video id should by in format %owner_id_%video_id
                     Response * response = Manager::prepare() -> postFollowed(
-                        QStringLiteral("https://vk.com/al_video.php?act=show&al=1&autoplay=1&force_no_repeat=1&preload=1&video=%1").arg(video_id),
+                        LSTR("https://vk.com/al_video.php?act=show&al=1&autoplay=1&force_no_repeat=1&preload=1&video=%1").arg(video_id),
                         dntHeader()
                     );
 
@@ -26,10 +26,10 @@ namespace Core {
 
                         QStringList available_keys = obj.keys();
                         QMap<int, QHash<QString, QString> > pathes;
-                        QString cache_key = QStringLiteral("cache");
-                        QString url_key = QStringLiteral("url");
+                        QString cache_key = LSTR("cache");
+                        QString url_key = LSTR("url");
 
-                        QRegularExpression cache_reg(QStringLiteral("(%1|%2)(\\d+)").arg(cache_key, url_key));
+                        QRegularExpression cache_reg(LSTR("(%1|%2)(\\d+)").arg(cache_key, url_key));
 
                         for(QStringList::Iterator key = available_keys.begin(); key != available_keys.end(); key++) {
                             QRegularExpressionMatch res = cache_reg.match(*key);
@@ -109,16 +109,16 @@ namespace Core {
                         case sf_site: {
                             Response * req_response = Manager::prepare() -> postFollowed(
                                 IQueriable::baseUrlStr(
-                                    qst_site, QStringLiteral("al_video.php"),
+                                    qst_site, LSTR("al_video.php"),
                                     {
-                                        { QStringLiteral("act"), QStringLiteral("load_videos_silent") },
-                                        { QStringLiteral("al"), QStringLiteral("1") },
-                                        { QStringLiteral("is_layer"), 0 },
-                                        { QStringLiteral("need_albums"), 1 },
-                                        { QStringLiteral("offset"), offset },
-                                        { QStringLiteral("oid"), user_id },
-                                        { QStringLiteral("rowlen"), 3 },
-                                        { QStringLiteral("section"), QStringLiteral("all") }
+                                        { LSTR("act"),          LSTR("load_videos_silent") },
+                                        { LSTR("al"),           LSTR("1") },
+                                        { LSTR("is_layer"),     0 },
+                                        { LSTR("need_albums"),  1 },
+                                        { LSTR("offset"),       offset },
+                                        { LSTR("oid"),          user_id },
+                                        { LSTR("rowlen"),       3 },
+                                        { LSTR("section"),      LSTR("all") }
                                     }
                                 ),
                                 dntHeader()
@@ -161,8 +161,8 @@ namespace Core {
                             }
 
                             return QJsonArray()
-                                << prepareBlock(dmt_video_set, mod_sets, {{tkn_dir_name, QStringLiteral("Videos")}})
-                                << prepareBlock(dmt_video, cmd_mtd_video_by_user, response, {{tkn_dir_name, QStringLiteral("Videos")}}, {{CMD_ID, user_id}});
+                                << prepareBlock(dmt_video_set, mod_sets, {{tkn_dir_name, LSTR("Videos")}})
+                                << prepareBlock(dmt_video, cmd_mtd_video_by_user, response, {{tkn_dir_name, LSTR("Videos")}}, {{CMD_ID, user_id}});
                         break;}
 
                         case sf_api: {
@@ -196,8 +196,8 @@ namespace Core {
                             }
 
                             return QJsonArray()
-                                << prepareBlock(dmt_video_set, mod_sets, {{tkn_dir_name, QStringLiteral("Videos")}})
-                                << prepareBlock(dmt_video, content.value(block_items_video), {{tkn_dir_name, QStringLiteral("Videos")}});
+                                << prepareBlock(dmt_video_set, mod_sets, {{tkn_dir_name, LSTR("Videos")}})
+                                << prepareBlock(dmt_video, content.value(block_items_video), {{tkn_dir_name, LSTR("Videos")}});
                         break;}
 
                         default: Logger::obj().write(name(), "video Search is not accessable", Logger::log_error);
@@ -264,10 +264,10 @@ namespace Core {
 
                         if (JSON_CSTR(cat_obj, tkn_id) == category_id) {
                             return QJsonObject {
-                                {tkn_content, JSON_ARR(cat_obj, tkn_items)},
-                                {tkn_media_type, dmt_video},
-                                {tkn_source_id, sourceType()},
-                                {tkn_more_cmd, JSON_STR(cat_obj, tkn_more_cmd)}
+                                {tkn_content,       JSON_ARR(cat_obj, tkn_items)},
+                                {tkn_media_type,    dmt_video},
+                                {tkn_source_id,     sourceType()},
+                                {tkn_more_cmd,      JSON_STR(cat_obj, tkn_more_cmd)}
                             };
                         }
                     }
@@ -359,8 +359,8 @@ namespace Core {
                                     Cmd::build(
                                         sourceType(), cmd_mtd_video_by_category,
                                         {
-                                            {CMD_ID, JSON_CSTR(cat_obj, tkn_id)},
-                                            {CMD_OFFSET, JSON_CSTR(cat_obj, LSTR("next"))}
+                                            {CMD_ID,        JSON_CSTR(cat_obj, tkn_id)},
+                                            {CMD_OFFSET,    JSON_CSTR(cat_obj, LSTR("next"))}
                                         }
                                     ).toString()
                                 );

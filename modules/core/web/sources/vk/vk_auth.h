@@ -45,7 +45,7 @@ namespace Core {
                             Html::Tag * form = html.findFirst("form");
 
                             if (!form) {
-                                error = QStringLiteral("Auth form did not found");
+                                error = LSTR("Auth form did not found");
                                 Logger::obj().write(name(), error, Logger::log_error);
                                 return false;
                             }
@@ -86,7 +86,7 @@ namespace Core {
                         }
                         else {
                             form_url = authUrl();
-                            error = QStringLiteral("Some shit happened... :(");
+                            error = LSTR("Some shit happened... :(");
                         }
                     }
                 }

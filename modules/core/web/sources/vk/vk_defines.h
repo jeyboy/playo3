@@ -8,10 +8,10 @@
 #include "vk_keys.h"
 
 #define RESPONSE_TO_JSON(response) \
-    Info::extractLimitedBy(response -> toText(), QStringLiteral("<!json>"), QStringLiteral("<!>"))
+    Info::extractLimitedBy(response -> toText(), LSTR("<!json>"), LSTR("<!>"))
 
 #define RESPONSE_TO_JSON_PARTS(response) \
-    QStringList parts = Info::extractPartsLimitedBy(response -> toText(), QStringLiteral("<!json>"), QStringLiteral("<!>")); \
+    QStringList parts = Info::extractPartsLimitedBy(response -> toText(), LSTR("<!json>"), LSTR("<!>")); \
     QJsonArray json_parts; \
     for(QStringList::Iterator part = parts.begin(); part != parts.end(); part++) {\
         QJsonDocument doc = QJsonDocument::fromJson((*part).toUtf8()); \

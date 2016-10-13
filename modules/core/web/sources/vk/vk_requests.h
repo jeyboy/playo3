@@ -61,11 +61,13 @@ namespace Core {
                         {sf_video_by_category,          sf_both_auth},
                         {sf_video_by_playlist,          sf_both_auth},
 
+                        {sf_user_sociable,              sf_both_auth},
                         {sf_user_status,                sf_api},
                         {sf_user_by_id,                 sf_both_auth},
                         {sf_user_by_title,              sf_both_auth},
                         {sf_user_by_perma,              sf_both_auth},
 
+                        {sf_group_sociable,             sf_both_auth},
                         {sf_group_by_user,              sf_both_auth},
                         {sf_group_by_title,             sf_both_auth},
                         {sf_group_by_id,                sf_both_auth},
@@ -297,11 +299,11 @@ namespace Core {
                                 IQueriable::baseUrlStr(
                                     qst_site, LSTR("al_audio.php"),
                                     {
-                                        { LSTR("act"), LSTR("load_silent") },
-                                        { LSTR("al"), LSTR("1") },
-                                        { LSTR("album_id"), LSTR("-2") },
-                                        { LSTR("band"), LSTR("true") },
-                                        { LSTR("owner_id"), user_id }
+                                        { LSTR("act"),          LSTR("load_silent") },
+                                        { LSTR("al"),           LSTR("1") },
+                                        { LSTR("album_id"),     LSTR("-2") },
+                                        { LSTR("band"),         LSTR("true") },
+                                        { LSTR("owner_id"),     user_id }
                                     }
                                 ),
                                 Auth::dntHeader()

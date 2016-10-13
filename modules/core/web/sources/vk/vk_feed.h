@@ -18,11 +18,11 @@ namespace Core {
                         case sf_api: {
                             block_content = saRequest(
                                 baseUrlStr(
-                                    qst_api, QStringLiteral("newsfeed.get"),
+                                    qst_api, LSTR("newsfeed.get"),
                                     {
-                                        { QStringLiteral("filters"), QStringLiteral("audio,video") },
-                                        { QStringLiteral("count"), 100 },
-                                        { QStringLiteral("source_ids"), sources }
+                                        { LSTR("filters"),      LSTR("audio,video") },
+                                        { LSTR("count"),        100 },
+                                        { LSTR("source_ids"),   sources }
                                     }
                                 ),
                                 call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items

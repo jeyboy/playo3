@@ -12,25 +12,25 @@ namespace Core {
                 enum SetType { set_popular_tracks = 1, set_popular_video, set_feed_video, set_top_video, set_series_video, set_other_video };
                 QMap<QString, QString> audioSetOptions() {
                     return {
-                        { QStringLiteral("All Genres"),                 QStringLiteral("0") },
-                        { QStringLiteral("Rock"),                       QStringLiteral("1") },
-                        { QStringLiteral("Pop"),                        QStringLiteral("2") },
-                        { QStringLiteral("Rap & Hip-Hop"),              QStringLiteral("3") },
-                        { QStringLiteral("House & Dance"),              QStringLiteral("5") },
-                        { QStringLiteral("Alternative"),                QStringLiteral("21") },
-                        { QStringLiteral("Instrumental"),               QStringLiteral("6") },
-                        { QStringLiteral("Easy Listening"),             QStringLiteral("4") },
-                        { QStringLiteral("Metal"),                      QStringLiteral("7") },
-                        { QStringLiteral("Dubstep & Trap"),             QStringLiteral("8") },
-                        { QStringLiteral("Indie Pop"),                  QStringLiteral("17") },
-                        { QStringLiteral("Jazz & Blues"),               QStringLiteral("1001") },
-                        { QStringLiteral("Drum & Bass"),                QStringLiteral("10") },
-                        { QStringLiteral("Trance"),                     QStringLiteral("11") },
-                        { QStringLiteral("Ethnic"),                     QStringLiteral("13") },
-                        { QStringLiteral("Acoustic & Vocal"),           QStringLiteral("14") },
-                        { QStringLiteral("Reggae"),                     QStringLiteral("15") },
-                        { QStringLiteral("Classical"),                  QStringLiteral("16") },
-                        { QStringLiteral("Electropop & Disco"),         QStringLiteral("22") }
+                        { LSTR("All Genres"),                 LSTR("0") },
+                        { LSTR("Rock"),                       LSTR("1") },
+                        { LSTR("Pop"),                        LSTR("2") },
+                        { LSTR("Rap & Hip-Hop"),              LSTR("3") },
+                        { LSTR("House & Dance"),              LSTR("5") },
+                        { LSTR("Alternative"),                LSTR("21") },
+                        { LSTR("Instrumental"),               LSTR("6") },
+                        { LSTR("Easy Listening"),             LSTR("4") },
+                        { LSTR("Metal"),                      LSTR("7") },
+                        { LSTR("Dubstep & Trap"),             LSTR("8") },
+                        { LSTR("Indie Pop"),                  LSTR("17") },
+                        { LSTR("Jazz & Blues"),               LSTR("1001") },
+                        { LSTR("Drum & Bass"),                LSTR("10") },
+                        { LSTR("Trance"),                     LSTR("11") },
+                        { LSTR("Ethnic"),                     LSTR("13") },
+                        { LSTR("Acoustic & Vocal"),           LSTR("14") },
+                        { LSTR("Reggae"),                     LSTR("15") },
+                        { LSTR("Classical"),                  LSTR("16") },
+                        { LSTR("Electropop & Disco"),         LSTR("22") }
                     };
                 }
 
@@ -42,25 +42,25 @@ namespace Core {
                         case set_popular_tracks: {
                             switch(perm) {
                                 case sf_site: {
-                                    QString genre_id = (limits.in_foreign() ? QStringLiteral("foreign") : QString())
+                                    QString genre_id = (limits.in_foreign() ? LSTR("foreign") : QString())
                                             % limits.genre; // 0 is eql to all genres
 
                                     Response * req_response = Manager::prepare() -> postFollowed(
                                         IQueriable::baseUrlStr(
-                                            qst_site, QStringLiteral("al_audio.php"),
+                                            qst_site, LSTR("al_audio.php"),
                                             {
-                                                { QStringLiteral("act"), QStringLiteral("a_load_section") },
-                                                { QStringLiteral("al"), QStringLiteral("1") },
-                                                { QStringLiteral("album_id"), genre_id },
-                                                { QStringLiteral("offset"), limits.start_offset },
-                                                { QStringLiteral("owner_id"), userID() },
-                                                { QStringLiteral("type"), QStringLiteral("popular") }
+                                                { LSTR("act"),          LSTR("a_load_section") },
+                                                { LSTR("al"),           LSTR("1") },
+                                                { LSTR("album_id"),     genre_id },
+                                                { LSTR("offset"),       limits.start_offset },
+                                                { LSTR("owner_id"),     userID() },
+                                                { LSTR("type"),         LSTR("popular") }
                                             }
                                         ),
                                         dntHeader()
                                     );
 
-                                    QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
+                                    QJsonArray items = JSON_ARR(RESPONSE_TO_JSON_OBJECT(req_response), LSTR("list"));
                                     prepareTracks(items, block_content);
                                     QueriableResponse response = QueriableResponse(block_content, QString::number(limits.start_offset + block_content.size()), 0, 1, block_content.isEmpty());
                                     return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
@@ -111,14 +111,14 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_popular_tracks: return QStringLiteral("Popular Tracks: ");
-                        case set_popular_video: return QStringLiteral("Popular Video");
-                        case set_feed_video: return QStringLiteral("Video from user feeds");
-                        case set_top_video: return QStringLiteral("Redaction choose Video");
-                        case set_series_video: return QStringLiteral("Serial Video");
-                        case set_other_video: return QStringLiteral("Some Video");
+                        case set_popular_tracks:        return LSTR("Popular Tracks: ");
+                        case set_popular_video:         return LSTR("Popular Video");
+                        case set_feed_video:            return LSTR("Video from user feeds");
+                        case set_top_video:             return LSTR("Redaction choose Video");
+                        case set_series_video:          return LSTR("Serial Video");
+                        case set_other_video:           return LSTR("Some Video");
 
-                        default: return QStringLiteral("Unknown: ");
+                        default:                        return LSTR("Unknown: ");
                     }
                 }
             public:

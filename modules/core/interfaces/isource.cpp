@@ -124,7 +124,7 @@ void ISource::openTab() {
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(user_id)),
-            Models::Params(sourceType(), Models::mpf_auto_play_next, user_id), 0, true, true, 0, true
+            Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_obj_info), 0, true, true, 0, true
         );
     }
 }

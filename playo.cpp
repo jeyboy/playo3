@@ -34,8 +34,6 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
 
     //safe usage of pointers
 //    QPointer dlg = new SomeDialog( this );
-
-
 }
 
 Playo::~Playo() {

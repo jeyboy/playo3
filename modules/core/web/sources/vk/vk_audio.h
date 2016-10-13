@@ -27,7 +27,7 @@ namespace Core {
                                     { { tkn_lyrics_id, lyrics_id } }
                                 ),
                                 call_type_json, 0, proc_json_extract
-                            ).value(QStringLiteral("hudo")).toString();
+                            ).value(LSTR("hudo")).toString();
                         }
 
                         default: Logger::obj().write(name(), "track Lyric is not accessable", Logger::log_error);
@@ -49,12 +49,12 @@ namespace Core {
                         case sf_site: {
                             Response * response = Manager::prepare() -> postFollowed(
                                 baseUrlStr(
-                                    qst_site, QStringLiteral("al_audio.php"),
+                                    qst_site, LSTR("al_audio.php"),
                                     {
-                                        { QStringLiteral("act"), QStringLiteral("reload_audio") },
-                                        { QStringLiteral("al"), QStringLiteral("1") },
-                                        { QStringLiteral("al_ad"), QStringLiteral("1") },
-                                        { QStringLiteral("ids"), track_ids.join(',') }
+                                        { LSTR("act"),      LSTR("reload_audio") },
+                                        { LSTR("al"),       LSTR("1") },
+                                        { LSTR("al_ad"),    LSTR("1") },
+                                        { LSTR("ids"),      track_ids.join(',') }
                                     }
                                 ), dntHeader()
                             );
@@ -70,7 +70,7 @@ namespace Core {
                                     {
                                         {
                                             tkn_code,
-                                            QString(QStringLiteral("return API.audio.getById({ audios: \"") % track_ids.join(',') % QStringLiteral("\"});"))
+                                            QString(LSTR("return API.audio.getById({ audios: \"") % track_ids.join(',') % LSTR("\"});"))
                                         }
                                     }
                                 ),
@@ -99,20 +99,20 @@ namespace Core {
                         case sf_site: {
                             Response * req_response = Manager::prepare() -> postFollowed(
                                 IQueriable::baseUrlStr(
-                                    qst_site, QStringLiteral("al_audio.php"),
+                                    qst_site, LSTR("al_audio.php"),
                                     {
-                                        { QStringLiteral("act"), QStringLiteral("a_load_section") },
-                                        { QStringLiteral("al"), QStringLiteral("1") },
-                                        { QStringLiteral("album_id"), QStringLiteral("-2") },
-                                        { QStringLiteral("offset"), offset },
-                                        { QStringLiteral("owner_id"), user_id },
-                                        { QStringLiteral("type"), QStringLiteral("recoms") }
+                                        { LSTR("act"),          LSTR("a_load_section") },
+                                        { LSTR("al"),           LSTR("1") },
+                                        { LSTR("album_id"),     LSTR("-2") },
+                                        { LSTR("offset"),       offset },
+                                        { LSTR("owner_id"),     user_id },
+                                        { LSTR("type"),         LSTR("recoms") }
                                     }
                                 ),
                                 dntHeader()
                             );
 
-                            QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
+                            QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(LSTR("list")).toArray();
                             prepareTracks(items, block_content);
 
                             QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
@@ -160,20 +160,20 @@ namespace Core {
                         case sf_site: {
                             Response * req_response = Manager::prepare() -> postFollowed(
                                 IQueriable::baseUrlStr(
-                                    qst_site, QStringLiteral("al_audio.php"),
+                                    qst_site, LSTR("al_audio.php"),
                                     {
-                                        { QStringLiteral("act"), QStringLiteral("a_load_section") },
-                                        { QStringLiteral("al"), QStringLiteral("1") },
-                                        { QStringLiteral("album_id"), QString(QStringLiteral("audio") % track_id) },
-                                        { QStringLiteral("offset"), offset },
-                                        { QStringLiteral("owner_id"), userID(sf_audio_recs_by_user) },
-                                        { QStringLiteral("type"), QStringLiteral("recoms") }
+                                        { LSTR("act"),      LSTR("a_load_section") },
+                                        { LSTR("al"),       LSTR("1") },
+                                        { LSTR("album_id"), QString(LSTR("audio") % track_id) },
+                                        { LSTR("offset"),   offset },
+                                        { LSTR("owner_id"), userID(sf_audio_recs_by_user) },
+                                        { LSTR("type"),     LSTR("recoms") }
                                     }
                                 ),
                                 dntHeader()
                             );
 
-                            QJsonArray items = RESPONSE_TO_JSON_OBJECT(req_response).value(QStringLiteral("list")).toArray();
+                            QJsonArray items = JSON_ARR(RESPONSE_TO_JSON_OBJECT(req_response), LSTR("list"));
                             prepareTracks(items, block_content);
 
                             QueriableResponse response(block_content, QString::number(offset + block_content.size()), 0, 1, block_content.isEmpty());
@@ -292,10 +292,10 @@ namespace Core {
                         case sf_api: {
                             block_content = saRequest(
                                 baseUrlStr(
-                                    qst_api, QStringLiteral("audio.get"),
+                                    qst_api, LSTR("audio.get"),
                                     {
-                                        { QStringLiteral("album_id"), playlist_id },
-                                        { QStringLiteral("count"), 6000} // max
+                                        { LSTR("album_id"), playlist_id },
+                                        { LSTR("count"),    6000} // max
                                     }
                                 ),
                                 call_type_json, 0, proc_json_extract, QStringList() << tkn_response << tkn_items
