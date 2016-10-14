@@ -4,8 +4,8 @@
 #include <qwidget.h>
 #include <qevent.h>
 #include <qstatictext.h>
-#include <qpainter.h>
 #include <qtimer.h>
+#include <qimage.h>
 
 #define SPINNER_IS_CONTINIOUS -1
 #define SPINNER_NOT_SHOW_SECOND -2
@@ -14,15 +14,39 @@ namespace Controls {
     class Spinner : public QWidget {
         Q_OBJECT
     public:
-        Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent = 0, bool fixed_size = false);
+        Spinner(const QString & text, int spinner_width, int spinner_height, QWidget * parent = 0, bool fixed_size = false, const QImage & def_ico = QImage());
         ~Spinner();
     public slots:
+        void setDefaultIcon(const QImage & new_def_ico) {
+            def_ico = new_def_ico;
+            if (isHidden()) { // rehide image for appling of new state
+                show();
+                hide();
+            }
+        }
+
         void setValue(int percent);
         void setValue2(int percent);
         void clear();
+
+        inline bool isHidden() const {
+            return show_def_ico || QWidget::isHidden();
+        }
+
+        inline void show() {
+            if (show_def_ico) {
+                show_def_ico = false;
+                repaint();
+            }
+
+            QWidget::show();
+        }
         inline void hide() {
             clear();
-            QWidget::hide();
+            if (!(show_def_ico = !def_ico.isNull()))
+                QWidget::hide();
+            else
+                repaint();
         }
     protected slots:
         void continiousProgression();
@@ -40,7 +64,8 @@ namespace Controls {
         QPen * clearPen, * spinePen, * borderPen;
 
         QTimer timer, timer2;
-        bool continious, continious2, show_text;
+        bool continious, continious2, show_text, show_def_ico;
+        QImage def_ico;
     };
 }
 

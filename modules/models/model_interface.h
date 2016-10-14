@@ -239,6 +239,7 @@ namespace Models {
         void fetchNeeded(const QModelIndex & index) const;
         void itemsCountChanged(int change);
 
+        void changeIco(const QImage &);
         void moveInBackgroundProcess();
         void moveOutBackgroundProcess();
         void setBackgroundProgress(int percent);

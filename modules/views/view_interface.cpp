@@ -10,6 +10,12 @@ void IView::registerParent(QWidget * newParent) {
     mdl -> setObjectName(newParent -> objectName() % MODEL_POSTFIX);
 
     connect(mdl, SIGNAL(moveInBackgroundProcess()), newParent, SLOT(onMoveInBackgroundProcess()));
+    connect(mdl, SIGNAL(changeIco(QImage)), newParent, SLOT(onSetDefaultIco(QImage)));
+
+    if (mdl -> root() -> hasMoreItems()) {
+        emit mdl -> changeIco(QImage(LSTR(":/download")));
+    }
+
     connect(mdl, SIGNAL(moveOutBackgroundProcess()), newParent, SLOT(onMoveOutBackgroundProcess()));
     connect(mdl, SIGNAL(setBackgroundProgress(int)), newParent, SLOT(onSetBackgroundProgress(int)));
 

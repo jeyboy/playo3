@@ -48,6 +48,7 @@ namespace Controls {
 
         inline void rotate() { useVerticalTitles(!isUsedVerticalTitles()); }
 
+        inline void onSetDefaultIco(const QImage & ico) { titleWidget -> setIco(ico); }
         inline void onMoveInBackgroundProcess() { titleWidget -> showProgress(true); }
         inline void onMoveOutBackgroundProcess() { titleWidget -> showProgress(false); }
         inline void onSetBackgroundProgress(int percent) {

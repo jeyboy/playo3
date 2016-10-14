@@ -1,10 +1,13 @@
 #include "spinner.h"
 
+#include <qpainter.h>
+
 using namespace Controls;
 
-Spinner::Spinner(QString text, int spinner_width, int spinner_height, QWidget * parent, bool fixed_size)
-    : QWidget(parent), img_text(0), spineWidth(spinner_width < 30 ? 4 : 10), spinePad(spinner_width < 30 ? 0 : 2),
-      borderWidth(2), continiousLen((15 / 100.0) * -5760), w(spinner_width), h(spinner_height), clearPen(0), spinePen(0)
+Spinner::Spinner(const QString & text, int spinner_width, int spinner_height, QWidget * parent, bool fixed_size, const QImage & def_ico)
+    : QWidget(parent), img_text(0), spineWidth(spinner_width < 30 ? 4 : 10),
+      spinePad(spinner_width < 30 ? 0 : 2), borderWidth(2), continiousLen((15 / 100.0) * -5760),
+      w(spinner_width), h(spinner_height), clearPen(0), spinePen(0), show_def_ico(false), def_ico(def_ico)
 {
 
     setAutoFillBackground(false);
@@ -84,35 +87,39 @@ void Spinner::paintEvent(QPaintEvent * e) {
     p.save();
     p.setRenderHint(QPainter::HighQualityAntialiasing, true);
 
-    if (show_text)
-        p.drawStaticText(textPoint, *img_text);
+    if (show_def_ico) {
+        p.drawImage(outter, def_ico);
+    } else {
+        if (show_text)
+            p.drawStaticText(textPoint, *img_text);
 
-    p.setPen(*borderPen);
+        p.setPen(*borderPen);
 
-    p.drawEllipse(outter);
-    p.drawEllipse(inner);
+        p.drawEllipse(outter);
+        p.drawEllipse(inner);
 
-    if (drawSecond)
-        p.drawEllipse(ininner);
+        if (drawSecond)
+            p.drawEllipse(ininner);
 
-    p.setPen(*clearPen);
-    p.drawEllipse(spine);
+        p.setPen(*clearPen);
+        p.drawEllipse(spine);
 
-    if (drawSecond)
-        p.drawEllipse(inner_spine);
+        if (drawSecond)
+            p.drawEllipse(inner_spine);
 
-    p.setPen(*spinePen);
+        p.setPen(*spinePen);
 
-    if (continious)
-        p.drawArc(spine, continiousPos, continiousLen);
-    else
-        p.drawArc(spine, 1440, (lastVal / 100.0) * -5760);
-
-    if (drawSecond) {
-        if (continious2)
-            p.drawArc(inner_spine, continiousPos2, continiousLen);
+        if (continious)
+            p.drawArc(spine, continiousPos, continiousLen);
         else
-            p.drawArc(inner_spine, 1440, (lastVal2 / 100.0) * -5760);
+            p.drawArc(spine, 1440, (lastVal / 100.0) * -5760);
+
+        if (drawSecond) {
+            if (continious2)
+                p.drawArc(inner_spine, continiousPos2, continiousLen);
+            else
+                p.drawArc(inner_spine, 1440, (lastVal2 / 100.0) * -5760);
+        }
     }
 
     p.restore();
@@ -120,6 +127,8 @@ void Spinner::paintEvent(QPaintEvent * e) {
 }
 
 void Spinner::resizeEvent(QResizeEvent * event) {
+    QWidget::resizeEvent(event);
+
     int b = spineWidth / 2 + borderWidth / 2;
     int e = spineWidth + borderWidth;
 
@@ -145,9 +154,7 @@ void Spinner::resizeEvent(QResizeEvent * event) {
                 );
 
     textPoint = outter.bottomLeft() + QPoint(0, 2);
-
-    QWidget::resizeEvent(event)
-;}
+}
 
 void Spinner::continiousProgression() {
     update(outter);
