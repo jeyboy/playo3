@@ -1423,6 +1423,9 @@ void IModel::finishSetLoading(const QJsonValue & json, void * params) {
 
         if (playlist)
             playlist -> setStates(IItem::flag_not_in_proc);
+
+        if (playlist == root_item)
+            emit changeIco(playlist -> hasMoreItems() ? QImage(LSTR(":/download")) : QImage());
     }
 
     emit moveOutBackgroundProcess();
