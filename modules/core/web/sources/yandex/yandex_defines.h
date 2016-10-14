@@ -56,7 +56,7 @@ namespace Core {
 
                 //filter = albums: genre, pager: {total, page, perPage}, albums,
                 //filter = : genre, tracks, artists, albums, pics
-//                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + QStringLiteral("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
+//                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + LSTR("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
                 QJsonObject prepareTracksBlock(QJsonObject & obj, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray tracks = JSON_ARR(obj, tkn_tracks);

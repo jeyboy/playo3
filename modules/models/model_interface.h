@@ -21,7 +21,7 @@
 
 #include "modules/controls/user_dialog_box.h"
 
-#define MODEL_POSTFIX QStringLiteral("_mdl")
+#define MODEL_POSTFIX LSTR("_mdl")
 
 namespace Models {
     using namespace Core;

@@ -137,13 +137,13 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_popular_tracks: return QStringLiteral("Popular Tracks: ");
-                        case set_popular_artists: return QStringLiteral("Popular Artists: ");
-                        case set_popular_promotions: return QStringLiteral("Popular Promotions: ");
-                        case set_new_albums: return QStringLiteral("New Albums: ");
-                        case set_compilations: return QStringLiteral("Compilation: ");
-                        case set_genre_stream: return QStringLiteral("Stream: ");
-                        default: return QStringLiteral("Unknown: ");
+                        case set_popular_tracks:        return LSTR("Popular Tracks: ");
+                        case set_popular_artists:       return LSTR("Popular Artists: ");
+                        case set_popular_promotions:    return LSTR("Popular Promotions: ");
+                        case set_new_albums:            return LSTR("New Albums: ");
+                        case set_compilations:          return LSTR("Compilation: ");
+                        case set_genre_stream:          return LSTR("Stream: ");
+                        default:                        return LSTR("Unknown: ");
                     }
                 }
                 QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) {

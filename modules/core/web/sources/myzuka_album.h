@@ -15,7 +15,7 @@ namespace Core {
             const QString data_url_token, title_token, search_path_token, search_predicate_token;
             const Html::Selector searchTablesSelector, songTrSelector, artistSelector, songSelector, linksSelector, table_columns_selector;
         public:
-            inline QString name() const { return QStringLiteral("Myzuka"); }
+            inline QString name() const { return LSTR("Myzuka"); }
             inline DataSubType sourceType() const { return dt_web_myzuka; }
 
             // artists by genre
@@ -27,7 +27,7 @@ namespace Core {
     //            if (genre_id == genres.defaultInt()) return json;
 
     //            WebManager * manager = WebManager::manager();
-    //            QString genrePath = baseUrlStr(QStringLiteral("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
+    //            QString genrePath = baseUrlStr(LSTR("/Genre/%1/%2/Page").arg(QString::number(genre_id), genre));
     //            QHash<QString, QString> artistLinks;
 
     //            for(int page = 1; page < MAX_PAGE; page++) {
@@ -97,15 +97,15 @@ namespace Core {
             }
 
             QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) {
-                return QStringLiteral("https://myzuka.org") % predicate;
+                return LSTR("https://myzuka.org") % predicate;
             }
 
 
             inline void genresProc() { // not tested
                 PolyQueryRules rules(call_iter_type_page, call_iter_method_offset);
-                pRequest(baseUrlStr(qst_site, QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, 0, proc_genres1);
+                pRequest(baseUrlStr(qst_site, LSTR("/Genre/Page") % OFFSET_TEMPLATE), call_type_html, rules, 0, proc_genres1);
 
-//                lQuery(baseUrlStr(QStringLiteral("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
+//                lQuery(baseUrlStr(LSTR("/Genre/Page") % OFFSET_TEMPLATE), proc_genres1, DEFAULT_REQUESTS_LIMIT);
             }
 
             QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
@@ -148,8 +148,8 @@ namespace Core {
                         if (!size_tag) {
                             Logger::obj().write(
                                 name(),
-                                QStringLiteral("Search: parsing of songs"),
-                                QStringLiteral("Some shit happened"), Logger::log_error
+                                LSTR("Search: parsing of songs"),
+                                LSTR("Some shit happened"), Logger::log_error
                             );
                             return arr;
                         }
@@ -169,7 +169,7 @@ namespace Core {
 
             void artistsToJson(QHash<QString, QString> & artists, QJsonArray & arr) {
                 for(QHash<QString, QString>::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
-                    QString artistPage = artist.key() % QStringLiteral("/Songs/Page") % OFFSET_TEMPLATE;
+                    QString artistPage = artist.key() % LSTR("/Songs/Page") % OFFSET_TEMPLATE;
 
                     PolyQueryRules rules(call_iter_type_page, call_iter_method_offset, DEFAULT_ITEMS_LIMIT, MAX_PAGES_PER_ARTIST);
                     pRequest(baseUrlStr(qst_site, artistPage), call_type_html, rules, &arr, proc_tracks1);
@@ -237,9 +237,9 @@ namespace Core {
             }
         private:
             friend class Singleton<MyzukaAlbum>;
-            inline MyzukaAlbum() : data_url_token(QStringLiteral("data-url")),
-                title_token(QStringLiteral("title")), search_path_token(QStringLiteral("/Search")),
-                search_predicate_token(QStringLiteral("searchText=")), searchTablesSelector(Html::Selector(".content table")),
+            inline MyzukaAlbum() : data_url_token(LSTR("data-url")),
+                title_token(LSTR("title")), search_path_token(LSTR("/Search")),
+                search_predicate_token(LSTR("searchText=")), searchTablesSelector(Html::Selector(".content table")),
                 songTrSelector(Html::Selector("a[href^'/Song']<tr")), artistSelector(Html::Selector("td a[href^'/Artist']")),
                 songSelector(Html::Selector("a[href^'/Song']")), linksSelector(Html::Selector("table a[href^'/Genre/']")),
                 table_columns_selector("tr th") { }

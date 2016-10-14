@@ -23,17 +23,17 @@ namespace Core {
                     switch(perm) {
                         case sf_api: {
                             QJsonObject obj = audioInfo(track_id);
-                            QString url = obj.value(QStringLiteral("stream_url")).toString();
+                            QString url = obj.value(LSTR("stream_url")).toString();
                             if (!url.isEmpty()) return url;
                         break;}
 
                         case sf_site: {
                             QJsonObject obj = sRequest(
-                                baseUrlStr(qst_site, QStringLiteral("i1/tracks/%1/streams").arg(track_id), {}),
+                                baseUrlStr(qst_site, LSTR("i1/tracks/%1/streams").arg(track_id), {}),
                                 call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
 
-                            QString res = obj.value(QStringLiteral("http_mp3_128_url")).toString();
+                            QString res = obj.value(LSTR("http_mp3_128_url")).toString();
                             return res;
                         break;}
 
@@ -62,7 +62,7 @@ namespace Core {
                                 headers()
                             ) -> toJson();
 
-                            return obj.value(QStringLiteral("status")).toString().startsWith(QStringLiteral("201"));
+                            return obj.value(LSTR("status")).toString().startsWith(LSTR("201"));
                         break;}
 
                         default: Logger::obj().write(name(), "LIKE TRACK is not accessable", Logger::log_error);
@@ -184,12 +184,12 @@ namespace Core {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_alt1,
-                                    QStringLiteral("search/tracks"),
+                                    LSTR("search/tracks"),
                                     {
                                         { tkn_q, limits.predicate },
-                                        { QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base) },
-                                        { QStringLiteral("sc_a_id"), generateMark() },
-                                        { QStringLiteral("facet"), QStringLiteral("genre") }
+                                        { LSTR("user_id"),  Manager::cookie(LSTR("sc_anonymous_id"), url_site_base) },
+                                        { LSTR("sc_a_id"),  generateMark() },
+                                        { LSTR("facet"),    LSTR("genre") }
                                     }
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit, limits.requests_limit), 0,
@@ -217,7 +217,7 @@ namespace Core {
                     switch(perm) {
                         case sf_api: { // support a comma separated list of tags
                             response = pRequest(
-                                baseUrlStr(qst_api, path_tracks, {{ QStringLiteral("tags"), tag }}),
+                                baseUrlStr(qst_api, path_tracks, {{ LSTR("tags"), tag }}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch
                             );
                         break;}
@@ -225,10 +225,10 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, QStringLiteral("search/sounds"),
+                                    qst_site, LSTR("search/sounds"),
                                     {
-                                        { tkn_q, QStringLiteral("*") },
-                                        { QStringLiteral("filter.genre"), tag } // its a genius !!! // try to use a comma separated list of tags
+                                        { tkn_q,                LSTR("*") },
+                                        { LSTR("filter.genre"), tag } // its a genius !!! // try to use a comma separated list of tags
                                     }
                                 ),
                                 call_type_json, rules(offset, count), 0,
@@ -263,7 +263,7 @@ namespace Core {
 
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
+                                baseUrlStr(qst_site, LSTR("groups/%1/tracks").arg(group_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -298,8 +298,8 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, QStringLiteral("users/%1/tracks").arg(user_id),
-                                    {{ QStringLiteral("representation"), QString() }}
+                                    qst_site_alt1, LSTR("users/%1/tracks").arg(user_id),
+                                    {{ LSTR("representation"), QString() }}
                                 ),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
@@ -333,10 +333,10 @@ namespace Core {
 
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/likes").arg(user_id), {}),
+                                baseUrlStr(qst_site_alt1, LSTR("users/%1/likes").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0,
-                                proc_json_patch, IQUERY_DEF_FIELDS << QStringLiteral("collection") <<
-                                QStringLiteral("track"), call_method_get, headers()
+                                proc_json_patch, IQUERY_DEF_FIELDS << LSTR("collection") <<
+                                LSTR("track"), call_method_get, headers()
                             );
                         break;}
 

@@ -95,7 +95,7 @@ namespace Core {
 //                    QueriableResponse response = pRequest(
 //                                audioUrlStr(
 //                                    path_audio_by_artist_id,
-//                                    { {QStringLiteral("artistId"), artist_id} }
+//                                    { {LSTR("artistId"), artist_id} }
 //                                ),
 //                                call_type_json, rules(offset, qMax(count, TRACKS_AMOUNT_LIMIT)), 0,
 //                                proc_json_extract, QStringList() << tkn_tracks // similarArtists
@@ -144,7 +144,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_collection,
-                            { {QStringLiteral("collectionId"), collection_id} }
+                            { {LSTR("collectionId"), collection_id} }
                         ),
                         call_type_json, rules(offset, qMax(count, TRACKS_AMOUNT_LIMIT)), 0,
                         proc_json_extract, QStringList() << tkn_tracks
@@ -160,7 +160,7 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue audioByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = QStringLiteral("ru"), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { //TODO: need to check
+                QJsonValue audioByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = LSTR("ru"), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { //TODO: need to check
                     QueriableResponse response = pRequest( // artists // tracks //albums
                         audioUrlStr(
                             path_audio_radio,
@@ -187,7 +187,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         audioUrlStr(
                             path_audio_by_album_id,
-                            { {QStringLiteral("albumId"), album_id} }
+                            { {LSTR("albumId"), album_id} }
                         ),
                         call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,
                         proc_json_extract, QStringList() << tkn_tracks

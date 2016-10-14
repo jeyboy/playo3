@@ -28,7 +28,7 @@ namespace Core {
 //                inline void setArtistFilter(QUrlQuery & query, const QString & artist) { setParam(query, tkn_artist, artist); }
 
                 inline Headers siteHeaders() {
-                    return Headers({{QStringLiteral("x-security"), Manager::cookie(QStringLiteral("Login"), url_html_site_base)}});
+                    return Headers({{LSTR("x-security"), Manager::cookie(LSTR("Login"), url_html_site_base)}});
                 }
 
                 PolyQueryRules rulesApi(

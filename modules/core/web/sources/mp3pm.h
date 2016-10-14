@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         class Mp3pm : public ISource, public IQueriable, public Singleton<Mp3pm> {
         public:
-            inline QString name() const { return QStringLiteral("Mp3pm"); }
+            inline QString name() const { return LSTR("Mp3pm"); }
             inline DataSubType sourceType() const { return dt_web_mp3pm; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -20,7 +20,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3pm.net") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://mp3pm.net") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
@@ -37,7 +37,7 @@ namespace Core {
                         for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                             QJsonObject track_obj;
 
-                            track_obj.insert(tkn_grab_url, (*track) -> value(QStringLiteral("data-download-url")));
+                            track_obj.insert(tkn_grab_url, (*track) -> value(LSTR("data-download-url")));
                             track_obj.insert(tkn_grab_duration, (*track) -> find(&duration_selector).text());
                             track_obj.insert(tkn_skip_info, true);
 
@@ -60,11 +60,11 @@ namespace Core {
 
             inline bool isRefreshable() { return false; }
 
-    //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/genres")), proc_genres1); }
+    //        inline void genresProc() { sQuery(baseUrlStr(LSTR("/genres")), proc_genres1); }
 
             QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(qst_site,
-                    QStringLiteral("/s/f/%1/page/%2/")
+                    LSTR("/s/f/%1/page/%2/")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );
 

@@ -76,35 +76,35 @@ void Dockbars::save(DataStore * settings) {
                 continue;
 
             curr_bar = QJsonObject();
-            curr_bar.insert(QStringLiteral("title"), (*it) -> windowTitle());
-            curr_bar.insert(QStringLiteral("name"), (*it) -> objectName());
-            curr_bar.insert(QStringLiteral("stick"), (*it) -> isSticked());
-            curr_bar.insert(QStringLiteral("vertical"), (*it) -> isUsedVerticalTitles());
+            curr_bar.insert(LSTR("title"), (*it) -> windowTitle());
+            curr_bar.insert(LSTR("name"), (*it) -> objectName());
+            curr_bar.insert(LSTR("stick"), (*it) -> isSticked());
+            curr_bar.insert(LSTR("vertical"), (*it) -> isUsedVerticalTitles());
 
             QString path = linkedTabs.key((*it), QString());
             if (!path.isEmpty())
-                curr_bar.insert(QStringLiteral("link"), path);
+                curr_bar.insert(LSTR("link"), path);
 
             if ((*it) -> windowTitle() == LOGS_TAB) {
                 //do nothing
             } else if ((*it) -> windowTitle() == DOWNLOADS_TAB) {
-                curr_bar.insert(QStringLiteral("cont"), ((DownloadView *)(*it) -> mainWidget()) -> toJson());
+                curr_bar.insert(LSTR("cont"), ((DownloadView *)(*it) -> mainWidget()) -> toJson());
             } else {
                 if ((*it) == played) {
-                    curr_bar.insert(QStringLiteral("played"), true);
+                    curr_bar.insert(LSTR("played"), true);
                     if (DataFactory::obj().playedIndex().isValid()) {
-                        curr_bar.insert(QStringLiteral("played_item"), DataFactory::obj().playedItem() -> buildTreePath());
-                        curr_bar.insert(QStringLiteral("played_time"), QJsonValue::fromVariant(DataFactory::obj().currPlayer() -> position()));
-//                        curr_bar.insert(QStringLiteral("played_duration"), QJsonValue::fromVariant(DataFactory::obj().currPlayer() -> duration()));
+                        curr_bar.insert(LSTR("played_item"), DataFactory::obj().playedItem() -> buildTreePath());
+                        curr_bar.insert(LSTR("played_time"), QJsonValue::fromVariant(DataFactory::obj().currPlayer() -> position()));
+//                        curr_bar.insert(LSTR("played_duration"), QJsonValue::fromVariant(DataFactory::obj().currPlayer() -> duration()));
                     }
                 }
 
                 if (v) {
-                    curr_bar.insert(QStringLiteral("set"), v -> settings().toJson());
-                    curr_bar.insert(QStringLiteral("cont"), v -> toJson());
+                    curr_bar.insert(LSTR("set"), v -> settings().toJson());
+                    curr_bar.insert(LSTR("cont"), v -> toJson());
 
                     if (v -> currentIndex().isValid())
-                        curr_bar.insert(QStringLiteral("selection"), v -> currentIndex().data(ITREEPATH).toString());
+                        curr_bar.insert(LSTR("selection"), v -> currentIndex().data(ITREEPATH).toString());
                 }
             }
 
@@ -229,8 +229,8 @@ void Dockbars::changeBarsVisibility(bool hide) {
 void Dockbars::closeAll() {
     UserDialogBox::obj().alert(
         Settings::obj().anchorWidget(),
-        QStringLiteral("Closing of tabs"),
-        QStringLiteral("Are you sure what you want to close all your tabs ?"),
+        LSTR("Closing of tabs"),
+        LSTR("Are you sure what you want to close all your tabs ?"),
         QMessageBox::Yes | QMessageBox::No
     );
 
@@ -270,7 +270,7 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
         IView * view = dynamic_cast<IView *>(bar -> widget());
 
         if (!view -> isConfigurable()) {
-            QMessageBox::warning(this, QStringLiteral("Settings"), QStringLiteral("This view type is not editable ..."));
+            QMessageBox::warning(this, LSTR("Settings"), LSTR("This view type is not editable ..."));
             return;
         }
 
@@ -315,7 +315,7 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
     TabifyParams tabData = played -> tabIndex();
 
     if (tabData.index != -1) {
-        tabData.tabbar -> setTabIcon(tabData.index, QIcon(QStringLiteral(":played_tab")));
+        tabData.tabbar -> setTabIcon(tabData.index, QIcon(LSTR(":played_tab")));
         tabData.tabbar -> setIconSize(QSize(14, 14));
     }
 
@@ -324,7 +324,7 @@ void Dockbars::updateActiveTabIcon(bool isFloating) {
 //    TabifyParams tabData = played -> tabIndex();
 
 //    if (tabData.index != -1) {
-//        tabData.tabbar -> setTabIcon(tabData.index, QIcon(QStringLiteral(":played_tab")));
+//        tabData.tabbar -> setTabIcon(tabData.index, QIcon(LSTR(":played_tab")));
 //        tabData.tabbar -> setIconSize(QSize(14, 14));
 //    }
 

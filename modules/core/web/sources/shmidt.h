@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         class Shmidt : public ISource, public IQueriable, public Singleton<Shmidt> {
         public:
-            inline QString name() const { return QStringLiteral("Shmidt"); }
+            inline QString name() const { return LSTR("Shmidt"); }
             inline DataSubType sourceType() const { return dt_web_shmidt; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -20,7 +20,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3.shmidt.net") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://mp3.shmidt.net") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
@@ -50,7 +50,7 @@ namespace Core {
                 return result;
             }
 
-    //        inline void genresProc() { sQuery(baseUrlStr(QStringLiteral("/music")), genres1); }
+    //        inline void genresProc() { sQuery(baseUrlStr(LSTR("/music")), genres1); }
 
             inline QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 Html::Document parser(reply);
@@ -63,9 +63,9 @@ namespace Core {
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site, QStringLiteral("/search.php?userquery=%1&type=%2")).arg(
+                QString url_str = baseUrlStr(qst_site, LSTR("/search.php?userquery=%1&type=%2")).arg(
                     encodeStr(limits.predicate),
-                    (limits.by_artists() ? QStringLiteral("artistname") : limits.by_songs_name() ? QStringLiteral("songtitle") : QStringLiteral("entire"))
+                    (limits.by_artists() ? LSTR("artistname") : limits.by_songs_name() ? LSTR("songtitle") : LSTR("entire"))
                 );
 
                 PolyQueryRules rules(

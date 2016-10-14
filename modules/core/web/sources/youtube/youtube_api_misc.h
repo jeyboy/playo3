@@ -106,7 +106,7 @@ namespace Core {
                         //                            }
 
                         if (decode_required)
-                            return url % QStringLiteral("&signature=") % signature;
+                            return url % LSTR("&signature=") % signature;
 
                         return url;
                     }
@@ -144,7 +144,7 @@ namespace Core {
                                 pos += tkn_url_encoded_fmt_stream_map.length() + 3;
                                 int len = response.indexOf('"', pos) - pos;
                                 QStringList templates = response.mid(pos, len).split(',');
-                                proceedLinkTemplates(templates, options, QStringLiteral("\\u0026"), js_method);
+                                proceedLinkTemplates(templates, options, LSTR("\\u0026"), js_method);
                             }
 
                             pos = response.indexOf(tkn_adaptive_fmts);
@@ -152,7 +152,7 @@ namespace Core {
                                 pos += tkn_adaptive_fmts.length() + 3;
                                 int len = response.indexOf('"', pos) - pos;
                                 QStringList templates = response.mid(pos, len).split(',');
-                                proceedLinkTemplates(templates, options, QStringLiteral("\\u0026"), js_method);
+                                proceedLinkTemplates(templates, options, LSTR("\\u0026"), js_method);
                             }
                         }
                     }
@@ -252,7 +252,7 @@ namespace Core {
                             resJs.append((*meth).code).append(";");
 
                         res.name = methodName;
-                        res.code = resJs/*.replace(QStringLiteral("\\\""), QStringLiteral("\""))*/;
+                        res.code = resJs/*.replace(LSTR("\\\""), LSTR("\""))*/;
                     }
 
                     return res;
@@ -296,7 +296,7 @@ namespace Core {
                             else if ((*part).startsWith("itag="))
                                 opt.quality_id = (*part).mid(5).toInt();
                             else if ((*part).startsWith("type=")) // each link contains param type equal to the 'video' or 'audio'
-                                opt.audio = (*part).mid(5, 5) == QStringLiteral("audio");
+                                opt.audio = (*part).mid(5, 5) == LSTR("audio");
                         }
 
                         options.insert(opt.quality_id, opt);

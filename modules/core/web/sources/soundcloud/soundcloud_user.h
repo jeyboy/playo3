@@ -63,12 +63,12 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, QStringLiteral("search/users"),
+                                    qst_site_alt1, LSTR("search/users"),
                                     {
                                         { tkn_q, uname },
-                                        { QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base) },
-                                        { QStringLiteral("sc_a_id"), generateMark() },
-                                        { QStringLiteral("facet"), QStringLiteral("place") }
+                                        { LSTR("user_id"),  Manager::cookie(LSTR("sc_anonymous_id"), url_site_base) },
+                                        { LSTR("sc_a_id"),  generateMark() },
+                                        { LSTR("facet"),    LSTR("place") }
                                     }
                                 ),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
@@ -103,7 +103,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, QStringLiteral("tracks/%1/likers").arg(track_id), {}),
+                                    qst_site_alt1, LSTR("tracks/%1/likers").arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -130,7 +130,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, QStringLiteral("e1/tracks/%1/reposters").arg(track_id), {}),
+                                    qst_site, LSTR("e1/tracks/%1/reposters").arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -164,9 +164,9 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, QStringLiteral("users/%1/followings").arg(user_id), {}),
+                                    qst_site, LSTR("users/%1/followings").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
-                                IQUERY_DEF_FIELDS << QStringLiteral("collection"), call_method_get, headers()
+                                IQUERY_DEF_FIELDS << LSTR("collection"), call_method_get, headers()
                             );
                         break;}
 
@@ -197,9 +197,9 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, QStringLiteral("users/%1/followers").arg(user_id), {}),
+                                    qst_site, LSTR("users/%1/followers").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
-                                IQUERY_DEF_FIELDS << QStringLiteral("collection"), call_method_get, headers()
+                                IQUERY_DEF_FIELDS << LSTR("collection"), call_method_get, headers()
                             );
                         break;}
 

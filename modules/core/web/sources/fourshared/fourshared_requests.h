@@ -14,17 +14,17 @@ namespace Core {
                 QJsonValue procJson(const QJsonValue & json, const AdditionalProc & /*proc*/) {
                     QJsonObject user_data = json.toObject();
 
-                    QJsonObject info = user_data[QStringLiteral("info")].toObject();
+                    QJsonObject info = JSON_OBJ(user_data, LSTR("info"));
 
-                    QJsonArray dirs = info.value(QStringLiteral("dirs")).toArray();
-                    QJsonArray files = info.value(QStringLiteral("files")).toArray();
+                    QJsonArray dirs = JSON_ARR(info, LSTR("dirs"));
+                    QJsonArray files = JSON_ARR(info, LSTR("files"));
 
                     QJsonArray res;
 
                     for(QJsonArray::Iterator dir = dirs.begin(); dir != dirs.end(); dir++) {
                         QJsonObject dir_obj = (*dir).toObject();
 
-                        if (dir_obj.value(QStringLiteral("canPlay")).toBool()) { // check on audio fides only :(
+                        if (JSON_BOOL(dir_obj, LSTR("canPlay"))) { // check on audio fides only :(
                             QJsonObject set_obj;
 
                             QString id = JSON_CSTR(dir_obj, tkn_id);
@@ -92,8 +92,8 @@ namespace Core {
                                 Extensions::obj().extractExtension(name, ext);
 
                                 Html::Tag * play_img = (*track) -> findFirst(".playThumb img");
-                                QString js = play_img -> value(QStringLiteral("onclick")), url;
-                                Info::extract(js, QStringLiteral("http"), QStringLiteral("'"), url);
+                                QString js = play_img -> value(LSTR("onclick")), url;
+                                Info::extract(js, LSTR("http"), LSTR("'"), url);
 
                                 Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
 

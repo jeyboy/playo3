@@ -8,7 +8,7 @@ namespace Core {
         namespace Od {
             class Tuner : public virtual Base {
             protected:
-                QJsonValue tunersList(const QString & locale = QStringLiteral("ru"), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
+                QJsonValue tunersList(const QString & locale = LSTR("ru"), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray tuners = saRequest(
                         audioUrlStr(
                             path_audio_tuners,

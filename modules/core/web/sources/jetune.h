@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         class Jetune : public ISource, public IQueriable, public Singleton<Jetune> {
         public:
-            inline QString name() const { return QStringLiteral("Jetune"); }
+            inline QString name() const { return LSTR("Jetune"); }
             inline DataSubType sourceType() const { return dt_web_jetune; }
 
             inline QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -18,7 +18,7 @@ namespace Core {
             }
 
         protected:
-            inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://www.jetune.ru") % predicate; }
+            inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://www.jetune.ru") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & message, bool removeReply = false) {
                 Html::Document parser = reply -> toHtml(removeReply);
@@ -37,8 +37,8 @@ namespace Core {
                                 QString link = link_tag -> childTag("a") -> link();
                                 link = link.section('/', 2, 2);
 
-                                track_obj.insert(tkn_grab_url, baseUrlStr(qst_site, QStringLiteral("/freedownload.php?id=") % link));
-                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site, QStringLiteral("/myplayer.php?id=") % link));
+                                track_obj.insert(tkn_grab_url, baseUrlStr(qst_site, LSTR("/freedownload.php?id=") % link));
+                                track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site, LSTR("/myplayer.php?id=") % link));
                                 track_obj.insert(tkn_skip_info, true);
 
                                 Html::Set links = (*track) -> childTag("td", 0) -> find("a");
@@ -47,7 +47,7 @@ namespace Core {
 
                                 arg -> append(track_obj, track + 1 == tracks.end());
                             }
-                            else message = QStringLiteral("Jetune: Parse error");
+                            else message = LSTR("Jetune: Parse error");
                         }
 
                         result = !tracks.isEmpty();
@@ -70,18 +70,18 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(qst_site, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
+                sRequest(baseUrlStr(qst_site, LSTR("/genres")), call_type_html, 0, proc_genres1);
 
-//                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
+//                sQuery(baseUrlStr(LSTR("/genres")), genres1);
             }
 
             inline bool isRefreshable() { return false; }
 
             QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(qst_site,
-                    QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
+                    LSTR("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                         encodeStr(limits.predicate),
-                        limits.by_artists() ? QStringLiteral("artist") : QStringLiteral("track"),
+                        limits.by_artists() ? LSTR("artist") : LSTR("track"),
                         OFFSET_TEMPLATE
                     )
                 );

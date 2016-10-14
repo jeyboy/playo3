@@ -15,7 +15,7 @@ namespace Core {
                     );
 
                     QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
-                    Info::extract(res, QStringLiteral("http"), QStringLiteral("\""), res);
+                    Info::extract(res, LSTR("http"), LSTR("\""), res);
                     return res;
                 }
 

@@ -24,8 +24,8 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, QStringLiteral("playlists/discovery"),
-                                    {{ QStringLiteral("tag"), tag }}
+                                    qst_site_alt1, LSTR("playlists/discovery"),
+                                    {{ LSTR("tag"), tag }}
                                 ),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
@@ -51,7 +51,7 @@ namespace Core {
                     switch(perm) {
                         case sf_api: {
                             response = pRequest(
-                                baseUrlStr(qst_api, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
+                                baseUrlStr(qst_api, LSTR("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch
                             );
@@ -59,7 +59,7 @@ namespace Core {
 
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_alt1, QStringLiteral("tracks/%1/playlists").arg(track_id), {}),
+                                baseUrlStr(qst_site_alt1, LSTR("tracks/%1/playlists").arg(track_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET),
                                 0, proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );
@@ -94,12 +94,12 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, QStringLiteral("search/playlists"),
+                                    qst_site_alt1, LSTR("search/playlists"),
                                     {
                                         { tkn_q, predicate },
-                                        { QStringLiteral("user_id"), Manager::cookie(QStringLiteral("sc_anonymous_id"), url_site_base) },
-                                        { QStringLiteral("sc_a_id"), generateMark() },
-                                        { QStringLiteral("facet"), QStringLiteral("genre") }
+                                        { LSTR("user_id"),  Manager::cookie(LSTR("sc_anonymous_id"), url_site_base) },
+                                        { LSTR("sc_a_id"),  generateMark() },
+                                        { LSTR("facet"),    LSTR("genre") }
                                     }
                                 ),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET), 0,
@@ -133,7 +133,7 @@ namespace Core {
 
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/playlists").arg(user_id), {}),
+                                baseUrlStr(qst_site_alt1, LSTR("users/%1/playlists").arg(user_id), {}),
                                 call_type_json, rules(offset, count, SOUNDCLOUD_PAGES_LIMIT, SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );

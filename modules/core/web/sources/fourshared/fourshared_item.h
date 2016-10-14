@@ -11,8 +11,8 @@ namespace Core {
                 QJsonValue itemsByCollection(const QString & collection_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray block_content = saRequest(
                         baseUrlStr(
-                            qst_site_base, QStringLiteral("web/accountActions/changeDir"),
-                            {{ QStringLiteral("dirId"), collection_id }}
+                            qst_site_base, LSTR("web/accountActions/changeDir"),
+                            {{ LSTR("dirId"), collection_id }}
                         ),
                         call_type_json, 0, proc_json_proc,
                         QStringList(), call_method_post, siteHeaders()

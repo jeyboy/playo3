@@ -61,7 +61,7 @@ namespace Core {
                             rel = attr_rel_eq;
                         break;}
                         case klass: {
-                            klasses.append(token.split(QStringLiteral(" "), QString::SkipEmptyParts));
+                            klasses.append(token.split(' ', QString::SkipEmptyParts));
                         break;}
                         default:;
                     }

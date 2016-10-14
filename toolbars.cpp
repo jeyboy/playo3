@@ -64,7 +64,7 @@ QMenu * ToolBars::createPopupMenu() {
     }
 
     if (hasDocs) {
-        QMenu * docsMenu = menu -> addMenu(QStringLiteral("Tabs"));
+        QMenu * docsMenu = menu -> addMenu(LSTR("Tabs"));
 
         docsMenu -> addAction(LSTR("Show all"), &Dockbars::obj(), SLOT(showAll()));
         docsMenu -> addAction(LSTR("Hide all"), &Dockbars::obj(), SLOT(hideAll()));
@@ -191,7 +191,7 @@ void ToolBars::createToolbars() {
 void ToolBars::updateBarStyle(QToolBar * bar) {
     if (!bar) return;
     bool movable = bar -> isMovable() || qobject_cast<ToolBar *>(bar) != 0;
-    Settings::currentStyle -> applyProperty(bar, "state", movable ? QStringLiteral("movable") : QStringLiteral("fixed"));
+    Settings::currentStyle -> applyProperty(bar, "state", movable ? LSTR("movable") : LSTR("fixed"));
 }
 
 QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
@@ -243,7 +243,7 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     int icoSize = Settings::obj().toolIconSize();
 
     ptb -> setProperty(toolbar_service_mark, true);
-    ptb -> setObjectName(QStringLiteral("_") % name);
+    ptb -> setObjectName('_' % name);
     ptb -> setMinimumSize(icoSize, 30);
     ptb -> setIconSize(QSize(icoSize, icoSize));
 

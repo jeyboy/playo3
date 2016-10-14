@@ -29,7 +29,7 @@ namespace Core {
                 }
 
                 QJsonValue usersByIdsOrPermas(const QStringList & ids) {
-                    return usersByIdOrPerma(ids.join(QStringLiteral(",")));
+                    return usersByIdOrPerma(ids.join(','));
                 }
                 QJsonValue usersById(const QUrlQuery & args) {
                     return usersByIdOrPerma(

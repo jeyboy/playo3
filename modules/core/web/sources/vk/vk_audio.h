@@ -212,7 +212,7 @@ namespace Core {
 
 //                    setParam(query, tkn_code, QString(
 //                        "    var items = API.audio.search({"
-//                        "        q: \"" % encodeStr(searchStr) % QStringLiteral("\", count: ") % QString::number(limit) % ", lyrics: 0"
+//                        "        q: \"" % encodeStr(searchStr) % LSTR("\", count: ") % QString::number(limit) % ", lyrics: 0"
 //                        "    }).items;"
 //                        "return {" % tkn_audio_list % ": search};"
 //                    ));

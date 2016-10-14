@@ -102,7 +102,7 @@ namespace Core {
     namespace Web {
         class Mp3Base : public ISource, public IQueriable, public Singleton<Mp3Base> {
         public:
-            inline QString name() const { return QStringLiteral("Mp3Base"); }
+            inline QString name() const { return LSTR("Mp3Base"); }
             inline DataSubType sourceType() const { return dt_web_mp3base; }
 
             QJsonValue popular(const SearchLimit & /*limitations*/) {
@@ -112,7 +112,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://mp3base.cc") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://mp3base.cc") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
                 Html::Document parser = reply -> toHtml(removeReply);
@@ -130,10 +130,10 @@ namespace Core {
 
                             link = link.section('(', 1).section(')', 0, 0);
 
-                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site, QStringLiteral("/user/player/?song=") % link));
+                            track_obj.insert(tkn_grab_refresh, baseUrlStr(qst_site, LSTR("/user/player/?song=") % link));
 
-                            QString artist = (*track) -> childTag(QStringLiteral("td"), 2) -> toText();
-                            QString title = (*track) -> childTag(QStringLiteral("td"), 1) -> toText();
+                            QString artist = (*track) -> childTag(LSTR("td"), 2) -> toText();
+                            QString title = (*track) -> childTag(LSTR("td"), 1) -> toText();
                             title = artist % tkn_dash % title;
                             track_obj.insert(tkn_grab_title, title);
 
@@ -167,8 +167,8 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(qst_site, QStringLiteral("/genres")), call_type_html, 0, proc_genres1);
-//                sQuery(baseUrlStr(QStringLiteral("/genres")), genres1);
+                sRequest(baseUrlStr(qst_site, LSTR("/genres")), call_type_html, 0, proc_genres1);
+//                sQuery(baseUrlStr(LSTR("/genres")), genres1);
             }
 
             inline QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
@@ -180,7 +180,7 @@ namespace Core {
 
             QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(qst_site,
-                    QStringLiteral("/search?q=%1&page=%2")
+                    LSTR("/search?q=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );
 

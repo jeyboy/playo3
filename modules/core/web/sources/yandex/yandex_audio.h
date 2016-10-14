@@ -20,7 +20,7 @@ namespace Core {
 
                     QString path = JSON_STR(obj, LSTR("path"));
 
-                    return QStringLiteral("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
+                    return LSTR("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
                         JSON_STR(obj, LSTR("host")), calcKey(path, JSON_CSTR(obj, LSTR("s"))),
                         JSON_CSTR(obj, LSTR("ts")), path, track_id.split(':').first()
                     );

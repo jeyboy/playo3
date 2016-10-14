@@ -93,14 +93,14 @@ namespace Core {
                                 case set_top_50: {
                                     QJsonArray block_content = saRequest(
                                         baseUrlStr(
-                                            qst_site_alt1, QStringLiteral("charts"),
+                                            qst_site_alt1, LSTR("charts"),
                                             {
                                                 { tkn_limit, SOUNDCLOUD_PER_REQUEST_LIMIT },
-                                                { QStringLiteral("genre"), QString(QStringLiteral("soundcloud:genres:") % (limits.genre.isEmpty() ? SOUNDCLOUD_ALL_GENRES_PARAM : limits.genre)) },
-                                                { QStringLiteral("kind"), set_type == set_new_hot ? QStringLiteral("trending") : QStringLiteral("top") }
+                                                { LSTR("genre"), QString(LSTR("soundcloud:genres:") % (limits.genre.isEmpty() ? SOUNDCLOUD_ALL_GENRES_PARAM : limits.genre)) },
+                                                { LSTR("kind"), set_type == set_new_hot ? LSTR("trending") : LSTR("top") }
                                             }
                                         ),
-                                        call_type_json, 0, proc_json_patch, COLLECTION_FIELDS << QStringLiteral("track"), call_method_get, headers()
+                                        call_type_json, 0, proc_json_patch, COLLECTION_FIELDS << LSTR("track"), call_method_get, headers()
                                     );
 
                                     return prepareBlock(dmt_audio, block_content);

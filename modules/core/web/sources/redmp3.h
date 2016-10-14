@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         class RedMp3 : public ISource, public IQueriable, public Singleton<RedMp3> {
         public:
-            inline QString name() const { return QStringLiteral("RedMp3"); }
+            inline QString name() const { return LSTR("RedMp3"); }
             inline DataSubType sourceType() const { return dt_web_redmp3; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -19,7 +19,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://redmp3.cc") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://redmp3.cc") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
                 if (reply -> attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() != 200) return false;
@@ -31,9 +31,9 @@ namespace Core {
                     case proc_tracks1: {
                         Html::Set tracks = parser.find(".player");
 
-                        QString data_title = QStringLiteral("data-title");
-                        QString data_url = QStringLiteral("data-mp3url");
-                        QString url_template = QStringLiteral("%1\r\nReferer: %2");
+                        QString data_title = LSTR("data-title");
+                        QString data_url = LSTR("data-mp3url");
+                        QString url_template = LSTR("%1\r\nReferer: %2");
 
                         for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                             QJsonObject track_obj;
@@ -65,8 +65,8 @@ namespace Core {
             inline bool isRefreshable() { return false; }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site, QStringLiteral("/mp3-%1/%2").arg(
-                    encodeStr(limits.predicate.toLower().replace(QRegularExpression("[\\W_]+"), QStringLiteral("-"))),
+                QString url_str = baseUrlStr(qst_site, LSTR("/mp3-%1/%2").arg(
+                    encodeStr(limits.predicate.toLower().replace(QRegularExpression("[\\W_]+"), LSTR("-"))),
                     OFFSET_TEMPLATE
                 ));
 

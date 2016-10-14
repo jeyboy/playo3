@@ -12,7 +12,7 @@ namespace Core {
     namespace Web {
         class PromoDj : public ISource, public IQueriable, public Singleton<PromoDj> {
         public:
-            inline QString name() const { return QStringLiteral("PromoDJ"); }
+            inline QString name() const { return LSTR("PromoDJ"); }
             inline DataSubType sourceType() const { return dt_web_promodj; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -21,7 +21,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://promodj.com") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://promodj.com") % predicate; }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
 //            bool toJson(toJsonType jtype, QNetworkReply * reply, QJsonArray & json, bool removeReply = false) {
@@ -39,7 +39,7 @@ namespace Core {
                             QString link = (*track) -> find(".downloads_count a").link();
                             if (link.isEmpty()) {
                                 link = title -> link();
-                                link = link.section('/', 0, 2) % QStringLiteral("/prelisten/") % link.section('/', 5);
+                                link = link.section('/', 0, 2) % LSTR("/prelisten/") % link.section('/', 5);
                             }
 
                             track_obj.insert(tkn_grab_url, link);
@@ -70,8 +70,8 @@ namespace Core {
             }
 
             inline void genresProc() {
-                sRequest(baseUrlStr(qst_site, QStringLiteral("/music")), call_type_html, 0, proc_genres1);
-//                sQuery(baseUrlStr(QStringLiteral("/music")), genres1);
+                sRequest(baseUrlStr(qst_site, LSTR("/music")), call_type_html, 0, proc_genres1);
+//                sQuery(baseUrlStr(LSTR("/music")), genres1);
             }
 
     //        http://promodj.com/prelisten/5338563/Beck_Sarbassov_DJ_Zhasulan_Baikenov_Time_flies.mp3
@@ -88,8 +88,8 @@ namespace Core {
                 // alt search http://promodj.com/search?searchfor=lol&mode=audio&sortby=relevance&period=all
 
                 QString alias = genresList().toAlias(limits.genre);
-                QString url_str = baseUrlStr(qst_site, QStringLiteral("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
-                            (alias.isEmpty() ? QString() : QStringLiteral("/")) % alias, encodeStr(limits.predicate), OFFSET_TEMPLATE);
+                QString url_str = baseUrlStr(qst_site, LSTR("/music%1?kind=music&styleID=&searchfor=%2&page=%3")).arg(
+                            (alias.isEmpty() ? QString() : LSTR("/")) % alias, encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
                 PolyQueryRules rules(
                     call_iter_type_page, limits.start_offset,

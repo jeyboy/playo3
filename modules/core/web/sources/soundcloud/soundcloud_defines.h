@@ -15,7 +15,7 @@
 #define SOUNDCLOUD_PER_REQUEST_LIMIT_SET 4
 #define SOUNDCLOUD_OFFLINE_PER_REQUEST_LIMIT_SET 10
 
-#define COLLECTION_FIELDS IQUERY_DEF_FIELDS << QStringLiteral("collection")
+#define COLLECTION_FIELDS IQUERY_DEF_FIELDS << LSTR("collection")
 
 namespace Core {
     namespace Web {
@@ -42,7 +42,7 @@ namespace Core {
                 }
 
                 QString generateMark() {
-                    const QString possibleCharacters = QStringLiteral("abcdefghijklmnopqrstuvwxyz0123456789");
+                    const QString possibleCharacters = LSTR("abcdefghijklmnopqrstuvwxyz0123456789");
                     int valid_range = possibleCharacters.length();
 
                     QString randomString;

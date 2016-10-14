@@ -397,11 +397,11 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QMenu menu(this);
 
     if (isConfigurable()) {
-        menu.addAction(QIcon(QStringLiteral(":/settings")), QStringLiteral("View settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
+        menu.addAction(QIcon(LSTR(":/settings")), LSTR("View settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
         menu.addSeparator();
     }
 
-    menu.addAction(QIcon(QStringLiteral(":/refresh")), QStringLiteral("Refresh items"), mdl, SLOT(refresh()));
+    menu.addAction(QIcon(LSTR(":/refresh")), LSTR("Refresh items"), mdl, SLOT(refresh()));
     menu.addSeparator();
 
     QModelIndex ind = indexAt(event -> pos());
@@ -413,7 +413,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
         if (itm && itm -> hasMoreItems()) {
             menu.addAction(
-                QIcon(QStringLiteral(":/more")), QStringLiteral("Load more items"),
+                QIcon(LSTR(":/more")), LSTR("Load more items"),
                 this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
             );
         }
@@ -421,12 +421,12 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
     menu.addSeparator();
 
-    menu.addAction(QIcon(QStringLiteral(":/search")), QStringLiteral("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
+    menu.addAction(QIcon(LSTR(":/search")), LSTR("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();
 
     if (DataFactory::obj().playedIndex().isValid()) {
         menu.addAction(
-            QIcon(QStringLiteral(":/active_tab")), QStringLiteral("Show active elem"),
+            QIcon(LSTR(":/active_tab")), LSTR("Show active elem"),
             &Presentation::Dockbars::obj(), SLOT(scrollToActive()), QKeySequence(tr("Ctrl+P", "Played elem"))
         );
         menu.addSeparator();
@@ -439,38 +439,38 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
         if (src) {
             if (src -> hasSimillarAudioByUser())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations for item owner"), this, SLOT(openRecsForItemUser()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations for item owner"), this, SLOT(openRecsForItemUser()));
 
             if (src -> hasSimillarAudioByAudio())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item"), this, SLOT(openRecsForItem()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item"), this, SLOT(openRecsForItem()));
 
             if (src -> hasSimillarAudioByArtist())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item artist"), this, SLOT(openRecsForArtist()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item artist"), this, SLOT(openRecsForArtist()));
 
             if (src -> hasSimillarAudioByTag())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Recommendations by item tags"), this, SLOT(openRecsForTag()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item tags"), this, SLOT(openRecsForTag()));
 
             if (src -> hasAudioFromSameArtist())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Tracks from same artist"), this, SLOT(openTracksFromSameArtist()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same artist"), this, SLOT(openTracksFromSameArtist()));
 
             if (src -> hasAlbumsFromSameArtist())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Albums from same artist"), this, SLOT(openAlbumsFromSameArtist()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same artist"), this, SLOT(openAlbumsFromSameArtist()));
 
 
             if (src -> hasAudioFromSameLabel())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Tracks from same label"), this, SLOT(openTracksFromSameLabel()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same label"), this, SLOT(openTracksFromSameLabel()));
 
             if (src -> hasAlbumsFromSameLabel())
-                menu.addAction(QIcon(/*":/active_tab"*/), QStringLiteral("Albums from same label"), this, SLOT(openAlbumsFromSameLabel()));
+                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same label"), this, SLOT(openAlbumsFromSameLabel()));
 
             menu.addSeparator();
         }
 
-        menu.addAction(QIcon(QStringLiteral(":/copy")), QStringLiteral("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
+        menu.addAction(QIcon(LSTR(":/copy")), LSTR("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
         menu.addSeparator();
 
         if (!ind.data(IFULLPATH).toString().isEmpty())
-            menu.addAction(QIcon(QStringLiteral(":/open")), QStringLiteral("Open location"), this, SLOT(openLocation()));
+            menu.addAction(QIcon(LSTR(":/open")), LSTR("Open location"), this, SLOT(openLocation()));
 
 //        if (ind.data(IREMOTE).toBool()) {
             //    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
@@ -497,14 +497,14 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     }
 
     menu.addAction(
-        QIcon(QStringLiteral(":/import")), QStringLiteral("Import Ids"),
+        QIcon(LSTR(":/import")), LSTR("Import Ids"),
         this, SLOT(importIds()), QKeySequence(tr("Ctrl+Shift+V", "Insert ids"))
     );
 
     if (mdl -> rowCount() > 0) {
         if (!selectedIndexes().isEmpty()) {
             menu.addAction(
-                QIcon(QStringLiteral(":/export")), QStringLiteral("Copy Ids to Clipboard"),
+                QIcon(LSTR(":/export")), LSTR("Copy Ids to Clipboard"),
                 this, SLOT(copyIdsToClipboard()), QKeySequence(tr("Ctrl+Shift+C", "Copy ids"))
             );
             menu.addSeparator();
@@ -515,27 +515,27 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
 //            menu.addAction(QIcon(":/move"), "Copy Checked To New Tab", this, SLOT(moveCheckedToNewTab()));
 
-            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check All"), mdl, SLOT(markAllAsChecked()));
-            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Uncheck All"), mdl, SLOT(markAllAsUnchecked()));
-            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Liked"), this, SLOT(markLikedAsChecked()));
-            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check New"), this, SLOT(markNewAsChecked()));
-            menu.addAction(QIcon(QStringLiteral(":/move")), QStringLiteral("Check Listened"), this, SLOT(markListenedAsChecked()));
+            menu.addAction(QIcon(LSTR(":/move")), LSTR("Check All"), mdl, SLOT(markAllAsChecked()));
+            menu.addAction(QIcon(LSTR(":/move")), LSTR("Uncheck All"), mdl, SLOT(markAllAsUnchecked()));
+            menu.addAction(QIcon(LSTR(":/move")), LSTR("Check Liked"), this, SLOT(markLikedAsChecked()));
+            menu.addAction(QIcon(LSTR(":/move")), LSTR("Check New"), this, SLOT(markNewAsChecked()));
+            menu.addAction(QIcon(LSTR(":/move")), LSTR("Check Listened"), this, SLOT(markListenedAsChecked()));
             menu.addSeparator();
         }
 
-        menu.addAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Download"), this, SLOT(downloadSelected()));
-        menu.addAction(QIcon(QStringLiteral(":/download")), QStringLiteral("Download All"), this, SLOT(downloadAll()));
+        menu.addAction(QIcon(LSTR(":/download")), LSTR("Download"), this, SLOT(downloadSelected()));
+        menu.addAction(QIcon(LSTR(":/download")), LSTR("Download All"), this, SLOT(downloadAll()));
         menu.addSeparator();
 
-        menu.addAction(QIcon(QStringLiteral(":/shuffle")), QStringLiteral("Shuffle"), this, SLOT(shuffle()));
+        menu.addAction(QIcon(LSTR(":/shuffle")), LSTR("Shuffle"), this, SLOT(shuffle()));
 
         if (mdl -> playlistType() != dt_level) {
             menu.addSeparator();
 
             if (itm -> parent())
-                menu.addAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse parent"), this, SLOT(collapseParent()));
-            menu.addAction(QIcon(QStringLiteral(":/collapse")), QStringLiteral("Collapse all"), this, SLOT(collapseAll()));
-            menu.addAction(QIcon(QStringLiteral(":/expand")), QStringLiteral("Expand all"), this, SLOT(expandAll()));
+                menu.addAction(QIcon(LSTR(":/collapse")), LSTR("Collapse parent"), this, SLOT(collapseParent()));
+            menu.addAction(QIcon(LSTR(":/collapse")), LSTR("Collapse all"), this, SLOT(collapseAll()));
+            menu.addAction(QIcon(LSTR(":/expand")), LSTR("Expand all"), this, SLOT(expandAll()));
         }
     }
 
@@ -623,8 +623,8 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
             if (!usePrevAction || (usePrevAction && _deleteFolderAnswer != QMessageBox::YesToAll)) {
                 UserDialogBox::obj().alert(
                     this,
-                    QStringLiteral("Folder deletion"),
-                    QStringLiteral("Are you sure what you want to remove the not empty folder '") % node.data().toString() % QStringLiteral("' ?"),
+                    LSTR("Folder deletion"),
+                    LSTR("Are you sure what you want to remove the not empty folder '") % node.data().toString() % LSTR("' ?"),
                     QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
                 );
 
@@ -1001,7 +1001,7 @@ void IView::mouseMoveEvent(QMouseEvent * event) {
         if (selectedIndexes().length() > 0) {
             QDrag * drag = new QDrag(this);
             QMimeData * mimeData = model() -> mimeData(selectedIndexes());
-            drag -> setPixmap(QPixmap(QStringLiteral(":drag")));
+            drag -> setPixmap(QPixmap(LSTR(":drag")));
             drag -> setMimeData(mimeData);
             drag -> exec(Qt::CopyAction, Qt::CopyAction);
         }

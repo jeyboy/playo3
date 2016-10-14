@@ -23,7 +23,7 @@ namespace Core {
 //                title – Resources are sorted alphabetically by title.
 //                videoCount – Channels are sorted in descending order of their number of uploaded videos.
 //                viewCount – Resources are sorted from highest to lowest number of views. For live broadcasts, videos are sorted by number of concurrent viewers while the broadcasts are ongoing.
-                inline void setOrder(QUrlQuery & query, const QString & order = QStringLiteral("relevance")) {
+                inline void setOrder(QUrlQuery & query, const QString & order = LSTR("relevance")) {
                     setParam(query, tkn_order, order);
                 }
 
@@ -38,12 +38,12 @@ namespace Core {
 //             }
 //            },
                 void setMusicVideoCategory(QUrlQuery & query) {
-                    setParam(query, QStringLiteral("videoCategoryId"), 10);
+                    setParam(query, LSTR("videoCategoryId"), 10);
                 }
 
                 inline void setEmbedable(QUrlQuery & query) {
-                    setParam(query, tkn_video_embedable, QStringLiteral("true")); // any // true
-                    setParam(query, tkn_type, QStringLiteral("video")); // channel // playlist // video
+                    setParam(query, tkn_video_embedable, LSTR("true")); // any // true
+                    setParam(query, tkn_type, LSTR("video")); // channel // playlist // video
                 }
 
 
@@ -74,7 +74,7 @@ namespace Core {
                 {
                     return PolyQueryRules(
                         qMin(pages_limit, YOUTUBE_PAGES_LIMIT),
-                        QStringLiteral("pageToken"), start_token,
+                        LSTR("pageToken"), start_token,
                         qMin(items_limit, YOUTUBE_ITEMS_LIMIT)
                     );
                 }
@@ -87,7 +87,7 @@ namespace Core {
                         if (ids.length() == YOUTUBE_INFO_ITEMS_LIMIT)
                             proceedDurationResult(ids, res);
                         else
-                            ids << (*item).toObject().value(QStringLiteral("id")).toObject().value(QStringLiteral("videoId")).toString();
+                            ids << (*item).toObject().value(LSTR("id")).toObject().value(LSTR("videoId")).toString();
 
                     if (!ids.isEmpty())
                         proceedDurationResult(ids, res);
@@ -131,18 +131,18 @@ namespace Core {
                 //encodeStr
                 QString searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
                     QUrlQuery query = genDefaultParams();
-                    setOrder(query, hottest ? QStringLiteral("rating") : QStringLiteral("relevance"));
+                    setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
                     setEmbedable(query);
-                    setParam(query, tkn_part, QStringLiteral("snippet"));
-                    setParam(query, QStringLiteral("fields"), QStringLiteral("items(id,snippet),nextPageToken,pageInfo"));
-                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
-//                    setParam(query, QStringLiteral("safeSearch"), QStringLiteral("none"));
+                    setParam(query, tkn_part, LSTR("snippet"));
+                    setParam(query, LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo"));
+                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
+//                    setParam(query, LSTR("safeSearch"), LSTR("none"));
                     setMusicVideoCategory(query);
 
                     if (!predicate.isEmpty())
                         setSearchPredicate(query, predicate);
                     else if (!relatedVideoId.isEmpty())
-                        setParam(query, QStringLiteral("relatedToVideoId"), relatedVideoId);
+                        setParam(query, LSTR("relatedToVideoId"), relatedVideoId);
 
                     return baseUrlStr(qst_api, path_search, query);
                 }
@@ -150,17 +150,17 @@ namespace Core {
                 QString videosUrl(const QStringList & ids = QStringList()) {
                     QUrlQuery query = genDefaultParams();
                     if (!ids.isEmpty())
-                        setParam(query, QStringLiteral("id"), ids.join(','));
+                        setParam(query, LSTR("id"), ids.join(','));
                     else
-                        setParam(query, QStringLiteral("chart"), QStringLiteral("mostPopular"));
+                        setParam(query, LSTR("chart"), LSTR("mostPopular"));
 
-                    setParam(query, tkn_part, QStringLiteral("snippet,contentDetails"));
-                    setParam(query, QStringLiteral("fields"), QStringLiteral("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
-                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
-                    setParam(query, QStringLiteral("regionCode"), QStringLiteral("ua"));
+                    setParam(query, tkn_part, LSTR("snippet,contentDetails"));
+                    setParam(query, LSTR("fields"), LSTR("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
+                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
+                    setParam(query, LSTR("regionCode"), LSTR("ua"));
                     setMusicVideoCategory(query);
 
-                    return baseUrlStr(qst_api, QStringLiteral("videos"), query);
+                    return baseUrlStr(qst_api, LSTR("videos"), query);
                 }
 
 

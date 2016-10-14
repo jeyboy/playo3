@@ -30,7 +30,7 @@ namespace Core {
                         case sf_api:
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_alt1, QStringLiteral("stations/artist_recommended"), {}),
+                                baseUrlStr(qst_site_alt1, LSTR("stations/artist_recommended"), {}),
                                 call_type_json, rules(offset, qMin(limit, 50)), 0,
                                 proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                             );

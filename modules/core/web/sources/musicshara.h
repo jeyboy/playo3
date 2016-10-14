@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         class MusicShara : public ISource, public IQueriable, public Singleton<MusicShara> {
         public:
-            inline QString name() const { return QStringLiteral("MusicShara"); }
+            inline QString name() const { return LSTR("MusicShara"); }
             inline DataSubType sourceType() const { return dt_web_music_shara; }
 
             inline QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -19,7 +19,7 @@ namespace Core {
             }
 
         protected:
-            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return QStringLiteral("http://musicshara.ru") % predicate; }
+            QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) { return LSTR("http://musicshara.ru") % predicate; }
 
             QString refreshProc(Response * reply, const DataMediaType & /*itemMediaType*/) {
                 Html::Document parser(reply);
@@ -33,7 +33,7 @@ namespace Core {
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site, QStringLiteral("/search-page-%2-%1.html?ajax=yw1")).arg(encodeStr(limits.predicate), OFFSET_TEMPLATE);
+                QString url_str = baseUrlStr(qst_site, LSTR("/search-page-%2-%1.html?ajax=yw1")).arg(encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
                 PolyQueryRules rules(
                     call_iter_type_page, limits.start_offset,
@@ -61,7 +61,7 @@ namespace Core {
                         for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                             QJsonObject track_obj;
 
-                            track_obj.insert(tkn_grab_url, (*track) -> data(QStringLiteral("src")));
+                            track_obj.insert(tkn_grab_url, (*track) -> data(LSTR("src")));
 
                             QString artist = (*track) -> find(&artistSelector).text();
                             QString title = (*track) -> find(&titleSelector).text();

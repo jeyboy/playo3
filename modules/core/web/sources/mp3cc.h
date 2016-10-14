@@ -10,7 +10,7 @@ namespace Core {
     namespace Web {
         class Mp3cc : public ISource, public IQueriable, public Singleton<Mp3cc> {
         public:
-            inline QString name() const { return QStringLiteral("Mp3cc"); }
+            inline QString name() const { return LSTR("Mp3cc"); }
             inline DataSubType sourceType() const { return dt_web_mp3cc; }
 
             QJsonValue popular(const SearchLimit & /*limits*/) {
@@ -19,7 +19,7 @@ namespace Core {
             }
         protected:
             QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate = DEFAULT_PREDICATE_NAME) {
-                return QStringLiteral("http://mp3.cc") % predicate;
+                return LSTR("http://mp3.cc") % predicate;
             }
 
             bool htmlToJson(QueriableArg * arg, Response * reply, QString & /*message*/, bool removeReply = false) {
@@ -35,8 +35,8 @@ namespace Core {
                         for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                             QJsonObject track_obj;
 
-                            track_obj.insert(tkn_grab_url, (*track) -> find(&down_selector).link()); // alt (*track) -> value(QStringLiteral("data-mp3")).toString()
-                            track_obj.insert(tkn_grab_duration, Duration::fromMillis((*track) -> value(QStringLiteral("data-duration")).toInt()));
+                            track_obj.insert(tkn_grab_url, (*track) -> find(&down_selector).link()); // alt (*track) -> value(LSTR("data-mp3")).toString()
+                            track_obj.insert(tkn_grab_duration, Duration::fromMillis((*track) -> value(LSTR("data-duration")).toInt()));
                             track_obj.insert(tkn_skip_info, true);
 
                             Html::Set titles = (*track) -> find(&titles_selector);
@@ -58,30 +58,30 @@ namespace Core {
             inline bool isRefreshable() { return false; }
 
             inline void genresProc() {
-                genres.addGenre(QStringLiteral("Pop"), QStringLiteral("pop"));
-                genres.addGenre(QStringLiteral("Rock"), QStringLiteral("rock"));
-                genres.addGenre(QStringLiteral("Rap"), QStringLiteral("rap"));
-                genres.addGenre(QStringLiteral("Alternative"), QStringLiteral("alternative"));
-                genres.addGenre(QStringLiteral("Rhythm and Blues"), QStringLiteral("rnb"));
-                genres.addGenre(QStringLiteral("Rhythm & Blues"), QStringLiteral("rnb"));
-                genres.addGenre(QStringLiteral("Metal"), QStringLiteral("metal"));
-                genres.addGenre(QStringLiteral("Reggae"), QStringLiteral("reggae"));
-                genres.addGenre(QStringLiteral("Jazz"), QStringLiteral("jazz"));
-                genres.addGenre(QStringLiteral("Country"), QStringLiteral("country"));
-                genres.addGenre(QStringLiteral("Chanson"), QStringLiteral("chanson"));
-                genres.addGenre(QStringLiteral("Blues"), QStringLiteral("blues"));
-                genres.addGenre(QStringLiteral("Dance"), QStringLiteral("dance"));
-                genres.addGenre(QStringLiteral("Estrada"), QStringLiteral("estrada"));
-                genres.addGenre(QStringLiteral("Easy Listening"), QStringLiteral("relax"));
-                genres.addGenre(QStringLiteral("Folk"), QStringLiteral("folk"));
-                genres.addGenre(QStringLiteral("Electronic"), QStringLiteral("electronic"));
-                genres.addGenre(QStringLiteral("Drum & Bass"), QStringLiteral("dnb"));
-                genres.addGenre(QStringLiteral("Soundtrack"), QStringLiteral("soundtrack"));
-                genres.addGenre(QStringLiteral("Classical"), QStringLiteral("classical"));
+                genres.addGenre(LSTR("Pop"),                LSTR("pop"));
+                genres.addGenre(LSTR("Rock"),               LSTR("rock"));
+                genres.addGenre(LSTR("Rap"),                LSTR("rap"));
+                genres.addGenre(LSTR("Alternative"),        LSTR("alternative"));
+                genres.addGenre(LSTR("Rhythm and Blues"),   LSTR("rnb"));
+                genres.addGenre(LSTR("Rhythm & Blues"),     LSTR("rnb"));
+                genres.addGenre(LSTR("Metal"),              LSTR("metal"));
+                genres.addGenre(LSTR("Reggae"),             LSTR("reggae"));
+                genres.addGenre(LSTR("Jazz"),               LSTR("jazz"));
+                genres.addGenre(LSTR("Country"),            LSTR("country"));
+                genres.addGenre(LSTR("Chanson"),            LSTR("chanson"));
+                genres.addGenre(LSTR("Blues"),              LSTR("blues"));
+                genres.addGenre(LSTR("Dance"),              LSTR("dance"));
+                genres.addGenre(LSTR("Estrada"),            LSTR("estrada"));
+                genres.addGenre(LSTR("Easy Listening"),     LSTR("relax"));
+                genres.addGenre(LSTR("Folk"),               LSTR("folk"));
+                genres.addGenre(LSTR("Electronic"),         LSTR("electronic"));
+                genres.addGenre(LSTR("Drum & Bass"),        LSTR("dnb"));
+                genres.addGenre(LSTR("Soundtrack"),         LSTR("soundtrack"));
+                genres.addGenre(LSTR("Classical"),          LSTR("classical"));
             }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site, QStringLiteral("/search/%1/%2/page/%3/")).arg(
+                QString url_str = baseUrlStr(qst_site, LSTR("/search/%1/%2/page/%3/")).arg(
                     QString(limits.by_artists() ? 'a' : (limits.by_songs_name() ? 't' : 'f')),
                     encodeStr(limits.predicate),
                     OFFSET_TEMPLATE

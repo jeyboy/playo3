@@ -69,7 +69,7 @@ namespace Core {
                         Html::Tag * form = html.findFirst("form.authorize-token");
 
                         if (!form) {
-                            Logger::obj().write(name(), QStringLiteral("Auth form did not found"), Logger::log_error);
+                            Logger::obj().write(name(), LSTR("Auth form did not found"), Logger::log_error);
                             return false;
                         }
 
@@ -159,7 +159,7 @@ namespace Core {
 //                bool initOAuthToken() {
 //                    QJsonObject obj = Manager::prepare() -> jsonPost(
 //                        baseUrlStr(
-//                            qst_site, QStringLiteral("connect/token"),
+//                            qst_site, LSTR("connect/token"),
 //                            {{LSTR("scope"), LSTR("non-expiring%20fast-connect%20purchase%20upload")}}
 //                        )
 //                    );

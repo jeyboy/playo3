@@ -33,7 +33,7 @@ namespace Core {
 
                     QString calcKey(const QString & path, const QString & s) {
                         QString str = path.mid(1) + s;
-    //                    str.replace(QStringLiteral("\r\n"), QStringLiteral("\n"))
+    //                    str.replace(LSTR("\r\n"), LSTR("\n"))
 
                         QCryptographicHash hash(QCryptographicHash::Md5);
                         hash.addData((val_key_set % str).toLatin1());

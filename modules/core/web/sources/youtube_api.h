@@ -77,15 +77,15 @@ namespace Core {
 //                inline int requestLimit() const { return 200; }
 
                 inline bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
-                    QJsonObject error = json.value(QStringLiteral("error")).toObject();
+                    QJsonObject error = json.value(LSTR("error")).toObject();
                     if (error.isEmpty()) {
                         arg -> prepareRequestUrlByToken(
-                            json.value(QStringLiteral("nextPageToken")).toString()
+                            json.value(LSTR("nextPageToken")).toString()
                         );
                         return true;
                     } else {
-                        code = error.value(QStringLiteral("code")).toInt();
-                        message = error.value(QStringLiteral("message")).toString();
+                        code = error.value(LSTR("code")).toInt();
+                        message = error.value(LSTR("message")).toString();
                         return false;
                     }
                 }                

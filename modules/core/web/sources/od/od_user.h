@@ -69,7 +69,7 @@ namespace Core {
 
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_user, QStringLiteral("search"),
+                            qst_site_user, LSTR("search"),
                             {
                                 { LSTR("cmd"),          LSTR("PortalSearchResults") },
                                 { LSTR("st.cmd"),       LSTR("searchResult") },

@@ -56,7 +56,7 @@ namespace Presentation {
     class Dockbars : public QWidget, public Singleton<Dockbars> {
         Q_OBJECT
     public:
-        static inline QString settingsName() { return QStringLiteral("docks"); }
+        static inline QString settingsName() { return LSTR("docks"); }
 
         void load(const QJsonArray & bars);
         void save(DataStore * settings);

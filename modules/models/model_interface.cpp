@@ -357,7 +357,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
             QString player_url = JSON_STR(itm, Vk::tkn_player);
 
             //FIXME: need to realize correct algorithm for inner video identification // current algorithm is not worked properly
-            if (QUrl(player_url).host() != QStringLiteral("vk.com")) // https://new.vk.com
+            if (QUrl(player_url).host() != LSTR("vk.com")) // https://new.vk.com
                 uri = player_url;
             else
                 uri = QString(); // store only embeded videos // not playable at this time
@@ -712,7 +712,7 @@ int IModel::proceedYandexList(const QJsonObject & block, Playlist * parent, int 
             QString name = JSON_STR(obj, Yandex::tkn_name);
 
             artists.insert(JSON_CSTR(obj, Yandex::tkn_id), name);
-            artistStr = artistStr % (artistStr.isEmpty() ? QString() : QStringLiteral(" & ")) % name;
+            artistStr = artistStr % (artistStr.isEmpty() ? QString() : LSTR(" & ")) % name;
         };
 
         QVariantMap albums;
@@ -843,7 +843,7 @@ int IModel::proceedYoutubeList(const QJsonObject & block, Playlist * parent, int
 
             stores[parent].insert(uid, new_item);
 
-            //snippet.value(QStringLiteral("thumbnails")).toObject().value(QStringLiteral("default")).toObject().value(QStringLiteral("url")); // "medium" // "high"
+            //snippet.value(LSTR("thumbnails")).toObject().value(LSTR("default")).toObject().value(LSTR("url")); // "medium" // "high"
 
 
             snippet = JSON_OBJ(itm, LSTR("contentDetails"));
@@ -1252,7 +1252,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
         if (itm -> isShareable()) {
             QVariant uid = itm -> id();
             if (uid.isValid())
-                ret = ret % QStringLiteral(" ") % UID_CAT(itm, uid.toString());
+                ret = ret % ' ' % UID_CAT(itm, uid.toString());
         }
     }
 
@@ -1415,7 +1415,7 @@ void IModel::finishSetLoading(const QJsonValue & json, void * params) {
                 emit expandNeeded(pind);
         } else {
             if (temp_item -> dataType() == dt_dummy) {
-                temp_item -> setTitle(QStringLiteral("Error: %1").arg(err_str));
+                temp_item -> setTitle(LSTR("Error: %1").arg(err_str));
                 emit dataChanged(pind, pind);
             }
         }

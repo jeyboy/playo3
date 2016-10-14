@@ -17,7 +17,7 @@ namespace Core {
                     );
                 }
                 QJsonValue groupsByIdOrPermas(const QStringList & ids) {
-                    return groupsByIdOrPerma(ids.join(QStringLiteral(",")));
+                    return groupsByIdOrPerma(ids.join(','));
                 }
                 QJsonValue groupsByIdOrPerma(const QString & id, int offset = 0, int count = 100) {
                     SourceFlags perm = permissions(sf_group_by_id);
@@ -69,7 +69,7 @@ namespace Core {
 //                                    {
 //                                        { tkn_type, val_group_types },
 //                                        { tkn_q, name },
-//                                        { QStringLiteral("count"), count }
+//                                        { LSTR("count"), count }
 //                                    }
 //                                ),
 //                                call_type_json, 0, proc_json_extract,

@@ -13,20 +13,20 @@ namespace Core {
             public:
                 bool connectApi() {
 ////                    OAuth auth("22abeb63487b7f6b75051079b7e610b1", "71970e08961f3a78e821f51f989e6cb568cbd0ce");
-////                    bool res = auth.initiate(url_api_base.arg(val_version) % QStringLiteral("oauth/initiate"));
+////                    bool res = auth.initiate(url_api_base.arg(val_version) % LSTR("oauth/initiate"));
 ////                    if (res)
-////                        res = auth.autorize(url_api_base.arg(val_version) % QStringLiteral("oauth/authorize"));
+////                        res = auth.autorize(url_api_base.arg(val_version) % LSTR("oauth/authorize"));
 ////                    if (res)
-////                        res = auth.access(url_api_base.arg(val_version) % QStringLiteral("oauth/token"));
+////                        res = auth.access(url_api_base.arg(val_version) % LSTR("oauth/token"));
 
 ////                    return res;
 
-////                    OAuth auth("i0SEyiZts1mMGizAVDjn4nhOH", "O52MLLcKA0LknMLf47ZKyvTQhwdhLshsSY865hEgERS6ediuSj", QStringLiteral("http://localhost:3000/"));
-////                    bool res = auth.initiate(QStringLiteral("https://api.twitter.com/oauth/request_token"));
+////                    OAuth auth("i0SEyiZts1mMGizAVDjn4nhOH", "O52MLLcKA0LknMLf47ZKyvTQhwdhLshsSY865hEgERS6ediuSj", LSTR("http://localhost:3000/"));
+////                    bool res = auth.initiate(LSTR("https://api.twitter.com/oauth/request_token"));
 ////                    if (res)
-////                        res = auth.autorize(QStringLiteral("https://api.twitter.com/oauth/authenticate"));
+////                        res = auth.autorize(LSTR("https://api.twitter.com/oauth/authenticate"));
 ////                    if (res)
-////                        res = auth.access(QStringLiteral("https://api.twitter.com/oauth/access_token"));
+////                        res = auth.access(LSTR("https://api.twitter.com/oauth/access_token"));
 
 //                    return res;
 
@@ -40,7 +40,7 @@ namespace Core {
                     QHash<QString, QString> vals;
 
                     while(true) {
-                        if (!showingLogin(QStringLiteral("4shared auth"), vals[QStringLiteral("login")], vals[QStringLiteral("password")], err))
+                        if (!showingLogin(LSTR("4shared auth"), vals[LSTR("login")], vals[LSTR("password")], err))
                             return false;
 
                         QUrl form_url = form -> serializeFormToUrl(vals);
@@ -50,7 +50,7 @@ namespace Core {
                         if (!form) {
                             Html::Document acc_doc = Manager::prepare() -> getFollowed(
                                 baseUrlStr(
-                                    qst_site_base, QStringLiteral("account/home.jsp")
+                                    qst_site_base, LSTR("account/home.jsp")
                                 )
                             ) -> toHtml();
 

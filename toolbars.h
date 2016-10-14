@@ -26,7 +26,7 @@ namespace Presentation {
     public:
         ~ToolBars() { }
 
-        static inline QString settingsName() { return QStringLiteral("bars"); }
+        static inline QString settingsName() { return LSTR("bars"); }
 
         QMenu * createPopupMenu();
 
@@ -85,7 +85,7 @@ namespace Presentation {
             updateBarStyle((QToolBar *)sender());
         }
 
-        inline void onTopLevelChanged(bool /*topLevel*/) { Settings::currentStyle -> applyProperty((QToolBar *)sender(), "state", QStringLiteral("float")); }
+        inline void onTopLevelChanged(bool /*topLevel*/) { Settings::currentStyle -> applyProperty((QToolBar *)sender(), "state", LSTR("float")); }
 
     private:
         void updateBarStyle(QToolBar * bar);

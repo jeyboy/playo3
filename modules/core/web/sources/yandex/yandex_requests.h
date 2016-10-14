@@ -49,7 +49,7 @@ namespace Core {
                 }
 
                 void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
-//                    if (arr.size() == 0 || (arr.size() == 1 && arr[0].toObject().contains(QStringLiteral("errors")))) return;
+//                    if (arr.size() == 0 || (arr.size() == 1 && arr[0].toObject().contains(LSTR("errors")))) return;
 
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = (*obj_iter).toObject();
