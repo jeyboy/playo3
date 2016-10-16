@@ -320,6 +320,8 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
         endInsertRows();
     }
 
+    emit changeIco(root_item -> hasMoreItems() ? QImage(LSTR(":/download")) : QImage());
+
     return items_amount;
 }
 
