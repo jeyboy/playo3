@@ -133,7 +133,7 @@ namespace Core {
 
 
                         {sf_user_by_user,               sf_site_auth_only},
-//                        {sf_user_by_id,             sf_site_auth_only},
+                        {sf_user_by_id,                 sf_site_auth_only},
 //                        {sf_user_by_title,          sf_site_auth_only},
                     };
                 }
