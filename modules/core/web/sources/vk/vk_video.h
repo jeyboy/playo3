@@ -21,7 +21,7 @@ namespace Core {
                     QString resp = response -> toText();
 
                     QRegularExpressionMatch match;
-                    if (resp.indexOf(QRegularExpression("vars = ([^;]+);"), 0, &match) != -1) {
+                    if (resp.indexOf(QRegularExpression("vars = (.+)(?<=\\});"), 0, &match) != -1) {
                         QJsonObject obj = QJsonDocument::fromJson(match.captured(1).toUtf8()).object();
 
                         QStringList available_keys = obj.keys();
@@ -39,6 +39,9 @@ namespace Core {
 
                         // INFO: take middle quality // need to add option in settings about preferable quality and take closest to chosen by user
                         int size = pathes.size();
+                        if (size == 0)
+                            return QString();
+
                         int quality_index = size / 2 + (size > 1 ? size % 2 : 0);
                         QHash<QString, QString> variants = pathes[pathes.keys()[quality_index]];
 
