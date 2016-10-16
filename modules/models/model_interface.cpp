@@ -401,8 +401,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
             if (clear_media_type == dmt_video) {
                 QString player_url = JSON_STR(itm, Vk::tkn_player);
 
-                //FIXME: need to realize correct algorithm for inner video identification // current algorithm is not worked properly
-                if (QUrl(player_url).host() != LSTR("vk.com")) // https://new.vk.com
+                if (QUrl(player_url).host().contains(LSTR("vk.com"), Qt::CaseInsensitive))
                     uri = player_url;
                 else
                     uri = QString(); // store only embeded videos // not playable at this time
