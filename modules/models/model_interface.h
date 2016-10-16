@@ -152,7 +152,7 @@ namespace Models {
         int proceedBlocks(const QJsonArray & blocks, Playlist * parent);
 
         int proceedVkList(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
-        int proceedVkSet(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
+//        int proceedVkSet(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
 
         int proceedScList(const QJsonObject & collection, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);
         int proceedScSet(const QJsonObject & collection, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_sc);

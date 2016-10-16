@@ -94,7 +94,6 @@ namespace Core {
                     return prepareBlock(dmt_video, block_content);
                 }
 
-
                 QJsonValue videoByUser(const QUrlQuery & args) {
                     return videoByUser(
                         args.queryItemValue(CMD_ID),
@@ -263,12 +262,13 @@ namespace Core {
                         QJsonObject cat_obj = (*cat).toObject();
 
                         if (JSON_CSTR(cat_obj, tkn_id) == category_id) {
-                            return QJsonObject {
-                                {tkn_content,       JSON_ARR(cat_obj, tkn_items)},
-                                {tkn_media_type,    dmt_video},
-                                {tkn_source_id,     sourceType()},
-                                {tkn_more_cmd,      JSON_STR(cat_obj, tkn_more_cmd)}
-                            };
+                            return prepareVideoCategoryBlock(JSON_ARR(cat_obj, tkn_items), category_id, JSON_CSTR(cat_obj, LSTR("next")));
+//                            return QJsonObject {
+//                                {tkn_content,       JSON_ARR(cat_obj, tkn_items)},
+//                                {tkn_media_type,    category_id == LSTR("series") ? dmt_video_set : dmt_video},
+//                                {tkn_source_id,     sourceType()},
+//                                {tkn_more_cmd,      JSON_STR(cat_obj, tkn_more_cmd)}
+//                            };
                         }
                     }
 
@@ -303,14 +303,15 @@ namespace Core {
                         default: Logger::obj().write(name(), "video by category is not accessable", Logger::log_error);
                     }
 
-                    QString offset = JSON_STR(response, LSTR("offset_token"));
-                    QJsonArray block_content = JSON_ARR(response, block_sets);
-                    if (offset.isEmpty())
-                        return prepareBlock(dmt_video, block_content);
-                    else {
-                        QueriableResponse response(block_content, offset, 0, 1, block_content.isEmpty());
-                        return prepareBlock(dmt_video, cmd_mtd_video_by_category, response, {}, {{CMD_ID, category_id}});
-                    }
+                    return prepareVideoCategoryBlock(JSON_ARR(response, block_sets), category_id, JSON_STR(response, LSTR("offset_token")));
+//                    QString offset = JSON_STR(response, LSTR("offset_token"));
+//                    QJsonArray block_content = JSON_ARR(response, block_sets);
+//                    if (offset.isEmpty())
+//                        return prepareBlock(dmt_video, block_content);
+//                    else {
+//                        QueriableResponse response(block_content, offset, 0, 1, block_content.isEmpty());
+//                        return prepareBlock(dmt_video, cmd_mtd_video_by_category, response, {}, {{CMD_ID, category_id}});
+//                    }
                 }
 
                 QJsonValue videoCategories(const QUrlQuery & args) {
@@ -322,31 +323,18 @@ namespace Core {
 
                     switch(perm) {
                         case sf_site:
-                        case sf_api: {
-                            saRequest(
+                        case sf_api: {                        
+                            sRequest(
                                 baseUrlStr(
-                                    qst_api, tkn_execute,
+                                    qst_api,
+                                    LSTR("video.getCatalog"),
                                     {
-                                        {
-                                            tkn_code, QString(
-                                                "var search = []; var rule = true; var offset = \"" % offset_token % "\"; var counter = 0; var limit = 20;"
-                                                "do {"
-                                                "    var response = API.video.getCatalog({"
-                                                "        filters: \"feed,top,ugc,series,other\", count: 0, " // count - affect only on other cats amount - max eq to 16
-                                                "        from: offset, items_count: 16"
-                                                "    });"
-                                                "    offset = response.next;"
-                                                "    search = search %2b response.items;"
-                                                "    counter = counter %2b 1;"
-                                                "    rule = counter <= limit && response.items.length != 0;"
-                                                "} while(rule);"
-                                                "if (counter < limit) offset = \"\";"
-                                                "return {\"" % block_sets % "\": search, \"offset_token\": offset};"
-                                            )
-                                        }
+                                        {LSTR("filters"), LSTR("feed,top,ugc,series,other")},
+                                        {LSTR("count"), LSTR("0")}, // affect only on other cats amount - max eq to 16
+                                        {LSTR("from"), offset_token},
+                                        {LSTR("items_count"), LSTR("16")}
                                     }
-                                ),
-                                call_type_json, &block_content, proc_json_extract, IQUERY_DEF_FIELDS << block_sets
+                                ), call_type_json, &block_content, proc_json_extract, IQUERY_DEF_FIELDS << LSTR("items")
                             );
 
                             QJsonArray temp;
@@ -354,7 +342,6 @@ namespace Core {
                                 QJsonObject cat_obj = (*cat).toObject();
 
                                 cat_obj.insert(tkn_title, JSON_STR(cat_obj, LSTR("name")));
-
                                 cat_obj.insert(tkn_more_cmd,
                                     Cmd::build(
                                         sourceType(), cmd_mtd_video_by_category,

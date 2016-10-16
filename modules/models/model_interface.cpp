@@ -279,7 +279,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
             switch(wType) {
                 case dt_web_vk: {
                     proc_func = &IModel::proceedVkList;
-                    proc_set_func = &IModel::proceedVkSet;
+                    proc_set_func = &IModel::proceedVkList;
                 break;}
                 case dt_web_sc: {
                     proc_func = &IModel::proceedScList;
@@ -302,7 +302,7 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
                     proc_set_func = &IModel::proceedGrabberList;
             }
 
-            if (dmt_type != dmt_any && dmt_type & dmt_set)
+            if (dmt_type & dmt_any || dmt_type & dmt_set)
                 block_amount = (*this.*proc_set_func)(block_obj, curr_parent, update_amount, stores, dmt_type, wType);
             else
                 block_amount = (*this.*proc_func)(block_obj, curr_parent, update_amount, stores, dmt_type, wType);
@@ -323,17 +323,15 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
     return items_amount;
 }
 
-int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
+int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);
     if (collection.isEmpty()) return 0;
 
-    DataMediaType dm_type = EXTRACT_MEDIA_TYPE(fdmtype);
     int items_amount = 0;
+    bool is_collapsed = parent != root_item;
 
     if (JSON_HAS_KEY(block, tkn_more_cmd))
-        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
-
-    QString uid_prefix = UID_CAT_EXT(wType, dm_type, QString());
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));   
 
 //    int pos = parent -> playlistsAmount();
 //    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
@@ -342,119 +340,167 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & /*
 
         if (itm.isEmpty()) continue;
 
+        DataMediaType curr_media_type = fdmtype;
+
         if (JSON_HAS_KEY(itm, tkn_media_type))
-            dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
+            curr_media_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
-        QString owner = JSON_CSTR(itm, Vk::tkn_owner_id);
-        QString id = ID_TOKEN(owner, JSON_CSTR(itm, Vk::tkn_id), '_');
-        QString uid = uid_prefix % id;
+        DataMediaType clear_media_type = EXTRACT_MEDIA_TYPE(curr_media_type);
 
-        if (ignoreListContainUid(uid)) continue;
+        if (curr_media_type & dmt_set) {
+            Playlist * folder;
+            QString playlist_id = JSON_CSTR(itm, Vk::tkn_id);
+            QString title = JSON_STR(itm, Vk::tkn_title);
 
-        QVariant uri;
-
-        if (dm_type == dmt_video) {
-            QString player_url = JSON_STR(itm, Vk::tkn_player);
-
-            //FIXME: need to realize correct algorithm for inner video identification // current algorithm is not worked properly
-            if (QUrl(player_url).host() != LSTR("vk.com")) // https://new.vk.com
-                uri = player_url;
-            else
-                uri = QString(); // store only embeded videos // not playable at this time
-        } else {
-            uri = Vk::Queries::cleanUrl(JSON_STR(itm, Vk::tkn_url)); // remove extra info from url
-        }
-
-        QList<IItem *> items = stores[parent].values(uid);
-
-        if (items.isEmpty()) {
-            items_amount++;
-            IItem * new_item = new IItem(parent, VK_ITEM_ATTRS(
-                id, uri,
-                JSON_HAS_KEY(itm, Vk::tkn_artist) ? JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title) : JSON_STR(itm, Vk::tkn_title),
-                owner, id,
-                Duration::fromSeconds(JSON_INT(itm, Vk::tkn_duration)),
-                dm_type
-            )/*, pos*/);
-
-            stores[parent].insert(uid, new_item);
-
-            if (dm_type == dmt_video)
-                new_item -> setArtPath(JSON_STR(itm, Vk::tkn_video_art));
-
-//                if (itm.contains(Vk::genre_id_key))
-//                    new_item -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
-        } else {
-            for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
-                (*it_it) -> setPath(uri);
-        }
-
-//        pos++;
-    }
-
-    return items_amount;
-}
-int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
-    QJsonArray collection = EXTRACT_ITEMS(block);
-
-    if (collection.isEmpty()) return 0;
-    int items_amount = 0;
-
-    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
-    bool is_collapsed = parent != root_item;
-//    int pos = 0;
-
-    if (JSON_HAS_KEY(block, tkn_more_cmd))
-        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
-
-    for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++/*, pos++*/) {
-        QJsonObject playlist = (*playlist_obj).toObject();
-        Playlist * folder;
-
-        QString playlist_id = JSON_CSTR(playlist, Vk::tkn_id);
-        QString title = JSON_STR(playlist, Vk::tkn_title);
-
-        if (JSON_HAS_KEY(playlist, tkn_loadable_cmd)) {
-            if (parent -> createLoadablePlaylist(
-                folder,
-                JSON_STR(playlist, tkn_loadable_cmd),
-                title,
-                playlist_id
-            ))
-                update_amount++;
-        } else {
-            QJsonArray playlist_items = JSON_ARR(playlist, Vk::tkn_items);
-
-            if (playlist_items.size() > 0) {
-                if (parent -> createPlaylist(
+            if (JSON_HAS_KEY(itm, tkn_loadable_cmd)) {
+                if (parent -> createLoadablePlaylist(
                     folder,
-                    wType,
-                    playlist_id,
-                    title/*,
-                    pos*/
+                    JSON_STR(itm, tkn_loadable_cmd),
+                    title,
+                    playlist_id
                 ))
                     update_amount++;
+            } else {
+                QJsonArray playlist_items = JSON_ARR(itm, Vk::tkn_items);
 
-                int sub_update_amount = 0;
-                folder -> accumulateUids(stores[folder]);
-                int amount = proceedVkList(
-                    QJsonObject {{ tkn_content, playlist_items}},
-                    folder, sub_update_amount, stores, dmt_type
-                );
-                folder -> updateItemsCountInBranch(amount);
-                items_amount += amount;
+                if (playlist_items.size() > 0) {
+                    if (parent -> createPlaylist(
+                        folder,
+                        wType,
+                        playlist_id,
+                        title/*,
+                        pos*/
+                    ))
+                        update_amount++;
+
+                    int sub_update_amount = 0;
+                    folder -> accumulateUids(stores[folder]);
+                    int amount = proceedVkList(
+                        QJsonObject {{ tkn_content, playlist_items}},
+                        folder, sub_update_amount, stores, clear_media_type
+                    );
+                    folder -> updateItemsCountInBranch(amount);
+                    items_amount += amount;
+                }
             }
+
+            if (JSON_HAS_KEY(itm, tkn_more_cmd))
+                folder -> setFetchableAttrs(JSON_STR(itm, tkn_more_cmd));
+
+            if (is_collapsed)
+                folder -> setStates(IItem::flag_not_expanded);
+        } else {
+            QString owner = JSON_CSTR(itm, Vk::tkn_owner_id);
+            QString id = ID_TOKEN(owner, JSON_CSTR(itm, Vk::tkn_id), '_');
+            QString uid = UID_CAT_EXT(wType, clear_media_type, id);
+
+            if (ignoreListContainUid(uid)) continue;
+
+            QVariant uri;
+
+            if (clear_media_type == dmt_video) {
+                QString player_url = JSON_STR(itm, Vk::tkn_player);
+
+                //FIXME: need to realize correct algorithm for inner video identification // current algorithm is not worked properly
+                if (QUrl(player_url).host() != LSTR("vk.com")) // https://new.vk.com
+                    uri = player_url;
+                else
+                    uri = QString(); // store only embeded videos // not playable at this time
+            } else {
+                uri = Vk::Queries::cleanUrl(JSON_STR(itm, Vk::tkn_url)); // remove extra info from url
+            }
+
+            QList<IItem *> items = stores[parent].values(uid);
+
+            if (items.isEmpty()) {
+                items_amount++;
+                IItem * new_item = new IItem(parent, VK_ITEM_ATTRS(
+                    id, uri,
+                    JSON_HAS_KEY(itm, Vk::tkn_artist) ? JSON_STR_CAT(itm, Vk::tkn_artist, tkn_dash, Vk::tkn_title) : JSON_STR(itm, Vk::tkn_title),
+                    owner, id,
+                    Duration::fromSeconds(JSON_INT(itm, Vk::tkn_duration)),
+                    clear_media_type
+                )/*, pos*/);
+
+                stores[parent].insert(uid, new_item);
+
+                if (clear_media_type == dmt_video)
+                    new_item -> setArtPath(JSON_STR(itm, Vk::tkn_video_art));
+
+    //                if (itm.contains(Vk::genre_id_key))
+    //                    new_item -> setGenre(VkGenres::instance() -> toStandartId(itm.value(Vk::genre_id_key).toInt()));
+            } else {
+                for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
+                    (*it_it) -> setPath(uri);
+            }
+
+    //        pos++;
         }
-
-        if (JSON_HAS_KEY(playlist, tkn_more_cmd))
-            folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
-
-        if (is_collapsed)
-            folder -> setStates(IItem::flag_not_expanded);
     }
 
     return items_amount;
 }
+//int IModel::proceedVkSet(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
+//    QJsonArray collection = EXTRACT_ITEMS(block);
+
+//    if (collection.isEmpty()) return 0;
+//    int items_amount = 0;
+
+//    DataMediaType dmt_type = EXTRACT_MEDIA_TYPE(fdmtype);
+//    bool is_collapsed = parent != root_item;
+////    int pos = 0;
+
+//    if (JSON_HAS_KEY(block, tkn_more_cmd))
+//        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
+
+//    for(QJsonArray::Iterator playlist_obj = collection.begin(); playlist_obj != collection.end(); playlist_obj++/*, pos++*/) {
+//        QJsonObject playlist = (*playlist_obj).toObject();
+//        Playlist * folder;
+
+//        QString playlist_id = JSON_CSTR(playlist, Vk::tkn_id);
+//        QString title = JSON_STR(playlist, Vk::tkn_title);
+
+//        if (JSON_HAS_KEY(playlist, tkn_loadable_cmd)) {
+//            if (parent -> createLoadablePlaylist(
+//                folder,
+//                JSON_STR(playlist, tkn_loadable_cmd),
+//                title,
+//                playlist_id
+//            ))
+//                update_amount++;
+//        } else {
+//            QJsonArray playlist_items = JSON_ARR(playlist, Vk::tkn_items);
+
+//            if (playlist_items.size() > 0) {
+//                if (parent -> createPlaylist(
+//                    folder,
+//                    wType,
+//                    playlist_id,
+//                    title/*,
+//                    pos*/
+//                ))
+//                    update_amount++;
+
+//                int sub_update_amount = 0;
+//                folder -> accumulateUids(stores[folder]);
+//                int amount = proceedVkList(
+//                    QJsonObject {{ tkn_content, playlist_items}},
+//                    folder, sub_update_amount, stores, dmt_type
+//                );
+//                folder -> updateItemsCountInBranch(amount);
+//                items_amount += amount;
+//            }
+//        }
+
+//        if (JSON_HAS_KEY(playlist, tkn_more_cmd))
+//            folder -> setFetchableAttrs(JSON_STR(playlist, tkn_more_cmd));
+
+//        if (is_collapsed)
+//            folder -> setStates(IItem::flag_not_expanded);
+//    }
+
+//    return items_amount;
+//}
 
 int IModel::proceedScList(const QJsonObject & block, Playlist * parent, int & /*update_amount*/, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype, const DataSubType & wType) {
     QJsonArray collection = EXTRACT_ITEMS(block);

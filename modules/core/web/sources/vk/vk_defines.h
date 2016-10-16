@@ -138,6 +138,62 @@ namespace Core {
                         // 10 - views amount
                     }
                 }
+
+                QJsonValue prepareVideoCategoryBlock(const QJsonArray & items, const QString & category_id, const QString & offset) {
+//                    QString offset = JSON_STR(response, LSTR("offset_token"));
+//                    QJsonArray block_content = JSON_ARR(response, block_sets);
+//                    if (offset.isEmpty())
+//                        return prepareBlock(dmt_video, block_content);
+//                    else {
+//                        QueriableResponse response(block_content, offset, 0, 1, block_content.isEmpty());
+//                        return prepareBlock(dmt_video, cmd_mtd_video_by_category, response, {}, {{CMD_ID, category_id}});
+//                    }
+
+//                    cat_obj.insert(tkn_more_cmd,
+//                        Cmd::build(
+//                            sourceType(), cmd_mtd_video_by_category,
+//                            {
+//                                {CMD_ID,        JSON_CSTR(cat_obj, tkn_id)},
+//                                {CMD_OFFSET,    JSON_CSTR(cat_obj, LSTR("next"))}
+//                            }
+//                        ).toString()
+//                    );
+
+                    bool is_mixed = false;
+
+                    QJsonArray temp;
+                    for(QJsonArray::ConstIterator video = items.constBegin(); video != items.constEnd(); video++) {
+                        QJsonObject video_obj = (*video).toObject();
+
+                        if (JSON_STR(video_obj, LSTR("type")) == LSTR("album")) {
+                            is_mixed = true;
+                            video_obj.insert(tkn_loadable_cmd,
+                                Cmd::build(
+                                    sourceType(), cmd_mtd_video_by_playlist,
+                                    {
+                                        {
+                                            CMD_ID,
+                                            QString(
+                                                ID_TOKEN(
+                                                    JSON_CSTR(video_obj, tkn_owner_id),
+                                                    JSON_CSTR(video_obj,
+                                                    tkn_id),
+                                                    '_'
+                                                )
+                                            )
+                                        }
+                                    }
+                                ).toString()
+                            );
+                            video_obj.insert(tkn_media_type, dmt_video_set);
+                        }
+
+                        temp << video_obj;
+                    }
+
+                    QueriableResponse response(temp, offset, 0, 1, temp.isEmpty());
+                    return prepareBlock((is_mixed ? dmt_any_video : dmt_video), cmd_mtd_video_by_category, response, {}, {{CMD_ID, category_id}, {CMD_OFFSET, offset}});
+                }
             };
         }
     }

@@ -26,9 +26,8 @@ namespace Core {
         dmt_audio = 1,
         dmt_video = 2,
         dmt_dir = 4,
+        dmt_any = 8,
 
-        //reserved 4
-        //reserved 8
         //reserved 16
         //reserved 32
         //reserved 64
@@ -50,7 +49,8 @@ namespace Core {
         dmt_video_cat = dmt_video_set | dmt_dir,
 
         dmt_any_item = dmt_audio | dmt_video,
-        dmt_any = dmt_set | dmt_any_item
+        dmt_any_audio = dmt_audio | dmt_any,
+        dmt_any_video = dmt_video | dmt_any
     };
 
     #define EXTRACT_MEDIA_TYPE(val) (DataMediaType)(val & 3)

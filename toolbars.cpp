@@ -263,7 +263,6 @@ QToolBar * ToolBars::createPlayedItemFeaturesBar() {
     pl_item_features = precreateToolBar(toolbar_pl_item_features_key);
     pl_item_features -> setProperty(toolbar_block_mark, true);
 
-    pl_item_features -> addSeparator();
     pl_more_items_btn = pl_item_features -> addAction(QIcon(LSTR(":/download")), LSTR("Load more"), this, SLOT(loadMoreItem()));
     pl_item_features -> addSeparator();
 
