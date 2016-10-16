@@ -65,17 +65,6 @@ namespace Core {
                     }
                 }
             protected:
-//                inline SourceFlags defaultFlags() {
-//                    return (SourceFlags)(
-//                        sf_primary_source |
-//                        sf_auth_site_has | //sf_site_online_credentials_req |
-//                        sf_items_serachable | sf_sets_serachable | sf_packable |
-//                        sf_sociable_users | sf_shareable |
-//                        /*sf_recommendable_by_item | sf_recommendable_by_user | */ sf_recommendable_by_artist |
-////                        /*sf_newable |*/ sf_populable |
-//                    );
-//                }
-
                 Requests() {
 //                    setSociableLimitations(true, true, true, true);
 
