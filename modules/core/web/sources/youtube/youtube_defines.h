@@ -33,7 +33,7 @@ namespace Core {
 //                    QUrlQuery query = genDefaultParams();
 //                    setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
 //                    setEmbedable(query);
-//                    setParam(query, tkn_part, LSTR("snippet"));
+//                    setParam(query, tkn_part, tkn_snippet);
 //                    setParam(query, LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo"));
 //                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
 ////                    setParam(query, LSTR("safeSearch"), LSTR("none"));
@@ -50,14 +50,14 @@ namespace Core {
                 QString videosUrl(const QStringList & ids = QStringList()) {
                     QUrlQuery query = genDefaultParams();
                     if (!ids.isEmpty())
-                        setParam(query, LSTR("id"), ids.join(','));
+                        setParam(query, tkn_id, ids.join(','));
                     else
                         setParam(query, LSTR("chart"), LSTR("mostPopular"));
 
-                    setParam(query, tkn_part, LSTR("snippet,contentDetails"));
-                    setParam(query, LSTR("fields"), LSTR("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
+                    setParam(query, tkn_part,           LSTR("snippet,contentDetails"));
+                    setParam(query, LSTR("fields"),     LSTR("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
                     setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
-                    setParam(query, LSTR("regionCode"), siteLocale(LSTR("ua")));
+                    setParam(query, tkn_region_code,    siteLocale(LSTR("ua")));
                     setMusicVideoCategory(query);
 
                     return baseUrlStr(qst_api, LSTR("videos"), query);
@@ -75,12 +75,6 @@ namespace Core {
 //                    return Headers({{LSTR("x-security"), Manager::cookie(LSTR("Login"), url_html_site_base)}});
 //                }
 
-
-//                Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
-//                search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
-//                Similarly, to search for videos matching either "boating" or "sailing" but not "fishing", set the q parameter value to boating|sailing -fishing.
-//                Note that the pipe character must be URL-escaped when it is sent in your API request. The URL-escaped value for the pipe character is %7C.
-                inline void setSearchPredicate(QUrlQuery & query, const QString & predicate) { setParam(query, tkn_q, predicate); }
 
 //                date – Resources are sorted in reverse chronological order based on the date they were created.
 //                rating – Resources are sorted from highest to lowest rating.
@@ -106,10 +100,10 @@ namespace Core {
                     setParam(query, LSTR("videoCategoryId"), 10);
                 }
 
-                inline void setEmbedable(QUrlQuery & query) {
-                    setParam(query, tkn_video_embedable, LSTR("true")); // any // true
-                    setParam(query, tkn_type, LSTR("video")); // channel // playlist // video
-                }
+//                inline void setEmbedable(QUrlQuery & query) {
+//                    setParam(query, tkn_video_embedable, LSTR("true")); // any // true
+//                    setParam(query, tkn_type, LSTR("video")); // channel // playlist // video
+//                }
 
 
                 void proceedDurationResult(QStringList & ids, QJsonArray & arr) {

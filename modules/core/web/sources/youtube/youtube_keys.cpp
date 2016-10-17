@@ -8,8 +8,11 @@ namespace Core {
 //            extern const QString url_video             = QStringLiteral("http://youtube.com/get_video?video_id=%1&t=%2&fmt=18&asv=2");
             extern const QString url_embed             = QStringLiteral("https://www.youtube.com/watch?v=%1&feature=player_embedded");
 
-            extern const QString path_search           = QStringLiteral("search/");
+            extern const QString path_search           = QStringLiteral("search");
+            extern const QString path_video_cats       = QStringLiteral("videoCategories");
 
+            extern const QString tkn_region_code       = QStringLiteral("regionCode");
+            extern const QString tkn_snippet           = QStringLiteral("snippet");
             extern const QString tkn_id                = QStringLiteral("id");
             extern const QString tkn_q                 = QStringLiteral("q");
             extern const QString tkn_max_results       = QStringLiteral("maxResults");

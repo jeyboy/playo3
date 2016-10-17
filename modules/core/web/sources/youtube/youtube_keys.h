@@ -11,6 +11,8 @@ namespace Core {
             extern const QString url_embed;
             extern const QString path_search;
 
+            extern const QString tkn_region_code;
+            extern const QString tkn_snippet;
             extern const QString tkn_id;
             extern const QString tkn_q;
             extern const QString tkn_max_results;
