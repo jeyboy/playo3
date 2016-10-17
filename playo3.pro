@@ -283,10 +283,6 @@ HEADERS += \
     modules/core/web/sources/shmidt.h \
     modules/core/web/sources/soundcloud_queries.h \
     modules/core/web/sources/vk_queries.h \
-    modules/core/web/sources/youtube_api.h \
-    modules/core/web/sources/youtube/youtube_api_keys.h \
-    modules/core/web/sources/youtube/youtube_api_misc.h \
-    modules/core/web/sources/youtube/youtube_request_api.h \
     modules/core/web/sources/zaycev.h \
     modules/core/web/sources/_sources.h \
     modules/core/web/sources/fourshared/fourshared_set.h \
@@ -338,7 +334,12 @@ HEADERS += \
     modules/core/web/sources/od/od_audio.h \
     modules/core/web/sources/soundcloud/soundcloud_audio.h \
     modules/core/web/sources/vk/vk_audio.h \
-    modules/core/web/sources/yandex/yandex_audio.h
+    modules/core/web/sources/yandex/yandex_audio.h \
+    modules/core/web/sources/youtube/youtube_defines.h \
+    modules/core/web/sources/youtube/youtube_keys.h \
+    modules/core/web/sources/youtube/youtube_misc.h \
+    modules/core/web/sources/youtube/youtube_requests.h \
+    modules/core/web/sources/youtube_queries.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -464,10 +465,10 @@ SOURCES += \
     modules/core/web/sources/soundcloud_queries.cpp \
     modules/core/web/sources/vk_queries.cpp \
     modules/core/web/sources/youtube_api.cpp \
-    modules/core/web/sources/youtube/youtube_api_keys.cpp \
     modules/core/web/sources/zaycev.cpp \
     modules/core/web/sources/od/od_keys.cpp \
     modules/core/web/sources/od_queries.cpp \
     modules/core/web/sources/fourshared_queries.cpp \
     modules/core/web/sources/fourshared/fourshared_keys.cpp \
-    modules/core/web/sources/yandex/yandex_keys.cpp
+    modules/core/web/sources/yandex/yandex_keys.cpp \
+    modules/core/web/sources/youtube/youtube_keys.cpp

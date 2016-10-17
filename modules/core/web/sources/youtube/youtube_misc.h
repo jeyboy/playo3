@@ -1,14 +1,15 @@
 #ifndef YOUTUBE_API_MISC
 #define YOUTUBE_API_MISC
 
+#include "modules/core/interfaces/isource.h"
 #include "modules/core/web/interfaces/iqueriable.h"
 #include "modules/core/web/utils/js_document.h"
-#include "youtube_api_keys.h"
+#include "youtube_keys.h"
 
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Misc : public IQueriable {
+            class Misc : public ISource, public IQueriable {
                 enum Formats {
                     other = 0,
                     video_flv_400_240 = 5,

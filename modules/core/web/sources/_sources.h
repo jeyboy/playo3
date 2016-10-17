@@ -7,7 +7,7 @@
 #include "od_queries.h"
 #include "soundcloud_queries.h"
 #include "yandex_queries.h"
-#include "youtube_api.h"
+#include "youtube_queries.h"
 
 #include "myzuka_album.h"
 #include "zaycev.h"
