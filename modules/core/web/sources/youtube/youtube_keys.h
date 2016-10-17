@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            extern const QString url_base;
+            extern const QString url_api_base;
             extern const QString url_info;
             extern const QString url_embed;
             extern const QString path_search;

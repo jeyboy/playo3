@@ -9,9 +9,9 @@
 
 //#include "modules/core/media/genres/music_genres.h"
 
-//#define FOURSHARED_PAGES_LIMIT 10
-//#define FOURSHARED_ITEMS_LIMIT 1000
-//#define FOURSHARED_PER_REQUEST_LIMIT 100
+#define YOUTUBE_INFO_ITEMS_LIMIT 50
+#define YOUTUBE_ITEMS_LIMIT 100
+#define YOUTUBE_PAGES_LIMIT 10
 
 namespace Core {
     namespace Web {
@@ -28,24 +28,24 @@ namespace Core {
 //                    medium – Only include videos that are between four and 20 minutes long (inclusive).
 //                    short – Only include videos that are less than four minutes long.
 
-                //encodeStr
-                QString searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
-                    QUrlQuery query = genDefaultParams();
-                    setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
-                    setEmbedable(query);
-                    setParam(query, tkn_part, LSTR("snippet"));
-                    setParam(query, LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo"));
-                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
-//                    setParam(query, LSTR("safeSearch"), LSTR("none"));
-                    setMusicVideoCategory(query);
+//                //encodeStr
+//                QString searchUrl(const QString & predicate, const QString & /*genre*/, bool hottest = false, const QString & relatedVideoId = QString()) {
+//                    QUrlQuery query = genDefaultParams();
+//                    setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
+//                    setEmbedable(query);
+//                    setParam(query, tkn_part, LSTR("snippet"));
+//                    setParam(query, LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo"));
+//                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
+////                    setParam(query, LSTR("safeSearch"), LSTR("none"));
+//                    setMusicVideoCategory(query);
 
-                    if (!predicate.isEmpty())
-                        setSearchPredicate(query, predicate);
-                    else if (!relatedVideoId.isEmpty())
-                        setParam(query, LSTR("relatedToVideoId"), relatedVideoId);
+//                    if (!predicate.isEmpty())
+//                        setSearchPredicate(query, predicate);
+//                    else if (!relatedVideoId.isEmpty())
+//                        setParam(query, LSTR("relatedToVideoId"), relatedVideoId);
 
-                    return baseUrlStr(qst_api, path_search, query);
-                }
+//                    return baseUrlStr(qst_api, path_search, query);
+//                }
 
                 QString videosUrl(const QStringList & ids = QStringList()) {
                     QUrlQuery query = genDefaultParams();

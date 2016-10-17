@@ -339,7 +339,9 @@ HEADERS += \
     modules/core/web/sources/youtube/youtube_keys.h \
     modules/core/web/sources/youtube/youtube_misc.h \
     modules/core/web/sources/youtube/youtube_requests.h \
-    modules/core/web/sources/youtube_queries.h
+    modules/core/web/sources/youtube_queries.h \
+    modules/core/web/sources/youtube/youtube_video.h \
+    modules/core/web/sources/youtube/youtube_playlist.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

@@ -1,20 +1,17 @@
 #ifndef YOUTUBE_REQUEST_API
 #define YOUTUBE_REQUEST_API
 
-#include "youtube_misc.h"
+#include "youtube_playlist.h"
+#include "youtube_video.h"
 
 //#include <qregexp.h>
 ////#include "modules/core/web/interfaces/teu_auth.h"
 ////#include "modules/core/web/apis/service/recaptcha.h"
 
-#define YOUTUBE_INFO_ITEMS_LIMIT 50
-#define YOUTUBE_ITEMS_LIMIT 100
-#define YOUTUBE_PAGES_LIMIT 10
-
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Requests : public Misc {
+            class Requests : public Playlist, public Video {
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
                     QJsonObject error = json.value(LSTR("error")).toObject();
                     if (error.isEmpty()) {
@@ -30,7 +27,7 @@ namespace Core {
                 }
 
                 inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) {
-                    return url_base % predicate;
+                    return url_api_base % predicate;
                 }
                 inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api) {
                     QUrlQuery query;
@@ -60,7 +57,23 @@ namespace Core {
 
                 QJsonValue searchProc(const SearchLimit & limits) { //count = 5
                     QueriableResponse response = pRequest(
-                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
+                        baseUrlStr(qst_api, path_search, {
+                            {tkn_part, LSTR("snippet")},
+                            {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
+                            {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
+//                            {LSTR("safeSearch"), LSTR("none")},
+                        }),
+
+//                                QUrlQuery query = genDefaultParams();
+//                                setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
+//                                setEmbedable(query);
+//                                setMusicVideoCategory(query);
+
+//                                if (!predicate.isEmpty())
+//                                    setSearchPredicate(query, predicate);
+//                                else if (!relatedVideoId.isEmpty())
+//                                    setParam(query, LSTR("relatedToVideoId"), relatedVideoId);
+//                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
                         call_type_json,
                         rules(QString(), limits.items_limit)
                     );
