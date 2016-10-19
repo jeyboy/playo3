@@ -1,6 +1,7 @@
 #ifndef YOUTUBE_REQUEST_API
 #define YOUTUBE_REQUEST_API
 
+#include "youtube_auth.h"
 #include "youtube_playlist.h"
 #include "youtube_video.h"
 
@@ -11,7 +12,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Requests : public Playlist, public Video {
+            class Requests : public Auth, public Playlist, public Video {
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
                     QJsonObject error = json.value(LSTR("error")).toObject();
                     if (error.isEmpty()) {

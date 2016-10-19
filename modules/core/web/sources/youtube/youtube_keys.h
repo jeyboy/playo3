@@ -28,6 +28,7 @@ namespace Core {
             extern const QString tkn_order;
 
             extern const QString val_client_tkn;
+            extern const QString val_tkn;
             extern const QString val_name;
         }
     }

@@ -246,12 +246,19 @@ namespace Core {
                 return baseUrlStr(stype, predicate) % (query.isEmpty() ? QString() : '?' % query.toString());
             }
 
+            QUrlQuery baseQuery(const QuerySourceType & stype, const std::initializer_list<std::pair<QString, QVariant> > & params) {
+                QUrlQuery query = genDefaultParams(stype);
+
+                if (params.size() > 0)
+                    setParam(query, params);
+
+                return query;
+            }
             QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const std::initializer_list<std::pair<QString, QVariant> > & params) {
                 QUrlQuery query = genDefaultParams(stype);
 
                 if (params.size() > 0)
-                    for (typename std::initializer_list<std::pair<QString, QVariant> >::const_iterator it = params.begin(); it != params.end(); ++it)
-                        setParam(query, it -> first, it -> second);
+                    setParam(query, params);
 
                 return baseUrlStr(stype, predicate, query);
             }
@@ -262,6 +269,13 @@ namespace Core {
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
             inline QString decodeStr(const QString & str) const { return QUrl::fromPercentEncoding(str.toLatin1()); }
+
+            void setParam(QUrlQuery & query, const std::initializer_list<std::pair<QString, QVariant> > & params) {
+                if (params.size() > 0)
+                    for (typename std::initializer_list<std::pair<QString, QVariant> >::const_iterator it = params.begin(); it != params.end(); ++it)
+                        setParam(query, it -> first, it -> second);
+            }
+
 
             inline void setParam(QUrlQuery & query, const QString & name, const QVariant & value) {
                 switch (value.type()) {

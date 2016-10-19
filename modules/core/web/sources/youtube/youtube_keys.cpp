@@ -31,6 +31,7 @@ namespace Core {
 
 
             extern const QString val_client_tkn        = QStringLiteral("AIzaSyApdFaU0JogzzuUA2a8GeGURe2H9Kw0XFs");
+            extern const QString val_tkn               = QStringLiteral("995040225879-vlpceeo02mk7idjb06013gr4mfp2pbbc.apps.googleusercontent.com");
             extern const QString val_name              = QStringLiteral("Youtube");
         }
     }

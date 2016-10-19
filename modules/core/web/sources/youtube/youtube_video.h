@@ -8,41 +8,59 @@ namespace Core {
         namespace Youtube {
             class Video : public virtual Base {
             public:
-                QJsonValue videoRecommendations(const QUrlQuery & /*args*/) {
-                    return videoRecommendations();
+                QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
+                QJsonValue videoSearch(const SearchLimit & limits) {
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_search, {
+                            {tkn_part, tkn_snippet},
+                            {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
+                            {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
+                            {LSTR("safeSearch"), LSTR("none")},
+                            {tkn_video_embedable, LSTR("true")}, // any // true
+                            {tkn_type, LSTR("video")}, // channel // playlist // video
+                        //  Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
+                        //  search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
+                        //  Similarly, to search for videos matching either "boating" or "sailing" but not "fishing", set the q parameter value to boating|sailing -fishing.
+                        //  Note that the pipe character must be URL-escaped when it is sent in your API request. The URL-escaped value for the pipe character is %7C.
+                            {tkn_q, limits.predicate},
+                        }),
+
+//                                setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
+//                                setMusicVideoCategory(query);
+                        call_type_json,
+                        rules(QString(), limits.items_limit)
+                    );
+
+                    initDuration(response.content);
+                    return prepareBlock(dmt_video, cmd_mtd_unknown, response, limits);
                 }
 
-                QJsonValue videoRecommendations(const QUrlQuery & /*args*/) {
-                    return QJsonObject();
+
+                QJsonValue videoRecommendations(const QUrlQuery & args) {
+                    return videoRecommendations(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET)
+                    );
+                }
+                QJsonValue videoRecommendations(const QString & video_id, const QString * offset_token = QString()) {
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_search, {
+                           {tkn_part, tkn_snippet},
+                           {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
+                           {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
+                           {LSTR("safeSearch"), LSTR("none")},
+                           {tkn_type, LSTR("video")},
+                           {LSTR("relatedToVideoId"), video_id},
+                        }),
+                        call_type_json,
+                        rules(offset_token)
+                    );
+
+                    return prepareBlock(dmt_video, cmd_mtd_video_recommendations, response);
                 }
 
 
-
-//                QueriableResponse response = pRequest(
-//                    baseUrlStr(qst_api, path_search, {
-//                        {tkn_part, tkn_snippet},
-//                        {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
-//                        {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
-//                        {LSTR("safeSearch"), LSTR("none")},
-//                        {tkn_video_embedable, LSTR("true")}, // any // true
-//                        {tkn_type, LSTR("video")}, // channel // playlist // video
-//                    //  Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
-//                    //  search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
-//                    //  Similarly, to search for videos matching either "boating" or "sailing" but not "fishing", set the q parameter value to boating|sailing -fishing.
-//                    //  Note that the pipe character must be URL-escaped when it is sent in your API request. The URL-escaped value for the pipe character is %7C.
-//                        {tkn_q, limits.predicate},
-//                    }),
-
-////                                setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
-////                                setMusicVideoCategory(query);
-
-////                                else if (!relatedVideoId.isEmpty())
-////                                    setParam(query, LSTR("relatedToVideoId"), relatedVideoId);
-////                        searchUrl(limits.predicate, limits.genre, limits.by_popularity()),
-//                    call_type_json,
-//                    rules(QString(), limits.items_limit)
-//                );
-
+                //https://developers.google.com/youtube/v3/docs/videoCategories/list#part
                 QJsonValue videoCategories(const QUrlQuery & args) {
                     return videoCategories(args.queryItemValue(CMD_OFFSET));
                 }
