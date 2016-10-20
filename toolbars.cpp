@@ -355,7 +355,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 QToolBar * ToolBars::createPanMediaBar() {
     QToolBar * ptb = precreateToolBar(toolbar_media_pan_key, true);
 
-    ClickableSlider * pslider = new ClickableSlider(0, ptb);
+    ClickableSlider * pslider = new ClickableSlider(0, ptb, LSTR("pan|0|0"));
     pslider -> setOrientation(Qt::Horizontal);
     pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
@@ -401,7 +401,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
     PlayerFactory::obj().registerCallback(call_out, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
 
-    ClickableSlider * slider = new ClickableSlider(100000000, ptb, LSTR("volume"));
+    ClickableSlider * slider = new ClickableSlider(100000000, ptb, LSTR("volume|4000|7500"));
 
     slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
