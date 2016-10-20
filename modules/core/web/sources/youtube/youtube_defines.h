@@ -47,20 +47,20 @@ namespace Core {
 //                    return baseUrlStr(qst_api, path_search, query);
 //                }
 
-                QString videosUrl(const QStringList & ids = QStringList()) {
-                    QUrlQuery query = genDefaultParams();
-                    if (!ids.isEmpty())
-                        setParam(query, tkn_id, ids.join(','));
-                    else
-                        setParam(query, LSTR("chart"), LSTR("mostPopular"));
+                QUrlQuery videoQuery(const std::initializer_list<std::pair<QString, QVariant> > & params = {}, const bool & only_music = false) {
+                    QUrlQuery query = baseQuery(qst_api, {
+                        {tkn_part, tkn_snippet},
+                        {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
+                        {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
+                        {LSTR("safeSearch"), LSTR("none")},
+                    });
 
-                    setParam(query, tkn_part,           LSTR("snippet,contentDetails"));
-                    setParam(query, LSTR("fields"),     LSTR("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
-                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT); // 50
-                    setParam(query, tkn_region_code,    siteLocale(LSTR("ua")));
-                    setMusicVideoCategory(query);
+                    if (only_music)
+                        setMusicVideoCategory(query);
 
-                    return baseUrlStr(qst_api, LSTR("videos"), query);
+                    setParam(query, params);
+
+                    return query;
                 }
 
 
