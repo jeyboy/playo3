@@ -12,9 +12,7 @@ void IView::registerParent(QWidget * newParent) {
     connect(mdl, SIGNAL(moveInBackgroundProcess()), newParent, SLOT(onMoveInBackgroundProcess()));
     connect(mdl, SIGNAL(changeIco(QImage)), newParent, SLOT(onSetDefaultIco(QImage)));
 
-    if (mdl -> root() -> hasMoreItems()) {
-        emit mdl -> changeIco(QImage(LSTR(":/download")));
-    }
+    mdl -> updateIcon();
 
     connect(mdl, SIGNAL(moveOutBackgroundProcess()), newParent, SLOT(onMoveOutBackgroundProcess()));
     connect(mdl, SIGNAL(setBackgroundProgress(int)), newParent, SLOT(onSetBackgroundProgress(int)));

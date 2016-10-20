@@ -212,6 +212,12 @@ namespace Models {
 
         inline virtual bool ignoreListContainUid(const QString & /*uid*/) { return false; }
     public slots:
+        void updateIcon() {
+            emit changeIco(
+                root_item -> hasMoreItems() ? Settings::currentStyle -> loadableTabIcon() : QImage()
+            );
+        }
+
         void copyTitleToClipboard(const QModelIndex & index);
         void copyIdsToClipboard(const QModelIndexList & indexes);
         void importIds(const QStringList & ids);

@@ -49,7 +49,7 @@ public:
     void resetTabSettings();
     void resetLibrarySettings();
 
-    static void setCurrentStyle(IStylesheets::StyleType newType) {
+    static void setCurrentStyle(const IStylesheets::StyleType & newType) {
 //        bool is_transparent = currentStyle -> isTransparent();
         delete currentStyle;
 

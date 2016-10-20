@@ -32,6 +32,8 @@ public:
     virtual StyleType styleType() const { return stub; }
     virtual bool isTransparent() { return false; }
 
+    virtual QImage loadableTabIcon() { return QImage(); }
+
     // background colors
     virtual inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }
 
