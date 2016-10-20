@@ -36,6 +36,17 @@ namespace Core {
                 else
                     return source -> refresh(refreshStr, itemMediaType);
             }
+
+//          need to ask user about choosing of his country and manually proceed it if request failed
+//          enum QLocale::Country
+//          QString QLocale::name() const
+//          Returns the language and country of this locale as a string of the form "language_country", where language is a lowercase, two-letter ISO 639 language code, and country is an uppercase, two- or three-letter ISO 3166 country code.
+            static QString userCountry() { // not tested
+                QJsonObject obj = Manager::prepare() -> jsonGet(LSTR("http://ip-api.com/json"));
+                if (JSON_HAS_KEY(obj, LSTR("countryCode")))
+                    return JSON_STR(obj, LSTR("countryCode")).toLower();
+                else return QString();
+            }
         };
     }
 }

@@ -34,7 +34,29 @@ namespace Core {
 
                 QJsonValue videoByUser(const QUrlQuery & args) { return videoByUser(args.queryItemValue(CMD_ID)); }
                 QJsonValue videoByUser(const QString & user_id) {
+                    SourceFlags perm = permissions(sf_video_by_user);
 
+                    switch(perm) {
+                        case sf_site:
+                        case sf_api: {
+                            QueriableResponse response = pRequest(
+                                baseUrlStr(qst_api, path_search, {
+                                    videoQuery({
+                                       {tkn_video_embedable, LSTR("true")}, // any // true
+                                       {tkn_type, LSTR("video")}, // channel // playlist // video
+                                    })
+                                }),
+                                call_type_json,
+                                rules(QString(), limits.items_limit)
+                            );
+
+                            initDuration(response.content);
+                            return prepareBlock(dmt_video, cmd_mtd_unknown, response, limits);
+                        break;}
+                        default: Logger::obj().write(name(), "videoByUser", Logger::log_error);
+                    }
+
+                    return QJsonObject();
                 }
 
 
