@@ -32,6 +32,13 @@ namespace Core {
                     return prepareBlock(dmt_video, cmd_mtd_unknown, response, limits);
                 }
 
+                QJsonValue videoByCategory(const QUrlQuery & args) {
+                    return QJsonObject();
+                }
+                QJsonValue videoByCategory(const QString & category_id, const QString & token = QString()) {
+                    return QJsonObject();
+                }
+
                 QJsonValue videoByUser(const QUrlQuery & args) { return videoByUser(args.queryItemValue(CMD_ID)); }
                 QJsonValue videoByUser(const QString & user_id) {
                     SourceFlags perm = permissions(sf_video_by_user);
@@ -44,6 +51,7 @@ namespace Core {
                                     videoQuery({
                                        {tkn_video_embedable, LSTR("true")}, // any // true
                                        {tkn_type, LSTR("video")}, // channel // playlist // video
+                                       {LSTR("channelId"), user_id}
                                     })
                                 }),
                                 call_type_json,
