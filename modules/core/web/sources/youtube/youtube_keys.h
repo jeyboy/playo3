@@ -19,6 +19,9 @@ namespace Core {
             extern const QString tkn_auth_pass;
             extern const QString tkn_auth_captcha;
 
+            extern const QString tkn_profile_info;
+            extern const QString tkn_encoded_profile_info;
+
             extern const QString tkn_region_code;
             extern const QString tkn_snippet;
             extern const QString tkn_id;

@@ -29,8 +29,6 @@ namespace Core {
                     while(true) {
                         Response * resp = Manager::prepare() -> getFollowed(form_url);
 
-                //        Logger::dump(resp -> toText().toUtf8());
-
                         Html::Document html = resp -> toHtml(false);
                         html.output();
 
@@ -66,14 +64,27 @@ namespace Core {
                             }
 
                             error = QString();
-                            form_url = form -> serializeFormToUrl(vals);
+                            form_url = form -> serializeFormToUrl(vals);\
+                            form_url.setPath(form_url.path() % LSTR("Xhr"));
                             qDebug() << form_url;
                             resp = Manager::prepare() -> formFollowed(form_url);
                         } else return false; // something went wrong
 
-                        form_url = resp -> toUrl(false);
-                        Html::Document doc = resp -> toHtml(false);
-                        doc.output();
+                        QJsonObject json = resp -> toJson();
+                        qDebug() << json;
+
+                        if (JSON_HAS_KEY(json, tkn_encoded_profile_info)) {
+                            form_url.setPath(LSTR("/signin/challenge/sl/password"));
+                            QUrlQuery query = QUrlQuery(form_url.query());
+                            query.removeQueryItem(tkn_profile_info);
+                            query.addQueryItem(tkn_profile_info, JSON_STR(json, tkn_encoded_profile_info));
+                            form_url.setQuery(query);
+
+                            qDebug() << form_url;
+                            resp = Manager::prepare() -> formFollowed(form_url);
+                        } else return false;
+
+
                         int i = 0;
 //                        QUrlQuery query(form_url.fragment());
 

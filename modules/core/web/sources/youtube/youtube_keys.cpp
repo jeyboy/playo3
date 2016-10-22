@@ -17,6 +17,10 @@ namespace Core {
             extern const QString tkn_auth_pass         = QStringLiteral("Passwd");
             extern const QString tkn_auth_captcha      = QStringLiteral("identifier-captcha-input");
 
+            extern const QString tkn_profile_info      = QStringLiteral("ProfileInformation");
+            extern const QString tkn_encoded_profile_info
+                                                       = QStringLiteral("encoded_profile_information");
+
             extern const QString tkn_region_code       = QStringLiteral("regionCode");
             extern const QString tkn_snippet           = QStringLiteral("snippet");
             extern const QString tkn_id                = QStringLiteral("id");
@@ -41,8 +45,8 @@ namespace Core {
             extern const QString tkn_scope             = QStringLiteral("scope");
 
 
-            extern const QString val_client_tkn        = QStringLiteral("AIzaSyApdFaU0JogzzuUA2a8GeGURe2H9Kw0XFs");
-            extern const QString val_tkn               = QStringLiteral("995040225879-vlpceeo02mk7idjb06013gr4mfp2pbbc.apps.googleusercontent.com");
+            extern const QString val_client_tkn        = QStringLiteral("AIzaSyBiX7ylcLASR4mX7DtQDoQrE5_x6-Todr8");
+            extern const QString val_tkn               = QStringLiteral("970305815614-fd19sv4htr1n5vivi0nift9u1qs31b3c.apps.googleusercontent.com");
             extern const QString val_name              = QStringLiteral("Youtube");
         }
     }

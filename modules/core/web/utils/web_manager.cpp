@@ -52,15 +52,19 @@ namespace Core {
 
             QByteArray ar = readAll();
 
-            if (rawHeader("Content-Type").startsWith("application/json")) {
+            QByteArray header = rawHeader("Content-Type");
+
+            if (header.startsWith("application/json") || header.startsWith("application/javascript")) {
 //                ar.replace('\'', '"'); // ' wraps responds to errors on parsing // need to replace ' with "
                 if (!wrap.isEmpty()) { ar.prepend(QStringLiteral("{\"%1\":").arg(wrap).toUtf8()); ar.append("}"); }
                 if (destroy) deleteLater();
-                return QJsonDocument::fromJson(ar).object();
-            } else {
-                qCritical() << "NOT JSON" << rawHeader("Content-Type");
-                return QJsonObject {{JSON_ERR_FIELD, QString(ar)}};
+                QJsonParseError err;
+                QJsonObject ret =  QJsonDocument::fromJson(ar, &err).object();
+                if (err.error == NoError) return ret;
             }
+
+            qCritical() << "NOT JSON" << rawHeader("Content-Type");
+            return QJsonObject {{JSON_ERR_FIELD, QString(ar)}};
         }
         QPixmap Response::toPixmap(bool destroy) {
             if (error()) qDebug() << "IOERROR" << error() << url();

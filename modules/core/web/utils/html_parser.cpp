@@ -158,7 +158,7 @@ namespace Core {
                             QString inp_val = url_vals.take(inp_name);
                             if (inp_val.isEmpty()) inp_val = (*input) -> value();
 
-                            query.addQueryItem(inp_name, inp_val);
+                            query.addQueryItem(inp_name, QUrl::toPercentEncoding(inp_val));
                         }
 
                         if (appendable && !url_vals.isEmpty())
