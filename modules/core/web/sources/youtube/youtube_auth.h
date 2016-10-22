@@ -31,7 +31,7 @@ namespace Core {
                         Html::Document html = resp -> toHtml();
 
                         if (html.has("input[name='Email']")) { // if user not authorized
-                            QHash<QString, QString> vals;
+                            QHash<QString, QString> vals = QHash<QString, QString>{{LSTR("bgresponse"), LSTR("js_disabled")}};
 
                             if (error.isEmpty())
                                 error = html.find(".error-msg").text();
@@ -86,8 +86,6 @@ namespace Core {
                         }
 
                         Html::Document choose_html = resp -> toHtml();
-                        choose_html.output();
-
                         Html::Tag * form = choose_html.findFirst("form");
 
                         if (!form) {
@@ -97,7 +95,7 @@ namespace Core {
                         }
 
                         error = QString();
-                        form_url = form -> serializeFormToUrl(QHash<QString, QString> {{LSTR("submit_access"), LSTR("true")}});
+                        form_url = form -> serializeFormToUrl(QHash<QString, QString> {{LSTR("submit_access"), LSTR("true")}, {LSTR("bgresponse"), LSTR("js_disabled")}});
 
 
                         form_url = Manager::prepare() -> formFollowed(form_url) -> toUrl();
