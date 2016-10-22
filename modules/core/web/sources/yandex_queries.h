@@ -27,7 +27,7 @@ namespace Core {
                 }
 
                 inline void artistRecommendationsAsync(const QString & artist_id, Func * func) {
-                    ThreadUtils::obj().run((Stream *)this, &Stream::streamByArtist, artist_id, QString(), func);
+                    ThreadUtils::obj().run((Stream *)this, &Stream::streamsByArtist, artist_id, QString(), func);
                 }
 
 

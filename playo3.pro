@@ -342,7 +342,8 @@ HEADERS += \
     modules/core/web/sources/youtube_queries.h \
     modules/core/web/sources/youtube/youtube_video.h \
     modules/core/web/sources/youtube/youtube_playlist.h \
-    modules/core/web/sources/youtube/youtube_auth.h
+    modules/core/web/sources/youtube/youtube_auth.h \
+    modules/core/web/sources/youtube/youtube_channel.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -467,11 +468,11 @@ SOURCES += \
     modules/core/web/sources/shmidt.cpp \
     modules/core/web/sources/soundcloud_queries.cpp \
     modules/core/web/sources/vk_queries.cpp \
-    modules/core/web/sources/youtube_api.cpp \
     modules/core/web/sources/zaycev.cpp \
     modules/core/web/sources/od/od_keys.cpp \
     modules/core/web/sources/od_queries.cpp \
     modules/core/web/sources/fourshared_queries.cpp \
     modules/core/web/sources/fourshared/fourshared_keys.cpp \
     modules/core/web/sources/yandex/yandex_keys.cpp \
-    modules/core/web/sources/youtube/youtube_keys.cpp
+    modules/core/web/sources/youtube/youtube_keys.cpp \
+    modules/core/web/sources/youtube_queries.cpp

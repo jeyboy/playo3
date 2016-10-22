@@ -428,6 +428,8 @@ QToolBar * ToolBars::createControlToolBar() {
     connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));
     ptb -> addWidget(listBtn);
 
+    ptb -> addSeparator();
+
     QMenu * menu = new QMenu();
 
     QMap<DataSubType, ISource *> apis = Web::Apis::sourcesList();

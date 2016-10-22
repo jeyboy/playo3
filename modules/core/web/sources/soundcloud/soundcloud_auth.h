@@ -77,17 +77,17 @@ namespace Core {
                             err = html.find(".warning").text();
 
                             QString captcha_src;
-                            Html::Set captcha_set = form -> find(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
+                            Html::Tag * captcha_tag = form -> findFirst(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
 
-                            if (!captcha_set.isEmpty())
-                                captcha_src = captcha_set.first() -> value(tkn_src);
+                            if (captcha_tag)
+                                captcha_src = captcha_tag -> value(tkn_src);
 
                             if (captcha_src.isEmpty()) {
-                                if (!showingLogin(val_auth_title, vals[tkn_username], vals[tkn_password], err))
+                                if (!showingLogin(name() % val_login_title_postfix, vals[tkn_username], vals[tkn_password], err))
                                     return false;
                             } else {
                                 if (!showingLoginWithCaptcha(
-                                    val_auth_title, Recaptcha::V1::obj().takeImageUrl(captcha_src, vals[tkn_recaptcha_challenge_field]),
+                                    name() % val_login_title_postfix, Recaptcha::V1::obj().takeImageUrl(captcha_src, vals[tkn_recaptcha_challenge_field]),
                                     vals[tkn_username], vals[tkn_password], vals[tkn_recaptcha_response_field], err
                                 )) return false;
                             }

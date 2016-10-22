@@ -26,6 +26,40 @@ namespace Core {
                         return false;
                     }
                 }
+            protected:
+                Requests() {
+//                    setSociableLimitations(true, true, true, true);
+
+                    flags = {
+                        {sf_endpoint, (SourceFlags) (
+                            sf_is_primary | sf_is_content_shareable | sf_video | sf_sociable |
+                            sf_feed | sf_playlist | sf_compilation | sf_api | sf_api_connectable
+                            /* | sf_site | sf_site_connectable*/
+                         )
+                        },
+
+                        {sf_feed,                       sf_api},
+
+                        {sf_feed_by_user,               sf_both_auth},
+
+                        {sf_search,                     sf_api},
+
+                        {sf_compilation,                sf_api},
+
+//                        {sf_video_playlist_by_id,       sf_site},
+                        {sf_video_playlist_by_user,     sf_both_auth},
+
+                        {sf_video_by_id,                sf_api},
+                        {sf_video_by_title,             sf_api},
+                        {sf_video_by_user,              sf_both_auth},
+                        {sf_video_by_category,          sf_api},
+                        {sf_video_by_playlist,          sf_api},
+
+
+//                        {sf_user_by_id,                 sf_api},
+//                        {sf_user_by_title,              sf_api},
+                    };
+                }
 
                 inline QString baseUrlStr(const QuerySourceType & /*stype*/, const QString & predicate) {
                     return url_api_base % predicate;
@@ -36,10 +70,41 @@ namespace Core {
                     return query;
                 }
 
-                void fromJson(const QJsonObject & hash);
-                void toJson(QJsonObject & hash);
+                bool connectUserApi() {
+                    QString token, user_id, expiration;
 
-                bool connectUser() { return true; }
+                    if (connectApi(token, user_id, expiration, error)) {
+                        setApiToken(token);
+                        setApiUserID(user_id);
+                        setApiExpiration(expiration);
+                        return true;
+                    }
+
+                    return false;
+                }
+//                bool connectUserSite() {
+//                    setSiteUserID(apiUserID()); // use api user id
+//                    return true; /*return connectSite(error);*/
+//                }
+
+                void saveAdditionals(QJsonObject & obj) {
+//                    Sociable::toJson(obj);
+                    Manager::saveCookies(obj, QUrl(url_api_base));
+                }
+                void loadAdditionals(QJsonObject & obj) {
+//                    Sociable::fromJson(obj);
+                    Manager::loadCookies(obj);
+                }
+                void clearAdditionals() {
+//                    clearFriends();
+//                    clearGroups();
+                    Manager::removeCookies(url_api_base);
+                }
+
+//                void fromJson(const QJsonObject & hash);
+//                void toJson(QJsonObject & hash);
+
+//                bool connectUser() { return true; }
 
             public:               
                 inline virtual ~Requests() {}

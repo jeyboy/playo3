@@ -85,7 +85,6 @@ namespace Core {
             extern const QString val_audio_types;
             extern const QString val_audio_org_types;
             extern const QString val_audio_rmx_types;
-            extern const QString val_auth_title;
             extern const QString val_name;
             extern const QString val_default_format;
             extern const QString val_id_tkn;

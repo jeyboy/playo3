@@ -85,7 +85,6 @@ namespace Core {
             extern const QString val_audio_types       = QStringLiteral("original,remix,live,podcast");
             extern const QString val_audio_org_types   = QStringLiteral("original,live");
             extern const QString val_audio_rmx_types   = QStringLiteral("remix");
-            extern const QString val_auth_title        = QStringLiteral("Soundcloud auth");
             extern const QString val_name              = QStringLiteral("Soundcloud");
             extern const QString val_default_format    = QStringLiteral(".json");
             extern const QString val_id_tkn            = QStringLiteral("8f84790a84f5a5acd1c92e850b5a91b7");

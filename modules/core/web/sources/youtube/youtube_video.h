@@ -7,6 +7,7 @@ namespace Core {
     namespace Web {
         namespace Youtube {
             class Video : public virtual Base {
+                // The hl parameter specifies the language that will be used for text values in the API response. The default value is en-US.
             public:
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits) {
@@ -33,10 +34,25 @@ namespace Core {
                 }
 
                 QJsonValue videoByCategory(const QUrlQuery & args) {
-                    return QJsonObject();
+                    return videoByCategory(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET)
+                    );
                 }
                 QJsonValue videoByCategory(const QString & category_id, const QString & token = QString()) {
-                    return QJsonObject();
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_search, {
+                            videoQuery({
+                                {tkn_video_embedable, LSTR("true")}, // any // true
+                                {tkn_type, LSTR("video")}, // channel // playlist // video
+                                {LSTR("videoCategoryId"), category_id}
+                            })
+                        }),
+                        call_type_json, rules(token)
+                    );
+
+                    initDuration(response.content);
+                    return prepareBlock(dmt_video, cmd_mtd_video_by_category, response);
                 }
 
                 QJsonValue videoByUser(const QUrlQuery & args) { return videoByUser(args.queryItemValue(CMD_ID)); }
@@ -55,11 +71,11 @@ namespace Core {
                                     })
                                 }),
                                 call_type_json,
-                                rules(QString(), limits.items_limit)
+                                rules(QString())
                             );
 
                             initDuration(response.content);
-                            return prepareBlock(dmt_video, cmd_mtd_unknown, response, limits);
+                            return prepareBlock(dmt_video, cmd_mtd_unknown, response);
                         break;}
                         default: Logger::obj().write(name(), "videoByUser", Logger::log_error);
                     }
@@ -74,7 +90,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoRecommendations(const QString & video_id, const QString * offset_token = QString()) {
+                QJsonValue videoRecommendations(const QString & video_id, const QString & offset_token = QString()) {
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_search,
                            videoQuery({
@@ -119,6 +135,29 @@ namespace Core {
 
                     initDuration(response.content);
                     return prepareBlock(dmt_video_set, cmd_mtd_video_categories, response);
+                }
+
+                QJsonValue officialVideoCategories() {
+//                    {
+//                       "kind": "youtube#videoCategory",
+//                       "etag": "\"I_8xdZu766_FSaexEaDXTIfEWc0/HwXKamM1Q20q9BN-oBJavSGkfDI\"",
+//                       "id": "15",
+//                       "snippet": {
+//                        "channelId": "UCBR8-60-B28hp2BmDPdntcQ",
+//                        "title": "Pets & Animals"
+//                       }
+//                      }
+
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_quide_cats, {
+                            {tkn_part,          tkn_snippet},
+                            {tkn_region_code,   siteLocale(LSTR("ua"))},
+//                           id 	string
+//                           The id parameter specifies a comma-separated list of video category IDs for the resources that you are retrieving.
+                        }),
+                        call_type_json, rules(QString())
+                    );
+                    return prepareBlock(dmt_video_set, cmd_mtd_unknown, response);
                 }
             };
         }

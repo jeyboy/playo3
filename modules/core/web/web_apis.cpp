@@ -6,7 +6,7 @@ namespace Core {
         QMap<DataSubType, QString> Apis::sources_name = QMap<DataSubType, QString>();
 
         void Apis::initiate(const QJsonObject & obj) {
-            sources.insert(Youtube::Api::obj().sourceType(),      &Youtube::Api::obj());
+            sources.insert(Youtube::Queries::obj().sourceType(),      &Youtube::Queries::obj());
             sources.insert(Yandex::Queries::obj().sourceType(),       &Yandex::Queries::obj());
             sources.insert(Vk::Queries::obj().sourceType(),           &Vk::Queries::obj());
             sources.insert(Soundcloud::Queries::obj().sourceType(),   &Soundcloud::Queries::obj());

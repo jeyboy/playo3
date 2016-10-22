@@ -85,7 +85,6 @@ namespace Core {
             extern const QString val_str_true;
             extern const QString val_str_false;
             extern const QString val_name;
-            extern const QString val_auth_title;
             extern const QString val_api_call_limit;
             extern const QString val_version;
             extern const QString val_page_token;

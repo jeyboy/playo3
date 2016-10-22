@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Playlist : public virtual Misc {
+            class Playlist : public virtual Base {
             public:
 
             };

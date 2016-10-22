@@ -40,7 +40,7 @@ namespace Core {
                     QHash<QString, QString> vals;
 
                     while(true) {
-                        if (!showingLogin(LSTR("4shared auth"), vals[LSTR("login")], vals[LSTR("password")], err))
+                        if (!showingLogin(name() % val_login_title_postfix, vals[LSTR("login")], vals[LSTR("password")], err))
                             return false;
 
                         QUrl form_url = form -> serializeFormToUrl(vals);

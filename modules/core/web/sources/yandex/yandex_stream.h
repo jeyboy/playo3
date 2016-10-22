@@ -235,13 +235,13 @@ namespace Core {
                 }
 
                 //curl 'https://music.yandex.ua/api/v2.1/handlers/radio/artist/79215/tracks/a/net/get-direct/F4GGm-tghyrZErZ2vj9USg/x80?queue=&external-domain=music.yandex.ua&overembed=no&__t=1473809509622' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/artist/79215' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fartist%2F79215'
-                QJsonValue streamByArtist(const QUrlQuery & args) {
-                    return streamByArtist(
+                QJsonValue streamsByArtist(const QUrlQuery & args) {
+                    return streamsByArtist(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue streamByArtist(const QString & artist_id, const QString & queue = QString("")) { // TODO: test me
+                QJsonValue streamsByArtist(const QString & artist_id, const QString & queue = QString("")) { // TODO: test me
                     QJsonArray content = saRequest(
                         baseUrlStr(
                             qst_site_alt2, LSTR("radio/artist/%1/tracks").arg(artist_id),
@@ -259,7 +259,7 @@ namespace Core {
                         {
                             {
                                 tkn_more_cmd, Cmd::build(
-                                    sourceType(), cmd_mtd_stream_by_artist,
+                                    sourceType(), cmd_mtd_streams_by_artist,
                                     {{CMD_ID, artist_id}, {CMD_OFFSET, offset}}
                                 ).toString()
                             }

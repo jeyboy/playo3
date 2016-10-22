@@ -2,54 +2,96 @@
 #define YOUTUBE_AUTH_H
 
 #include "youtube_defines.h"
+#include "modules/core/interfaces/iuser_interaction.h"
+//#include "modules/core/web/services/recaptcha.h"
 
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Auth : public virtual Base {
+            class Auth : public virtual Base, public IUserInteraction {
             public:
-                bool apiConnection(QString & user_id, QString & err) {
-                    QHash<QString, QString> vals;
-//                    Response * response = Manager::prepare() -> getFollowed(baseUrlStr(qst_site_base));
-//                    setSiteLocale(response -> toUrl(false).host().section('.', -1));
-//                    Html::Document doc = response -> toHtml();
-//                    Html::Tag * login_link = doc.findFirst(".log-in");
+                QString authUrl() {
+                    QUrl url(url_auth);
 
-//                    if (!login_link) {
-//                        qCritical() << name() << "Auth link is not found";
-//                        return false;
-//                    }
+                    QUrlQuery query = QUrlQuery();
+                    setParam(query, tkn_client_id, val_tkn);
+                    setParam(query, tkn_redirect_uri, LSTR("http://localhost:9999"));
+                    setParam(query, tkn_response_type, LSTR("code"));
+                    setParam(query, tkn_scope, LSTR("https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly")); // https://www.googleapis.com/auth/youtube.upload
 
-//                    QString login_link_href = login_link -> link().replace(LSTR("undefined"), baseUrlStr(qst_site_base).section('/', 2, 2));
-//                    //INFO: patch locale for auth link / why its always eq to ru ?
-//                    login_link_href.replace('.' % val_default_locale % '/', '.' % siteLocale() % '/');
+                    url.setQuery(query);
+                    return url.toString();
+                }
 
-//                    Html::Document login_doc = Manager::prepare() -> getFollowed(login_link_href) -> toHtml();
-//                    Html::Tag * auth_form = login_doc.findFirst("form");
-//                    if (!auth_form) {
-//                        qCritical() << name() << "Auth form is not found";
-//                        return false;
-//                    }
+                bool connectApi(QString & new_token, QString & user_id, QString & expiration, QString & error) {
+                    QUrl form_url = authUrl();
 
-//                    while(true) {
-//                        if (!showingLogin(name() % val_login_title_postfix, vals[LSTR("login")], vals[LSTR("passwd")], err)) return false;
+                    while(true) {
+                        Response * resp = Manager::prepare() -> getFollowed(form_url);
 
-//                        QUrl form_url = auth_form -> serializeFormToUrl(vals, false, login_link_href);
+                //        Logger::dump(resp -> toText().toUtf8());
 
-//                        //form also contains captcha field //.js-domik-captcha
+                        Html::Document html = resp -> toHtml(false);
+                        html.output();
 
-//                        Html::Document resp_doc = Manager::prepare() -> formFollowed(form_url) -> toHtml();
+                        if (html.has("input[name='Email']")) { // if user not authorized
+                            resp -> deleteLater();
+                            QHash<QString, QString> vals;
 
-//                        if (checkConnection(user_id))
+                            if (error.isEmpty())
+                                error = html.find(".error-msg").text();
+
+                            Html::Tag * form = html.findFirst("form");
+
+                            if (!form) {
+                                error = LSTR("Auth form did not found");
+                                Logger::obj().write(name(), error, Logger::log_error);
+                                return false;
+                            }
+
+                            // div ||| [(style : display: none)(id : identifier-captcha)]
+                            QString captcha_src;
+                            Html::Tag * captcha_tag = form -> findFirst(".captcha-box img");
+
+                            if (captcha_tag)
+                                captcha_src = captcha_tag -> value("src");
+
+                            if (captcha_src.isEmpty()) {
+                                if (!showingLogin(name() % val_login_title_postfix, vals[tkn_auth_email], vals[tkn_auth_pass], error))
+                                    return false;
+                            } else {
+                                if (!showingLoginWithCaptcha(name() % val_login_title_postfix, captcha_src,
+                                    vals[tkn_auth_email], vals[tkn_auth_pass], vals[tkn_auth_captcha], error
+                                )) return false;
+                            }
+
+                            error = QString();
+                            form_url = form -> serializeFormToUrl(vals);
+                            qDebug() << form_url;
+                            resp = Manager::prepare() -> formFollowed(form_url);
+                        } else return false; // something went wrong
+
+                        form_url = resp -> toUrl(false);
+                        Html::Document doc = resp -> toHtml(false);
+                        doc.output();
+                        int i = 0;
+//                        QUrlQuery query(form_url.fragment());
+
+//                        if (query.hasQueryItem(tkn_error)) {
+//                            error = query.queryItemValue(tkn_error_description);
+//                            return false;
+//                        } else if (query.hasQueryItem(tkn_access_token)) {
+//                            new_token = query.queryItemValue(tkn_access_token);
+//                            user_id = query.queryItemValue(tkn_user_id);
+//                            expiration = query.queryItemValue(tkn_expires_in);
+
 //                            return true;
-//                        else {
-//                            Html::Tag * err_tag = resp_doc.findFirst(".js-messages");
-//                            if (err_tag)
-//                                err = err_tag -> text();
 //                        }
-//                    }
-
-                    return false;
+//                        else {
+//                            form_url = authUrl();
+//                            error = LSTR("Some shit happened... :(");
+//                        }
+                    }
                 }
             };
         }

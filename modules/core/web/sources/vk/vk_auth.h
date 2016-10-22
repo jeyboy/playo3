@@ -51,23 +51,22 @@ namespace Core {
                             }
 
                             QString captcha_src;
-                            Html::Set captcha_set = form -> find("img#captcha");
+                            Html::Tag * captcha_tag = form -> findFirst("img#captcha");
 
-                            if (!captcha_set.isEmpty())
-                                captcha_src = captcha_set.first() -> value("src");
+                            if (captcha_tag)
+                                captcha_src = captcha_tag -> value("src");
 
                             if (captcha_src.isEmpty()) {
-                                if (!showingLogin(val_auth_title, vals[tkn_email], vals[tkn_password], error))
+                                if (!showingLogin(name() % val_login_title_postfix, vals[tkn_email], vals[tkn_password], error))
                                     return false;
                             } else {
-                                if (!showingLoginWithCaptcha(val_auth_title, captcha_src,
+                                if (!showingLoginWithCaptcha(name() % val_login_title_postfix, captcha_src,
                                     vals[tkn_email], vals[tkn_password], vals[tkn_captcha], error
                                 )) return false;
                             }
 
                             error = QString();
                             form_url = form -> serializeFormToUrl(vals);
-                            qDebug() << form_url;
                             resp = Manager::prepare() -> formFollowed(form_url);
                         } else return false; // something went wrong
 

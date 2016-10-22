@@ -9,7 +9,15 @@ namespace Core {
             extern const QString url_api_base;
             extern const QString url_info;
             extern const QString url_embed;
+            extern const QString url_auth;
+
             extern const QString path_search;
+            extern const QString path_video_cats;
+            extern const QString path_quide_cats;
+
+            extern const QString tkn_auth_email;
+            extern const QString tkn_auth_pass;
+            extern const QString tkn_auth_captcha;
 
             extern const QString tkn_region_code;
             extern const QString tkn_snippet;
@@ -26,6 +34,11 @@ namespace Core {
             extern const QString tkn_adaptive_fmts;
             extern const QString tkn_use_cipher_signature;
             extern const QString tkn_order;
+
+            extern const QString tkn_client_id;
+            extern const QString tkn_redirect_uri;
+            extern const QString tkn_response_type;
+            extern const QString tkn_scope;
 
             extern const QString val_client_tkn;
             extern const QString val_tkn;

@@ -203,6 +203,9 @@ namespace Core {
             cmd_mtd_video_by_playlist,
             cmd_mtd_video_by_category,
 
+            cmd_mtd_video_channels_by_user,
+            cmd_mtd_video_channels_by_category,
+
             // mixed types playlists
             cmd_mtd_playlists_info,
             cmd_mtd_playlists_search,
@@ -219,7 +222,7 @@ namespace Core {
 
             cmd_mtd_streams_recommendations,
             cmd_mtd_streams_by_genre,
-            cmd_mtd_stream_by_artist,
+            cmd_mtd_streams_by_artist,
             cmd_mtd_stream_configure,
 //            cmd_mtd_stream_config,
 
@@ -276,6 +279,9 @@ namespace Core {
                 case cmd_mtd_video_by_category: return videoByCategory(params);
                 case cmd_mtd_video_recommendations: return videoRecommendations(params);
 
+                case cmd_mtd_video_channels_by_user: return videoChannelsByUser(params);
+                case cmd_mtd_video_channels_by_category: return videoChannelsByCategory(params);
+
                 case cmd_mtd_playlists_info: return playlistsInfo(params);
                 case cmd_mtd_playlists_search: return playlistsSearch(params);
                 case cmd_mtd_playlists_by_tag: return playlistsByTag(params);
@@ -291,7 +297,7 @@ namespace Core {
 
                 case cmd_mtd_streams_recommendations: return streamsRecommendations(params);
                 case cmd_mtd_streams_by_genre: return streamsByGenre(params);
-                case cmd_mtd_stream_by_artist: return streamByArtist(params);
+                case cmd_mtd_streams_by_artist: return streamsByArtist(params);
                 case cmd_mtd_stream_configure: return streamConfigure(params);
 //                case cmd_mtd_stream_configuration: return streamConfiguration(params);
 
@@ -350,6 +356,8 @@ namespace Core {
         virtual QJsonValue videoByCategory(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
+        virtual QJsonValue videoChannelsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoChannelsByCategory(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
         // mixed types playlists
         virtual QJsonValue playlistsInfo(const QUrlQuery & /*args*/) { return QJsonObject(); }
@@ -367,7 +375,7 @@ namespace Core {
 
         virtual QJsonValue streamsRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamsByGenre(const QUrlQuery & /*args*/) { return QJsonObject(); }
-        virtual QJsonValue streamByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue streamsByArtist(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue streamConfigure(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QVariant streamConfiguration(const QUrlQuery & /*args*/) { return QVariant(); }
 

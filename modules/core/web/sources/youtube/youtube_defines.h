@@ -47,6 +47,22 @@ namespace Core {
 //                    return baseUrlStr(qst_api, path_search, query);
 //                }
 
+                QString videosUrl(const QStringList & ids = QStringList()) {
+                    QUrlQuery query = genDefaultParams();
+                    if (!ids.isEmpty())
+                        setParam(query, LSTR("id"), ids.join(','));
+                    else
+                        setParam(query, LSTR("chart"), LSTR("mostPopular"));
+
+                    setParam(query, tkn_part, LSTR("snippet,contentDetails"));
+                    setParam(query, LSTR("fields"), LSTR("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
+                    setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT);
+                    setParam(query, LSTR("regionCode"), LSTR("ua"));
+//                    setMusicVideoCategory(query);
+
+                    return baseUrlStr(qst_api, LSTR("videos"), query);
+                }
+
                 QUrlQuery videoQuery(const std::initializer_list<std::pair<QString, QVariant> > & params = {}, const bool & only_music = false) {
                     QUrlQuery query = baseQuery(qst_api, {
                         {tkn_part, tkn_snippet},
@@ -63,13 +79,6 @@ namespace Core {
                     return query;
                 }
 
-
-
-
-//                enum CategoryTypes {
-//                    music = 1, video = 2, photo = 3, archive = 4, book = 5,
-//                    program = 6, web = 7, mobile = 8, android = 10
-//                };
 
 //                inline Headers siteHeaders() {
 //                    return Headers({{LSTR("x-security"), Manager::cookie(LSTR("Login"), url_html_site_base)}});
@@ -106,20 +115,13 @@ namespace Core {
 //                }
 
 
-                void proceedDurationResult(QStringList & ids, QJsonArray & arr) {
+                void proceedDurationResult(const QStringList & ids, QJsonArray & arr) {
                     pRequest(
                         videosUrl(ids),
                         call_type_json,
                         rules(QString(), YOUTUBE_INFO_ITEMS_LIMIT),
                         &arr
                     );
-
-//                    lQuery(
-//                        videosUrl(ids),
-//                        queryRules(50),
-//                        res
-//                    );
-                    ids.clear();
                 }
 
                 void initDuration(QJsonArray & arr) {
@@ -127,9 +129,10 @@ namespace Core {
                     QJsonArray res;
 
                     for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++)
-                        if (ids.length() == YOUTUBE_INFO_ITEMS_LIMIT)
+                        if (ids.length() == YOUTUBE_INFO_ITEMS_LIMIT) {
                             proceedDurationResult(ids, res);
-                        else
+                            ids.clear();
+                        } else
                             ids << (*item).toObject().value(tkn_id).toObject().value(LSTR("videoId")).toString();
 
                     if (!ids.isEmpty())
