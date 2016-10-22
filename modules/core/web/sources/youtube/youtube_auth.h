@@ -28,12 +28,9 @@ namespace Core {
 
                     while(true) {
                         Response * resp = Manager::prepare() -> getFollowed(form_url);
-
-                        Html::Document html = resp -> toHtml(false);
-                        html.output();
+                        Html::Document html = resp -> toHtml();
 
                         if (html.has("input[name='Email']")) { // if user not authorized
-                            resp -> deleteLater();
                             QHash<QString, QString> vals;
 
                             if (error.isEmpty())
@@ -64,14 +61,15 @@ namespace Core {
                             }
 
                             error = QString();
-                            form_url = form -> serializeFormToUrl(vals);\
+                            form_url = form -> serializeFormToUrl(vals);
                             form_url.setPath(form_url.path() % LSTR("Xhr"));
-                            qDebug() << form_url;
                             resp = Manager::prepare() -> formFollowed(form_url);
-                        } else return false; // something went wrong
+                        } else {
+                            error = LSTR("Login form did not found");
+                            return false; // something went wrong
+                        }
 
                         QJsonObject json = resp -> toJson();
-                        qDebug() << json;
 
                         if (JSON_HAS_KEY(json, tkn_encoded_profile_info)) {
                             form_url.setPath(LSTR("/signin/challenge/sl/password"));
@@ -82,8 +80,27 @@ namespace Core {
 
                             qDebug() << form_url;
                             resp = Manager::prepare() -> formFollowed(form_url);
-                        } else return false;
+                        } else {
+                            error = LSTR("Validation of email failed");
+                            return false;
+                        }
 
+                        Html::Document choose_html = resp -> toHtml();
+                        choose_html.output();
+
+                        Html::Tag * form = choose_html.findFirst("form");
+
+                        if (!form) {
+                            error = LSTR("Submit form did not found");
+                            Logger::obj().write(name(), error, Logger::log_error);
+                            return false;
+                        }
+
+                        error = QString();
+                        form_url = form -> serializeFormToUrl(QHash<QString, QString> {{LSTR("submit_access"), LSTR("true")}});
+
+
+                        form_url = Manager::prepare() -> formFollowed(form_url) -> toUrl();
 
                         int i = 0;
 //                        QUrlQuery query(form_url.fragment());
