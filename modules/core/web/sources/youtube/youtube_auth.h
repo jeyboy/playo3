@@ -17,8 +17,9 @@ namespace Core {
                     setParam(query, tkn_client_id, val_tkn);
                     setParam(query, tkn_redirect_uri, val_redirect_url);
                     setParam(query, tkn_response_type, LSTR("code"));
-                    setParam(query, tkn_scope, LSTR("https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly")); // https://www.googleapis.com/auth/youtube.upload
+                    setParam(query, tkn_scope, LSTR("https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/userinfo.profile")); // https://www.googleapis.com/auth/youtube.upload
                     setParam(query, LSTR("access_type"), LSTR("offline"));
+                    setParam(query, LSTR("approval_prompt"), LSTR("force"));
 
                     url.setQuery(query);
                     return url.toString();
