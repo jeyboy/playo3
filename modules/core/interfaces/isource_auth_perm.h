@@ -13,6 +13,7 @@
 
 #define SOURCE_API_EXPIRED_AT_JSON QStringLiteral("_aa")
 #define SOURCE_API_TOKEN_JSON QStringLiteral("_at")
+#define SOURCE_API_REFRESH_TOKEN_JSON QStringLiteral("_rt")
 #define SOURCE_API_USER_ID_JSON QStringLiteral("_au")
 
 #define SOURCE_SITE_USER_ID_JSON QStringLiteral("_su")
@@ -30,6 +31,9 @@ namespace Core {
 
         inline void setApiExpiration(const QString & expiration)        { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
         inline QString apiExpiration() const                            { return attrs[SOURCE_API_EXPIRED_AT_JSON].toString(); }
+
+        inline void setApiRefreshToken(const QString & expiration)      { attrs[SOURCE_API_REFRESH_TOKEN_JSON] = expiration; }
+        inline QString apiRefreshToken() const                          { return attrs[SOURCE_API_REFRESH_TOKEN_JSON].toString(); }
 
         inline void setApiUserID(const QString & user_id)               { attrs[SOURCE_API_USER_ID_JSON] = user_id; }
         inline QString apiUserID() const                                { return attrs[SOURCE_API_USER_ID_JSON].toString(); }

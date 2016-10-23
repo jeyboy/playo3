@@ -48,8 +48,8 @@ namespace Core {
 
             extern const QString val_redirect_url      = QStringLiteral("http://localhost:9999");
             extern const QString val_client_tkn        = QStringLiteral("AIzaSyBiX7ylcLASR4mX7DtQDoQrE5_x6-Todr8");
-            extern const QString val_tkn               = QStringLiteral("970305815614-fd19sv4htr1n5vivi0nift9u1qs31b3c.apps.googleusercontent.com");
-            extern const QString val_sec_tkn           = QStringLiteral("hL3PMGrNjX_Czh3Ve4RrcEv8");
+            extern const QString val_tkn               = QStringLiteral("970305815614-904q93bf04da3qdb09o82oucghob6urt.apps.googleusercontent.com");
+            extern const QString val_sec_tkn           = QStringLiteral("SABrlovkX9hV5QbCY6p8QjSS");
             extern const QString val_name              = QStringLiteral("Youtube");
         }
     }
