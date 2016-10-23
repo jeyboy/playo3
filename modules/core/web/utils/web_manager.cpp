@@ -125,27 +125,49 @@ namespace Core {
             return manager -> post(*this, payload);
         }
 
-        Response * Request::viaPut(const QString & content_type) {
-            QUrl curl = url();
-            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
-            setUrl(curl);
+        Response * Request::viaPut(const QByteArray & data, const QString & content_type) {
+            QByteArray payload = data;
+
+            if (payload.isEmpty()) {
+                QUrl curl = url();
+                QByteArray add_payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+                setUrl(curl);
+
+                if (!add_payload.isEmpty())
+                    payload = payload + '&' + add_payload;
+            }
+
+//            QUrl curl = url();
+//            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+//            setUrl(curl);
 
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
             return manager -> put(*this, payload);
         }
 
         Response * Request::viaForm(const QByteArray & data) {
-            setHeader(QNetworkRequest::ContentTypeHeader, QStringLiteral("application/x-www-form-urlencoded"));
+            setHeader(QNetworkRequest::ContentTypeHeader, FORM_URLENCODE);
 
-            QUrl curl = url();
-            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
-            setUrl(curl);
+            QByteArray payload = data;
 
-            if (!data.isEmpty()) {
-                if (!payload.isEmpty()) {
-                    payload = payload + '&' + data;
-                } else payload = data;
+            if (payload.isEmpty()) {
+                QUrl curl = url();
+                QByteArray add_payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+                setUrl(curl);
+
+                if (!add_payload.isEmpty())
+                    payload = payload + '&' + add_payload;
             }
+
+//            QUrl curl = url();
+//            QByteArray payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+//            setUrl(curl);
+
+//            if (!data.isEmpty()) {
+//                if (!payload.isEmpty()) {
+//                    payload = payload + '&' + data;
+//                } else payload = data;
+//            }
 
             return manager -> post(*this, payload);
         }

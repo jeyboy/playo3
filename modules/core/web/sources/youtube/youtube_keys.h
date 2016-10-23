@@ -10,6 +10,7 @@ namespace Core {
             extern const QString url_info;
             extern const QString url_embed;
             extern const QString url_auth;
+            extern const QString url_token;
 
             extern const QString path_search;
             extern const QString path_video_cats;
@@ -43,8 +44,10 @@ namespace Core {
             extern const QString tkn_response_type;
             extern const QString tkn_scope;
 
+            extern const QString val_redirect_url;
             extern const QString val_client_tkn;
             extern const QString val_tkn;
+            extern const QString val_sec_tkn;
             extern const QString val_name;
         }
     }

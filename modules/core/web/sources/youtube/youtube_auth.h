@@ -15,9 +15,24 @@ namespace Core {
 
                     QUrlQuery query = QUrlQuery();
                     setParam(query, tkn_client_id, val_tkn);
-                    setParam(query, tkn_redirect_uri, LSTR("http://localhost:9999"));
+                    setParam(query, tkn_redirect_uri, val_redirect_url);
                     setParam(query, tkn_response_type, LSTR("code"));
                     setParam(query, tkn_scope, LSTR("https://www.googleapis.com/auth/youtube https://www.googleapis.com/auth/youtube.readonly")); // https://www.googleapis.com/auth/youtube.upload
+                    setParam(query, LSTR("access_type"), LSTR("offline"));
+
+                    url.setQuery(query);
+                    return url.toString();
+                }
+
+                QString tokenUrl(const QString & code) {
+                    QUrl url(url_token);
+
+                    QUrlQuery query = QUrlQuery();
+                    setParam(query, tkn_redirect_uri, val_redirect_url);
+                    setParam(query, LSTR("code"), code);
+                    setParam(query, LSTR("client_id"), val_tkn);
+                    setParam(query, LSTR("client_secret"), val_sec_tkn);
+                    setParam(query, LSTR("grant_type"), LSTR("authorization_code"));
 
                     url.setQuery(query);
                     return url.toString();
@@ -95,10 +110,20 @@ namespace Core {
                         }
 
                         error = QString();
-                        form_url = form -> serializeFormToUrl(QHash<QString, QString> {{LSTR("submit_access"), LSTR("true")}, {LSTR("bgresponse"), LSTR("js_disabled")}});
+                        //INFO: this request very sensitive to params and payload parts separation
+                        QByteArray payload;
+                        form -> serializeForm(form_url, payload, QHash<QString, QString> {{LSTR("submit_access"), LSTR("true")}, {LSTR("bgresponse"), LSTR("js_disabled")}});
+                        form_url = Manager::prepare() -> form(form_url, payload) -> toRedirectUrl();
 
+                        QUrlQuery code_query = QUrlQuery(form_url.query());
+                        QString code = code_query.queryItemValue(LSTR("code"));
 
-                        form_url = Manager::prepare() -> formFollowed(form_url) -> toUrl();
+                        if (code.isEmpty()) {
+                            error = LSTR("Some error occured while receiving token");
+                            return false;
+                        }
+
+                        QJsonObject obj = Manager::prepare() -> jsonPost(tokenUrl(code));
 
                         int i = 0;
 //                        QUrlQuery query(form_url.fragment());

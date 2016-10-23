@@ -101,9 +101,18 @@ namespace Core {
                             actionDialog -> proceedForm(inputs);
 
                             if (actionDialog -> exec() == QDialog::Accepted) {
-                                QHash<QString, QString> attrs = {{tkn_captcha, actionDialog -> getValue(tkn_code)}};
-                                QUrl url = QUrl(url_root).resolved(form -> serializeFormToUrl(attrs));
-                                QNetworkReply * reply = Manager::prepare() -> formFollowed(url, initHeaders());
+//                                QHash<QString, QString> attrs = {{tkn_captcha, actionDialog -> getValue(tkn_code)}};
+//                                QUrl url = QUrl(url_root).resolved(form -> serializeFormToUrl(attrs));
+
+                                QUrl url;
+                                QByteArray payload;
+                                form -> serializeForm(url, payload, {{tkn_captcha, actionDialog -> getValue(tkn_code)}});
+
+                                QNetworkReply * reply = Manager::prepare() -> formFollowed(
+                                    QUrl(url_root).resolved(url),
+                                    payload,
+                                    initHeaders()
+                                );
                                 //TODO: check session
                                 reply -> deleteLater();
                             }

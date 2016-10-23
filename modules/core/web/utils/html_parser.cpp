@@ -140,18 +140,18 @@ namespace Core {
                 }
 
                 ////////  Tag //////////
-
+                //INFO: some servers very sensitive to params part and payload part separation ...
                 // appendable - appends inputs from vals, which not finded in form
                 // default_url - if form did not contains action, we should use source url
-                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable, const QString & default_url) { // not full support of inputs
+                void Tag::serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals, bool appendable, const QString & default_url) {
                     QString action = value(attr_action);
-                    QUrl url = QUrl(action.isEmpty() ? default_url : action);
+                    url = QUrl(action.isEmpty() ? default_url : action);
 
                     Set inputs = find("input") << find("select");
                     QHash<QString, QString> url_vals(vals);
 
                     if (!inputs.isEmpty()) {
-                        QUrlQuery query = QUrlQuery(url.query());
+                        QUrlQuery query = QUrlQuery();
 
                         for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
                             QString inp_name = (*input) -> value(attr_name);
@@ -165,9 +165,17 @@ namespace Core {
                             for(QHash<QString, QString>::Iterator it = url_vals.begin(); it != url_vals.end(); it++)
                                 query.addQueryItem(it.key(), it.value());
 
-                        url.setQuery(query);
+                        payload = query.toString().toUtf8();
                     }
+                }
 
+                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable, const QString & default_url) { // not full support of inputs
+                    QUrl url;
+                    QByteArray payload;
+
+                    serializeForm(url, payload, vals, appendable, default_url);
+
+                    url.setQuery(QUrlQuery(payload));
                     return url;
                 }
                 QString Tag::toText() const {

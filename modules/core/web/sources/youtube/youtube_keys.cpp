@@ -8,6 +8,7 @@ namespace Core {
 //            extern const QString url_video             = QStringLiteral("http://youtube.com/get_video?video_id=%1&t=%2&fmt=18&asv=2");
             extern const QString url_embed             = QStringLiteral("https://www.youtube.com/watch?v=%1&feature=player_embedded");
             extern const QString url_auth              = QStringLiteral("https://accounts.google.com/o/oauth2/auth");
+            extern const QString url_token             = QStringLiteral("https://accounts.google.com/o/oauth2/token");
 
             extern const QString path_search           = QStringLiteral("search");
             extern const QString path_video_cats       = QStringLiteral("videoCategories");
@@ -45,8 +46,10 @@ namespace Core {
             extern const QString tkn_scope             = QStringLiteral("scope");
 
 
+            extern const QString val_redirect_url      = QStringLiteral("http://localhost:9999");
             extern const QString val_client_tkn        = QStringLiteral("AIzaSyBiX7ylcLASR4mX7DtQDoQrE5_x6-Todr8");
             extern const QString val_tkn               = QStringLiteral("970305815614-fd19sv4htr1n5vivi0nift9u1qs31b3c.apps.googleusercontent.com");
+            extern const QString val_sec_tkn           = QStringLiteral("hL3PMGrNjX_Czh3Ve4RrcEv8");
             extern const QString val_name              = QStringLiteral("Youtube");
         }
     }

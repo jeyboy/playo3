@@ -15,6 +15,8 @@
 #define JSON_ERR_FIELD QStringLiteral("json_err")
 #define DEF_JSON_FIELD QStringLiteral("response")
 #define USER_AGENT_HEADER_NAME QStringLiteral("User-Agent")
+#define FORM_URLENCODE QStringLiteral("application/x-www-form-urlencoded")
+
 
 #ifdef Q_OS_WIN
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0") // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")
@@ -117,8 +119,8 @@ namespace Core { // requests and response has memory leaks
 
             Request withHeaders(const Headers & headers);
             Response * viaGet(bool async = false);
-            Response * viaPost(const QString & content_type = QStringLiteral("application/x-www-form-urlencoded"));
-            Response * viaPut(const QString & content_type = QStringLiteral("application/x-www-form-urlencoded"));
+            Response * viaPost(const QString & content_type = FORM_URLENCODE);
+            Response * viaPut(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE);
             Response * viaForm(const QByteArray & data = QByteArray());
 
             static QByteArray extractParams(QUrl & url) {
@@ -262,22 +264,24 @@ namespace Core { // requests and response has memory leaks
                 return resp;
             }
 
-            inline Response * postFollowed(const QUrl & url, const QString & content_type = QStringLiteral("application/x-www-form-urlencoded")) {
+            inline Response * postFollowed(const QUrl & url, const QString & content_type = FORM_URLENCODE) {
                 return requestTo(url).viaPost(content_type) -> followByRedirect();
             }
-            inline Response * postFollowed(const QUrl & url, const Headers & headers, const QString & content_type = QStringLiteral("application/x-www-form-urlencoded")) {
+            inline Response * postFollowed(const QUrl & url, const Headers & headers, const QString & content_type = FORM_URLENCODE) {
                 return requestTo(url).withHeaders(headers).viaPost(content_type) -> followByRedirect();
             }
 
-            inline Response * putFollowed(const QUrl & url, const QString & content_type = QStringLiteral("application/x-www-form-urlencoded")) {
-                return requestTo(url).viaPut(content_type) -> followByRedirect();
+            inline Response * putFollowed(const QUrl & url, const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE) {
+                return requestTo(url).viaPut(data, content_type) -> followByRedirect();
             }
-            inline Response * putFollowed(const QUrl & url, const Headers & headers, const QString & content_type = QStringLiteral("application/x-www-form-urlencoded")) {
-                return requestTo(url).withHeaders(headers).viaPut(content_type) -> followByRedirect();
+            inline Response * putFollowed(const QUrl & url, const Headers & headers, const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE) {
+                return requestTo(url).withHeaders(headers).viaPut(data, content_type) -> followByRedirect();
             }
 
             inline Response * form(const QUrl & url) { return requestTo(url).viaForm(); }
             inline Response * form(const QUrl & url, const Headers & headers) { return requestTo(url).withHeaders(headers).viaForm(); }
+            inline Response * form(const QUrl & url, const QByteArray & data) { return requestTo(url).viaForm(data); }
+            inline Response * form(const QUrl & url, const QByteArray & data, const Headers & headers) { return requestTo(url).withHeaders(headers).viaForm(data); }
 
             inline Response * formFollowed(const QUrl & url) { return requestTo(url).viaForm() -> followByRedirect(); }
             inline Response * formFollowed(const QUrl & url, const QByteArray & data) { return requestTo(url).viaForm(data) -> followByRedirect(); }
@@ -285,7 +289,7 @@ namespace Core { // requests and response has memory leaks
             inline Response * formFollowed(const QUrl & url, const QByteArray & data, const Headers & headers) { return requestTo(url).withHeaders(headers).viaForm(data) -> followByRedirect(); }
 
         public slots:
-            inline void sendGet(QString & url) { getFollowed(url) -> deleteLater(); }
+            inline void sendGet(const QString & url) { getFollowed(url) -> deleteLater(); }
         protected slots:
             inline void requestFinished() {
                 Response * source = (Response *)sender();

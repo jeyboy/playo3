@@ -43,8 +43,11 @@ namespace Core {
                         if (!showingLogin(name() % val_login_title_postfix, vals[LSTR("login")], vals[LSTR("password")], err))
                             return false;
 
-                        QUrl form_url = form -> serializeFormToUrl(vals);
-                        Html::Document doc = Manager::prepare() -> formFollowed(form_url) -> toHtml();
+                        QUrl form_url;
+                        QByteArray payload;
+                        form -> serializeForm(form_url, payload, vals);
+
+                        Html::Document doc = Manager::prepare() -> formFollowed(form_url, payload) -> toHtml();
                         form = doc.findFirst("form[name='loginForm']");
 
                         if (!form) {

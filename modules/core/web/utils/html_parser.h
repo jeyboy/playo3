@@ -124,6 +124,7 @@ namespace Core {
                 inline QString src() const { return value(attr_src); }
                 inline QString link() const { return attrs.value(attr_href); }
 
+                void serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false, const QString & default_url = QString());
                 QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false, const QString & default_url = QString());
                 QString toText() const;
 

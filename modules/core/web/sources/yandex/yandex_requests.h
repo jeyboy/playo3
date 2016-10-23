@@ -21,7 +21,7 @@ namespace Core {
                     return (JSON_INT(pager_obj, tkn_page) + 1) * JSON_INT(pager_obj, LSTR("perPage")) >= JSON_INT(pager_obj, LSTR("total"));
                 }
                 inline bool extractStatus(QueriableArg * arg, QJsonObject & json, int & /*code*/, QString & /*message*/) {
-                    while(true) { // INFO: check captcha validation456
+                    while(true) { // INFO: check captcha validation
                         if (JSON_HAS_KEY(json, JSON_ERR_FIELD)) {
                             Html::Document doc(JSON_STR(json, JSON_ERR_FIELD));
 

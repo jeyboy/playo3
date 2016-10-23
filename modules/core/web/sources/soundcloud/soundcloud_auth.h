@@ -98,7 +98,10 @@ namespace Core {
                         if (form_url.isRelative())
                             form_url = auth_url.resolved(form_url);
 
-                        resp = Manager::prepare() -> formFollowed(form_url, {{tkn_referer, form_url.toString()}});
+                        resp = Manager::prepare() -> formFollowed(
+                            form_url,
+                            {{tkn_referer, form_url.toString()}}
+                        );
 
                         QUrlQuery query(resp -> toUrl(false).query());
 
