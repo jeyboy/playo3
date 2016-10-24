@@ -48,11 +48,14 @@ namespace Core {
                     while(true) {
                         if (!showingLogin(name() % val_login_title_postfix, vals[LSTR("login")], vals[LSTR("passwd")], err)) return false;
 
-                        QUrl form_url = auth_form -> serializeFormToUrl(vals, Html::Tag::fsf_none, login_link_href);
+                        QUrl form_url;
+                        QByteArray payload;
+
+                        auth_form -> serializeForm(form_url, payload, vals, Html::Tag::fsf_none, login_link_href);
 
                         //form also contains captcha field //.js-domik-captcha
 
-                        Html::Document resp_doc = Manager::prepare() -> formFollowed(form_url) -> toHtml();
+                        Html::Document resp_doc = Manager::prepare() -> formFollowed(form_url, payload) -> toHtml();
 
                         if (checkConnection(user_id))
                             return true;

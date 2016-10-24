@@ -66,9 +66,10 @@ namespace Core {
                             }
 
                             error = QString();
-                            form_url = form -> serializeFormToUrl(vals);
-                            qDebug() << form_url;
-                            resp = Manager::prepare() -> formFollowed(form_url);
+                            QByteArray payload;
+
+                            form -> serializeForm(form_url, payload, vals);
+                            resp = Manager::prepare() -> formFollowed(form_url, payload);
                         } else return false; // something went wrong
 
                         form_url = resp -> toUrl();

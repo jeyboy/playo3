@@ -174,7 +174,33 @@ namespace Core {
                         payload = query.toString().toUtf8();
                     }
                 }
+//                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, const FormSerializationFlags & flags, const QString & default_url) { // not full support of inputs
+//                    QString action = value(attr_action);
+//                    QUrl url = QUrl(action.isEmpty() ? default_url : action);
 
+//                    Set inputs = find("input") << find("select");
+//                    QHash<QString, QString> url_vals(vals);
+
+//                    if (!inputs.isEmpty()) {
+//                        QUrlQuery query = QUrlQuery(url.query());
+
+//                        for(Set::Iterator input = inputs.begin(); input != inputs.end(); input++) {
+//                            QString inp_name = (*input) -> value(attr_name);
+//                            QString inp_val = url_vals.take(inp_name);
+//                            if (inp_val.isEmpty()) inp_val = (*input) -> value();
+
+//                            query.addQueryItem(inp_name, flags & fsf_percent_encoding ? QUrl::toPercentEncoding(inp_val) : inp_val);
+//                        }
+
+//                        if (flags & fsf_append_vals_from_hash && !url_vals.isEmpty())
+//                            for(QHash<QString, QString>::Iterator it = url_vals.begin(); it != url_vals.end(); it++)
+//                                query.addQueryItem(it.key(), flags & fsf_percent_encoding ? QUrl::toPercentEncoding(it.value()) : it.value());
+
+//                        url.setQuery(query);
+//                    }
+
+//                    return url;
+//                }
                 QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, const FormSerializationFlags & flags, const QString & default_url) { // not full support of inputs
                     QUrl url;
                     QByteArray payload;

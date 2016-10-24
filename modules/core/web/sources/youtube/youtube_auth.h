@@ -87,13 +87,13 @@ namespace Core {
                                 )) return false;
                             }
 
-                            error = QString();
-                            form_url = form -> serializeFormToUrl(vals, Html::Tag::fsf_percent_encoding);
+                            QByteArray payload;
+                            form -> serializeForm(form_url, payload, vals, Html::Tag::fsf_percent_encoding);
                             form_url.setPath(form_url.path() % LSTR("Xhr"));
-                            resp = Manager::prepare() -> formFollowed(form_url);
+                            resp = Manager::prepare() -> formFollowed(form_url, payload);
                         } else {
                             error = LSTR("Login form did not found");
-                            return false; // something went wrong
+                            return false;
                         }
 
                         QJsonObject json = resp -> toJson();

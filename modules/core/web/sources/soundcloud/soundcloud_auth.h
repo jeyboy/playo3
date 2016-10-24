@@ -63,7 +63,6 @@ namespace Core {
                     QHash<QString, QString> vals;
 
                     while(true) {
-                        QString err;
                         Html::Document html = resp -> toHtml();
 
                         Html::Tag * form = html.findFirst("form.authorize-token");
@@ -74,7 +73,7 @@ namespace Core {
                         }
 
                         if (form -> has("input[name='password']")) { // if user not authorized
-                            err = html.find(".warning").text();
+                            error = html.find(".warning").text();
 
                             QString captcha_src;
                             Html::Tag * captcha_tag = form -> findFirst(QString("script[src^'" + RECAPTCHA_BASE_URL + "']").toUtf8().data());
@@ -83,23 +82,24 @@ namespace Core {
                                 captcha_src = captcha_tag -> value(tkn_src);
 
                             if (captcha_src.isEmpty()) {
-                                if (!showingLogin(name() % val_login_title_postfix, vals[tkn_username], vals[tkn_password], err))
+                                if (!showingLogin(name() % val_login_title_postfix, vals[tkn_username], vals[tkn_password], error))
                                     return false;
                             } else {
                                 if (!showingLoginWithCaptcha(
                                     name() % val_login_title_postfix, Recaptcha::V1::obj().takeImageUrl(captcha_src, vals[tkn_recaptcha_challenge_field]),
-                                    vals[tkn_username], vals[tkn_password], vals[tkn_recaptcha_response_field], err
+                                    vals[tkn_username], vals[tkn_password], vals[tkn_recaptcha_response_field], error
                                 )) return false;
                             }
                         }
 
-                        form_url = form -> serializeFormToUrl(vals, Html::Tag::fsf_append_vals_from_hash);
+                        QByteArray payload;
+                        form -> serializeForm(form_url, payload, vals, Html::Tag::fsf_append_vals_from_hash);
 
                         if (form_url.isRelative())
                             form_url = auth_url.resolved(form_url);
 
                         resp = Manager::prepare() -> formFollowed(
-                            form_url,
+                            form_url, payload,
                             {{tkn_referer, form_url.toString()}}
                         );
 
@@ -120,6 +120,7 @@ namespace Core {
                                 doc = Web::Manager::prepare() -> jsonGet(confirmAuthUrl(newToken));
                                 userID = QString::number(doc.value(tkn_id).toInt());
                                 resp -> deleteLater();
+                                error = QString();
                                 return true;
                             }
                         }
