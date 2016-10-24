@@ -98,8 +98,8 @@ namespace Core {
         inline bool isPrimary()                                         { return HAS_FLAG(flags[sf_endpoint], sf_is_primary); }
         inline bool isSociable()                                        { return HAS_FLAG(flags[sf_endpoint], sf_sociable); }
 
-        inline bool hasApiConnection()                                  { return HAS_FLAG(flags[sf_endpoint], sf_api); }
-        inline bool hasSiteConnection()                                 { return HAS_FLAG(flags[sf_endpoint], sf_site); }
+        inline bool hasApiConnection()                                  { return HAS_FLAG(flags[sf_endpoint], sf_api_connectable); }
+        inline bool hasSiteConnection()                                 { return HAS_FLAG(flags[sf_endpoint], sf_site_connectable); }
 
         inline bool hasUsers()                                          { return HAS_FLAG(flags[sf_endpoint], sf_user); }
         inline bool hasGroups()                                         { return HAS_FLAG(flags[sf_endpoint], sf_group); }
