@@ -30,7 +30,7 @@ namespace Core {
                             QString id = JSON_CSTR(dir_obj, tkn_id);
 
                             set_obj.insert(tkn_grab_id, id);
-                            set_obj.insert(tkn_media_type, dmt_any);
+                            set_obj.insert(tkn_media_type, dmt_set);
                             set_obj.insert(tkn_grab_title, JSON_STR(dir_obj, tkn_name));
 
                             set_obj.insert(

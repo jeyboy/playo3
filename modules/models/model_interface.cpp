@@ -937,7 +937,6 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
         if (JSON_HAS_KEY(itm, tkn_media_type))
             dm_type = (DataMediaType)JSON_INT(itm, tkn_media_type);
 
-
         if (dm_type & dmt_set) {
             QString pid = JSON_STR(itm, tkn_grab_id);
             QString ptitle = JSON_STR(itm, tkn_grab_title);
