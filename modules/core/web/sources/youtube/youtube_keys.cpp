@@ -40,11 +40,14 @@ namespace Core {
                                                        = QStringLiteral("use_cipher_signature");
             extern const QString tkn_order             = QStringLiteral("order");
 
+            extern const QString tkn_code               = QStringLiteral("code");
             extern const QString tkn_client_id         = QStringLiteral("client_id");
             extern const QString tkn_redirect_uri      = QStringLiteral("redirect_uri");
             extern const QString tkn_response_type     = QStringLiteral("response_type");
             extern const QString tkn_scope             = QStringLiteral("scope");
-
+            extern const QString tkn_access_token      = QStringLiteral("access_token");
+            extern const QString tkn_expires_in        = QStringLiteral("expires_in");
+            extern const QString tkn_refresh_token     = QStringLiteral("refresh_token");
 
             extern const QString val_redirect_url      = QStringLiteral("http://localhost:9999");
             extern const QString val_client_tkn        = QStringLiteral("AIzaSyBiX7ylcLASR4mX7DtQDoQrE5_x6-Todr8");

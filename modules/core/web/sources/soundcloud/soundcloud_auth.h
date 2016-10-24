@@ -93,7 +93,7 @@ namespace Core {
                             }
                         }
 
-                        form_url = form -> serializeFormToUrl(vals, true);
+                        form_url = form -> serializeFormToUrl(vals, Html::Tag::fsf_append_vals_from_hash);
 
                         if (form_url.isRelative())
                             form_url = auth_url.resolved(form_url);

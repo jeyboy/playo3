@@ -48,7 +48,7 @@ namespace Core {
                     while(true) {
                         if (!showingLogin(name() % val_login_title_postfix, vals[LSTR("login")], vals[LSTR("passwd")], err)) return false;
 
-                        QUrl form_url = auth_form -> serializeFormToUrl(vals, false, login_link_href);
+                        QUrl form_url = auth_form -> serializeFormToUrl(vals, Html::Tag::fsf_none, login_link_href);
 
                         //form also contains captcha field //.js-domik-captcha
 

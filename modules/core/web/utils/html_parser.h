@@ -101,6 +101,12 @@ namespace Core {
 
             class Tag {
             public:
+                enum FormSerializationFlags {
+                    fsf_none,
+                    fsf_append_vals_from_hash = 1,
+                    fsf_percent_encoding
+                };
+
                 inline Tag(QString tag, Tag * parent_tag = 0) : _level(parent_tag ? parent_tag -> level() + 1 : 0), _name(tag), parent(parent_tag) {}
                 inline ~Tag() { qDeleteAll(tags); }
 
@@ -124,8 +130,8 @@ namespace Core {
                 inline QString src() const { return value(attr_src); }
                 inline QString link() const { return attrs.value(attr_href); }
 
-                void serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false, const QString & default_url = QString());
-                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), bool appendable = false, const QString & default_url = QString());
+                void serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals = QHash<QString, QString>(), const FormSerializationFlags & flags = fsf_none, const QString & default_url = QString());
+                QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), const FormSerializationFlags & flags = fsf_none, const QString & default_url = QString());
                 QString toText() const;
 
                 inline bool is_link() { return _name == tag_a; }

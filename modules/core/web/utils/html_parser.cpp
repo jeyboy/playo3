@@ -143,7 +143,7 @@ namespace Core {
                 //INFO: some servers very sensitive to params part and payload part separation ...
                 // appendable - appends inputs from vals, which not finded in form
                 // default_url - if form did not contains action, we should use source url
-                void Tag::serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals, bool appendable, const QString & default_url) {
+                void Tag::serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals, const FormSerializationFlags & flags, const QString & default_url) {
                     QString action = value(attr_action);
                     url = QUrl(action.isEmpty() ? default_url : action);
 
@@ -158,22 +158,28 @@ namespace Core {
                             QString inp_val = url_vals.take(inp_name);
                             if (inp_val.isEmpty()) inp_val = (*input) -> value();
 
-                            query.addQueryItem(inp_name, QUrl::toPercentEncoding(inp_val));
+                            query.addQueryItem(
+                                inp_name,
+                                flags & fsf_percent_encoding ? QUrl::toPercentEncoding(inp_val) : inp_val
+                            );
                         }
 
-                        if (appendable && !url_vals.isEmpty())
+                        if (flags & fsf_append_vals_from_hash && !url_vals.isEmpty())
                             for(QHash<QString, QString>::Iterator it = url_vals.begin(); it != url_vals.end(); it++)
-                                query.addQueryItem(it.key(), it.value());
+                                query.addQueryItem(
+                                    it.key(),
+                                    flags & fsf_percent_encoding ? QUrl::toPercentEncoding(it.value()) : it.value()
+                                );
 
                         payload = query.toString().toUtf8();
                     }
                 }
 
-                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, bool appendable, const QString & default_url) { // not full support of inputs
+                QUrl Tag::serializeFormToUrl(const QHash<QString, QString> & vals, const FormSerializationFlags & flags, const QString & default_url) { // not full support of inputs
                     QUrl url;
                     QByteArray payload;
 
-                    serializeForm(url, payload, vals, appendable, default_url);
+                    serializeForm(url, payload, vals, flags, default_url);
 
                     url.setQuery(QUrlQuery(payload));
                     return url;

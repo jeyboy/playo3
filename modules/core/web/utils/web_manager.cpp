@@ -130,11 +130,8 @@ namespace Core {
 
             if (payload.isEmpty()) {
                 QUrl curl = url();
-                QByteArray add_payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+                payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
                 setUrl(curl);
-
-                if (!add_payload.isEmpty())
-                    payload = payload + '&' + add_payload;
             }
 
 //            QUrl curl = url();
@@ -152,11 +149,8 @@ namespace Core {
 
             if (payload.isEmpty()) {
                 QUrl curl = url();
-                QByteArray add_payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
+                payload = manager -> isExtractParamsToPayload() ? extractParams(curl) : QByteArray();
                 setUrl(curl);
-
-                if (!add_payload.isEmpty())
-                    payload = payload + '&' + add_payload;
             }
 
 //            QUrl curl = url();

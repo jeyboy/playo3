@@ -71,11 +71,12 @@ namespace Core {
                 }
 
                 bool connectUserApi() {
-                    QString token, user_id, expiration;
+                    QString token, refresh_token;
+                    qint64 expiration;
 
-                    if (connectApi(token, user_id, expiration, error)) {
+                    if (connectApi(token, refresh_token, expiration, error)) {
                         setApiToken(token);
-                        setApiUserID(user_id);
+                        setApiRefreshToken(refresh_token);
                         setApiExpiration(expiration);
                         return true;
                     }

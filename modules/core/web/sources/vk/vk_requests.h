@@ -80,7 +80,8 @@ namespace Core {
                 inline QString boolToStr(const bool & val) { return val ? val_str_true : val_str_false; }
 
                 bool connectUserApi() {
-                    QString token, user_id, expiration;
+                    QString token, user_id;
+                    qint64 expiration;
 
                     if (connectApi(token, user_id, expiration, error)) {
                         setApiToken(token);

@@ -39,10 +39,14 @@ namespace Core {
             extern const QString tkn_use_cipher_signature;
             extern const QString tkn_order;
 
+            extern const QString tkn_code;
             extern const QString tkn_client_id;
             extern const QString tkn_redirect_uri;
             extern const QString tkn_response_type;
             extern const QString tkn_scope;
+            extern const QString tkn_access_token;
+            extern const QString tkn_expires_in;
+            extern const QString tkn_refresh_token;
 
             extern const QString val_redirect_url;
             extern const QString val_client_tkn;

@@ -25,7 +25,7 @@ namespace Core {
                     return url.toString();
                 }
 
-                bool connectApi(QString & new_token, QString & user_id, QString & expiration, QString & error) {
+                bool connectApi(QString & new_token, QString & user_id, qint64 & expiration, QString & error) {
                     QUrl form_url = authUrl();
 
                     while(true) {
@@ -54,7 +54,7 @@ namespace Core {
                             Html::Tag * captcha_tag = form -> findFirst("img#captcha");
 
                             if (captcha_tag)
-                                captcha_src = captcha_tag -> value("src");
+                                captcha_src = captcha_tag -> src();
 
                             if (captcha_src.isEmpty()) {
                                 if (!showingLogin(name() % val_login_title_postfix, vals[tkn_email], vals[tkn_password], error))
@@ -67,6 +67,7 @@ namespace Core {
 
                             error = QString();
                             form_url = form -> serializeFormToUrl(vals);
+                            qDebug() << form_url;
                             resp = Manager::prepare() -> formFollowed(form_url);
                         } else return false; // something went wrong
 
@@ -79,7 +80,8 @@ namespace Core {
                         } else if (query.hasQueryItem(tkn_access_token)) {
                             new_token = query.queryItemValue(tkn_access_token);
                             user_id = query.queryItemValue(tkn_user_id);
-                            expiration = query.queryItemValue(tkn_expires_in);
+                            QString exp_str = query.queryItemValue(tkn_expires_in);
+                            expiration = exp_str.toInt();
 
                             return true;
                         }

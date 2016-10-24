@@ -29,8 +29,8 @@ namespace Core {
     protected:
         virtual QToolButton * initButton(QWidget * parent = 0) = 0;
 
-        inline void setApiExpiration(const QString & expiration)        { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
-        inline QString apiExpiration() const                            { return attrs[SOURCE_API_EXPIRED_AT_JSON].toString(); }
+        inline void setApiExpiration(const qint64 & expiration)         { attrs[SOURCE_API_EXPIRED_AT_JSON] = expiration; }
+        inline qint64 apiExpiration() const                             { return (qint64)attrs[SOURCE_API_EXPIRED_AT_JSON].toDouble(); }
 
         inline void setApiRefreshToken(const QString & expiration)      { attrs[SOURCE_API_REFRESH_TOKEN_JSON] = expiration; }
         inline QString apiRefreshToken() const                          { return attrs[SOURCE_API_REFRESH_TOKEN_JSON].toString(); }
