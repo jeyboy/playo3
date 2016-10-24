@@ -180,8 +180,7 @@ namespace Core {
                     QByteArray payload;
 
                     serializeForm(url, payload, vals, flags, default_url);
-
-                    url.setQuery(QUrlQuery(payload));
+                    url.setQuery(QUrlQuery(payload + '&' + url.query()));
                     return url;
                 }
                 QString Tag::toText() const {
