@@ -148,6 +148,10 @@ QString IStylesheets::_sliderStyles() {
 
 QString IStylesheets::_treeViewStyles() {
     return QStringLiteral(
+        "QTreeView::item:hover {"
+        "   color: black;"
+        "}"
+
         "QTreeView, QTreeView::branch {"
         "   selection-background-color: transparent;"
 //        "   show-decoration-selected: 0;"

@@ -98,14 +98,23 @@ QString DarkStylesheets::scrollStyles() {
 
 QString DarkStylesheets::treeViewStyles() {
     return QString(
-        #ifdef HAVE_X11
-            "QTreeView::branch::selected {"
-            "   background-color: " + color3().name(QColor::HexArgb) + ";"
-            "}"
-        #endif
         "QTreeView {"
         "   border-radius: 8px;"
         "   background-color: transparent;"
+        "}"
+
+        "QTreeView::item {"
+        "   color: white;"
+        "}"
+
+        "QTreeView::branch::selected {"
+            #ifdef HAVE_X11
+                "   background-color: " + color3().name(QColor::HexArgb) + ";"
+            #endif
+        "}"
+
+        "QTreeView::item::selected {"
+        "   color: black;"
         "}"
     );
 }

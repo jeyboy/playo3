@@ -95,11 +95,12 @@ QString LightStylesheets::scrollStyles() {
 
 QString LightStylesheets::treeViewStyles() {
     return QString(
-        #ifdef HAVE_X11
-            "QTreeView::branch::selected {"
-            "   background-color: " + color2().name(QColor::HexRgb) + ";"
-            "}"
-        #endif
+        "QTreeView::branch::selected {"
+            #ifdef HAVE_X11
+                "   background-color: " + color2().name(QColor::HexRgb) + ";"
+            #endif
+        "}"
+
         "QTreeView {"
         "   background-color: " + color2().name(QColor::HexArgb) + ";"
         "   border-radius: 8px;"
