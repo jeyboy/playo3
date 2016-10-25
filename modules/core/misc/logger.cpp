@@ -1,6 +1,6 @@
 #include "logger.h"
 
-Logger::Logger() : QObject(), out(0), file(0), m_showDate(true)  {}
+Logger::Logger() : QObject(), out(0), file(0), m_showDate(true), fm(0) {}
 
 Logger::~Logger() {
     if (file != 0) {
@@ -47,8 +47,15 @@ void Logger::write(const QString & initiator, const QString & value, const QStri
 
 
 void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
-    if ((m_editor = editor))
+    if ((m_editor = editor)) {
         editor -> setReadOnly(true);
+
+        fm = new QFontMetrics(editor -> document() -> defaultFont());
+//        QTextDocument * doc = editor -> document();
+//        QFont font = doc -> defaultFont();
+//        font.setFamily("Courier New");
+//        doc -> setDefaultFont(font);
+    }
 
     if (!fileName.isEmpty()) {
         file = new QFile;
@@ -75,10 +82,18 @@ void Logger::toEditor(const QString & initiator, const QString & value) {
             text = "<br>" % initiator % "<br>";
         }
 
+        ///////////// monkey patch for crash on missed symbols (khmer and etc)
+        QString cval;
+        for(QString::ConstIterator ch = value.constBegin(); ch != value.constEnd(); ch++)
+            if (fm -> inFont(*ch))
+                cval.append(*ch);
+
+        ///////////////////////////////////////
+
         text = QString("%1%2 ::: %3").arg(
             text,
             (m_showDate ? QStringLiteral("<b>") % QDateTime::currentDateTime().toString(QStringLiteral("dd.MM.yyyy hh:mm:ss ")) % QStringLiteral("</b>") : QStringLiteral("")),
-            value
+            cval/*value*/
         );
 
         bool atEnd = m_editor -> verticalScrollBar() -> maximum() - m_editor -> verticalScrollBar() -> value() < 10;

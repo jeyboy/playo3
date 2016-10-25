@@ -9,6 +9,7 @@
 #include <qscrollbar.h>
 #include <qstringbuilder.h>
 #include <qapplication.h>
+#include <qfontmetrics.h>
 
 #include "modules/core/misc/format.h"
 #include "modules/core/interfaces/singleton.h"
@@ -58,6 +59,7 @@ private:
     QPlainTextEdit * m_editor;
     bool m_showDate;
     QString lastInitiator;
+    QFontMetrics * fm;
 
     QElapsedTimer timer;
 
