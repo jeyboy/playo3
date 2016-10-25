@@ -103,6 +103,7 @@ QString UserActionDialog::getValue(const QString & name) {
     QPair<FormInputType, QWidget *> elem = elements.value(name);
     switch(elem.first) {
         case url:
+        case password:
         case string: return ((QLineEdit *)elem.second) -> text();
         case text: return ((QPlainTextEdit *)elem.second) -> toPlainText();
         case list: return ((QComboBox *)elem.second) -> currentText();
@@ -125,6 +126,12 @@ QWidget * UserActionDialog::registerItem(FormInput & input) {
             ((QCheckBox *)res) -> setChecked(!input.value.isEmpty());
         }
         case text: {res = new QPlainTextEdit(input.value, layer); break;}
+        case password: {
+            QLineEdit * pass_res = new QLineEdit(input.value, layer);
+            pass_res -> setEchoMode(QLineEdit::Password);
+            pass_res -> setInputMethodHints(Qt::ImhHiddenText | Qt::ImhNoPredictiveText | Qt::ImhNoAutoUppercase);
+            res = pass_res;
+        break;}
         default: res = new QLineEdit(input.value, layer);
     }
     elements.insert(input.name, QPair<FormInputType, QWidget *>(input.ftype, res));

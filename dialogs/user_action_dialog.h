@@ -19,7 +19,7 @@
 
 namespace Ui { class UserActionDialog; }
 
-enum FormInputType { title, image, string, text, action, url, list, checkbox, message };
+enum FormInputType { title, image, string, text, action, url, list, checkbox, message, password };
 
 //class IdHighlighter : public QSyntaxHighlighter {
 //    Q_OBJECT
@@ -67,6 +67,10 @@ struct FormInput {
 
     static inline FormInput createStr(const QString & name, const QString & label, const QString & value = QString()) {
         return FormInput(string, name, label, value);
+    }
+
+    static inline FormInput createPass(const QString & name, const QString & label, const QString & value = QString()) {
+        return FormInput(password, name, label, value);
     }
 
     static inline FormInput createTxt(const QString & name, const QString & label, const QString & value = QString()) {
@@ -133,7 +137,7 @@ public:
 
     void buildLoginFields(const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
         inputs << FormInput::createStr(login_key, login_label, login_val);
-        inputs << FormInput::createStr(pass_key, password_label, password_val);
+        inputs << FormInput::createPass(pass_key, password_label, password_val);
     }
 
     void buildCaptchaFields(const QPixmap & captcha_img) {
