@@ -227,16 +227,14 @@ namespace Core {
                 QList<Linkable> findFriendsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByIdOrPerma(uid).toArray();
-                    jsonToUsers(linkables, arr);
+                    jsonToUsers(linkables, EXTRACT_ITEMS(usersByIdOrPerma(uid).toObject()));
 
                     return linkables;
                 }
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = usersByName(name).toArray();
-                    jsonToUsers(linkables, arr);
+                    jsonToUsers(linkables, EXTRACT_ITEMS(usersByName(name).toObject()));
 
                     return linkables;
                 }
@@ -244,16 +242,14 @@ namespace Core {
                 QList<Linkable> findGroupsById(const QString & uid) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByIdOrPerma(uid).toArray();
-                    jsonToGroups(linkables, arr);
+                    jsonToGroups(linkables, EXTRACT_ITEMS(groupsByIdOrPerma(uid).toObject()));
 
                     return linkables;
                 }
                 QList<Linkable> findGroupsByName(const QString & name) {
                     QList<Linkable> linkables;
 
-                    QJsonArray arr = groupsByName(name).toArray();
-                    jsonToGroups(linkables, arr);
+                    jsonToGroups(linkables, EXTRACT_ITEMS(groupsByName(name).toObject()));
 
                     return linkables;
                 }

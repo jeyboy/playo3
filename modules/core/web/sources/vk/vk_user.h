@@ -94,7 +94,7 @@ namespace Core {
                         default: Logger::obj().write(name(), "GROUP INFO is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, name}});
+                    return prepareBlock(dmt_user, cmd_mtd_users_by_name, response, {}, {{CMD_PREDICATE, uname}});
                 }
             };
         }

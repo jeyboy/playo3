@@ -239,10 +239,6 @@ namespace Core {
 
             virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = DEFAULT_PREDICATE_NAME) = 0;
             virtual QString baseUrlStr(const QuerySourceType & stype, const QString & predicate, const QUrlQuery & query) {
-//                QUrl url(baseUrlStr(stype, predicate));
-//                url.setQuery(query);
-//                return url.toString();
-
                 return baseUrlStr(stype, predicate) % (query.isEmpty() ? QString() : '?' % query.toString());
             }
 

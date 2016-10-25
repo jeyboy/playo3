@@ -91,10 +91,13 @@ namespace Core {
 
             QueriableArg(QJsonArray * arr, const QString & url, const ApiCallType & call_type, const AdditionalProc & post_proc = proc_none,
                 const QStringList & fields = QStringList(), QObject * error_receiver = 0, bool extract_params_to_payload = true)
-                : url_template(url), request_url(url), call_type(call_type), call_amount(call_solo), call_method(call_method_get),
+                : call_type(call_type), call_amount(call_solo), call_method(call_method_get),
                   post_proc(post_proc), arr(arr), fields(fields), counter(0), amount_of_appends(0),
                   requests_fact_count(0), error_receiver(error_receiver), extract_params_to_payload(extract_params_to_payload), last_result_is_empty(false), forse_completing(false)
             {
+                (url_template = url).replace(OFFSET_TEMPLATE_ENC, OFFSET_TEMPLATE);
+                request_url = url_template;
+
                 ignoreArrContent(true);
             }
 
