@@ -30,9 +30,6 @@ namespace Core {
 
                     while(true) {
                         Response * resp = Manager::prepare() -> getFollowed(form_url);
-
-                //        Logger::dump(resp -> toText().toUtf8());
-
                         Html::Document html = resp -> toHtml(false);
 
                         if (html.has("input[name='pass']")) { // if user not authorized
@@ -72,7 +69,7 @@ namespace Core {
                             resp = Manager::prepare() -> formFollowed(form_url, payload);
                         } else return false; // something went wrong
 
-                        form_url = resp -> toUrl();
+                        form_url = resp -> toUrl(false);
                         QUrlQuery query(form_url.fragment());
 
                         if (query.hasQueryItem(tkn_error)) {
@@ -83,13 +80,44 @@ namespace Core {
                             user_id = query.queryItemValue(tkn_user_id);
                             QString exp_str = query.queryItemValue(tkn_expires_in);
                             expiration = exp_str.toInt();
+                            resp -> deleteLater();
 
                             return true;
+                        } else {
+                            QString confirm_url;
+                            QRegularExpression ruga(LSTR("location.href = \"([^\"]+)\""));
+                            QRegularExpressionMatchIterator i = ruga.globalMatch(resp -> toText());
+
+                            while (i.hasNext()) {
+                                QRegularExpressionMatch match = i.next();
+                                if (match.hasMatch()) {
+                                    QString text = match.captured(1);
+
+                                    if (text.indexOf(LSTR("act=grant_access")) > -1 && text.indexOf(LSTR("cancel=1")) == -1) {
+                                        confirm_url = text;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (confirm_url.isEmpty()) {
+                                form_url = authUrl();
+                                error = LSTR("Some shit happened... :(");
+                                continue;
+                            } else {
+                                //https://login.vk.com/?act=grant_access&client_id=4332211&settings=327706&redirect_uri=https%3A%2F%2Foauth.vk.com%2Fblank.html&response_type=token&direct_hash=3744c1197ad0359075&token_type=0&v=5.52&state=&display=page&ip_h=954e1677fa11b49ae8&hash=a5fa4acec0d43cc6f4&https=1
+                                resp = Manager::prepare() -> getFollowed(confirm_url);
+                                form_url = resp -> toUrl(false);
+                                query = QUrlQuery(form_url.fragment());
+                            }
                         }
-                        else {
-                            form_url = authUrl();
-                            error = LSTR("Some shit happened... :(");
-                        }
+
+                        new_token = query.queryItemValue(tkn_access_token);
+                        user_id = query.queryItemValue(tkn_user_id);
+                        QString exp_str = query.queryItemValue(tkn_expires_in);
+                        expiration = exp_str.toInt();
+                        resp -> deleteLater();
+                        return true;
                     }
                 }
 
