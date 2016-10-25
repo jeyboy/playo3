@@ -103,7 +103,7 @@ QString DarkStylesheets::treeViewStyles() {
         "   background-color: transparent;"
         "}"
 
-        "QTreeView::item {"
+        "QTreeView::item, QListView::item {"
         "   color: white;"
         "}"
 
@@ -113,7 +113,7 @@ QString DarkStylesheets::treeViewStyles() {
             #endif
         "}"
 
-        "QTreeView::item::selected {"
+        "QTreeView::item::selected, QListView::item:selected {"
         "   color: black;"
         "}"
     );

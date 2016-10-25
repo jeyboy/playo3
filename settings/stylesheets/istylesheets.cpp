@@ -148,7 +148,7 @@ QString IStylesheets::_sliderStyles() {
 
 QString IStylesheets::_treeViewStyles() {
     return QStringLiteral(
-        "QTreeView::item:hover {"
+        "QTreeView::item:hover, QListView::item:hover {"
         "   color: black;"
         "}"
 
