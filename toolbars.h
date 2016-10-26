@@ -17,6 +17,24 @@
 #include "modules/controls/spectrum_view.h"
 #include "modules/controls/equalizer_view.h"
 
+#define TOOLBAR_PL_ITEM_FEATURES_KEY    LSTR("PlayedItemFeatures")
+#define TOOLBAR_SL_ITEM_FEATURES_KEY    LSTR("SelectedItemFeatures")
+#define TOOLBAR_MEDIA_KEY               LSTR("Media")
+#define TOOLBAR_MEDIA_PLUS_KEY          LSTR("Media+")
+#define TOOLBAR_MEDIA_POS_KEY           LSTR("Media+Position")
+#define TOOLBAR_MEDIA_PAN_KEY           LSTR("Media+Pan")
+#define TOOLBAR_MEDIA_TIME_KEY          LSTR("Media+Time")
+#define TOOLBAR_MEDIA_VOLUME_KEY        LSTR("Media+Volume")
+#define TOOLBAR_CONTROLS_KEY            LSTR("Controls")
+#define TOOLBAR_SPECTRUM_KEY            LSTR("Spectrum")
+#define TOOLBAR_EQUALIZER_KEY           LSTR("Equalizer")
+#define TOOLBAR_EQUALIZER_BUTTON_KEY    LSTR("EqualizerButton")
+#define TOOLBAR_SEARCH_KEY              LSTR("Search")
+#define TOOLBAR_SETTINGS_KEY            LSTR("Settings")
+#define TOOLBAR_SERVICE_MARK            "service"
+#define TOOLBAR_BLOCK_MARK              "blocked"
+
+
 namespace Presentation {
     using namespace Controls;
     using namespace Core::Web;
@@ -77,6 +95,7 @@ namespace Presentation {
         void openRecsForItemTags();
         void openTracksForLabel();
         void openAlbumsForLabel();
+        void openArtistsForLabel();
 
         void playerStateChanged(const PlayerState &);
         void onFolderDrop(const QString & name, const QString & path);
@@ -131,6 +150,7 @@ namespace Presentation {
         QAction * pl_item_tags_btn;
         QAction * pl_item_labels_song_btn;
         QAction * pl_item_labels_album_btn;
+        QAction * pl_item_labels_artist_btn;
 
         QToolBar * highlighted;
         MetricSlider * slider;
@@ -142,23 +162,6 @@ namespace Presentation {
 
         QPoint lastClickPoint;
         QMainWindow * container;
-
-        const QString toolbar_pl_item_features_key =    LSTR("PlayedItemFeatures");
-        const QString toolbar_sl_item_features_key =    LSTR("SelectedItemFeatures");
-        const QString toolbar_media_key =               LSTR("Media");
-        const QString toolbar_media_plus_key =          LSTR("Media+");
-        const QString toolbar_media_pos_key =           LSTR("Media+Position");
-        const QString toolbar_media_pan_key =           LSTR("Media+Pan");
-        const QString toolbar_media_time_key =          LSTR("Media+Time");
-        const QString toolbar_media_volume_key =        LSTR("Media+Volume");
-        const QString toolbar_controls_key =            LSTR("Controls");
-        const QString toolbar_spectrum_key =            LSTR("Spectrum");
-        const QString toolbar_equalizer_key =           LSTR("Equalizer");
-        const QString toolbar_equalizer_button_key =    LSTR("EqualizerButton");
-        const QString toolbar_search_key =              LSTR("Search");
-        const QString toolbar_settings_key =            LSTR("Settings");
-        const char * toolbar_service_mark = "service";
-        const char * toolbar_block_mark = "blocked";
     };
 }
 

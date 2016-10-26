@@ -1036,7 +1036,7 @@ int IModel::proceedCue(const QString & path, const QString & name, Playlist * ne
 void IModel::proceedRecsForUser(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_audio_recs_by_user)) {
+    if (src -> hasSimillarAudioByUser()) {
         QVariant owner_id = it -> ownerId();
         if (owner_id.isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, owner_id.toString(), rec_user_audio);
@@ -1047,7 +1047,7 @@ void IModel::proceedRecsForUser(IItem * it) {
 void IModel::proceedRecsForArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_audio_recs_by_artist)) {
+    if (src -> hasSimillarAudioByArtist()) {
         QVariantMap artists = it -> artistsList();
 
         for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
@@ -1059,7 +1059,7 @@ void IModel::proceedRecsForArtist(IItem * it) {
 void IModel::proceedRecsForItem(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_audio_recs_by_audio)) {
+    if (src -> hasSimillarAudioByAudio()) {
         if (it -> id().isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> id().toString(), rec_audio);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for song ") % it -> title().toString()), bar_settings, 0, true, true);
@@ -1071,7 +1071,7 @@ void IModel::proceedRecsForTags(IItem * it) {
 
     bool is_audio = it -> isAudio();
 
-    if (src -> respondableTo(sf_audio_by_tag)) {
+    if (src -> hasSimillarAudioByTag()) {
         if (it -> id().isValid()) {
             Params bar_settings(it -> dataType(), mpf_auto_play_next, it -> tagsList().join(','), is_audio ? rec_tag_audio : rec_tag_video);
             Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Rec for ") % (is_audio ? LSTR("song ") : LSTR("video ")) % it -> title().toString()), bar_settings, 0, true, true);
@@ -1081,7 +1081,7 @@ void IModel::proceedRecsForTags(IItem * it) {
 void IModel::proceedAudioFromSameArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_audio_by_artist)) {
+    if (src -> hasAudioFromSameArtist()) {
         QVariantMap artists = it -> artistsList();
 
         if (artists.isEmpty()) {
@@ -1098,7 +1098,7 @@ void IModel::proceedAudioFromSameArtist(IItem * it) {
 void IModel::proceedAlbumsFromSameArtist(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_audio_by_artist)) {
+    if (src -> hasAlbumsFromSameArtist()) {
         QVariantMap artists = it -> artistsList();
 
         for(QVariantMap::Iterator artist = artists.begin(); artist != artists.end(); artist++) {
@@ -1110,7 +1110,7 @@ void IModel::proceedAlbumsFromSameArtist(IItem * it) {
 void IModel::proceedAudioFromSameLabel(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_audio_by_label)) {
+    if (src -> hasAudioFromSameLabel()) {
         QVariantMap labels = it -> labelsList();
 
         for(QVariantMap::Iterator label = labels.begin(); label != labels.end(); label++) {
@@ -1122,7 +1122,19 @@ void IModel::proceedAudioFromSameLabel(IItem * it) {
 void IModel::proceedAlbumsFromSameLabel(IItem * it) {
     ISource * src = Web::Apis::source(it -> dataType());
 
-    if (src -> respondableTo(sf_album_by_label)) {
+    if (src -> hasAlbumsFromSameLabel()) {
+        QVariantMap labels = it -> labelsList();
+
+        for(QVariantMap::Iterator label = labels.begin(); label != labels.end(); label++) {
+            Params bar_settings(it -> dataType(), mpf_auto_play_next, label.key(), rec_label_album);
+            Presentation::Dockbars::obj().createDocBar(Presentation::BarCreationNames(LSTR("Albums for label ") % label.value().toString()), bar_settings, 0, true, true);
+        }
+    } else qCritical() << "Permissions required" << "This action required on some additional permissions or this service not respondable to this action";
+}
+void IModel::proceedArtistsFromSameLabel(IItem * it) {
+    ISource * src = Web::Apis::source(it -> dataType());
+
+    if (src -> hasArtistsFromSameLabel()) {
         QVariantMap labels = it -> labelsList();
 
         for(QVariantMap::Iterator label = labels.begin(); label != labels.end(); label++) {

@@ -118,6 +118,7 @@ namespace Core {
         sf_popular_artist                   = sf_artist | sf_section_popular,
         sf_artist_by_id                     = sf_artist | sf_by_id,
         sf_artist_by_title                  = sf_artist | sf_by_title,
+        sf_artist_by_label                  = sf_artist | sf_by_label,
 
         sf_new_album                        = sf_album | sf_section_new,
         sf_popular_album                    = sf_album | sf_section_popular,

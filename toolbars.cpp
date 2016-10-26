@@ -51,7 +51,7 @@ QMenu * ToolBars::createPopupMenu(QMenu * base_menu) {
         barsMenu -> addSeparator();
 
         for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
-            if ((*bar) -> property(toolbar_block_mark).toBool()) continue;
+            if ((*bar) -> property(TOOLBAR_BLOCK_MARK).toBool()) continue;
 
             if ((*bar) == spectrum)
                 spectrum -> generateContextMenu(barsMenu);
@@ -83,10 +83,20 @@ QMenu * ToolBars::createPopupMenu(QMenu * base_menu) {
 void ToolBars::load(const QJsonArray & bars) {
     if (bars.count() > 0) {
         QList<QString> barsList;
-        barsList << toolbar_media_key << toolbar_media_plus_key << toolbar_media_pos_key << toolbar_search_key
-                 << toolbar_media_time_key << toolbar_media_pan_key << toolbar_media_volume_key
-                 << toolbar_pl_item_features_key << toolbar_controls_key  << toolbar_settings_key
-                 << toolbar_spectrum_key << toolbar_equalizer_key << toolbar_equalizer_button_key;
+        barsList
+            << TOOLBAR_MEDIA_KEY
+            << TOOLBAR_MEDIA_PLUS_KEY
+            << TOOLBAR_MEDIA_POS_KEY
+            << TOOLBAR_MEDIA_PAN_KEY
+            << TOOLBAR_SEARCH_KEY
+            << TOOLBAR_MEDIA_TIME_KEY
+            << TOOLBAR_MEDIA_VOLUME_KEY
+            << TOOLBAR_PL_ITEM_FEATURES_KEY
+            << TOOLBAR_CONTROLS_KEY
+            << TOOLBAR_SETTINGS_KEY
+            << TOOLBAR_SPECTRUM_KEY
+            << TOOLBAR_EQUALIZER_KEY
+            << TOOLBAR_EQUALIZER_BUTTON_KEY;
 
         QJsonObject obj, actionObj;
         QString barName;
@@ -139,7 +149,7 @@ void ToolBars::save(DataStore * settings) {
             curr_tab.insert(Keys::name, (*bar) -> objectName());
             curr_tab.insert(Keys::movable, (*bar) -> isMovable());
 
-            if (!(*bar) -> property(toolbar_service_mark).toBool()) {
+            if (!(*bar) -> property(TOOLBAR_SERVICE_MARK).toBool()) {
                 actions = (*bar) -> actions();
                 if (actions.length() > 0) {
                     QJsonArray action_array = QJsonArray();
@@ -214,19 +224,19 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
 }
 
 QToolBar * ToolBars::linkNameToToolbars(const QString & barName) {
-    if (barName == toolbar_media_key)                   return createMediaBar();
-    else if (barName == toolbar_pl_item_features_key)   return createPlayedItemFeaturesBar();
-    else if (barName == toolbar_equalizer_button_key)   return createEqualizerButtonBar();
-    else if (barName == toolbar_media_plus_key)         return createAdditionalMediaBar();
-    else if (barName == toolbar_media_pos_key)          return createPositionMediaBar();
-    else if (barName == toolbar_media_time_key)         return createTimeMediaBar();
-    else if (barName == toolbar_media_volume_key)       return createVolumeMediaBar();
-    else if (barName == toolbar_controls_key)           return createControlToolBar();
-    else if (barName == toolbar_spectrum_key)           return getSpectrum();
-    else if (barName == toolbar_equalizer_key)          return createEqualizerToolBar();
-    else if (barName == toolbar_media_pan_key)          return createPanMediaBar();
-    else if (barName == toolbar_search_key)             return createSearchButtonBar();
-    else if (barName == toolbar_settings_key)           return createSettingsButtonBar();
+    if (barName == TOOLBAR_MEDIA_KEY)                   return createMediaBar();
+    else if (barName == TOOLBAR_PL_ITEM_FEATURES_KEY)   return createPlayedItemFeaturesBar();
+    else if (barName == TOOLBAR_EQUALIZER_BUTTON_KEY)   return createEqualizerButtonBar();
+    else if (barName == TOOLBAR_MEDIA_PLUS_KEY)         return createAdditionalMediaBar();
+    else if (barName == TOOLBAR_MEDIA_POS_KEY)          return createPositionMediaBar();
+    else if (barName == TOOLBAR_MEDIA_TIME_KEY)         return createTimeMediaBar();
+    else if (barName == TOOLBAR_MEDIA_VOLUME_KEY)       return createVolumeMediaBar();
+    else if (barName == TOOLBAR_CONTROLS_KEY)           return createControlToolBar();
+    else if (barName == TOOLBAR_SPECTRUM_KEY)           return getSpectrum();
+    else if (barName == TOOLBAR_EQUALIZER_KEY)          return createEqualizerToolBar();
+    else if (barName == TOOLBAR_MEDIA_PAN_KEY)          return createPanMediaBar();
+    else if (barName == TOOLBAR_SEARCH_KEY)             return createSearchButtonBar();
+    else if (barName == TOOLBAR_SETTINGS_KEY)           return createSettingsButtonBar();
     else                                                return createToolBar(barName);
 }
 
@@ -250,7 +260,7 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     QToolBar * ptb = new QToolBar(name, container);
     int icoSize = Settings::obj().toolIconSize();
 
-    ptb -> setProperty(toolbar_service_mark, true);
+    ptb -> setProperty(TOOLBAR_SERVICE_MARK, true);
     ptb -> setObjectName('_' % name);
     ptb -> setMinimumSize(icoSize, 30);
     ptb -> setIconSize(QSize(icoSize, icoSize));
@@ -268,10 +278,10 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
 }
 
 QToolBar * ToolBars::createPlayedItemFeaturesBar() {
-    pl_item_features = precreateToolBar(toolbar_pl_item_features_key);
-    pl_item_features -> setProperty(toolbar_block_mark, true);
+    pl_item_features = precreateToolBar(TOOLBAR_PL_ITEM_FEATURES_KEY);
+    pl_item_features -> setProperty(TOOLBAR_BLOCK_MARK, true);
 
-    pl_more_items_btn = pl_item_features -> addAction(QIcon(LSTR(":/download")), LSTR("Load more"), this, SLOT(loadMoreItem()));
+    pl_more_items_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_more")), LSTR("Load more"), this, SLOT(loadMoreItem()));
     pl_item_features -> addSeparator();
 
     pl_item_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_song")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
@@ -280,8 +290,9 @@ QToolBar * ToolBars::createPlayedItemFeaturesBar() {
     pl_item_singer_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer_album")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
     pl_item_owner_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_owner")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
     pl_item_tags_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tag")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
-    pl_item_labels_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
-    pl_item_labels_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label")), LSTR("Tracks from played item labels"), this, SLOT(openAlbumsForLabel()));
+    pl_item_labels_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label_song")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
+    pl_item_labels_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label_album")), LSTR("Albums from played item labels"), this, SLOT(openAlbumsForLabel()));
+    pl_item_labels_artist_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label_artist")), LSTR("Artists from played item labels"), this, SLOT(openArtistsForLabel()));
 
     pl_item_features -> adjustSize();
 
@@ -291,7 +302,7 @@ QToolBar * ToolBars::createPlayedItemFeaturesBar() {
 }
 
 QToolBar * ToolBars::createMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_KEY);
 
     play_btn = ptb -> addAction(QIcon(LSTR(":/play")), LSTR("Play"));
     PlayerFactory::obj().registerCallback(call_in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
@@ -318,7 +329,7 @@ QToolBar * ToolBars::createMediaBar() {
 }
 
 QToolBar * ToolBars::createAdditionalMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_plus_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_PLUS_KEY);
 
     //TODO: add del versions od buttons
     ptb -> addAction(QIcon(LSTR(":/prev")), LSTR("Prev track"), &Dockbars::obj(), SLOT(playPrev()));
@@ -340,7 +351,7 @@ QToolBar * ToolBars::createAdditionalMediaBar() {
 }
 
 QToolBar * ToolBars::createPositionMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_pos_key, true);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_POS_KEY, true);
 
     slider = new MetricSlider(ptb);
     slider -> setOrientation(Qt::Horizontal);
@@ -361,7 +372,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 }
 
 QToolBar * ToolBars::createPanMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_pan_key, true);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_PAN_KEY, true);
 
     ClickableSlider * pslider = new ClickableSlider(0, ptb, LSTR("pan|0|0"));
     pslider -> setOrientation(Qt::Horizontal);
@@ -383,7 +394,7 @@ QToolBar * ToolBars::createPanMediaBar() {
 }
 
 QToolBar * ToolBars::createTimeMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_time_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_TIME_KEY);
 
     TimeLabel * timeLabel = new TimeLabel(LSTR("After click invert showing time") , QString(), ptb);
     Settings::currentStyle -> applyProperty(timeLabel, "timer", true);
@@ -398,7 +409,7 @@ QToolBar * ToolBars::createTimeMediaBar() {
 }
 
 QToolBar * ToolBars::createVolumeMediaBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_media_volume_key, true);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_VOLUME_KEY, true);
 
     QIcon ico;
     ico.addPixmap(QPixmap(LSTR(":/mute")), QIcon::Normal);
@@ -428,7 +439,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 }
 
 QToolBar * ToolBars::createControlToolBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_controls_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_CONTROLS_KEY);
 
     ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(LSTR(":/add")), ptb);
     listBtn -> setToolTip(LSTR("Create new tab"));
@@ -474,7 +485,7 @@ QToolBar * ToolBars::createControlToolBar() {
 }
 
 QToolBar * ToolBars::createSearchButtonBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_search_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_SEARCH_KEY);
 
     ptb -> addAction(QIcon(LSTR(":/search")), LSTR("Search"), container, SLOT(showSearchDialog()));
     ptb -> adjustSize();
@@ -483,7 +494,7 @@ QToolBar * ToolBars::createSearchButtonBar() {
 }
 
 QToolBar * ToolBars::createSettingsButtonBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_settings_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_SETTINGS_KEY);
 
     ptb -> addAction(QIcon(LSTR(":/settings")), LSTR("Common setting"), container, SLOT(showSettingsDialog()));
     ptb -> adjustSize();
@@ -492,7 +503,7 @@ QToolBar * ToolBars::createSettingsButtonBar() {
 }
 
 QToolBar * ToolBars::createEqualizerToolBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_equalizer_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_EQUALIZER_KEY);
 
     equalizer = new EqualizerView(ptb);
     ptb -> addWidget(equalizer);
@@ -504,7 +515,7 @@ QToolBar * ToolBars::createEqualizerToolBar() {
 }
 
 QToolBar * ToolBars::createEqualizerButtonBar() {
-    QToolBar * ptb = precreateToolBar(toolbar_equalizer_button_key);
+    QToolBar * ptb = precreateToolBar(TOOLBAR_EQUALIZER_BUTTON_KEY);
 
     QToolBar * bar = (QToolBar *)equalizer -> parent();
     QAction * act = bar -> toggleViewAction();
@@ -517,8 +528,8 @@ QToolBar * ToolBars::createEqualizerButtonBar() {
 
 SpectrumView * ToolBars::getSpectrum() {
     if (spectrum == 0) {
-        spectrum = new SpectrumView(toolbar_spectrum_key, container);
-        spectrum -> setProperty(toolbar_service_mark, true);
+        spectrum = new SpectrumView(TOOLBAR_SPECTRUM_KEY, container);
+        spectrum -> setProperty(TOOLBAR_SERVICE_MARK, true);
 
         connect(spectrum, SIGNAL(topLevelChanged(bool)), this, SLOT(onTopLevelChanged(bool)));
         connect(spectrum, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
@@ -645,12 +656,12 @@ void ToolBars::itemFeaturesChanged() {
     bool show = false;
 
     if (it) {
+        show = it -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
+        pl_more_items_btn -> setVisible(show );
+
         ISource * source = Web::Apis::source(it -> dataType());
 
         if (source) {
-            bool has_more_items = it -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
-            pl_more_items_btn -> setVisible(has_more_items);
-
             bool has_item_recs = source -> hasSimillarAudioByAudio();
             pl_item_song_btn -> setVisible(has_item_recs);
 
@@ -675,7 +686,10 @@ void ToolBars::itemFeaturesChanged() {
             bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
             pl_item_labels_album_btn -> setVisible(has_label_album_recs);
 
-            show |= has_more_items || has_item_recs || has_owner_recs ||
+            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
+            pl_item_labels_artist_btn -> setVisible(has_label_artist_recs);
+
+            show |= has_item_recs || has_owner_recs || has_label_artist_recs ||
                     has_artist_recs || has_tags_recs || has_label_song_recs ||
                     has_artist_albums || has_artist_songs || has_label_album_recs;
         }
@@ -755,6 +769,14 @@ void ToolBars::openAlbumsForLabel() {
         IItem * it = DataFactory::obj().playedItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedAlbumsFromSameLabel(it);
+    }
+}
+void ToolBars::openArtistsForLabel() {
+    IView * view = Dockbars::obj().playedView();
+    if (view) {
+        IItem * it = DataFactory::obj().playedItem();
+        if (it)
+            ((Models::IModel *)view -> model()) -> proceedArtistsFromSameLabel(it);
     }
 }
 

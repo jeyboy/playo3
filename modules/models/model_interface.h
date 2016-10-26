@@ -177,6 +177,7 @@ namespace Models {
         void proceedAlbumsFromSameArtist(IItem * it);
         void proceedAudioFromSameLabel(IItem * it);
         void proceedAlbumsFromSameLabel(IItem * it);
+        void proceedArtistsFromSameLabel(IItem * it);
 
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());

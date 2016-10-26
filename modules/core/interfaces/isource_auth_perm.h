@@ -113,6 +113,7 @@ namespace Core {
         inline bool hasSimillarVideoByTag()                             { return respondableTo(sf_video_by_tag); }
         inline bool hasAudioFromSameLabel()                             { return respondableTo(sf_audio_by_label); }
         inline bool hasAlbumsFromSameLabel()                            { return respondableTo(sf_album_by_label); }
+        inline bool hasArtistsFromSameLabel()                           { return respondableTo(sf_artist_by_label); }
         inline bool hasAudioFromSameArtist()                            { return respondableTo(sf_audio_by_artist); }
         inline bool hasAlbumsFromSameArtist()                           { return respondableTo(sf_album_by_artist); }
 

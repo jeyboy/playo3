@@ -76,8 +76,9 @@ namespace Core {
         virtual void audioByArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
         virtual void videoByArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
         virtual void albumByArtistAsync(const QString & /*artist_id*/, Func * /*func*/) {}
-        virtual void audioByLabelAsync(const QString & /*artist_id*/, Func * /*func*/) {}
-        virtual void albumByLabelAsync(const QString & /*artist_id*/, Func * /*func*/) {}
+        virtual void audioByLabelAsync(const QString & /*label_id*/, Func * /*func*/) {}
+        virtual void albumByLabelAsync(const QString & /*label_id*/, Func * /*func*/) {}
+        virtual void artistByLabelAsync(const QString & /*label_id*/, Func * /*func*/) {}
     public slots:
         void openTab();
         void openAudioRecs();
