@@ -1,5 +1,6 @@
 #include "clickable_slider.h"
 #include "settings.h"
+#include "toolbars.h"
 
 using namespace Controls;
 
@@ -21,7 +22,10 @@ ClickableSlider::ClickableSlider(int default_value, QWidget * parent, const QStr
 void ClickableSlider::contextMenuEvent(QContextMenuEvent * event) {
     QMenu menu(this);
 
-    menu.addAction(QStringLiteral("Default"), this, SLOT(toDefault()));
+    menu.addAction(QStringLiteral("Set to default"), this, SLOT(toDefault()));
+    menu.addSeparator();
+
+    Presentation::ToolBars::obj().createPopupMenu(&menu);
 
     menu.exec(event -> globalPos());
     event -> accept();

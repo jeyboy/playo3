@@ -28,7 +28,7 @@ namespace Presentation {
 
         static inline QString settingsName() { return LSTR("bars"); }
 
-        QMenu * createPopupMenu();
+        QMenu * createPopupMenu(QMenu * base_menu = 0);
 
         void load(const QJsonArray & bars);
         void save(Core::DataStore * settings);

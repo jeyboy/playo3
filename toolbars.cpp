@@ -7,8 +7,8 @@
 
 using namespace Presentation;
 
-QMenu * ToolBars::createPopupMenu() {
-    QMenu * menu = new QMenu(container);
+QMenu * ToolBars::createPopupMenu(QMenu * base_menu) {
+    QMenu * menu = base_menu ? base_menu : new QMenu(container);
 
     lastClickPoint = QCursor::pos();
     QWidget * currentHover = container -> childAt(container -> mapFromGlobal(lastClickPoint));
