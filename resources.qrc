@@ -57,6 +57,9 @@
         <file alias="item_singer_album">images/elements/item_singer_album.png</file>
         <file alias="add_youtube">images/elements/add_youtube.png</file>
         <file alias="add_youtube_on">images/elements/add_youtube_on.png</file>
+        <file alias="item_label_album">images/elements/item_label_album.png</file>
+        <file alias="item_label_artist">images/elements/item_label_artist.png</file>
+        <file alias="item_label_song">images/elements/item_label_song.png</file>
     </qresource>
     <qresource prefix="/items">
         <file alias="sc_item">images/items/sc.png</file>

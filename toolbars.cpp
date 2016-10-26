@@ -117,7 +117,7 @@ void ToolBars::load(const QJsonArray & bars) {
     }
     else createToolbars();
 
-    pl_item_features -> hide();
+//    pl_item_features -> hide();
 //  sl_item_features -> hide();
 }
 
