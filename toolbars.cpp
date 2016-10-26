@@ -116,6 +116,9 @@ void ToolBars::load(const QJsonArray & bars) {
             container -> addToolBar(Qt::BottomToolBarArea, linkNameToToolbars(barsList.takeFirst()));
     }
     else createToolbars();
+
+    pl_item_features -> hide();
+//  sl_item_features -> hide();
 }
 
 void ToolBars::save(DataStore * settings) {
@@ -168,24 +171,29 @@ void ToolBars::save(DataStore * settings) {
 }
 
 void ToolBars::createToolbars() {
-  container -> addToolBar(Qt::TopToolBarArea, createMediaBar());
-  container -> addToolBar(Qt::TopToolBarArea, createTimeMediaBar());
-  container -> addToolBar(Qt::TopToolBarArea, createPositionMediaBar());
-  container -> addToolBarBreak(Qt::TopToolBarArea);
-  container -> addToolBar(Qt::TopToolBarArea, createAdditionalMediaBar());
-  container -> addToolBar(Qt::TopToolBarArea, createVolumeMediaBar());
-  container -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
-  container -> addToolBar(Qt::TopToolBarArea, createPlayedItemFeaturesBar());
-  container -> addToolBar(Qt::BottomToolBarArea, createToolBar(LSTR("Folder linker 1")));
-  container -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
-  container -> addToolBarBreak(Qt::BottomToolBarArea);
+    container -> addToolBar(Qt::TopToolBarArea, createMediaBar());
+    container -> addToolBar(Qt::TopToolBarArea, createTimeMediaBar());
+    container -> addToolBar(Qt::TopToolBarArea, createPositionMediaBar());
+    container -> addToolBarBreak(Qt::TopToolBarArea);
+    container -> addToolBar(Qt::TopToolBarArea, createAdditionalMediaBar());
+    container -> addToolBar(Qt::TopToolBarArea, createVolumeMediaBar());
+    container -> addToolBar(Qt::TopToolBarArea, createControlToolBar());
 
-  QToolBar * eql = createEqualizerToolBar();
-  container -> addToolBar(Qt::BottomToolBarArea, eql);
-  eql -> hide();
+    container -> addToolBar(Qt::BottomToolBarArea, createToolBar(LSTR("Folder linker 1")));
+    container -> addToolBar(Qt::BottomToolBarArea, createPlayedItemFeaturesBar());
+    container -> addToolBarBreak(Qt::BottomToolBarArea);
 
-  pl_item_features -> hide();
-//  sl_item_features -> hide();
+    container -> addToolBar(Qt::BottomToolBarArea, getSpectrum());
+    container -> addToolBarBreak(Qt::BottomToolBarArea);
+
+    QToolBar * eql = createEqualizerToolBar();
+    container -> addToolBar(Qt::BottomToolBarArea, eql);
+    eql -> hide();
+
+    container -> addToolBar(Qt::LeftToolBarArea, createSearchButtonBar());
+    container -> addToolBar(Qt::LeftToolBarArea, createSettingsButtonBar());
+    container -> addToolBar(Qt::LeftToolBarArea, createEqualizerButtonBar());
+    container -> addToolBar(Qt::LeftToolBarArea, createPanMediaBar());
 }
 
 void ToolBars::updateBarStyle(QToolBar * bar) {
