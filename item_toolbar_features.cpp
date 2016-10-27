@@ -75,6 +75,12 @@ ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar, const QString & pos
         this, SLOT(openAudioforArtist())
     );
 
+    item_artist_sim_audio_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("artist_sim_audio") % postfix),
+        LSTR("SImillar audio by artists from ") % sentence(),
+        this, SLOT(openSimillarAudiobyArtist())
+    );
+
     item_artist_album_btn = toolbar -> addAction(
         QIcon(prefix % LSTR("artist_album") % postfix),
         LSTR("Albums for artists from ") % sentence(),
@@ -237,47 +243,49 @@ ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar, const QString & pos
 void ItemToolbarFeatures::updateToolbar() {
     bool show = false;
 
-    Core::IItem * item = targetItem();
+    //TODO: write me
 
-    if (item) {
-        show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
-        more_items_btn -> setVisible(show );
+//    Core::IItem * item = targetItem();
 
-        Core::ISource * source = Web::Apis::source(item -> dataType());
+//    if (item) {
+//        show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
+//        more_items_btn -> setVisible(show );
 
-        if (source) {
-            bool has_item_recs = source -> hasSimillarAudioByAudio();
-            item_audio_btn -> setVisible(has_item_recs);
+//        Core::ISource * source = Web::Apis::source(item -> dataType());
 
-            bool has_owner_recs = source -> hasSimillarAudioByUser();
-            item_owner_btn -> setVisible(has_owner_recs);
+//        if (source) {
+//            bool has_item_recs = source -> hasSimillarAudioByAudio();
+//            item_audio_btn -> setVisible(has_item_recs);
 
-            bool has_artist_recs = source -> hasSimillarAudioByArtist();
-            item_artist_btn -> setVisible(has_artist_recs);
+//            bool has_owner_recs = source -> hasSimillarAudioByUser();
+//            item_owner_btn -> setVisible(has_owner_recs);
 
-            bool has_artist_songs = source -> hasAudioFromSameArtist();
-            item_artist_audio_btn -> setVisible(has_artist_songs);
+//            bool has_artist_recs = source -> hasSimillarAudioByArtist();
+//            item_artist_btn -> setVisible(has_artist_recs);
 
-            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
-            item_artist_album_btn -> setVisible(has_artist_albums);
+//            bool has_artist_songs = source -> hasAudioFromSameArtist();
+//            item_artist_audio_btn -> setVisible(has_artist_songs);
 
-            bool has_tags_recs = item -> isAudio() ? source -> hasSimillarAudioByTag() : source -> hasSimillarVideoByTag();
-            item_tag_btn -> setVisible(has_tags_recs);
+//            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
+//            item_artist_album_btn -> setVisible(has_artist_albums);
 
-            bool has_label_song_recs = source -> hasAudioFromSameLabel();
-            item_label_audio_btn -> setVisible(has_label_song_recs);
+//            bool has_tags_recs = item -> isAudio() ? source -> hasSimillarAudioByTag() : source -> hasSimillarVideoByTag();
+//            item_tag_btn -> setVisible(has_tags_recs);
 
-            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
-            item_label_album_btn -> setVisible(has_label_album_recs);
+//            bool has_label_song_recs = source -> hasAudioFromSameLabel();
+//            item_label_audio_btn -> setVisible(has_label_song_recs);
 
-            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
-            item_label_artist_btn -> setVisible(has_label_artist_recs);
+//            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
+//            item_label_album_btn -> setVisible(has_label_album_recs);
 
-            show |= has_item_recs || has_owner_recs || has_label_artist_recs ||
-                    has_artist_recs || has_tags_recs || has_label_song_recs ||
-                    has_artist_albums || has_artist_songs || has_label_album_recs;
-        }
-    }
+//            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
+//            item_label_artist_btn -> setVisible(has_label_artist_recs);
+
+//            show |= has_item_recs || has_owner_recs || has_label_artist_recs ||
+//                    has_artist_recs || has_tags_recs || has_label_song_recs ||
+//                    has_artist_albums || has_artist_songs || has_label_album_recs;
+//        }
+//    }
 
     toolbar -> setHidden(!show);
 }
@@ -316,7 +324,7 @@ void ItemToolbarFeatures::openVideoAlbumforItem();
 void ItemToolbarFeatures::openVideoPlaylistforItem();
 
 void ItemToolbarFeatures::openRecsforItemArtist();
-void ItemToolbarFeatures::openSimillarAudioforArtist() {
+void ItemToolbarFeatures::openSimillarAudiobyArtist() {
     IItem * it = targetItem();
     if (it) {
         ISource * src = Web::Apis::source(it -> dataType());

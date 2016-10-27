@@ -38,6 +38,7 @@ namespace Presentation {
         QAction * item_artist_album_btn;
         QAction * item_artist_playlist_btn;
         QAction * item_artist_audio_btn;
+        QAction * item_artist_sim_audio_btn;
         QAction * item_artist_video_btn;
         QAction * item_artist_video_album_btn;
         QAction * item_artist_video_playlist_btn;
@@ -70,7 +71,6 @@ namespace Presentation {
         QToolBar * targetToolbar() { return toolbar; }
     public slots:
         void hide() { toolbar ->  hide(); }
-
         void updateToolbar();
 
 
@@ -88,7 +88,7 @@ namespace Presentation {
         void openVideoPlaylistforItem();
 
         void openRecsforItemArtist();
-        void openSimillarAudioforArtist();
+        void openSimillarAudiobyArtist();
         void openAudioforArtist();
 
         void openAudioAlbumsForArtist();
