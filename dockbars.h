@@ -89,6 +89,8 @@ namespace Presentation {
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
         inline IView * playedView() { return view(played); }
+        inline IView * activeView() { return view(active); }
+
         void useVeticalTitles(bool vertical);
 
         inline void setContainer(QMainWindow * ct) { container = ct; }

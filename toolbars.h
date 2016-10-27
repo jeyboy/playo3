@@ -5,6 +5,8 @@
 #include <qmainwindow.h>
 #include <qmenu.h>
 
+#include "item_toolbar_features.h"
+
 #include "modules/core/interfaces/singleton.h"
 #include "modules/core/misc/file_utils/data_store.h"
 
@@ -84,19 +86,6 @@ namespace Presentation {
         void editPanelButtonTriggered();
 
     protected slots:
-        void itemFeaturesChanged();
-
-        void loadMoreItem();
-        void openRecsforItem();
-        void openRecsforItemUser();
-        void openRecsforItemArtist();
-        void openTracksforArtist();
-        void openAlbumsForArtist();
-        void openRecsForItemTags();
-        void openTracksForLabel();
-        void openAlbumsForLabel();
-        void openArtistsForLabel();
-
         void playerStateChanged(const PlayerState &);
         void onFolderDrop(const QString & name, const QString & path);
 
@@ -116,7 +105,7 @@ namespace Presentation {
         QToolBar * createToolBar(const QString & name);
         QToolBar * precreateToolBar(const QString & name, bool oriented = false);
 
-//        QToolBar * createSelectedItemFeaturesBar();
+        QToolBar * createSelectedItemFeaturesBar();
         QToolBar * createPlayedItemFeaturesBar();
         QToolBar * createMediaBar();
         QToolBar * createAdditionalMediaBar();
@@ -131,26 +120,19 @@ namespace Presentation {
         QToolBar * createEqualizerButtonBar();
 
         friend class Core::Singleton<ToolBars>;
-        inline ToolBars() : QObject(), highlighted(0), equalizer(0), spectrum(0),
-            underMouseBar(0), underMouseButton(0) { }
+        inline ToolBars() : QObject(), play_btn(0), pause_btn(0), stop_btn(0), pl_item_features(0), sl_item_features(0),
+            highlighted(0), equalizer(0), spectrum(0), underMouseBar(0), underMouseButton(0) { }
 
         QAction * play_btn;
         QAction * pause_btn;
         QAction * stop_btn;
 
-        QToolBar * pl_item_features;
-//        QToolBar * sl_item_features;
+        /////////////// item features ///////////////////////
 
-        QAction * pl_more_items_btn;
-        QAction * pl_item_song_btn;
-        QAction * pl_item_singer_btn;
-        QAction * pl_item_singer_song_btn;
-        QAction * pl_item_singer_album_btn;
-        QAction * pl_item_owner_btn;
-        QAction * pl_item_tags_btn;
-        QAction * pl_item_labels_song_btn;
-        QAction * pl_item_labels_album_btn;
-        QAction * pl_item_labels_artist_btn;
+        ItemToolbarFeatures * pl_item_features;
+        ItemToolbarFeatures * sl_item_features;
+
+        //////////////////////////////////////
 
         QToolBar * highlighted;
         MetricSlider * slider;

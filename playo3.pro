@@ -343,7 +343,8 @@ HEADERS += \
     modules/core/web/sources/youtube/youtube_video.h \
     modules/core/web/sources/youtube/youtube_playlist.h \
     modules/core/web/sources/youtube/youtube_auth.h \
-    modules/core/web/sources/youtube/youtube_channel.h
+    modules/core/web/sources/youtube/youtube_channel.h \
+    item_toolbar_features.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -475,4 +476,5 @@ SOURCES += \
     modules/core/web/sources/fourshared/fourshared_keys.cpp \
     modules/core/web/sources/yandex/yandex_keys.cpp \
     modules/core/web/sources/youtube/youtube_keys.cpp \
-    modules/core/web/sources/youtube_queries.cpp
+    modules/core/web/sources/youtube_queries.cpp \
+    item_toolbar_features.cpp
