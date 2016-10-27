@@ -77,7 +77,7 @@ ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar, const QString & pos
 
     item_artist_sim_audio_btn = toolbar -> addAction(
         QIcon(prefix % LSTR("artist_sim_audio") % postfix),
-        LSTR("SImillar audio by artists from ") % sentence(),
+        LSTR("Simillar audio by artists from ") % sentence(),
         this, SLOT(openSimillarAudiobyArtist())
     );
 
@@ -299,8 +299,8 @@ void ItemToolbarFeatures::loadMoreItem() {
     }
 }
 
-void ItemToolbarFeatures::openAlbumforItem();
-void ItemToolbarFeatures::openPlaylistforItem();
+void ItemToolbarFeatures::openAlbumforItem() {}
+void ItemToolbarFeatures::openPlaylistforItem() {}
 
 void ItemToolbarFeatures::openAudioforItem() {
     IItem * it = targetItem();
@@ -316,14 +316,14 @@ void ItemToolbarFeatures::openAudioforItem() {
     }
 }
 
-void ItemToolbarFeatures::openAudioAlbumforItem();
-void ItemToolbarFeatures::openAudioPlaylistforItem();
+void ItemToolbarFeatures::openAudioAlbumforItem() {}
+void ItemToolbarFeatures::openAudioPlaylistforItem() {}
 
-void ItemToolbarFeatures::openVideoforItem();
-void ItemToolbarFeatures::openVideoAlbumforItem();
-void ItemToolbarFeatures::openVideoPlaylistforItem();
+void ItemToolbarFeatures::openVideoforItem() {}
+void ItemToolbarFeatures::openVideoAlbumforItem() {}
+void ItemToolbarFeatures::openVideoPlaylistforItem() {}
 
-void ItemToolbarFeatures::openRecsforItemArtist();
+void ItemToolbarFeatures::openRecsforItemArtist() {}
 void ItemToolbarFeatures::openSimillarAudiobyArtist() {
     IItem * it = targetItem();
     if (it) {
@@ -375,13 +375,13 @@ void ItemToolbarFeatures::openAudioAlbumsForArtist() {
         } else qCritical() << PERM_ERROR(LSTR("openAudioAlbumsForArtist"));
     }
 }
-void ItemToolbarFeatures::openPlaylistsForArtist();
-void ItemToolbarFeatures::openVideoforArtist();
-void ItemToolbarFeatures::openVideoAlbumforArtist();
-void ItemToolbarFeatures::openVideoPlaylistforArtist();
+void ItemToolbarFeatures::openPlaylistsForArtist() {}
+void ItemToolbarFeatures::openVideoforArtist() {}
+void ItemToolbarFeatures::openVideoAlbumforArtist() {}
+void ItemToolbarFeatures::openVideoPlaylistforArtist() {}
 
-void ItemToolbarFeatures::openRecsforUser();
-void ItemToolbarFeatures::openArtistsforUser();
+void ItemToolbarFeatures::openRecsforUser() {}
+void ItemToolbarFeatures::openArtistsforUser() {}
 void ItemToolbarFeatures::openAudioforUser() {
     IItem * it = targetItem();
     if (it) {
@@ -396,15 +396,15 @@ void ItemToolbarFeatures::openAudioforUser() {
         } else qCritical() << PERM_ERROR(LSTR("openAudioforUser"));
     }
 }
-void ItemToolbarFeatures::openAudioAlbumsforUser();
-void ItemToolbarFeatures::openAudioPlaylistsforUser();
+void ItemToolbarFeatures::openAudioAlbumsforUser() {}
+void ItemToolbarFeatures::openAudioPlaylistsforUser() {}
 
-void ItemToolbarFeatures::openVideoforUser();
-void ItemToolbarFeatures::openVideoAlbumsforUser();
-void ItemToolbarFeatures::openVideoPlaylistsforUser();
+void ItemToolbarFeatures::openVideoforUser() {}
+void ItemToolbarFeatures::openVideoAlbumsforUser() {}
+void ItemToolbarFeatures::openVideoPlaylistsforUser() {}
 
-void ItemToolbarFeatures::openRecForTag();
-void ItemToolbarFeatures::openArtistForTag();
+void ItemToolbarFeatures::openRecForTag() {}
+void ItemToolbarFeatures::openArtistForTag() {}
 void ItemToolbarFeatures::openAudioForTag() {
     IItem * it = targetItem();
     if (it) {
@@ -420,14 +420,14 @@ void ItemToolbarFeatures::openAudioForTag() {
         } else qCritical() << PERM_ERROR(LSTR("openAudioForTag"));
     }
 }
-void ItemToolbarFeatures::openAudioAlbumForTag();
-void ItemToolbarFeatures::openAudioPlaylistForTag();
+void ItemToolbarFeatures::openAudioAlbumForTag() {}
+void ItemToolbarFeatures::openAudioPlaylistForTag() {}
 
-void ItemToolbarFeatures::openVideoForTag();
-void ItemToolbarFeatures::openVideoAlbumForTag();
-void ItemToolbarFeatures::openVideoPlaylistForTag();
+void ItemToolbarFeatures::openVideoForTag() {}
+void ItemToolbarFeatures::openVideoAlbumForTag() {}
+void ItemToolbarFeatures::openVideoPlaylistForTag() {}
 
-void ItemToolbarFeatures::openRecommendationsForLabel();
+void ItemToolbarFeatures::openRecommendationsForLabel() {}
 void ItemToolbarFeatures::openArtistsForLabel() {
     IItem * it = targetItem();
     if (it) {
@@ -475,8 +475,8 @@ void ItemToolbarFeatures::openAudioAlbumForLabel() {
     }
 }
 
-void ItemToolbarFeatures::openAudioPlaylistForLabel();
+void ItemToolbarFeatures::openAudioPlaylistForLabel() {}
 
-void ItemToolbarFeatures::openVideoForLabel();
-void ItemToolbarFeatures::openVideoAlbumForLabel();
-void ItemToolbarFeatures::openVideoPlaylistForLabel();
+void ItemToolbarFeatures::openVideoForLabel() {}
+void ItemToolbarFeatures::openVideoAlbumForLabel() {}
+void ItemToolbarFeatures::openVideoPlaylistForLabel() {}
