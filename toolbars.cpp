@@ -281,18 +281,18 @@ QToolBar * ToolBars::createPlayedItemFeaturesBar() {
     pl_item_features = precreateToolBar(TOOLBAR_PL_ITEM_FEATURES_KEY);
     pl_item_features -> setProperty(TOOLBAR_BLOCK_MARK, true);
 
-    pl_more_items_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_more")), LSTR("Load more"), this, SLOT(loadMoreItem()));
+    pl_more_items_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_more_pl")), LSTR("Load more"), this, SLOT(loadMoreItem()));
     pl_item_features -> addSeparator();
 
-    pl_item_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_song")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
-    pl_item_singer_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer")), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist()));
-    pl_item_singer_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer_song")), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist()));
-    pl_item_singer_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_singer_album")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
-    pl_item_owner_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_owner")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
-    pl_item_tags_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tag")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
-    pl_item_labels_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label_song")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
-    pl_item_labels_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label_album")), LSTR("Albums from played item labels"), this, SLOT(openAlbumsForLabel()));
-    pl_item_labels_artist_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_label_artist")), LSTR("Artists from played item labels"), this, SLOT(openArtistsForLabel()));
+    pl_item_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_audio_pl")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
+    pl_item_singer_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_artist_pl")), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist()));
+    pl_item_singer_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_artist_audio_pl")), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist()));
+    pl_item_singer_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_artist_album_pl")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
+    pl_item_owner_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_owner_pl")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
+    pl_item_tags_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_tag_pl")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
+    pl_item_labels_song_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_label_audio_pl")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
+    pl_item_labels_album_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_label_album_pl")), LSTR("Albums from played item labels"), this, SLOT(openAlbumsForLabel()));
+    pl_item_labels_artist_btn = pl_item_features -> addAction(QIcon(LSTR(":/item_tools/item_label_artist_pl")), LSTR("Artists from played item labels"), this, SLOT(openArtistsForLabel()));
 
     pl_item_features -> adjustSize();
 
@@ -441,7 +441,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 QToolBar * ToolBars::createControlToolBar() {
     QToolBar * ptb = precreateToolBar(TOOLBAR_CONTROLS_KEY);
 
-    ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(LSTR(":/add")), ptb);
+    ToolbarNewListButton * listBtn = new ToolbarNewListButton(QIcon(LSTR(":/sources/add")), ptb);
     listBtn -> setToolTip(LSTR("Create new tab"));
     connect(listBtn, SIGNAL(clicked(bool)), &Dockbars::obj(), SLOT(createNewBar()));
     connect(listBtn, SIGNAL(folderAdded(QString,QUrl)), &Dockbars::obj(), SLOT(createNewBar(QString,QUrl)));

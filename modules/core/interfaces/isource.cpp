@@ -29,7 +29,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
     bool is_connected = isConnected();
 
     button -> setEnabled(true);
-    button -> setIcon(QIcon(QStringLiteral(":/add_%1").arg(name().toLower())));
+    button -> setIcon(QIcon(QStringLiteral(":/sources/add_%1").arg(name().toLower())));
 
     if (is_connected || offline_respondable) {
         if(!menu)
@@ -38,7 +38,7 @@ QToolButton * ISource::initButton(QWidget * parent) {
             menu -> clear();
 
         if (is_connected) {
-            button -> setIcon(QIcon(QStringLiteral(":/add_%1_on").arg(name().toLower())));
+            button -> setIcon(QIcon(QStringLiteral(":/sources/add_%1_on").arg(name().toLower())));
 
             menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser()));
             menu -> addSeparator();
