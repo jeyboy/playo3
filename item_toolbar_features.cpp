@@ -54,37 +54,37 @@ void ItemToolbarFeatures::updateToolbar() {
 
     if (item) {
         show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
-        pl_more_items_btn -> setVisible(show );
+        more_items_btn -> setVisible(show );
 
         Core::ISource * source = Web::Apis::source(item -> dataType());
 
         if (source) {
             bool has_item_recs = source -> hasSimillarAudioByAudio();
-            pl_item_song_btn -> setVisible(has_item_recs);
+            item_audio_btn -> setVisible(has_item_recs);
 
             bool has_owner_recs = source -> hasSimillarAudioByUser();
-            pl_item_owner_btn -> setVisible(has_owner_recs);
+            item_owner_btn -> setVisible(has_owner_recs);
 
             bool has_artist_recs = source -> hasSimillarAudioByArtist();
-            pl_item_singer_btn -> setVisible(has_artist_recs);
+            item_artist_btn -> setVisible(has_artist_recs);
 
             bool has_artist_songs = source -> hasAudioFromSameArtist();
-            pl_item_singer_song_btn -> setVisible(has_artist_songs);
+            item_artist_audio_btn -> setVisible(has_artist_songs);
 
             bool has_artist_albums = source -> hasAlbumsFromSameArtist();
-            pl_item_singer_album_btn -> setVisible(has_artist_albums);
+            item_artist_album_btn -> setVisible(has_artist_albums);
 
             bool has_tags_recs = item -> isAudio() ? source -> hasSimillarAudioByTag() : source -> hasSimillarVideoByTag();
-            pl_item_tags_btn -> setVisible(has_tags_recs);
+            item_tag_btn -> setVisible(has_tags_recs);
 
             bool has_label_song_recs = source -> hasAudioFromSameLabel();
-            pl_item_labels_song_btn -> setVisible(has_label_song_recs);
+            item_label_audio_btn -> setVisible(has_label_song_recs);
 
             bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
-            pl_item_labels_album_btn -> setVisible(has_label_album_recs);
+            item_label_album_btn -> setVisible(has_label_album_recs);
 
             bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
-            pl_item_labels_artist_btn -> setVisible(has_label_artist_recs);
+            item_label_artist_btn -> setVisible(has_label_artist_recs);
 
             show |= has_item_recs || has_owner_recs || has_label_artist_recs ||
                     has_artist_recs || has_tags_recs || has_label_song_recs ||

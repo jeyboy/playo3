@@ -280,7 +280,7 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
 }
 
 QToolBar * ToolBars::createSelectedItemFeaturesBar() {
-    if (sl_item_features) return sl_item_features;
+    if (sl_item_features) return sl_item_features -> targetToolbar();
 
     QToolBar * item_features = precreateToolBar(TOOLBAR_SL_ITEM_FEATURES_KEY);
     item_features -> setProperty(TOOLBAR_BLOCK_MARK, true);
@@ -292,11 +292,11 @@ QToolBar * ToolBars::createSelectedItemFeaturesBar() {
     //TODO: write me
 //    connect(&DataFactory::obj(), SIGNAL(itemFeaturesChanged()), pl_item_features, SLOT(updateToolbar()));
 
-    return sl_item_features;
+    return item_features;
 }
 
 QToolBar * ToolBars::createPlayedItemFeaturesBar() {
-    if (pl_item_features) return pl_item_features;
+    if (pl_item_features) return pl_item_features -> targetToolbar();
 
     QToolBar * item_features = precreateToolBar(TOOLBAR_PL_ITEM_FEATURES_KEY);
     item_features -> setProperty(TOOLBAR_BLOCK_MARK, true);
@@ -307,7 +307,7 @@ QToolBar * ToolBars::createPlayedItemFeaturesBar() {
 
     connect(&DataFactory::obj(), SIGNAL(itemFeaturesChanged()), pl_item_features, SLOT(updateToolbar()));
 
-    return pl_item_features;
+    return item_features;
 }
 
 QToolBar * ToolBars::createMediaBar() {

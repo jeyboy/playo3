@@ -56,6 +56,7 @@ namespace Presentation {
     public:
         ItemToolbarFeatures(QToolBar * toolbar, const QString & postfix = QString());
 
+        QToolBar * targetToolbar() { return toolbar; }
     public slots:
         void hide() { toolbar ->  hide(); }
 
@@ -85,6 +86,8 @@ namespace Presentation {
     protected:
         Core::IItem * targetItem() { return targetView() -> selectedItem(); }
         Views::IView * targetView() { return Dockbars::obj().activeView(); }
+    public:
+        SelectedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar, QString()) {}
     };
 }
 
