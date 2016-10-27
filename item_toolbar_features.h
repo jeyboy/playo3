@@ -6,6 +6,8 @@
 #include "modules/core/web/web_apis.h"
 #include "modules/core/core_parts/item.h"
 
+#define PERM_ERROR(name) "Permissions required" << name << "required on some additional permissions or this service not respondable to this action";
+
 namespace Presentation {
     class ItemToolbarFeatures : public QObject {
         Q_OBJECT
@@ -41,6 +43,14 @@ namespace Presentation {
         QAction * item_artist_video_playlist_btn;
 
         QAction * item_audio_btn;
+        QAction * item_audio_album_btn;
+        QAction * item_audio_playlist_btn;
+        QAction * item_video_btn;
+        QAction * item_video_album_btn;
+        QAction * item_video_playlist_btn;
+
+        QAction * item_album_btn;
+        QAction * item_playlist_btn;
 
         QAction * item_tag_btn;
         QAction * item_tag_album_btn;
@@ -53,6 +63,7 @@ namespace Presentation {
 
         virtual Core::IItem * targetItem() = 0;
         virtual Views::IView * targetView() = 0;
+        virtual QString sentence() = 0;
     public:
         ItemToolbarFeatures(QToolBar * toolbar, const QString & postfix = QString());
 
@@ -62,22 +73,67 @@ namespace Presentation {
 
         void updateToolbar();
 
+
         void loadMoreItem();
-        void openRecsforItem();
-        void openRecsforItemUser();
+
+        void openAlbumforItem();
+        void openPlaylistforItem();
+
+        void openAudioforItem();
+        void openAudioAlbumforItem();
+        void openAudioPlaylistforItem();
+
+        void openVideoforItem();
+        void openVideoAlbumforItem();
+        void openVideoPlaylistforItem();
+
         void openRecsforItemArtist();
-        void openTracksforArtist();
-        void openAlbumsForArtist();
-        void openRecsForItemTags();
-        void openTracksForLabel();
-        void openAlbumsForLabel();
+        void openSimillarAudioforArtist();
+        void openAudioforArtist();
+
+        void openAudioAlbumsForArtist();
+        void openPlaylistsForArtist();
+        void openVideoforArtist();
+        void openVideoAlbumforArtist();
+        void openVideoPlaylistforArtist();
+
+        void openRecsforUser();
+        void openArtistsforUser();
+        void openAudioforUser();
+        void openAudioAlbumsforUser();
+        void openAudioPlaylistsforUser();
+
+        void openVideoforUser();
+        void openVideoAlbumsforUser();
+        void openVideoPlaylistsforUser();
+
+        void openRecForTag();
+        void openArtistForTag();
+        void openAudioForTag();
+        void openAudioAlbumForTag();
+        void openAudioPlaylistForTag();
+
+        void openVideoForTag();
+        void openVideoAlbumForTag();
+        void openVideoPlaylistForTag();
+
+        void openRecommendationsForLabel();
         void openArtistsForLabel();
+
+        void openAudioForLabel();
+        void openAudioAlbumForLabel();
+        void openAudioPlaylistForLabel();
+
+        void openVideoForLabel();
+        void openVideoAlbumForLabel();
+        void openVideoPlaylistForLabel();
     };
 
     class PlayedItemToolbarFeatures : public ItemToolbarFeatures {
     protected:
         Core::IItem * targetItem() { return DataFactory::obj().playedItem(); }
         Views::IView * targetView() { return Dockbars::obj().playedView(); }
+        QString sentence() { return LSTR("played item"); }
     public:
         PlayedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar, LSTR("_pl")) {}
     };
@@ -86,6 +142,7 @@ namespace Presentation {
     protected:
         Core::IItem * targetItem() { return targetView() -> selectedItem(); }
         Views::IView * targetView() { return Dockbars::obj().activeView(); }
+        QString sentence() { return LSTR("selected item"); }
     public:
         SelectedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar, QString()) {}
     };

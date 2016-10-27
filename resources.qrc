@@ -168,6 +168,16 @@
         <file alias="item_tag_video_pl">images/elements/item_tools/pl/item_tag_video.png</file>
         <file alias="item_tag_video_album_pl">images/elements/item_tools/pl/item_tag_video_album.png</file>
         <file alias="item_tag_video_playlist_pl">images/elements/item_tools/pl/item_tag_video_playlist.png</file>
+        <file alias="item_album">images/elements/item_tools/sl/item_album.png</file>
+        <file alias="item_playlist">images/elements/item_tools/sl/item_playlist.png</file>
+        <file alias="item_video">images/elements/item_tools/sl/item_video.png</file>
+        <file alias="item_video_album">images/elements/item_tools/sl/item_video_album.png</file>
+        <file alias="item_video_playlist">images/elements/item_tools/sl/item_video_playlist.png</file>
+        <file alias="item_album_pl">images/elements/item_tools/pl/item_album.png</file>
+        <file alias="item_playlist_pl">images/elements/item_tools/pl/item_playlist.png</file>
+        <file alias="item_video_pl">images/elements/item_tools/pl/item_video.png</file>
+        <file alias="item_video_album_pl">images/elements/item_tools/pl/item_video_album.png</file>
+        <file alias="item_video_playlist_pl">images/elements/item_tools/pl/item_video_playlist.png</file>
     </qresource>
     <qresource prefix="/sources">
         <file alias="add">images/elements/sources/add.png</file>

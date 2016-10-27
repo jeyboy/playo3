@@ -169,16 +169,6 @@ namespace Models {
 
         int proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items);
 
-        void proceedRecsForUser(IItem * it);
-        void proceedRecsForArtist(IItem * it);
-        void proceedRecsForItem(IItem * it);
-        void proceedRecsForTags(IItem * it);
-        void proceedAudioFromSameArtist(IItem * it);
-        void proceedAlbumsFromSameArtist(IItem * it);
-        void proceedAudioFromSameLabel(IItem * it);
-        void proceedAlbumsFromSameLabel(IItem * it);
-        void proceedArtistsFromSameLabel(IItem * it);
-
         bool insertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
         virtual bool removeRows(int position, int rows, const QModelIndex & parent = QModelIndex());
 
