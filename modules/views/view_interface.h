@@ -49,6 +49,7 @@ namespace Views {
         void scrollToActive();
 
         bool restoreItem(IItem * itm) { return mdl -> restoreUrl(itm); }
+        IItem * selectedItem() { return mdl -> item(currentIndex()); }
 
         inline bool isRemoveFileWithItem() const { return settings().isDeleteFile(); }
         inline bool isAutoPlayNext() const { return settings().isAutoPlayNext(); }

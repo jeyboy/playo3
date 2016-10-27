@@ -129,8 +129,8 @@ namespace Presentation {
 
         /////////////// item features ///////////////////////
 
-        ItemToolbarFeatures * pl_item_features;
-        ItemToolbarFeatures * sl_item_features;
+        PlayedItemToolbarFeatures * pl_item_features;
+        SelectedItemToolbarFeatures * sl_item_features;
 
         //////////////////////////////////////
 

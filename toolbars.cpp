@@ -279,15 +279,13 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
     return ptb;
 }
 
-
-
 QToolBar * ToolBars::createSelectedItemFeaturesBar() {
     if (sl_item_features) return sl_item_features;
 
     QToolBar * item_features = precreateToolBar(TOOLBAR_SL_ITEM_FEATURES_KEY);
     item_features -> setProperty(TOOLBAR_BLOCK_MARK, true);
 
-    sl_item_features = new ItemToolbarFeatures(item_features);
+    sl_item_features = new SelectedItemToolbarFeatures(item_features);
 
     item_features -> adjustSize();
 
@@ -303,7 +301,7 @@ QToolBar * ToolBars::createPlayedItemFeaturesBar() {
     QToolBar * item_features = precreateToolBar(TOOLBAR_PL_ITEM_FEATURES_KEY);
     item_features -> setProperty(TOOLBAR_BLOCK_MARK, true);
 
-    pl_item_features = new ItemToolbarFeatures(item_features, LSTR("pl"));
+    pl_item_features = new PlayedItemToolbarFeatures(item_features);
 
     item_features -> adjustSize();
 
@@ -660,13 +658,6 @@ void ToolBars::changeToolbarsMovable() {
     for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
         if (movable || (!movable && !(*bar) -> isFloating()))
             (*bar) -> setMovable(movable);
-}
-
-void ToolBars::playedItemFeaturesChanged() { pl_item_features -> updateToolbar(DataFactory::obj().playedItem()); }
-void ToolBars::selectedItemFeaturesChanged() {
-
-
-    sl_item_features -> updateToolbar(DataFactory::obj().playedItem());
 }
 
 void ToolBars::playerStateChanged(const PlayerState & state) {

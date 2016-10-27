@@ -7,7 +7,7 @@
 #include "modules/core/core_parts/item.h"
 
 namespace Presentation {
-    class ItemToolbarFeatures : QObject {
+    class ItemToolbarFeatures : public QObject {
         Q_OBJECT
     protected:
         QToolBar * toolbar;
@@ -71,6 +71,20 @@ namespace Presentation {
         void openTracksForLabel();
         void openAlbumsForLabel();
         void openArtistsForLabel();
+    };
+
+    class PlayedItemToolbarFeatures : public ItemToolbarFeatures {
+    protected:
+        Core::IItem * targetItem() { return DataFactory::obj().playedItem(); }
+        Views::IView * targetView() { return Dockbars::obj().playedView(); }
+    public:
+        PlayedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar, LSTR("_pl")) {}
+    };
+
+    class SelectedItemToolbarFeatures : public ItemToolbarFeatures {
+    protected:
+        Core::IItem * targetItem() { return targetView() -> selectedItem(); }
+        Views::IView * targetView() { return Dockbars::obj().activeView(); }
     };
 }
 

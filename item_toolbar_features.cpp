@@ -3,18 +3,48 @@
 using namespace Presentation;
 
 ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar, const QString & postfix) : toolbar(toolbar) {
-    pl_more_items_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_more_pl")), LSTR("Load more"), this, SLOT(loadMoreItem()));
+    QString prefix = LSTR(":/item_tools/item");
+
+    more_items_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_more") % postfix), LSTR("Load more"), this, SLOT(loadMoreItem())
+    );
     toolbar -> addSeparator();
 
-    pl_item_song_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_audio_pl")), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem()));
-    pl_item_singer_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_artist_pl")), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist()));
-    pl_item_singer_song_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_artist_audio_pl")), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist()));
-    pl_item_singer_album_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_artist_album_pl")), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist()));
-    pl_item_owner_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_owner_pl")), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser()));
-    pl_item_tags_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_tag_pl")), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags()));
-    pl_item_labels_song_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_label_audio_pl")), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel()));
-    pl_item_labels_album_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_label_album_pl")), LSTR("Albums from played item labels"), this, SLOT(openAlbumsForLabel()));
-    pl_item_labels_artist_btn = toolbar -> addAction(QIcon(LSTR(":/item_tools/item_label_artist_pl")), LSTR("Artists from played item labels"), this, SLOT(openArtistsForLabel()));
+    item_audio_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_audio") % postfix), LSTR("Recommendations for played item"), this, SLOT(openRecsforItem())
+    );
+
+    item_artist_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_artist") % postfix), LSTR("Recommendations for played item artists"), this, SLOT(openRecsforItemArtist())
+    );
+
+    item_artist_audio_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_artist_audio") % postfix), LSTR("Tracks from played item artists"), this, SLOT(openTracksforArtist())
+    );
+
+    item_artist_album_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_artist_album") % postfix), LSTR("Albums from played item artists"), this, SLOT(openAlbumsForArtist())
+    );
+
+    item_owner_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_owner") % postfix), LSTR("Recommendations for played item owner"), this, SLOT(openRecsforItemUser())
+    );
+
+    item_tag_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_tag") % postfix), LSTR("Recommendations for played item tags"), this, SLOT(openRecsForItemTags())
+    );
+
+    item_label_audio_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_label_audio") % postfix), LSTR("Tracks from played item labels"), this, SLOT(openTracksForLabel())
+    );
+
+    item_label_album_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_label_album") % postfix), LSTR("Albums from played item labels"), this, SLOT(openAlbumsForLabel())
+    );
+
+    item_label_artist_btn = toolbar -> addAction(
+        QIcon(prefix % LSTR("_label_artist") % postfix), LSTR("Artists from played item labels"), this, SLOT(openArtistsForLabel())
+    );
 }
 
 void ItemToolbarFeatures::updateToolbar() {
@@ -66,82 +96,82 @@ void ItemToolbarFeatures::updateToolbar() {
 }
 
 void ItemToolbarFeatures::loadMoreItem() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             view -> runItemCmd(it);
     }
 }
 
 void ItemToolbarFeatures::openRecsforItem() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedRecsForItem(it);
     }
 }
 void ItemToolbarFeatures::openRecsforItemUser() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedRecsForUser(it);
     }
 }
 void ItemToolbarFeatures::openRecsforItemArtist() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedRecsForArtist(it);
     }
 }
 void ItemToolbarFeatures::openTracksforArtist() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedAudioFromSameArtist(it);
     }
 }
 void ItemToolbarFeatures::openAlbumsForArtist() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedAlbumsFromSameArtist(it);
     }
 }
 void ItemToolbarFeatures::openRecsForItemTags() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedRecsForTags(it);
     }
 }
 void ItemToolbarFeatures::openTracksForLabel() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedAudioFromSameLabel(it);
     }
 }
 void ItemToolbarFeatures::openAlbumsForLabel() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedAlbumsFromSameLabel(it);
     }
 }
 void ItemToolbarFeatures::openArtistsForLabel() {
-    IView * view = Dockbars::obj().playedView();
+    IView * view = targetView();
     if (view) {
-        IItem * it = DataFactory::obj().playedItem();
+        IItem * it = targetItem();
         if (it)
             ((Models::IModel *)view -> model()) -> proceedArtistsFromSameLabel(it);
     }
