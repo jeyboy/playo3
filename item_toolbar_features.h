@@ -6,9 +6,27 @@
 #include "modules/core/web/web_apis.h"
 #include "modules/core/core_parts/item.h"
 
+#define ICO_PREFIX LSTR(":/item_tools/item_")
 #define PERM_ERROR(name) "Permissions required" << name << "required on some additional permissions or this service not respondable to this action";
 
-namespace Presentation {
+namespace Presentation { // proc_func = &IModel::proceedVkList;
+    struct ItemToolbarFeature {
+        ItemToolbarFeature(
+            const QString & ico = QString(), const QString & desc = QString(), const char * btn_slot, bool (ISource::*check_func)(), bool separate = false
+        ) : btn(0), ico(ico), desc(desc), check_func(check_func), separate(separate) {
+            int slot_len = strlen(btn_slot);
+            strncpy(slot, btn_slot, slot_len);
+            slot[slot_len - 1] = '\0';
+        }
+
+        QAction * btn;
+        QString ico;
+        QString desc;
+        char slot[512];
+        bool (ISource::*check_func)();
+        bool separate;
+    };
+
     class ItemToolbarFeatures : public QObject {
         Q_OBJECT
     protected:
@@ -16,51 +34,7 @@ namespace Presentation {
 
         QAction * more_items_btn;
 
-        QAction * item_label_btn;
-        QAction * item_label_album_btn;
-        QAction * item_label_artist_btn;
-        QAction * item_label_playlist_btn;
-        QAction * item_label_audio_btn;
-        QAction * item_label_video_btn;
-        QAction * item_label_video_album_btn;
-        QAction * item_label_video_playlist_btn;
-
-        QAction * item_owner_btn;
-        QAction * item_owner_album_btn;
-        QAction * item_owner_artist_btn;
-        QAction * item_owner_playlist_btn;
-        QAction * item_owner_audio_btn;
-        QAction * item_owner_video_btn;
-        QAction * item_owner_video_album_btn;
-        QAction * item_owner_video_playlist_btn;
-
-        QAction * item_artist_btn;
-        QAction * item_artist_album_btn;
-        QAction * item_artist_playlist_btn;
-        QAction * item_artist_audio_btn;
-        QAction * item_artist_sim_audio_btn;
-        QAction * item_artist_video_btn;
-        QAction * item_artist_video_album_btn;
-        QAction * item_artist_video_playlist_btn;
-
-        QAction * item_audio_btn;
-        QAction * item_audio_album_btn;
-        QAction * item_audio_playlist_btn;
-        QAction * item_video_btn;
-        QAction * item_video_album_btn;
-        QAction * item_video_playlist_btn;
-
-        QAction * item_album_btn;
-        QAction * item_playlist_btn;
-
-        QAction * item_tag_btn;
-        QAction * item_tag_album_btn;
-        QAction * item_tag_artist_btn;
-        QAction * item_tag_playlist_btn;
-        QAction * item_tag_audio_btn;
-        QAction * item_tag_video_btn;
-        QAction * item_tag_video_album_btn;
-        QAction * item_tag_video_playlist_btn;
+        QList<ItemToolbarFeature> features;
 
         virtual Core::IItem * targetItem() = 0;
         virtual Views::IView * targetView() = 0;
@@ -74,12 +48,9 @@ namespace Presentation {
     public slots:
         void hide() { toolbar ->  hide(); }
         void updateToolbar();
-
+        void appendToMenu(QMenu * menu);
 
         void loadMoreItem();
-
-//        void openAlbumforItem();
-//        void openPlaylistforItem();
 
         void openAudioforItem();
         void openAudioAlbumforItem();

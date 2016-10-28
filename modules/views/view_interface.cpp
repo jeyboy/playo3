@@ -398,41 +398,9 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addSeparator();
     }
 
-//    ISource * src = Web::Apis::source(mdl -> playlistType());
-
-//    Presentation::ToolBars::obj().selectedItemFeatures()
-
     if (ind.isValid()) {
-//        src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
-
-//        if (src) {
-//            if (src -> hasSimillarAudioByUser())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations for item owner"), this, SLOT(openRecsForItemUser()));
-
-//            if (src -> hasSimillarAudioByAudio())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item"), this, SLOT(openRecsForItem()));
-
-//            if (src -> hasSimillarAudioByArtist())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item artist"), this, SLOT(openRecsForArtist()));
-
-//            if (src -> hasSimillarAudioByTag())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item tags"), this, SLOT(openRecsForTag()));
-
-//            if (src -> hasAudioFromSameArtist())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same artist"), this, SLOT(openTracksFromSameArtist()));
-
-//            if (src -> hasAlbumsFromSameArtist())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same artist"), this, SLOT(openAlbumsFromSameArtist()));
-
-
-//            if (src -> hasAudioFromSameLabel())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same label"), this, SLOT(openTracksFromSameLabel()));
-
-//            if (src -> hasAlbumsFromSameLabel())
-//                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same label"), this, SLOT(openAlbumsFromSameLabel()));
-
-//            menu.addSeparator();
-//        }
+        Presentation::ToolBars::obj().selectedItemFeatures() -> appendToMenu(&menu);
+        menu.addSeparator();
 
         menu.addAction(QIcon(LSTR(":/copy")), LSTR("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
         menu.addSeparator();

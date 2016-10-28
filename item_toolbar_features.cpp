@@ -5,291 +5,219 @@ using namespace Presentation;
 ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar) : toolbar(toolbar) {}
 
 void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
-    QString prefix = LSTR(":/item_tools/item_");
+    features
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("audio") % postfix,                     LSTR("Audio recommendations for ") % sentence(),
+                              SLOT(openAudioforItem()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("audio_album") % postfix,               LSTR("Audio albums for ") % sentence(),
+                              SLOT(openAudioAlbumforItem()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("audio_playlist") % postfix,            LSTR("Audio playlists for ") % sentence(),
+                              SLOT(openAudioPlaylistforItem()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("video") % postfix,                     LSTR("Video recommendations for ") % sentence(),
+                              SLOT(openVideoforItem()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("video_album") % postfix,               LSTR("Video albums for ") % sentence(),
+                              SLOT(openVideoAlbumforItem()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("video_playlist") % postfix,            LSTR("Video playlists for ") % sentence(),
+                              SLOT(openVideoPlaylistforItem()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist") % postfix,                    LSTR("Recommendations for artists from ") % sentence(),
+                              SLOT(openRecsforItemArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_audio") % postfix,              LSTR("Audio for artists from ") % sentence(),
+                              SLOT(openAudioforArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_sim_audio") % postfix,          LSTR("Simillar audio by artists from ") % sentence(),
+                              SLOT(openSimillarAudiobyArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_album") % postfix,              LSTR("Albums for artists from ") % sentence(),
+                              SLOT(openAudioAlbumsForArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_playlist") % postfix,           LSTR("Playlists for artists from ") % sentence(),
+                              SLOT(openPlaylistsForArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_video") % postfix,              LSTR("Video for artists from ") % sentence(),
+                              SLOT(openVideoforArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_video_album") % postfix,        LSTR("Video albums for artists from ") % sentence(),
+                              SLOT(openVideoAlbumforArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_video_playlist") % postfix,     LSTR("Video playlists for artists from ") % sentence(),
+                              SLOT(openVideoPlaylistforArtist()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner") % postfix,                     LSTR("Recommendations for owner of ") % sentence(),
+                              SLOT(openRecsforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_artist") % postfix,              LSTR("Artists for owner of ") % sentence(),
+                              SLOT(openArtistsforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_audio") % postfix,               LSTR("Audio for owner of ") % sentence(),
+                              SLOT(openAudioforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_album") % postfix,               LSTR("Audio albums for owner of ") % sentence(),
+                              SLOT(openAudioAlbumsforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_playlist") % postfix,            LSTR("Audio playlists for owner of ") % sentence(),
+                              SLOT(openAudioPlaylistsforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_video") % postfix,               LSTR("Video for owner of ") % sentence(),
+                              SLOT(openVideoforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_video_album") % postfix,         LSTR("Video albums for owner of ") % sentence(),
+                              SLOT(openVideoAlbumsforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_video_playlist") % postfix,      LSTR("Video playlists for owner of ") % sentence(),
+                              SLOT(openVideoPlaylistsforUser()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag") % postfix,                       LSTR("Recommendations for tags of ") % sentence(),
+                              SLOT(openRecForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_artist") % postfix,                LSTR("Artists for tags of ") % sentence(),
+                              SLOT(openArtistForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_audio") % postfix,                 LSTR("Audio by tags of ") % sentence(),
+                              SLOT(openAudioForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_album") % postfix,                 LSTR("Audio albums by tags of ") % sentence(),
+                              SLOT(openAudioAlbumForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_playlist") % postfix,              LSTR("Audio playlists by tags of ") % sentence(),
+                              SLOT(openAudioPlaylistForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_video") % postfix,                 LSTR("Video by tags of ") % sentence(),
+                              SLOT(openVideoForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_video_album") % postfix,           LSTR("Video albums by tags of ") % sentence(),
+                              SLOT(openVideoAlbumForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_video_playlist") % postfix,        LSTR("Video playlists by tags of ") % sentence(),
+                              SLOT(openVideoPlaylistForTag()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label") % postfix,                     LSTR("Recommendations by labels from ") % sentence(),
+                              SLOT(openRecommendationsForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_artist") % postfix,              LSTR("Artists by labels from ") % sentence(),
+                              SLOT(openArtistsForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_audio") % postfix,               LSTR("Audio by labels from ") % sentence(),
+                              SLOT(openAudioForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_album") % postfix,               LSTR("Audio albums by labels from ") % sentence(),
+                              SLOT(openAudioAlbumForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_playlist") % postfix,            LSTR("Audio playlists by labels from ") % sentence(),
+                              SLOT(openAudioPlaylistForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_video") % postfix,               LSTR("Video by labels from ") % sentence(),
+                              SLOT(openVideoForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_video_album") % postfix,         LSTR("Video albums by labels from ") % sentence(),
+                              SLOT(openVideoAlbumForLabel()), 0)
+        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_video_playlist") % postfix,      LSTR("Video playlists by labels from ") % sentence(),
+                              SLOT(openVideoPlaylistForLabel()), 0);
+
 
     more_items_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("more") % postfix),
+        QIcon(ICO_PREFIX % LSTR("more") % postfix),
         LSTR("Load more"), this, SLOT(loadMoreItem())
     );
 
     toolbar -> addSeparator();
 
-//    item_album_btn = toolbar -> addAction(
-//        QIcon(prefix % LSTR("album") % postfix),
-//        LSTR("Albums for ") % sentence(),
-//        this, SLOT(openAlbumforItem())
-//    );
-
-//    item_playlist_btn = toolbar -> addAction(
-//        QIcon(prefix % LSTR("playlist") % postfix),
-//        LSTR("Playlists for ") % sentence(),
-//        this, SLOT(openPlaylistforItem())
-//    );
-
-
-    item_audio_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("audio") % postfix),
-        LSTR("Audio recommendations for ") % sentence(),
-        this, SLOT(openAudioforItem())
-    );
-
-    item_audio_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("audio_album") % postfix),
-        LSTR("Audio albums for ") % sentence(),
-        this, SLOT(openAudioAlbumforItem())
-    );
-
-    item_audio_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("audio_playlist") % postfix),
-        LSTR("Audio playlists for ") % sentence(),
-        this, SLOT(openAudioPlaylistforItem())
-    );
-
-    item_video_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("video") % postfix),
-        LSTR("Video recommendations for ") % sentence(),
-        this, SLOT(openVideoforItem())
-    );
-
-    item_video_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("video_album") % postfix),
-        LSTR("Video albums for ") % sentence(),
-        this, SLOT(openVideoAlbumforItem())
-    );
-
-    item_video_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("video_playlist") % postfix),
-        LSTR("Video playlists for ") % sentence(),
-        this, SLOT(openVideoPlaylistforItem())
-    );
-
-
-
-    item_artist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist") % postfix),
-        LSTR("Recommendations for artists from ") % sentence(),
-        this, SLOT(openRecsforItemArtist())
-    );
-
-    item_artist_audio_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_audio") % postfix),
-        LSTR("Audio for artists from ") % sentence(),
-        this, SLOT(openAudioforArtist())
-    );
-
-    item_artist_sim_audio_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_sim_audio") % postfix),
-        LSTR("Simillar audio by artists from ") % sentence(),
-        this, SLOT(openSimillarAudiobyArtist())
-    );
-
-    item_artist_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_album") % postfix),
-        LSTR("Albums for artists from ") % sentence(),
-        this, SLOT(openAudioAlbumsForArtist())
-    );
-
-    item_artist_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_playlist") % postfix),
-        LSTR("Playlists for artists from ") % sentence(),
-        this, SLOT(openPlaylistsForArtist())
-    );
-
-    item_artist_video_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_video") % postfix),
-        LSTR("Video for artists from ") % sentence(),
-        this, SLOT(openVideoforArtist())
-    );
-
-    item_artist_video_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_video_album") % postfix),
-        LSTR("Video albums for artists from ") % sentence(),
-        this, SLOT(openVideoAlbumforArtist())
-    );
-
-    item_artist_video_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("artist_video_playlist") % postfix),
-        LSTR("Video playlists for artists from ") % sentence(),
-        this, SLOT(openVideoPlaylistforArtist())
-    );
-
-    item_owner_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner") % postfix),
-        LSTR("Recommendations for owner of") % sentence(),
-        this, SLOT(openRecsforUser())
-    );
-    item_owner_artist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_artist") % postfix),
-        LSTR("Artists for owner of") % sentence(),
-        this, SLOT(openArtistsforUser())
-    );
-    item_owner_audio_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_audio") % postfix),
-        LSTR("Audio for owner of") % sentence(),
-        this, SLOT(openAudioforUser())
-    );
-    item_owner_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_album") % postfix),
-        LSTR("Audio albums for owner of") % sentence(),
-        this, SLOT(openAudioAlbumsforUser())
-    );
-    item_owner_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_playlist") % postfix),
-        LSTR("Audio playlists for owner of") % sentence(),
-        this, SLOT(openAudioPlaylistsforUser())
-    );
-
-    item_owner_video_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_video") % postfix),
-        LSTR("Video for owner of") % sentence(),
-        this, SLOT(openVideoforUser())
-    );
-    item_owner_video_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_video_album") % postfix),
-        LSTR("Video albums for owner of") % sentence(),
-        this, SLOT(openVideoAlbumsforUser())
-    );
-    item_owner_video_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("owner_video_playlist") % postfix),
-        LSTR("Video playlists for owner of") % sentence(),
-        this, SLOT(openVideoPlaylistsforUser())
-    );
-
-    item_tag_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag") % postfix),
-        LSTR("Recommendations for tags of ") % sentence(),
-        this, SLOT(openRecForTag())
-    );
-    item_tag_artist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_artist") % postfix),
-        LSTR("Artists for tags of ") % sentence(),
-        this, SLOT(openArtistForTag())
-    );
-    item_tag_audio_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_audio") % postfix),
-        LSTR("Audio by tags of ") % sentence(),
-        this, SLOT(openAudioForTag())
-    );
-    item_tag_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_album") % postfix),
-        LSTR("Audio albums by tags of ") % sentence(),
-        this, SLOT(openAudioAlbumForTag())
-    );
-    item_tag_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_playlist") % postfix),
-        LSTR("Audio playlists by tags of ") % sentence(),
-        this, SLOT(openAudioPlaylistForTag())
-    );
-
-    item_tag_video_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_video") % postfix),
-        LSTR("Video by tags of ") % sentence(),
-        this, SLOT(openVideoForTag())
-    );
-    item_tag_video_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_video_album") % postfix),
-        LSTR("Video albums by tags of ") % sentence(),
-        this, SLOT(openVideoAlbumForTag())
-    );
-    item_tag_video_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("tag_video_playlist") % postfix),
-        LSTR("Video playlists by tags of ") % sentence(),
-        this, SLOT(openVideoPlaylistForTag())
-    );
-
-
-    item_label_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label") % postfix),
-        LSTR("Recommendations by labels from ") % sentence(),
-        this, SLOT(openRecommendationsForLabel())
-    );
-    item_label_artist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_artist") % postfix),
-        LSTR("Artists by labels from ") % sentence(),
-        this, SLOT(openArtistsForLabel())
-    );
-    item_label_audio_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_audio") % postfix),
-        LSTR("Audio by labels from ") % sentence(),
-        this, SLOT(openAudioForLabel())
-    );
-    item_label_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_album") % postfix),
-        LSTR("Audio albums by labels from ") % sentence(),
-        this, SLOT(openAudioAlbumForLabel())
-    );
-    item_label_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_playlist") % postfix),
-        LSTR("Audio playlists by labels from ") % sentence(),
-        this, SLOT(openAudioPlaylistForLabel())
-    );
-
-
-    item_label_video_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_video") % postfix),
-        LSTR("Video by labels from ") % sentence(),
-        this, SLOT(openVideoForLabel())
-    );
-    item_label_video_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_video_album") % postfix),
-        LSTR("Video albums by labels from ") % sentence(),
-        this, SLOT(openVideoAlbumForLabel())
-    );
-    item_label_video_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("label_video_playlist") % postfix),
-        LSTR("Video playlists by labels from ") % sentence(),
-        this, SLOT(openVideoPlaylistForLabel())
-    );
+    for(QList<ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++)
+        (*feature).btn = toolbar -> addAction(QIcon((*feature).ico), (*feature).desc, this, (*feature).slot);
 }
 
 void ItemToolbarFeatures::updateToolbar() {
     bool show = false;
 
-    //TODO: write me
+    Core::IItem * item = targetItem();
 
-//    Core::IItem * item = targetItem();
+    if (item) {
+        show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
+        more_items_btn -> setVisible(show );
 
-//    if (item) {
-//        show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
-//        more_items_btn -> setVisible(show );
+        Core::ISource * source = Web::Apis::source(item -> dataType());
 
-//        Core::ISource * source = Web::Apis::source(item -> dataType());
+        if (source) {
+            bool has_item_recs = source -> hasSimillarAudioByAudio();
+            item_audio_btn -> setVisible(has_item_recs);
 
-//        if (source) {
-//            bool has_item_recs = source -> hasSimillarAudioByAudio();
-//            item_audio_btn -> setVisible(has_item_recs);
+            bool has_owner_recs = source -> hasSimillarAudioByUser();
+            item_owner_btn -> setVisible(has_owner_recs);
 
-//            bool has_owner_recs = source -> hasSimillarAudioByUser();
-//            item_owner_btn -> setVisible(has_owner_recs);
+            bool has_artist_recs = source -> hasSimillarAudioByArtist();
+            item_artist_btn -> setVisible(has_artist_recs);
 
-//            bool has_artist_recs = source -> hasSimillarAudioByArtist();
-//            item_artist_btn -> setVisible(has_artist_recs);
+            bool has_artist_songs = source -> hasAudioFromSameArtist();
+            item_artist_audio_btn -> setVisible(has_artist_songs);
 
-//            bool has_artist_songs = source -> hasAudioFromSameArtist();
-//            item_artist_audio_btn -> setVisible(has_artist_songs);
+            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
+            item_artist_album_btn -> setVisible(has_artist_albums);
 
-//            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
-//            item_artist_album_btn -> setVisible(has_artist_albums);
+            bool has_tags_audio_recs = item -> source -> hasSimillarAudioByTag();
+            item_tag_audio_btn -> setVisible(has_tags_audio_recs);
 
-//            bool has_tags_recs = item -> isAudio() ? source -> hasSimillarAudioByTag() : source -> hasSimillarVideoByTag();
-//            item_tag_btn -> setVisible(has_tags_recs);
+            bool has_tags_video_recs = item -> source -> hasSimillarVideoByTag();
+            item_tag_video_btn -> setVisible(has_tags_video_recs);
 
-//            bool has_label_song_recs = source -> hasAudioFromSameLabel();
-//            item_label_audio_btn -> setVisible(has_label_song_recs);
+            bool has_label_song_recs = source -> hasAudioFromSameLabel();
+            item_label_audio_btn -> setVisible(has_label_song_recs);
 
-//            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
-//            item_label_album_btn -> setVisible(has_label_album_recs);
+            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
+            item_label_album_btn -> setVisible(has_label_album_recs);
 
-//            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
-//            item_label_artist_btn -> setVisible(has_label_artist_recs);
+            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
+            item_label_artist_btn -> setVisible(has_label_artist_recs);
 
-//            show |= has_item_recs || has_owner_recs || has_label_artist_recs ||
-//                    has_artist_recs || has_tags_recs || has_label_song_recs ||
-//                    has_artist_albums || has_artist_songs || has_label_album_recs;
-//        }
-//    }
+            show |= has_item_recs || has_owner_recs || has_label_artist_recs || has_tags_video_recs ||
+                    has_artist_recs || has_tags_audio_recs || has_label_song_recs ||
+                    has_artist_albums || has_artist_songs || has_label_album_recs;
+        }
+    }
 
     toolbar -> setHidden(!show);
+}
+
+void ItemToolbarFeatures::appendToMenu(QMenu * menu) {
+    Core::IItem * item = targetItem();
+
+    if (item) {
+        Core::ISource * source = Web::Apis::source(item -> dataType());
+
+        if (source) {
+            QString prefix = LSTR(":/item_tools/item_");
+
+
+            bool has_item_recs = source -> hasSimillarAudioByAudio();
+            item_audio_btn -> setVisible(has_item_recs);
+
+            bool has_owner_recs = source -> hasSimillarAudioByUser();
+            item_owner_btn -> setVisible(has_owner_recs);
+
+            bool has_artist_recs = source -> hasSimillarAudioByArtist();
+            item_artist_btn -> setVisible(has_artist_recs);
+
+            bool has_artist_songs = source -> hasAudioFromSameArtist();
+            item_artist_audio_btn -> setVisible(has_artist_songs);
+
+            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
+            item_artist_album_btn -> setVisible(has_artist_albums);
+
+            bool has_tags_audio_recs = item -> source -> hasSimillarAudioByTag();
+            item_tag_audio_btn -> setVisible(has_tags_audio_recs);
+
+            bool has_tags_video_recs = item -> source -> hasSimillarVideoByTag();
+            item_tag_video_btn -> setVisible(has_tags_video_recs);
+
+            bool has_label_song_recs = source -> hasAudioFromSameLabel();
+            item_label_audio_btn -> setVisible(has_label_song_recs);
+
+            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
+            item_label_album_btn -> setVisible(has_label_album_recs);
+
+            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
+            item_label_artist_btn -> setVisible(has_label_artist_recs);
+        }
+    }
+
+    //        src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
+
+    //        if (src) {
+    //            if (src -> hasSimillarAudioByUser())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations for item owner"), this, SLOT(openRecsForItemUser()));
+
+    //            if (src -> hasSimillarAudioByAudio())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item"), this, SLOT(openRecsForItem()));
+
+    //            if (src -> hasSimillarAudioByArtist())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item artist"), this, SLOT(openRecsForArtist()));
+
+    //            if (src -> hasSimillarAudioByTag())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item tags"), this, SLOT(openRecsForTag()));
+
+    //            if (src -> hasAudioFromSameArtist())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same artist"), this, SLOT(openTracksFromSameArtist()));
+
+    //            if (src -> hasAlbumsFromSameArtist())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same artist"), this, SLOT(openAlbumsFromSameArtist()));
+
+
+    //            if (src -> hasAudioFromSameLabel())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same label"), this, SLOT(openTracksFromSameLabel()));
+
+    //            if (src -> hasAlbumsFromSameLabel())
+    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same label"), this, SLOT(openAlbumsFromSameLabel()));
+
+    //            menu.addSeparator();
+    //        }
 }
 
 void ItemToolbarFeatures::loadMoreItem() {
