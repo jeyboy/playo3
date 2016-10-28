@@ -65,8 +65,10 @@ namespace Presentation {
         virtual Core::IItem * targetItem() = 0;
         virtual Views::IView * targetView() = 0;
         virtual QString sentence() = 0;
+
+        void prepareToolbar(const QString & postfix = QString());
     public:
-        ItemToolbarFeatures(QToolBar * toolbar, const QString & postfix = QString());
+        ItemToolbarFeatures(QToolBar * toolbar);
 
         QToolBar * targetToolbar() { return toolbar; }
     public slots:
@@ -135,7 +137,7 @@ namespace Presentation {
         Views::IView * targetView() { return Dockbars::obj().playedView(); }
         QString sentence() { return LSTR("played item"); }
     public:
-        PlayedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar, LSTR("_pl")) {}
+        PlayedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar) { prepareToolbar(LSTR("_pl")); }
     };
 
     class SelectedItemToolbarFeatures : public ItemToolbarFeatures {
@@ -144,7 +146,7 @@ namespace Presentation {
         Views::IView * targetView() { return Dockbars::obj().activeView(); }
         QString sentence() { return LSTR("selected item"); }
     public:
-        SelectedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar, QString()) {}
+        SelectedItemToolbarFeatures(QToolBar * toolbar) : ItemToolbarFeatures(toolbar) { prepareToolbar(); }
     };
 }
 

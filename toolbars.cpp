@@ -92,6 +92,7 @@ void ToolBars::load(const QJsonArray & bars) {
             << TOOLBAR_MEDIA_TIME_KEY
             << TOOLBAR_MEDIA_VOLUME_KEY
             << TOOLBAR_PL_ITEM_FEATURES_KEY
+            << TOOLBAR_SL_ITEM_FEATURES_KEY
             << TOOLBAR_CONTROLS_KEY
             << TOOLBAR_SETTINGS_KEY
             << TOOLBAR_SPECTRUM_KEY

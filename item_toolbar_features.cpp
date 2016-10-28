@@ -2,7 +2,9 @@
 
 using namespace Presentation;
 
-ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar, const QString & postfix) : toolbar(toolbar) {
+ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar) : toolbar(toolbar) {}
+
+void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
     QString prefix = LSTR(":/item_tools/item_");
 
     more_items_btn = toolbar -> addAction(

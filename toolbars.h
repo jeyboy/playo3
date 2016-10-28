@@ -49,6 +49,7 @@ namespace Presentation {
         static inline QString settingsName() { return LSTR("bars"); }
 
         QMenu * createPopupMenu(QMenu * base_menu = 0);
+        SelectedItemToolbarFeatures * selectedItemFeatures() const { return sl_item_features; }
 
         void load(const QJsonArray & bars);
         void save(Core::DataStore * settings);
