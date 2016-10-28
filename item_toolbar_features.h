@@ -78,8 +78,8 @@ namespace Presentation {
 
         void loadMoreItem();
 
-        void openAlbumforItem();
-        void openPlaylistforItem();
+//        void openAlbumforItem();
+//        void openPlaylistforItem();
 
         void openAudioforItem();
         void openAudioAlbumforItem();

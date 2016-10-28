@@ -123,7 +123,7 @@
         <file alias="item_artist_album">images/elements/item_tools/sl/item_singer_album.png</file>
         <file alias="item_artist_playlist">images/elements/item_tools/sl/item_singer_playlist.png</file>
         <file alias="item_artist_audio">images/elements/item_tools/sl/item_singer_song.png</file>
-        <file alias="item_aritst_video">images/elements/item_tools/sl/item_singer_video.png</file>
+        <file alias="item_artist_video">images/elements/item_tools/sl/item_singer_video.png</file>
         <file alias="item_artist_video_album">images/elements/item_tools/sl/item_singer_video_album.png</file>
         <file alias="item_artist_video_playlist">images/elements/item_tools/sl/item_singer_video_playlist.png</file>
         <file alias="item_audio">images/elements/item_tools/sl/item_song.png</file>
@@ -140,8 +140,8 @@
         <file alias="item_label_pl">images/elements/item_tools/pl/item_label_pl.png</file>
         <file alias="item_label_playlist_pl">images/elements/item_tools/pl/item_label_playlist.png</file>
         <file alias="item_label_audio_pl">images/elements/item_tools/pl/item_label_song.png</file>
-        <file alias="item_lable_video_pl">images/elements/item_tools/pl/item_label_video.png</file>
-        <file alias="item_lable_video_album_pl">images/elements/item_tools/pl/item_label_video_album.png</file>
+        <file alias="item_label_video_pl">images/elements/item_tools/pl/item_label_video.png</file>
+        <file alias="item_label_video_album_pl">images/elements/item_tools/pl/item_label_video_album.png</file>
         <file alias="item_label_video_playlist_pl">images/elements/item_tools/pl/item_label_video_playlist.png</file>
         <file alias="item_more_pl">images/elements/item_tools/pl/item_more.png</file>
         <file alias="item_owner_pl">images/elements/item_tools/pl/item_owner.png</file>
@@ -168,13 +168,13 @@
         <file alias="item_tag_video_pl">images/elements/item_tools/pl/item_tag_video.png</file>
         <file alias="item_tag_video_album_pl">images/elements/item_tools/pl/item_tag_video_album.png</file>
         <file alias="item_tag_video_playlist_pl">images/elements/item_tools/pl/item_tag_video_playlist.png</file>
-        <file alias="item_album">images/elements/item_tools/sl/item_album.png</file>
-        <file alias="item_playlist">images/elements/item_tools/sl/item_playlist.png</file>
+        <file alias="item_audio_album">images/elements/item_tools/sl/item_album.png</file>
+        <file alias="item_audio_playlist">images/elements/item_tools/sl/item_playlist.png</file>
         <file alias="item_video">images/elements/item_tools/sl/item_video.png</file>
         <file alias="item_video_album">images/elements/item_tools/sl/item_video_album.png</file>
         <file alias="item_video_playlist">images/elements/item_tools/sl/item_video_playlist.png</file>
-        <file alias="item_album_pl">images/elements/item_tools/pl/item_album.png</file>
-        <file alias="item_playlist_pl">images/elements/item_tools/pl/item_playlist.png</file>
+        <file alias="item_audio_album_pl">images/elements/item_tools/pl/item_album.png</file>
+        <file alias="item_audio_playlist_pl">images/elements/item_tools/pl/item_playlist.png</file>
         <file alias="item_video_pl">images/elements/item_tools/pl/item_video.png</file>
         <file alias="item_video_album_pl">images/elements/item_tools/pl/item_video_album.png</file>
         <file alias="item_video_playlist_pl">images/elements/item_tools/pl/item_video_playlist.png</file>

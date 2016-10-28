@@ -14,17 +14,17 @@ void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
 
     toolbar -> addSeparator();
 
-    item_album_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("album") % postfix),
-        LSTR("Albums for ") % sentence(),
-        this, SLOT(openAlbumforItem())
-    );
+//    item_album_btn = toolbar -> addAction(
+//        QIcon(prefix % LSTR("album") % postfix),
+//        LSTR("Albums for ") % sentence(),
+//        this, SLOT(openAlbumforItem())
+//    );
 
-    item_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("playlist") % postfix),
-        LSTR("Playlists for ") % sentence(),
-        this, SLOT(openPlaylistforItem())
-    );
+//    item_playlist_btn = toolbar -> addAction(
+//        QIcon(prefix % LSTR("playlist") % postfix),
+//        LSTR("Playlists for ") % sentence(),
+//        this, SLOT(openPlaylistforItem())
+//    );
 
 
     item_audio_btn = toolbar -> addAction(
@@ -58,7 +58,7 @@ void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
     );
 
     item_video_playlist_btn = toolbar -> addAction(
-        QIcon(prefix % LSTR("video_playlis") % postfix),
+        QIcon(prefix % LSTR("video_playlist") % postfix),
         LSTR("Video playlists for ") % sentence(),
         this, SLOT(openVideoPlaylistforItem())
     );
@@ -301,8 +301,8 @@ void ItemToolbarFeatures::loadMoreItem() {
     }
 }
 
-void ItemToolbarFeatures::openAlbumforItem() {}
-void ItemToolbarFeatures::openPlaylistforItem() {}
+//void ItemToolbarFeatures::openAlbumforItem() {}
+//void ItemToolbarFeatures::openPlaylistforItem() {}
 
 void ItemToolbarFeatures::openAudioforItem() {
     IItem * it = targetItem();
