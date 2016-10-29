@@ -9,7 +9,7 @@
 #define ICO_PREFIX LSTR(":/item_tools/item_")
 #define PERM_ERROR(name) "Permissions required" << name << "required on some additional permissions or this service not respondable to this action";
 #define ADD_FEATURE_ITEM(postfix, ico, desc, slot, check_func) \
-    features.insert((quint64)(void *)(&slot), ItemToolbarFeature(toolbar, ICO_PREFIX + ico + postfix, desc, this, 0/*SLOT(slot())*/, &check_func))
+    features.insert((quint64)(void *)(&slot), ItemToolbarFeature(toolbar, ICO_PREFIX + ico + postfix, desc, this, SLOT(slot()), &check_func))
 
 namespace Presentation {
     struct ItemToolbarFeature {
@@ -17,13 +17,13 @@ namespace Presentation {
             QToolBar * toolbar = 0, const QString & ico = QString(), const QString & desc = QString(), QObject * obj = 0 , const char * btn_slot = 0, bool (ISource::*check_func)() = 0
         ) : btn(0), ico(ico), desc(desc), check_func(check_func) {
 
-            int slot_len = 1;
+            int slot_len = 0;
             if (btn_slot != 0) {
                 slot_len = strlen(btn_slot);
                 strncpy(slot, btn_slot, slot_len);
             }
 
-            slot[slot_len - 1] = '\0';
+            slot[slot_len] = '\0';
 
             if (toolbar && check_func)
                 btn = toolbar -> addAction(QIcon(ico), desc, obj, btn_slot);

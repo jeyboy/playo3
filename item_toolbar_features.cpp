@@ -154,9 +154,11 @@ void ItemToolbarFeatures::appendToMenu(QMenu * menu) {
         if (source) {
             for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
                 if (feature.value().check_func) {
+                    const char * slot = &(feature.value().slot[0]);
+
                     menu -> addAction(
                         QIcon(feature.value().ico), feature.value().desc,
-                        this, &feature.value().slot[0]
+                        this, slot
                     );
                 }
             }
