@@ -36,7 +36,6 @@ namespace Presentation {
         char slot[512];
     };
 
-
     class ItemToolbarFeatures : public QObject {
         Q_OBJECT
     protected:
