@@ -20,6 +20,7 @@ namespace Controls {
     class WindowTitle : public QWidget {
         Q_OBJECT
     public:
+        //TODO: rewrite bool values on enum
         WindowTitle(bool compact, QWidget * window, int height = 30, QMargins margins = QMargins(),
                     QMargins buttonsMargins = QMargins(), int leftPadding = 0, int rightPadding = 0,
                     bool showMini = true, bool showMaxi = true, bool showClose = true);

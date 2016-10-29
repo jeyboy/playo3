@@ -35,6 +35,7 @@ public:
     explicit Playo(QWidget * parent = 0);
     ~Playo();
 
+    void postinitialization();
 public slots:
 //    void outputActiveItem(ModelItem *, ModelItem *);
     void receiveMessage(const QString &);

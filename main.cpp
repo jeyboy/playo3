@@ -75,6 +75,7 @@ int main(int argc, char * argv[]) {
             w.receiveMessage(message);
 
         w.show();
+        w.postinitialization();
 
     //    a.setQuitOnLastWindowClosed(false);
         return a.exec();

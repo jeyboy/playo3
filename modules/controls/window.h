@@ -27,6 +27,8 @@ namespace Controls {
             QMainWindow::setTabPosition(Qt::AllDockWidgetAreas, tabPosition);
         }
 
+        virtual void postinitialization() {}
+
     public slots:
         void toggleWindowMostTop();
         inline void setWindowTitle(const QString & newTitle) { titleWidget -> setText(newTitle); }

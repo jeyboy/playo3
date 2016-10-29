@@ -13,8 +13,7 @@ namespace Controls {
         }
 
         inline QSize minimumSize() const {
-//            return QSize(1, QGridLayout::minimumSize().height()); // this is fix for dock widget correct dragging
-            return QGridLayout::minimumSize();
+            return QSize(1, QGridLayout::minimumSize().height()); // this is fix for dock widget correct dragging
         }
 
         inline void setVertical(bool vertical) {

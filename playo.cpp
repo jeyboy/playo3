@@ -98,6 +98,12 @@ void Playo::initialization() {
     Logger::obj().endMark(tr("Main"), tr("Loading"));
 }
 
+void Playo::postinitialization() { // patch for hidden toolbars on window showing
+    if (Dockbars::obj().playedView() == 0)
+        DataFactory::obj().proceedPlaying(0, 0);
+    ToolBars::obj().selectedItemFeatures() -> updateToolbar();
+}
+
 QMenu * Playo::createPopupMenu() {
     return ToolBars::obj().createPopupMenu();
 }

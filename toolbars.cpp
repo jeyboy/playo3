@@ -290,9 +290,6 @@ QToolBar * ToolBars::createSelectedItemFeaturesBar() {
 
     item_features -> adjustSize();
 
-    //TODO: write me
-//    connect(&DataFactory::obj(), SIGNAL(itemFeaturesChanged()), pl_item_features, SLOT(updateToolbar()));
-
     return item_features;
 }
 

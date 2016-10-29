@@ -11,7 +11,8 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
 
     setObjectName(objName.isEmpty() ? title + QString::number(QDateTime::currentMSecsSinceEpoch()) : objName);
     setTitleBarWidget((titleWidget = new WindowTitle(true, this, 26, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
-    titleWidget -> addCustomButton(QStringLiteral("Rotate"), QPixmap(QStringLiteral(":/controls/rotate_off")), QPixmap(QStringLiteral(":/controls/rotate_on")), this, SLOT(rotate()));
+//  INFO: rotate is a little buggy
+//    titleWidget -> addCustomButton(QStringLiteral("Rotate"), QPixmap(QStringLiteral(":/controls/rotate_off")), QPixmap(QStringLiteral(":/controls/rotate_on")), this, SLOT(rotate()));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);

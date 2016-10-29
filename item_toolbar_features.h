@@ -121,7 +121,10 @@ namespace Presentation {
 
     class SelectedItemToolbarFeatures : public ItemToolbarFeatures {
     protected:
-        Core::IItem * targetItem() { return targetView() -> selectedItem(); }
+        Core::IItem * targetItem() {
+            IView * view = targetView();
+            return view ? view -> selectedItem() : 0;
+        }
         Views::IView * targetView() { return Dockbars::obj().activeView(); }
         QString sentence() { return LSTR("selected item"); }
     public:

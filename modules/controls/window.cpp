@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
         titleHeight + 6,
         QMargins(doubleBorderWidth, doubleBorderWidth, doubleBorderWidth, 0),
         QMargins(0, 0, 0, 0),
-        Settings::currentStyle -> borderWidth,
-        Settings::currentStyle -> borderWidth,
+        Settings::currentStyle -> borderWidth * 2,
+        Settings::currentStyle -> borderWidth * 2,
         false, false, false
     );
     titleWidget -> addCustomButton(QStringLiteral("Most top"), QPixmap(QStringLiteral(":/controls/top_off_button")), QPixmap(QStringLiteral(":/controls/top_on_button")), this, SLOT(toggleWindowMostTop()));
