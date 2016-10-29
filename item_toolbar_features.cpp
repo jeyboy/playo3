@@ -156,7 +156,7 @@ void ItemToolbarFeatures::appendToMenu(QMenu * menu) {
                 if (feature.value().check_func) {
                     menu -> addAction(
                         QIcon(feature.value().ico), feature.value().desc,
-                        this, feature.value().slot
+                        this, &feature.value().slot[0]
                     );
                 }
             }
