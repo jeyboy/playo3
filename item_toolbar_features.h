@@ -8,23 +8,27 @@
 
 #define ICO_PREFIX LSTR(":/item_tools/item_")
 #define PERM_ERROR(name) "Permissions required" << name << "required on some additional permissions or this service not respondable to this action";
+#define ADD_FEATURE_ITEM(postfix, ico, desc, slot, check_func) \
+    features.insert((intptr_t)(void *)(&slot), ItemToolbarFeature(toolbar, ICO_PREFIX + ico + postfix, desc, this, SLOT(slot()), &check_func))
 
-namespace Presentation { // proc_func = &IModel::proceedVkList;
+//    features.insert(
+//        &openAudioforItem,
+//        ItemToolbarFeature(toolbar, ICO_PREFIX % LSTR("more") % postfix, LSTR("Load more"), this, SLOT(ItemToolbarFeatures::openAudioforItem()), &ISource::hasSimillarAudioByAudio)
+//    );
+
+namespace Presentation {
     struct ItemToolbarFeature {
         ItemToolbarFeature(
-            const QString & ico = QString(), const QString & desc = QString(), const char * btn_slot, bool (ISource::*check_func)(), bool separate = false
-        ) : btn(0), ico(ico), desc(desc), check_func(check_func), separate(separate) {
-            int slot_len = strlen(btn_slot);
-            strncpy(slot, btn_slot, slot_len);
-            slot[slot_len - 1] = '\0';
+            QToolBar * toolbar = 0, const QString & ico = QString(), const QString & desc = QString(), QObject * obj = 0 , const char * btn_slot = 0, bool (ISource::*check_func)() = 0
+        ) : btn(0), ico(ico), desc(desc), check_func(check_func) {
+            if (toolbar && check_func)
+                btn = toolbar -> addAction(QIcon(ico), desc, obj, btn_slot);
         }
 
         QAction * btn;
         QString ico;
         QString desc;
-        char slot[512];
         bool (ISource::*check_func)();
-        bool separate;
     };
 
     class ItemToolbarFeatures : public QObject {
@@ -32,9 +36,7 @@ namespace Presentation { // proc_func = &IModel::proceedVkList;
     protected:
         QToolBar * toolbar;
 
-        QAction * more_items_btn;
-
-        QList<ItemToolbarFeature> features;
+        QHash<intptr_t, ItemToolbarFeature> features;
 
         virtual Core::IItem * targetItem() = 0;
         virtual Views::IView * targetView() = 0;
