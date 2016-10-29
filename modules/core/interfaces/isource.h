@@ -24,7 +24,6 @@ namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {
         Q_OBJECT
     public:
-        inline bool stub() { return true; }
         virtual ~ISource() {}
 
         virtual QString name() const = 0;

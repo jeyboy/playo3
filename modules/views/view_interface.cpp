@@ -373,17 +373,18 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QModelIndex ind = indexAt(event -> pos());
     IItem * itm = mdl -> item(ind);   
 
-    // if clicked not at the item and root container has more items script or clicked on item
-    if (ind.isValid() || itm -> hasMoreItems()) {
-        if (!itm -> isContainer()) itm = itm -> parent();
+// INFO: moved to Presentation::ToolBars::obj().selectedItemFeatures()
+//    // if clicked not at the item and root container has more items script or clicked on item
+//    if (ind.isValid() || itm -> hasMoreItems()) {
+//        if (!itm -> isContainer()) itm = itm -> parent();
 
-        if (itm && itm -> hasMoreItems()) {
-            menu.addAction(
-                QIcon(LSTR(":/more")), LSTR("Load more items"),
-                this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
-            );
-        }
-    }
+//        if (itm && itm -> hasMoreItems()) {
+//            menu.addAction(
+//                QIcon(LSTR(":/more")), LSTR("Load more items"),
+//                this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
+//            );
+//        }
+//    }
 
     menu.addSeparator();
 

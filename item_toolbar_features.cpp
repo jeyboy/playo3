@@ -5,46 +5,21 @@ using namespace Presentation;
 ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar) : toolbar(toolbar) {}
 
 void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
-    ADD_FEATURE_ITEM(postfix, LSTR("more"), LSTR("Load more"), ItemToolbarFeatures::loadMoreItem, ISource::stub);
-
-//    features.insert(
-//        &openAudioforItem,
-//        ItemToolbarFeature(toolbar, ICO_PREFIX % LSTR("more") % postfix, LSTR("Load more"), this, SLOT(ItemToolbarFeatures::openAudioforItem()), &ISource::hasSimillarAudioByAudio)
-//    );
-
-//    more_items_btn = toolbar -> addAction(
-//        QIcon(ICO_PREFIX % LSTR("more") % postfix),
-//        LSTR("Load more"), this, SLOT(loadMoreItem())
-//    );
+    more_items_btn = toolbar -> addAction(
+        QIcon(ICO_PREFIX % LSTR("more") % postfix),
+        LSTR("Load more"), this, SLOT(loadMoreItem())
+    );
 
     toolbar -> addSeparator();
 
-//    features.insert(
-//        &ItemToolbarFeatures::openAudioforItem,
-//        ItemToolbarFeature(ICO_PREFIX % LSTR("audio") % postfix,                     LSTR("Audio recommendations for ") % sentence(),
-//            SLOT(openAudioforItem()), &ISource::hasSimillarAudioByAudio)
-//    );
+    ADD_FEATURE_ITEM(postfix, LSTR("audio"), LSTR("Audio recommendations for ") % sentence(), ItemToolbarFeatures::openAudioforItem, ISource::hasSimillarAudioByAudio);
+//        << ItemToolbarFeature(ICO_PREFIX % LSTR("audio") % postfix,                     LSTR("Audio recommendations for ") % sentence(),
+//                              SLOT(openAudioforItem()), ISource::hasSimillarAudioByAudio)
 
-//    features.insert(
-//        &ItemToolbarFeatures::openAudioAlbumforItem,
-//        ItemToolbarFeature(ICO_PREFIX % LSTR("audio_album") % postfix,               LSTR("Audio albums for ") % sentence(),
-//            SLOT(openAudioAlbumforItem()), 0)
-//    );
-
-//    features.insert(
-//        &ItemToolbarFeatures::openAudioPlaylistforItem,
-//        ItemToolbarFeature(ICO_PREFIX % LSTR("audio_playlist") % postfix,            LSTR("Audio playlists for ") % sentence(),
-//            SLOT(openAudioPlaylistforItem()), 0)
-//    );
-
-
-
-
+//        << ItemToolbarFeature(ICO_PREFIX % LSTR("audio_album") % postfix,               LSTR("Audio albums for ") % sentence(),
+//                              SLOT(openAudioAlbumforItem()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("audio_playlist") % postfix,            LSTR("Audio playlists for ") % sentence(),
 //                              SLOT(openAudioPlaylistforItem()), 0)
-
-
-
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("video") % postfix,                     LSTR("Video recommendations for ") % sentence(),
 //                              SLOT(openVideoforItem()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("video_album") % postfix,               LSTR("Video albums for ") % sentence(),
@@ -53,12 +28,19 @@ void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
 //                              SLOT(openVideoPlaylistforItem()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist") % postfix,                    LSTR("Recommendations for artists from ") % sentence(),
 //                              SLOT(openRecsforItemArtist()), 0)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("artist_audio"), LSTR("Audio for artists from ") % sentence(), ItemToolbarFeatures::openAudioforArtist, ISource::hasAudioFromSameArtist);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_audio") % postfix,              LSTR("Audio for artists from ") % sentence(),
-//                              SLOT(openAudioforArtist()), 0)
+//                              SLOT(openAudioforArtist()), ISource::hasAudioFromSameArtist)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("artist_sim_audio"), LSTR("Simillar audio by artists from ") % sentence(), ItemToolbarFeatures::openSimillarAudiobyArtist, ISource::hasSimillarAudioByArtist);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_sim_audio") % postfix,          LSTR("Simillar audio by artists from ") % sentence(),
-//                              SLOT(openSimillarAudiobyArtist()), 0)
+//                              SLOT(openSimillarAudiobyArtist()), ISource::hasSimillarAudioByArtist)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("artist_album"), LSTR("Albums for artists from ") % sentence(), ItemToolbarFeatures::openAudioAlbumsForArtist, ISource::hasAlbumsFromSameArtist);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_album") % postfix,              LSTR("Albums for artists from ") % sentence(),
-//                              SLOT(openAudioAlbumsForArtist()), 0)
+//                              SLOT(openAudioAlbumsForArtist()), ISource::hasAlbumsFromSameArtist)
+
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_playlist") % postfix,           LSTR("Playlists for artists from ") % sentence(),
 //                              SLOT(openPlaylistsForArtist()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("artist_video") % postfix,              LSTR("Video for artists from ") % sentence(),
@@ -71,8 +53,11 @@ void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
 //                              SLOT(openRecsforUser()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_artist") % postfix,              LSTR("Artists for owner of ") % sentence(),
 //                              SLOT(openArtistsforUser()), 0)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("owner_audio"), LSTR("Audio for owner of ") % sentence(), ItemToolbarFeatures::openAudioforUser, ISource::hasSimillarAudioByUser);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_audio") % postfix,               LSTR("Audio for owner of ") % sentence(),
-//                              SLOT(openAudioforUser()), 0)
+//                              SLOT(openAudioforUser()), ISource::hasSimillarAudioByUser)
+
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_album") % postfix,               LSTR("Audio albums for owner of ") % sentence(),
 //                              SLOT(openAudioAlbumsforUser()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("owner_playlist") % postfix,            LSTR("Audio playlists for owner of ") % sentence(),
@@ -87,8 +72,11 @@ void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
 //                              SLOT(openRecForTag()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_artist") % postfix,                LSTR("Artists for tags of ") % sentence(),
 //                              SLOT(openArtistForTag()), 0)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("tag_audio"), LSTR("Audio by tags of ") % sentence(), ItemToolbarFeatures::openAudioForTag, ISource::hasSimillarAudioByTag);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_audio") % postfix,                 LSTR("Audio by tags of ") % sentence(),
-//                              SLOT(openAudioForTag()), 0)
+//                              SLOT(openAudioForTag()), ISource::hasSimillarAudioByTag)
+
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_album") % postfix,                 LSTR("Audio albums by tags of ") % sentence(),
 //                              SLOT(openAudioAlbumForTag()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("tag_playlist") % postfix,              LSTR("Audio playlists by tags of ") % sentence(),
@@ -101,12 +89,19 @@ void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
 //                              SLOT(openVideoPlaylistForTag()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("label") % postfix,                     LSTR("Recommendations by labels from ") % sentence(),
 //                              SLOT(openRecommendationsForLabel()), 0)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("label_artist"), LSTR("Artists by labels from ") % sentence(), ItemToolbarFeatures::openArtistsForLabel, ISource::hasArtistsFromSameLabel);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_artist") % postfix,              LSTR("Artists by labels from ") % sentence(),
-//                              SLOT(openArtistsForLabel()), 0)
+//                              SLOT(openArtistsForLabel()), ISource::hasArtistsFromSameLabel)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("label_audio"), LSTR("Audio by labels from ") % sentence(), ItemToolbarFeatures::openAudioForLabel, ISource::hasAudioFromSameLabel);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_audio") % postfix,               LSTR("Audio by labels from ") % sentence(),
-//                              SLOT(openAudioForLabel()), 0)
+//                              SLOT(openAudioForLabel()), ISource::hasAudioFromSameLabel)
+
+    ADD_FEATURE_ITEM(postfix, LSTR("label_album"), LSTR("Audio albums by labels from ") % sentence(), ItemToolbarFeatures::openAudioAlbumForLabel, ISource::hasAlbumsFromSameLabel);
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_album") % postfix,               LSTR("Audio albums by labels from ") % sentence(),
-//                              SLOT(openAudioAlbumForLabel()), 0)
+//                              SLOT(openAudioAlbumForLabel()), ISource::hasAlbumsFromSameLabel)
+
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_playlist") % postfix,            LSTR("Audio playlists by labels from ") % sentence(),
 //                              SLOT(openAudioPlaylistForLabel()), 0)
 //        << ItemToolbarFeature(ICO_PREFIX % LSTR("label_video") % postfix,               LSTR("Video by labels from ") % sentence(),
@@ -124,44 +119,18 @@ void ItemToolbarFeatures::updateToolbar() {
 
     if (item) {
         show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
-        more_items_btn -> setVisible(show );
+        more_items_btn -> setVisible(show);
 
         Core::ISource * source = Web::Apis::source(item -> dataType());
 
         if (source) {
-            bool has_item_recs = source -> hasSimillarAudioByAudio();
-            item_audio_btn -> setVisible(has_item_recs);
-
-            bool has_owner_recs = source -> hasSimillarAudioByUser();
-            item_owner_btn -> setVisible(has_owner_recs);
-
-            bool has_artist_recs = source -> hasSimillarAudioByArtist();
-            item_artist_btn -> setVisible(has_artist_recs);
-
-            bool has_artist_songs = source -> hasAudioFromSameArtist();
-            item_artist_audio_btn -> setVisible(has_artist_songs);
-
-            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
-            item_artist_album_btn -> setVisible(has_artist_albums);
-
-            bool has_tags_audio_recs = item -> source -> hasSimillarAudioByTag();
-            item_tag_audio_btn -> setVisible(has_tags_audio_recs);
-
-            bool has_tags_video_recs = item -> source -> hasSimillarVideoByTag();
-            item_tag_video_btn -> setVisible(has_tags_video_recs);
-
-            bool has_label_song_recs = source -> hasAudioFromSameLabel();
-            item_label_audio_btn -> setVisible(has_label_song_recs);
-
-            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
-            item_label_album_btn -> setVisible(has_label_album_recs);
-
-            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
-            item_label_artist_btn -> setVisible(has_label_artist_recs);
-
-            show |= has_item_recs || has_owner_recs || has_label_artist_recs || has_tags_video_recs ||
-                    has_artist_recs || has_tags_audio_recs || has_label_song_recs ||
-                    has_artist_albums || has_artist_songs || has_label_album_recs;
+            for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
+                if (feature.value().check_func) {
+                    bool is_valid = (*source.*feature.value().check_func)();
+                    feature.value().btn -> setVisible(is_valid);
+                    show |= is_valid;
+                }
+            }
         }
     }
 
@@ -172,74 +141,28 @@ void ItemToolbarFeatures::appendToMenu(QMenu * menu) {
     Core::IItem * item = targetItem();
 
     if (item) {
+        if (item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/) {
+            menu -> addAction(
+                QIcon(LSTR(":/more")), LSTR("Load more items"),
+                this, SLOT(loadMoreItem()), QKeySequence(tr("Ctrl+M", "More items"))
+            );
+            menu -> addSeparator();
+        }
+
         Core::ISource * source = Web::Apis::source(item -> dataType());
 
         if (source) {
-            QString prefix = LSTR(":/item_tools/item_");
-
-
-            bool has_item_recs = source -> hasSimillarAudioByAudio();
-            item_audio_btn -> setVisible(has_item_recs);
-
-            bool has_owner_recs = source -> hasSimillarAudioByUser();
-            item_owner_btn -> setVisible(has_owner_recs);
-
-            bool has_artist_recs = source -> hasSimillarAudioByArtist();
-            item_artist_btn -> setVisible(has_artist_recs);
-
-            bool has_artist_songs = source -> hasAudioFromSameArtist();
-            item_artist_audio_btn -> setVisible(has_artist_songs);
-
-            bool has_artist_albums = source -> hasAlbumsFromSameArtist();
-            item_artist_album_btn -> setVisible(has_artist_albums);
-
-            bool has_tags_audio_recs = item -> source -> hasSimillarAudioByTag();
-            item_tag_audio_btn -> setVisible(has_tags_audio_recs);
-
-            bool has_tags_video_recs = item -> source -> hasSimillarVideoByTag();
-            item_tag_video_btn -> setVisible(has_tags_video_recs);
-
-            bool has_label_song_recs = source -> hasAudioFromSameLabel();
-            item_label_audio_btn -> setVisible(has_label_song_recs);
-
-            bool has_label_album_recs = source -> hasAlbumsFromSameLabel();
-            item_label_album_btn -> setVisible(has_label_album_recs);
-
-            bool has_label_artist_recs = source -> hasArtistsFromSameLabel();
-            item_label_artist_btn -> setVisible(has_label_artist_recs);
+            for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
+                if (feature.value().check_func) {
+                    menu -> addAction(
+                        QIcon(feature.value().ico), feature.value().desc,
+                        this, feature.value().slot
+                    );
+                }
+            }
+            menu -> addSeparator();
         }
     }
-
-    //        src = Web::Apis::source((DataSubType)ind.data(ITYPE).toInt());
-
-    //        if (src) {
-    //            if (src -> hasSimillarAudioByUser())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations for item owner"), this, SLOT(openRecsForItemUser()));
-
-    //            if (src -> hasSimillarAudioByAudio())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item"), this, SLOT(openRecsForItem()));
-
-    //            if (src -> hasSimillarAudioByArtist())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item artist"), this, SLOT(openRecsForArtist()));
-
-    //            if (src -> hasSimillarAudioByTag())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Recommendations by item tags"), this, SLOT(openRecsForTag()));
-
-    //            if (src -> hasAudioFromSameArtist())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same artist"), this, SLOT(openTracksFromSameArtist()));
-
-    //            if (src -> hasAlbumsFromSameArtist())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same artist"), this, SLOT(openAlbumsFromSameArtist()));
-
-
-    //            if (src -> hasAudioFromSameLabel())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Tracks from same label"), this, SLOT(openTracksFromSameLabel()));
-
-    //            if (src -> hasAlbumsFromSameLabel())
-    //                menu.addAction(QIcon(/*":/active_tab"*/), LSTR("Albums from same label"), this, SLOT(openAlbumsFromSameLabel()));
-
-    //            menu.addSeparator();
-    //        }
 }
 
 void ItemToolbarFeatures::loadMoreItem() {

@@ -9,12 +9,7 @@
 #define ICO_PREFIX LSTR(":/item_tools/item_")
 #define PERM_ERROR(name) "Permissions required" << name << "required on some additional permissions or this service not respondable to this action";
 #define ADD_FEATURE_ITEM(postfix, ico, desc, slot, check_func) \
-    features.insert((intptr_t)(void *)(&slot), ItemToolbarFeature(toolbar, ICO_PREFIX + ico + postfix, desc, this, SLOT(slot()), &check_func))
-
-//    features.insert(
-//        &openAudioforItem,
-//        ItemToolbarFeature(toolbar, ICO_PREFIX % LSTR("more") % postfix, LSTR("Load more"), this, SLOT(ItemToolbarFeatures::openAudioforItem()), &ISource::hasSimillarAudioByAudio)
-//    );
+    features.insert((quint64)(void *)(&slot), ItemToolbarFeature(toolbar, ICO_PREFIX + ico + postfix, desc, this, SLOT(slot()), &check_func))
 
 namespace Presentation {
     struct ItemToolbarFeature {
@@ -36,7 +31,8 @@ namespace Presentation {
     protected:
         QToolBar * toolbar;
 
-        QHash<intptr_t, ItemToolbarFeature> features;
+        QAction * more_items_btn;
+        QHash<quint64, ItemToolbarFeature> features;
 
         virtual Core::IItem * targetItem() = 0;
         virtual Views::IView * targetView() = 0;
