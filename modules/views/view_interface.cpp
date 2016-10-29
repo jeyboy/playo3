@@ -100,6 +100,7 @@ IView::IView(IModel * newModel, QWidget * parent)
     ////    setRowHidden(0, rootIndex(), true);
 
     ////    expandAll();
+    connect(selectionModel(), SIGNAL(currentRowChanged(QModelIndex,QModelIndex)), this, SLOT(onCurrentRowChanging(QModelIndex,QModelIndex)));
 }
 
 IView::~IView() {
@@ -291,6 +292,11 @@ void IView::runItemCmd(IItem * it) {
         mdl -> fetchMore(index(item));
     else
         mdl -> fetchMore(index(item -> parent()));
+}
+
+void IView::onCurrentRowChanging(QModelIndex,QModelIndex) {
+    if (Presentation::Dockbars::obj().activeView() == this)
+        Presentation::ToolBars::obj().selectedItemFeatures() -> updateToolbar();
 }
 
 void IView::openLocation() {

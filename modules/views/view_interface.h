@@ -109,6 +109,7 @@ namespace Views {
         void runItemCmd(IItem * it = 0);
 
     protected slots:
+        void onCurrentRowChanging(QModelIndex,QModelIndex);
         void updateRemovingBlockation(bool isBlocked) { block_deletion = isBlocked; }
         inline void onDoubleClick(const QModelIndex node) {
             if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
