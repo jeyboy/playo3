@@ -19,6 +19,11 @@ public:
     virtual bool isTransparent() { return true; }
 
     QImage loadableTabIcon() { return QImage(QStringLiteral(":/download_on")); }
+    virtual QImage background() {
+        QImage img = IStylesheets::background();
+        img.invertPixels();
+        return img;
+    }
 
     inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }
 

@@ -52,7 +52,6 @@ namespace Controls {
 
         uint titleHeight;
         int doubleBorderWidth, halfBorderWidth;
-        QPixmap * background;
         bool resizeFlagX, resizeFlagY, moveFlag, inAction;
         bool childInAction, skipChildAction;
         bool atBottom, atLeft, atRight, atTop;

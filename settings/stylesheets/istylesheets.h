@@ -7,6 +7,8 @@
 #include <qwidget.h>
 #include <qstyle.h>
 
+#define BACKGROUN_IMG QStringLiteral(":main")
+
 class IStylesheets {
 protected:
     QString _sliderStyles();
@@ -33,6 +35,7 @@ public:
     virtual bool isTransparent() { return false; }
 
     virtual QImage loadableTabIcon() { return QImage(); }
+    virtual QImage background() { return QImage(BACKGROUN_IMG); }
 
     // background colors
     virtual inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }

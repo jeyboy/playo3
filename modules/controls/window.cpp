@@ -7,11 +7,10 @@ using namespace Controls;
 
 MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     titleHeight(30), doubleBorderWidth(Settings::currentStyle -> borderWidth * 2),
-    halfBorderWidth(Settings::currentStyle -> borderWidth / 2), background(new QPixmap(QStringLiteral(":main"))),
+    halfBorderWidth(Settings::currentStyle -> borderWidth / 2),
      resizeFlagX(false), resizeFlagY(false), moveFlag(false), inAction(false),
      childInAction(false), skipChildAction(false)
-{
-
+{    
     setContentsMargins(doubleBorderWidth, doubleBorderWidth + titleHeight, doubleBorderWidth, doubleBorderWidth);
     setMouseTracking(true);
 
@@ -47,9 +46,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 //    setDocumentMode(true);
 }
 
-MainWindow::~MainWindow() {
-    delete background;
-}
+MainWindow::~MainWindow() {}
 
 void MainWindow::locationCorrection() {
     int width, height;
@@ -284,7 +281,7 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             }
 
             painter.setPen(isResizing ? Settings::currentStyle -> resizePen : Settings::currentStyle -> bevelPen);
-            painter.drawPixmap(backRect, *background);
+            painter.drawImage(backRect, Settings::currentStyle -> background());
             painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             painter.restore();
         break; }
@@ -297,7 +294,7 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             painter.setBrush(Settings::currentStyle -> mainBrush);
             painter.setPen(Qt::NoPen);
             painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
-            painter.drawPixmap(backRect, *background);
+            painter.drawImage(backRect, Settings::currentStyle -> background());
             painter.restore();
         break; }
 
