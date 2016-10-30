@@ -65,7 +65,7 @@ namespace Models {
         bool isDeleteFile() { return flags & mpf_del_file; }
         bool isCommon() { return flags & mpf_common; }
 
-        bool isConfigurable() { return flags & (mpf_common - 1); }
+        bool isConfigurable() { return (flags & (mpf_common - 1)) > 0; }
         bool isTabConfigurable() { return flags & mpf_tab_configurable; }
         bool isSourceConfigurable() { return flags & mpf_source_configurable; }
         bool isStreamConfigurable() { return flags & mpf_stream_configurable; }

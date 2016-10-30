@@ -379,21 +379,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QModelIndex ind = indexAt(event -> pos());
     IItem * itm = mdl -> item(ind);   
 
-// INFO: moved to Presentation::ToolBars::obj().selectedItemFeatures()
-//    // if clicked not at the item and root container has more items script or clicked on item
-//    if (ind.isValid() || itm -> hasMoreItems()) {
-//        if (!itm -> isContainer()) itm = itm -> parent();
-
-//        if (itm && itm -> hasMoreItems()) {
-//            menu.addAction(
-//                QIcon(LSTR(":/more")), LSTR("Load more items"),
-//                this, SLOT(runItemCmd()), QKeySequence(tr("Ctrl+M", "More items"))
-//            );
-//        }
-//    }
-
-    menu.addSeparator();
-
     menu.addAction(QIcon(LSTR(":/search")), LSTR("Find"), parent(), SLOT(showSearch()), QKeySequence(Qt::CTRL + Qt::Key_F));
     menu.addSeparator();
 
@@ -412,31 +397,10 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addAction(QIcon(LSTR(":/copy")), LSTR("Copy name to clipboard"), this, SLOT(copyToClipboard()), QKeySequence(tr("Ctrl+C", "Copy")));
         menu.addSeparator();
 
-        if (!ind.data(IFULLPATH).toString().isEmpty())
+        if (!ind.data(IFULLPATH).toString().isEmpty()) {
             menu.addAction(QIcon(LSTR(":/open")), LSTR("Open location"), this, SLOT(openLocation()));
-
-//        if (ind.data(IREMOTE).toBool()) {
-            //    openAct = new QAction(QIcon(":/refresh"), "Refresh", this);
-            //    connect(openAct, SIGNAL(triggered(bool)), model, SLOT(refresh()));
-            //    actions.append(openAct);
-
-            //    if (model -> getApi() != 0) {
-            //        openAct = new QAction(QIcon(":/refresh"), "Friends (groups) audio", this);
-            //        connect(openAct, SIGNAL(triggered(bool)), QApplication::activeWindow(), SLOT(showVKRelTabDialog()));
-            //        actions.append(openAct);
-            //    }
-
-//            if (mdl -> containerType() == vk) {
-//                actions.append((act = new QAction(QIcon(":/refresh"), "Parse/Refresh Wall", this)));
-//                connect(act, SIGNAL(triggered(bool)), mdl, SLOT(refreshWall()));
-//            }
-
-//            sepAct = new QAction(this);
-//            sepAct -> setSeparator(true);
-//            actions.append(sepAct);
-//        }
-
-        menu.addSeparator();
+            menu.addSeparator();
+        }
     }
 
     menu.addAction(
