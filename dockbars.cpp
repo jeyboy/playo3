@@ -306,34 +306,26 @@ void Dockbars::showViewSettingsDialog(DockBar * bar) {
 //}
 
 void Dockbars::updateActiveTabIcon(bool isFloating) {
+    qDebug() << "*********** updateActiveTabIcon";
     if (isFloating) return;
     if (!played) return;
 
-    if (lastTabData.tabbar)//    if (lastTabData.index != -1)
+    qDebug() << "*********** updateActiveTabIcon" << "1";
+
+    if (lastTabData.tabbar) {//    if (lastTabData.index != -1)
         lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
+        qDebug() << "*********** updateActiveTabIcon" << "2";
+    }
 
     TabifyParams tabData = played -> tabIndex();
 
     if (tabData.index != -1) {
+        qDebug() << "*********** updateActiveTabIcon" << "3";
         tabData.tabbar -> setTabIcon(tabData.index, QIcon(LSTR(":played_tab")));
         tabData.tabbar -> setIconSize(QSize(14, 14));
     }
 
     lastTabData = tabData;
-
-//    TabifyParams tabData = played -> tabIndex();
-
-//    if (tabData.index != -1) {
-//        tabData.tabbar -> setTabIcon(tabData.index, QIcon(LSTR(":played_tab")));
-//        tabData.tabbar -> setIconSize(QSize(14, 14));
-//    }
-
-//    if (tabData == lastTabData) return;
-
-//    if (lastTabData.index != -1)
-//        lastTabData.tabbar -> setTabIcon(lastTabData.index, QIcon());
-
-//    lastTabData = tabData;
 }
 
 void Dockbars::updateAllViews() { // update for item height

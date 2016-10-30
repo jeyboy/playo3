@@ -97,17 +97,21 @@ void ItemToolbarFeatures::updateToolbar() {
     Core::IItem * item = targetItem();
 
     if (item) {
-        show = item -> parent() -> hasMoreItems()/* || it -> hasMoreItems()*/;
+        IItem * parent_item = item -> parent();
+
+        show = parent_item && parent_item -> hasMoreItems()/* || it -> hasMoreItems()*/;
         more_items_btn -> setVisible(show);
 
-        Core::ISource * source = Web::Apis::source(item -> dataType());
+        if (!item -> isContainer()) {
+            Core::ISource * source = Web::Apis::source(item -> dataType());
 
-        if (source) {
-            for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
-                if (feature.value().check_func) {
-                    bool is_valid = (*source.*feature.value().check_func)();
-                    feature.value().btn -> setVisible(is_valid);
-                    show |= is_valid;
+            if (source) {
+                for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
+                    if (feature.value().check_func) {
+                        bool is_valid = (*source.*feature.value().check_func)();
+                        feature.value().btn -> setVisible(is_valid);
+                        show |= is_valid;
+                    }
                 }
             }
         }
@@ -128,20 +132,22 @@ void ItemToolbarFeatures::appendToMenu(QMenu * menu) {
             menu -> addSeparator();
         }
 
-        Core::ISource * source = Web::Apis::source(item -> dataType());
+        if (!item -> isContainer()) {
+            Core::ISource * source = Web::Apis::source(item -> dataType());
 
-        if (source) {
-            for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
-                if (feature.value().check_func && (*source.*feature.value().check_func)()) {
-                    const char * slot = &(feature.value().slot[0]);
+            if (source) {
+                for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
+                    if (feature.value().check_func && (*source.*feature.value().check_func)()) {
+                        const char * slot = &(feature.value().slot[0]);
 
-                    menu -> addAction(
-                        QIcon(feature.value().ico), feature.value().desc,
-                        this, slot
-                    );
+                        menu -> addAction(
+                            QIcon(feature.value().ico), feature.value().desc,
+                            this, slot
+                        );
+                    }
                 }
+                menu -> addSeparator();
             }
-            menu -> addSeparator();
         }
     }
 }
