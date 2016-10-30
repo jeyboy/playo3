@@ -34,27 +34,31 @@
        <string>Friends</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QLineEdit" name="friendId"/>
-       </item>
-       <item row="0" column="1">
+       <item row="2" column="0">
         <widget class="QPushButton" name="friendById">
          <property name="text">
           <string>Find by id or permalink</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="friendName"/>
-       </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QPushButton" name="friendByName">
          <property name="text">
           <string>Find by name</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="2" column="2">
+        <widget class="QPushButton" name="friendInList">
+         <property name="text">
+          <string>Find in list</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="3">
+        <widget class="QLineEdit" name="friendPredicate"/>
+       </item>
+       <item row="3" column="0" colspan="3">
         <widget class="QListWidget" name="friendsList"/>
        </item>
       </layout>
@@ -64,19 +68,6 @@
        <string>Groups</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLineEdit" name="groupId"/>
-       </item>
-       <item row="0" column="1">
-        <widget class="QPushButton" name="groupById">
-         <property name="text">
-          <string>Find by id or permalink</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="groupName"/>
-       </item>
        <item row="1" column="1">
         <widget class="QPushButton" name="groupByName">
          <property name="text">
@@ -84,7 +75,24 @@
          </property>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2">
+       <item row="1" column="0">
+        <widget class="QPushButton" name="groupById">
+         <property name="text">
+          <string>Find by id or permalink</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="groupInList">
+         <property name="text">
+          <string>Find in list</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" colspan="3">
+        <widget class="QLineEdit" name="groupPredicate"/>
+       </item>
+       <item row="2" column="0" colspan="3">
         <widget class="QListWidget" name="groupsList"/>
        </item>
       </layout>

@@ -38,6 +38,8 @@ private slots:
     void on_friendById_clicked();
     void on_groupById_clicked();
     void onFocusChanged(QWidget * old, QWidget * now);
+    void on_friendInList_clicked();
+    void on_groupInList_clicked();
 };
 
 #endif // RELATIONS_DIALOG_H

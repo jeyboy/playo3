@@ -37,13 +37,9 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
         ui -> friendsList -> sortItems();
 
         bool by_friend_id = api -> hasSearchByFriendId();
-
-        ui -> friendId -> setVisible(by_friend_id);
         ui -> friendById -> setVisible(by_friend_id);
 
         bool by_friend_name = api -> hasSearchByFriendName();
-
-        ui -> friendName -> setVisible(by_friend_name);
         ui -> friendByName -> setVisible(by_friend_name);
     }
     else ui -> tabWidget -> setTabEnabled(0, false);
@@ -53,13 +49,9 @@ RelationsDialog::RelationsDialog(ISource * currApi, QWidget * parent)
         ui -> groupsList -> sortItems();
 
         bool by_group_id = api -> hasSearchByGroupId();
-
-        ui -> groupId -> setVisible(by_group_id);
         ui -> groupById -> setVisible(by_group_id);
 
         bool by_group_name = api -> hasSearchByGroupName();
-
-        ui -> groupName -> setVisible(by_group_name);
         ui -> groupByName -> setVisible(by_group_name);
     }
     else ui -> tabWidget -> setTabEnabled(1, false);
@@ -96,7 +88,7 @@ void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
 void RelationsDialog::on_friendById_clicked() {
     ui -> errorStr -> setVisible(false);
     ui -> friendsList -> clear();
-    QList<Linkable> friends = api -> findFriendsById(ui -> friendId -> text());
+    QList<Linkable> friends = api -> findFriendsById(ui -> friendPredicate -> text());
     if (friends.isEmpty()) {
         ui -> errorStr -> setVisible(true);
         ui -> errorStr -> setText(EMPTY_RESULT_MESSAGE);
@@ -107,7 +99,7 @@ void RelationsDialog::on_friendById_clicked() {
 void RelationsDialog::on_friendByName_clicked() {
     ui -> errorStr -> setVisible(false);
     ui -> friendsList -> clear();
-    QList<Linkable> friends = api -> findFriendsByName(ui -> friendName -> text());
+    QList<Linkable> friends = api -> findFriendsByName(ui -> friendPredicate -> text());
 
     if (friends.isEmpty()) {
         ui -> errorStr -> setVisible(true);
@@ -119,7 +111,7 @@ void RelationsDialog::on_friendByName_clicked() {
 void RelationsDialog::on_groupById_clicked() {
     ui -> errorStr -> setVisible(false);
     ui -> groupsList -> clear();
-    QList<Linkable> groups = api -> findGroupsById(ui -> groupId -> text());
+    QList<Linkable> groups = api -> findGroupsById(ui -> groupPredicate -> text());
 
     if (groups.isEmpty()) {
         ui -> errorStr -> setVisible(true);
@@ -131,7 +123,7 @@ void RelationsDialog::on_groupById_clicked() {
 void RelationsDialog::on_groupByName_clicked() {
     ui -> errorStr -> setVisible(false);
     ui -> groupsList -> clear();
-    QList<Linkable> groups = api -> findGroupsByName(ui -> groupName -> text());
+    QList<Linkable> groups = api -> findGroupsByName(ui -> groupPredicate -> text());
     if (groups.isEmpty()) {
         ui -> errorStr -> setVisible(true);
         ui -> errorStr -> setText(EMPTY_RESULT_MESSAGE);
@@ -142,20 +134,31 @@ void RelationsDialog::on_groupByName_clicked() {
 void RelationsDialog::onFocusChanged(QWidget * /*old*/, QWidget * now) {
     default_btn -> setDefault(false);
 
-    bool fid = now == ui -> friendId;
-    if (fid) default_btn = ui -> friendById;
+    bool fid = now == ui -> friendPredicate;
+    if (fid) default_btn = ui -> friendInList;
 
-    bool fname = now == ui -> friendName;
-    if (fname) default_btn = ui -> friendByName;
+    bool gid = now == ui -> groupPredicate;
+    if (gid) default_btn = ui -> groupInList;
 
-    bool gid = now == ui -> groupId;
-    if (gid) default_btn = ui -> groupById;
 
-    bool gname = now == ui -> groupName;
-    if (gname) default_btn = ui -> groupByName;
-
-    if (!(fid | fname | gid | gname))
+    if (!(fid | gid))
         default_btn = ui -> cancelButton;
 
     default_btn -> setDefault(true);
+}
+
+void RelationsDialog::on_friendInList_clicked() {
+    QString predicate = ui -> friendPredicate -> text();
+    bool is_empty = predicate.isEmpty();
+
+    for(int index = 0; index < ui -> friendsList -> count(); index++)
+        ui -> friendsList -> setRowHidden(index, !is_empty && !ui -> friendsList -> item(index) -> text().contains(predicate, Qt::CaseInsensitive));
+}
+
+void RelationsDialog::on_groupInList_clicked() {
+    QString predicate = ui -> groupPredicate -> text();
+    bool is_empty = predicate.isEmpty();
+
+    for(int index = 0; index < ui -> groupsList -> count(); index++)
+        ui -> groupsList -> setRowHidden(index, !is_empty && !ui -> groupsList -> item(index) -> text().contains(predicate, Qt::CaseInsensitive));
 }
