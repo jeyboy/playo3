@@ -64,10 +64,21 @@ namespace Presentation {
         inline void setEqualizerSettings(const QJsonObject & settings) { equalizer -> setSettings(settings); }
         inline void setIconsSize(int newSize) {
             QList<QToolBar *> bars = toolbars();
-            QSize size(newSize, newSize);
+            if (bars.isEmpty()) return;
 
-            for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++)
+            QSize size(newSize, newSize);
+            bool growing = newSize > bars.first() -> iconSize().width();
+
+            for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
                 (*bar) -> setIconSize(size);
+
+                if (growing) { // INFO: sometimes buttons dont scaled up automatically
+                    QList<QToolButton *> buttons = (*bar) -> findChildren<QToolButton *>();
+                    for(QList<QToolButton *>::Iterator button = buttons.begin(); button != buttons.end(); button++) {
+                        (*button) -> setIconSize(size);
+                    }
+                }
+            }
         }
 
         inline void setContainer(QMainWindow * ct) { container = ct; }
