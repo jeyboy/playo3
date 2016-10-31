@@ -55,6 +55,7 @@ namespace Views {
         inline bool isAutoPlayNext() const { return settings().isAutoPlayNext(); }
         inline bool isCommon() const { return settings().isCommon(); }
         inline bool isConfigurable() const { return settings().isConfigurable(); }
+        inline bool isRefresheable() const { return true; } // TODO: update me
         inline bool isSearch() const { return settings().data_type == dt_search; }
         inline bool isStream() const { return DST_IS_STREAM(settings().data_type); }
 

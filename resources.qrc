@@ -180,6 +180,8 @@
         <file alias="item_video_playlist_pl">images/elements/item_tools/pl/item_video_playlist.png</file>
         <file alias="item_artist_sim_audio">images/elements/item_tools/sl/item_singer_sim_song.png</file>
         <file alias="item_artist_sim_audio_pl">images/elements/item_tools/pl/item_singer_sim_song.png</file>
+        <file alias="item_tab_refresh">images/elements/item_tools/sl/item_tab_refresh.png</file>
+        <file alias="item_tab_refresh_pl">images/elements/item_tools/pl/item_tab_refresh.png</file>
     </qresource>
     <qresource prefix="/sources">
         <file alias="add">images/elements/sources/add.png</file>

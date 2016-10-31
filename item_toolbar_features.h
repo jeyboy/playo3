@@ -42,6 +42,7 @@ namespace Presentation {
         QToolBar * toolbar;
 
         QAction * more_items_btn;
+        QAction * refresh_tab_btn;
         QHash<quint64, ItemToolbarFeature> features;
 
         virtual Core::IItem * targetItem() = 0;
@@ -59,6 +60,7 @@ namespace Presentation {
         void appendToMenu(QMenu * menu);
 
         void loadMoreItem();
+        void refreshTab();
 
         void openAudioforItem();
         void openAudioAlbumforItem();

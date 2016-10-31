@@ -5,7 +5,6 @@
 #include "youtube_playlist.h"
 #include "youtube_video.h"
 
-//#include <qregexp.h>
 ////#include "modules/core/web/interfaces/teu_auth.h"
 ////#include "modules/core/web/apis/service/recaptcha.h"
 

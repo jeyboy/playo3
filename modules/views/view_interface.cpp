@@ -373,8 +373,10 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
         menu.addSeparator();
     }
 
-    menu.addAction(QIcon(LSTR(":/refresh")), LSTR("Refresh items"), mdl, SLOT(refresh()));
-    menu.addSeparator();
+    if (isRefresheable()) {
+        menu.addAction(QIcon(LSTR(":/refresh")), LSTR("Refresh items"), mdl, SLOT(refresh()));
+        menu.addSeparator();
+    }
 
     QModelIndex ind = indexAt(event -> pos());
     IItem * itm = mdl -> item(ind);   

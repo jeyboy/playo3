@@ -8,6 +8,8 @@
 #include "isource_perm_flags.h"
 #include "modules/core/web/utils/web_manager.h"
 
+#define UNIX_TIME QDateTime::currentMSecsSinceEpoch() / 1000
+
 #define SOURCE_API_AUTH_JSON QStringLiteral("api_auth")
 #define SOURCE_SITE_AUTH_JSON QStringLiteral("site_auth")
 

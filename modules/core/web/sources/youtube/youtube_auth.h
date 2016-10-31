@@ -5,7 +5,7 @@
 #include "modules/core/interfaces/iuser_interaction.h"
 //#include "modules/core/web/services/recaptcha.h"
 
-#define CALC_EXPIRE(exp) QDateTime::currentMSecsSinceEpoch() / 1000 + exp
+#define CALC_EXPIRE(exp) UNIX_TIME + exp
 
 namespace Core {
     namespace Web {

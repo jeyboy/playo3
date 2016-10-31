@@ -5,6 +5,7 @@ using namespace Presentation;
 ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar) : toolbar(toolbar) {}
 
 void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
+    refresh_tab_btn = toolbar -> addAction(QIcon(ICO_PREFIX % LSTR("tab_refresh") % postfix), LSTR("Refresh tab for ") % sentence(), this, SLOT(refreshTab()));
     more_items_btn = toolbar -> addAction(QIcon(ICO_PREFIX % LSTR("more") % postfix), LSTR("Load more"), this, SLOT(loadMoreItem()));
 
     toolbar -> addSeparator();
@@ -102,16 +103,21 @@ void ItemToolbarFeatures::updateToolbar() {
         show = parent_item && parent_item -> hasMoreItems()/* || it -> hasMoreItems()*/;
         more_items_btn -> setVisible(show);
 
+        IView * view = targetView();
+        if (view) {
+            bool is_valid = view -> isRefresheable();
+            refresh_tab_btn -> setVisible(is_valid);
+            show |= is_valid;
+        }
+
         if (!item -> isContainer()) {
             Core::ISource * source = Web::Apis::source(item -> dataType());
 
-            if (source) {
-                for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
-                    if (feature.value().check_func) {
-                        bool is_valid = (*source.*feature.value().check_func)();
-                        feature.value().btn -> setVisible(is_valid);
-                        show |= is_valid;
-                    }
+            for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
+                if (feature.value().check_func) {
+                    bool is_valid = source && (*source.*feature.value().check_func)();
+                    feature.value().btn -> setVisible(is_valid);
+                    show |= is_valid;
                 }
             }
         }
@@ -135,19 +141,17 @@ void ItemToolbarFeatures::appendToMenu(QMenu * menu) {
         if (!item -> isContainer()) {
             Core::ISource * source = Web::Apis::source(item -> dataType());
 
-            if (source) {
-                for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
-                    if (feature.value().check_func && (*source.*feature.value().check_func)()) {
-                        const char * slot = &(feature.value().slot[0]);
+            for(QHash<quint64, ItemToolbarFeature>::Iterator feature = features.begin(); feature != features.end(); feature++) {
+                if (source && feature.value().check_func && (*source.*feature.value().check_func)()) {
+                    const char * slot = &(feature.value().slot[0]);
 
-                        menu -> addAction(
-                            QIcon(feature.value().ico), feature.value().desc,
-                            this, slot
-                        );
-                    }
+                    menu -> addAction(
+                        QIcon(feature.value().ico), feature.value().desc,
+                        this, slot
+                    );
                 }
-                menu -> addSeparator();
             }
+            menu -> addSeparator();
         }
     }
 }
@@ -159,6 +163,11 @@ void ItemToolbarFeatures::loadMoreItem() {
         if (it)
             view -> runItemCmd(it);
     }
+}
+void ItemToolbarFeatures::refreshTab() {
+    IView * view = targetView();
+    if (view && view -> isRefresheable())
+        view -> refresh();
 }
 
 void ItemToolbarFeatures::openAudioforItem() {
