@@ -62,20 +62,24 @@ namespace Core {
                     switch(perm) {
                         case sf_site:
                         case sf_api: {
+                            QUrlQuery query = videoQuery({
+                                {tkn_video_embedable, const_true}, // any // true
+                                {tkn_type, LSTR("video")}, // channel // playlist // video
+                            });
+
+                            if (user_id == apiUserID())
+                                query.addQueryItem(LSTR("forMine"), const_true);
+                            else
+                                query.addQueryItem(LSTR("channelId"), user_id);
+
                             QueriableResponse response = pRequest(
-                                baseUrlStr(qst_api, path_search, {
-                                    videoQuery({
-                                       {tkn_video_embedable, const_true}, // any // true
-                                       {tkn_type, LSTR("video")}, // channel // playlist // video
-                                       {LSTR("channelId"), user_id}
-                                    })
-                                }),
+                                baseUrlStr(qst_api, path_search, query),
                                 call_type_json,
                                 rules(QString())
                             );
 
                             initDuration(response.content);
-                            return prepareBlock(dmt_video, cmd_mtd_unknown, response);
+                            return prepareBlock(dmt_video, cmd_mtd_video_by_user, response);
                         break;}
                         default: Logger::obj().write(name(), "videoByUser", Logger::log_error);
                     }

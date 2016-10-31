@@ -15,6 +15,10 @@ namespace Core {
             public:
                 inline QString name() const { return val_name; }
                 inline DataSubType sourceType() const { return dt_web_youtube; }
+
+                void userInfoAsync(const QString & user_id, Func * func) {
+                    ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
+                }
             };
         }
     }

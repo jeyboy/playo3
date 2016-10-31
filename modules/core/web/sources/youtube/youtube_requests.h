@@ -77,6 +77,7 @@ namespace Core {
                         setApiToken(token);
                         setApiRefreshToken(refresh_token);
                         setApiExpiration(expiration);
+                        setApiUserID(LSTR("-1"));
                         return true;
                     }
 
@@ -154,6 +155,34 @@ namespace Core {
                 }
 
                 inline QString refresh(const QString & path, const DataMediaType & /*itemMediaType*/) { return idToUrl(path); }
+
+                QJsonValue userInfo(const QString & user_id) {
+                    QJsonArray blocks;
+
+//                    QJsonObject json = audioByUser(user_id).toObject();
+//                    json.insert(tkn_dir_name, LSTR("Tracks"));
+//                    blocks << json;
+
+//                    json = audioByUserLikes(user_id).toObject();
+//                    json.insert(tkn_dir_name, LSTR("Likes"));
+//                    blocks << json;
+
+//                    json = playlistsByUser(user_id).toObject();
+//                    json.insert(tkn_dir_name, LSTR("Playlists"));
+//                    blocks << json;
+
+//                    if (user_id == userID()) { // ignore socials for not current user
+//                        clearFriends();
+//                        QThread::msleep(REQUEST_DELAY);
+//                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowings(user_id).toObject()));
+//                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowers(user_id).toObject()));
+//                        clearGroups();
+//                        QThread::msleep(REQUEST_DELAY);
+//                        jsonToGroups(Groupable::linkables, EXTRACT_ITEMS(groupsByUser(user_id).toObject()));
+//                    }
+
+                    return blocks;
+                }
             };
         }
     }
