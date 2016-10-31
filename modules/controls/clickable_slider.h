@@ -22,13 +22,14 @@ namespace Controls {
         ~ClickableSlider() { delete slider_style; }
     public slots:
         void setValue(int val) {
-            if (value() == val) // fix when def value eq to set value
+            if (value() == val) //INFO: patch: when def value eq to set value
                 valueChanged(val);
             QSlider::setValue(val);
         }
         void setValueSilently(int val) {
             blockSignals(true);
             setValue(val);
+            valueChanged(val); // INFO: patch: changing of volume on unmute with 0 volume value
             blockSignals(false);
         }
     protected slots:

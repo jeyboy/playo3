@@ -16,7 +16,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_search, {
                             videoQuery({
-                               {tkn_video_embedable, LSTR("true")}, // any // true
+                               {tkn_video_embedable, const_true}, // any // true
                                {tkn_type, LSTR("video")}, // channel // playlist // video
                            //  Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
                            //  search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
@@ -43,7 +43,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_search, {
                             videoQuery({
-                                {tkn_video_embedable, LSTR("true")}, // any // true
+                                {tkn_video_embedable, const_true}, // any // true
                                 {tkn_type, LSTR("video")}, // channel // playlist // video
                                 {LSTR("videoCategoryId"), category_id}
                             })
@@ -65,7 +65,7 @@ namespace Core {
                             QueriableResponse response = pRequest(
                                 baseUrlStr(qst_api, path_search, {
                                     videoQuery({
-                                       {tkn_video_embedable, LSTR("true")}, // any // true
+                                       {tkn_video_embedable, const_true}, // any // true
                                        {tkn_type, LSTR("video")}, // channel // playlist // video
                                        {LSTR("channelId"), user_id}
                                     })

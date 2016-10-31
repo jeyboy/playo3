@@ -56,7 +56,7 @@ namespace Core {
                             for(int step = 0; step < limiter; step++) {
                                 std::initializer_list<std::pair<QString, QVariant> > params = {
                                     { LSTR("entries"), (QStringList)track_ids.mid(step * YANDEX_IDS_PER_REQUEST, YANDEX_IDS_PER_REQUEST) },
-                                    { LSTR("strict"), LSTR("true") }
+                                    { LSTR("strict"), const_true }
                                 };
 
                                 saRequest(
@@ -152,7 +152,7 @@ namespace Core {
                             {
                                 {tkn_owner, owner_uid},
                                 {LSTR("kinds"), kinds},
-                                {LSTR("light"), LSTR("true")}
+                                {LSTR("light"), const_true}
                             }
                         ),
                         call_type_json, 0, proc_json_extract,

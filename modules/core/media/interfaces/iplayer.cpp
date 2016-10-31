@@ -109,5 +109,5 @@ void IPlayer::mute(bool enable) {
         setVolume(0);
         volumeVal = val;
     }
-    else setVolume(volumeVal);
+    else setVolume(volumeVal == 0 ? VOLUME_MULTIPLIER : volumeVal);
 }

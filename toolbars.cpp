@@ -433,7 +433,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(45, 30);
     slider -> setMaximum(10000);
-    slider -> setValue(10000);
+    slider -> setValue(VOLUME_MULTIPLIER);
 
     PlayerFactory::obj().registerCallback(call_in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
     PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));

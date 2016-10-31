@@ -22,7 +22,7 @@ namespace Core {
                                 { LSTR("st.cmd"),       LSTR("userMain") },
                                 { LSTR("st.vpl.id"),    uid },
                                 { LSTR("st.vpl.mi"),    LSTR("3") },
-                                { LSTR("st.vpl.mini"),  LSTR("false") }
+                                { LSTR("st.vpl.mini"),  const_false }
                             }
                         ),
                         call_type_html, 0, proc_video2, QStringList(),

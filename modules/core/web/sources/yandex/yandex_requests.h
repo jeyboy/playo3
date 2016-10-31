@@ -217,7 +217,7 @@ namespace Core {
                             return QUrlQuery(
                                 QString(
                                     LSTR("external-domain=") % LSTR("music.yandex.ua") %
-                                    LSTR("&overembed=") % LSTR("false") %
+                                    LSTR("&overembed=") % const_false %
                                     LSTR("&lang=") % siteLocale(val_default_locale)
                                 )
                             );

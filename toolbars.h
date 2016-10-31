@@ -67,16 +67,14 @@ namespace Presentation {
             if (bars.isEmpty()) return;
 
             QSize size(newSize, newSize);
-            bool growing = newSize > bars.first() -> iconSize().width();
 
             for(QList<QToolBar *>::Iterator bar = bars.begin(); bar != bars.end(); bar++) {
                 (*bar) -> setIconSize(size);
 
-                if (growing) { // INFO: sometimes buttons dont scaled up automatically
-                    QList<QToolButton *> buttons = (*bar) -> findChildren<QToolButton *>();
-                    for(QList<QToolButton *>::Iterator button = buttons.begin(); button != buttons.end(); button++) {
-                        (*button) -> setIconSize(size);
-                    }
+                // INFO: sometimes buttons dont scaled automatically
+                QList<QToolButton *> buttons = (*bar) -> findChildren<QToolButton *>();
+                for(QList<QToolButton *>::Iterator button = buttons.begin(); button != buttons.end(); button++) {
+                    (*button) -> setIconSize(size);
                 }
             }
         }

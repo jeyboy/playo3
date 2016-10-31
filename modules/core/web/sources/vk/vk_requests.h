@@ -299,7 +299,7 @@ namespace Core {
                                         { LSTR("act"),          LSTR("load_silent") },
                                         { LSTR("al"),           LSTR("1") },
                                         { LSTR("album_id"),     LSTR("-2") },
-                                        { LSTR("band"),         LSTR("true") },
+                                        { LSTR("band"),         const_true },
                                         { LSTR("owner_id"),     user_id }
                                     }
                                 ),

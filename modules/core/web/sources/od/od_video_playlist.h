@@ -79,7 +79,7 @@ namespace Core {
                             {
                                 { LSTR("cmd"),          LSTR("VideoVitrinaMain") },
                                 { LSTR("st.cmd"),       LSTR("userMain") },
-                                { LSTR("st.vpl.mini"),  LSTR("false") },
+                                { LSTR("st.vpl.mini"),  const_false },
                                 { LSTR("st.vv_ft"),     vpl }
                             }
                         ),
@@ -109,7 +109,7 @@ namespace Core {
                             {
                                 { LSTR("cmd"),              LSTR("VideoVitrinaMain") },
                                 { LSTR("st.cmd"),           LSTR("userMain") },
-                                { LSTR("st.vpl.mini"),      LSTR("false") },
+                                { LSTR("st.vpl.mini"),      const_false },
                                 { LSTR("st.vv_albumId"),    album_id },
                                 { LSTR("st.vv_ft"),         LSTR("album") }
                             }

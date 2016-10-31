@@ -110,7 +110,7 @@ namespace Core {
                 }
 
 //                inline void setEmbedable(QUrlQuery & query) {
-//                    setParam(query, tkn_video_embedable, LSTR("true")); // any // true
+//                    setParam(query, tkn_video_embedable, const_true); // any // true
 //                    setParam(query, tkn_type, LSTR("video")); // channel // playlist // video
 //                }
 

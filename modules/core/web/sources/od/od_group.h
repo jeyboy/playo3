@@ -21,7 +21,7 @@ namespace Core {
                                     qst_site_group, LSTR("profile/%1/groups/mine").arg(user_id),
                                     {
                                         { LSTR("st.cmd"), LSTR("userGroups") },
-                                        { LSTR("st.vpl.mini"), LSTR("false") },
+                                        { LSTR("st.vpl.mini"), const_false },
                                     }
                                 ),
                         call_type_html, pageRules(LSTR("st.page"), offset, pages_limit), 0, proc_group1, QStringList(),
@@ -80,11 +80,11 @@ namespace Core {
                                 { LSTR("cmd"),          LSTR("PortalSearchResults") },
                                 { LSTR("st.cmd"),       LSTR("searchResult") },
                                 { LSTR("st.mode"),      LSTR("Groups") },
-                                { LSTR("st.vpl.mini"),  LSTR("false") },
+                                { LSTR("st.vpl.mini"),  const_false },
                                 { LSTR("st.grmode"),    LSTR("Groups") },
                                 { LSTR("st.posted"),    LSTR("set") },
                                 { LSTR("st.query"),     name },
-                                { LSTR("fetch"),        LSTR("false") }
+                                { LSTR("fetch"),        const_false }
                             }
                         ),
                         call_type_html, pageRules(LSTR("st.page"), offset, pages_limit), 0, proc_group2, QStringList(),

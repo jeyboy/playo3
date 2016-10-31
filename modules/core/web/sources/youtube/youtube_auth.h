@@ -51,9 +51,11 @@ namespace Core {
                 }
 
                 bool connectApi(QString & new_token, QString & refresh_token, qint64 & expire, QString & error) {
-                    QUrl form_url = authUrl();
+                    QUrl form_url;
+                    QByteArray payload;
 
                     while(true) { // add behaviour line for wrong wmail or password
+                        form_url = authUrl();
                         Response * resp = Manager::prepare() -> getFollowed(form_url);
                         Html::Document html = resp -> toHtml();
 
@@ -87,7 +89,6 @@ namespace Core {
                                 )) return false;
                             }
 
-                            QByteArray payload;
                             form -> serializeForm(form_url, payload, vals, Html::Tag::fsf_percent_encoding);
                             form_url.setPath(form_url.path() % LSTR("Xhr"));
                             resp = Manager::prepare() -> formFollowed(form_url, payload);
@@ -105,26 +106,33 @@ namespace Core {
                             query.addQueryItem(tkn_profile_info, JSON_STR(json, tkn_encoded_profile_info));
                             form_url.setQuery(query);
 
-                            resp = Manager::prepare() -> formFollowed(form_url);
+                            resp = Manager::prepare() -> formFollowed(form_url, payload);
                         } else {
                             error = LSTR("Validation of email failed");
                             return false;
                         }
 
-                        Html::Document choose_html = resp -> toHtml();
-                        Html::Tag * form = choose_html.findFirst("form");
+                        {
+                            Html::Document choose_html = resp -> toHtml();
+                            if (choose_html.findFirst("#gaia_loginform")) {
+                                error = LSTR("Login or password is incorrect");
+                                continue;
+                            }
 
-                        if (!form) {
-                            error = LSTR("Submit form did not found");
-                            Logger::obj().write(name(), error, Logger::log_error);
-                            return false;
+                            Html::Tag * form = choose_html.findFirst("form");
+
+                            if (!form) {
+                                error = LSTR("Submit form did not found");
+                                Logger::obj().write(name(), error, Logger::log_error);
+                                return false;
+                            }
+
+                            error = QString();
+                            //INFO: this request very sensitive to params and payload parts separation
+                            QByteArray payload;
+                            form -> serializeForm(form_url, payload, QHash<QString, QString> {{LSTR("submit_access"), const_true}, {LSTR("bgresponse"), LSTR("js_disabled")}}, Html::Tag::fsf_percent_encoding);
+                            form_url = Manager::prepare() -> form(form_url, payload) -> toRedirectUrl();
                         }
-
-                        error = QString();
-                        //INFO: this request very sensitive to params and payload parts separation
-                        QByteArray payload;
-                        form -> serializeForm(form_url, payload, QHash<QString, QString> {{LSTR("submit_access"), LSTR("true")}, {LSTR("bgresponse"), LSTR("js_disabled")}}, Html::Tag::fsf_percent_encoding);
-                        form_url = Manager::prepare() -> form(form_url, payload) -> toRedirectUrl();
 
                         QUrlQuery code_query = QUrlQuery(form_url.query());
                         QString code = code_query.queryItemValue(tkn_code);

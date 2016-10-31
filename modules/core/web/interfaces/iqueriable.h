@@ -96,7 +96,7 @@ namespace Core {
                     default: return false;
                 }
 
-                Logger::obj().endMark(QStringLiteral("sQuery") % (status ? "true" : "false"), arg -> request_url);
+                Logger::obj().endMark(QStringLiteral("sQuery") % (status ? const_true : "false"), arg -> request_url);
                 return status;
             }
 
@@ -260,7 +260,7 @@ namespace Core {
             }
 
 
-            virtual inline QString boolToStr(const bool & val) { return val ? QStringLiteral("true") : QStringLiteral("false"); }
+            virtual inline QString boolToStr(const bool & val) { return val ? const_true : const_false; }
             virtual inline QUrlQuery genDefaultParams(const QuerySourceType & /*stype*/ = qst_api) { return QUrlQuery(); }
 
             inline QString encodeStr(const QString & str) const { return QUrl::toPercentEncoding(str); }
