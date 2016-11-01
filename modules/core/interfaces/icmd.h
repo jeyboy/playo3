@@ -203,6 +203,8 @@ namespace Core {
             cmd_mtd_video_by_playlist,
             cmd_mtd_video_by_category,
 
+            cmd_mtd_video_channels_by_id,
+            cmd_mtd_video_channels_by_name,
             cmd_mtd_video_channels_by_user,
             cmd_mtd_video_channels_by_category,
 
@@ -279,6 +281,8 @@ namespace Core {
                 case cmd_mtd_video_by_category: return videoByCategory(params);
                 case cmd_mtd_video_recommendations: return videoRecommendations(params);
 
+                case cmd_mtd_video_channels_by_id: return videoChannelsById(params);
+                case cmd_mtd_video_channels_by_name: return videoChannelsByName(params);
                 case cmd_mtd_video_channels_by_user: return videoChannelsByUser(params);
                 case cmd_mtd_video_channels_by_category: return videoChannelsByCategory(params);
 
@@ -356,6 +360,9 @@ namespace Core {
         virtual QJsonValue videoByCategory(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
+
+        virtual QJsonValue videoChannelsById(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoChannelsByName(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoChannelsByUser(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoChannelsByCategory(const QUrlQuery & /*args*/) { return QJsonObject(); }
 

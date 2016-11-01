@@ -13,6 +13,8 @@
 #define YOUTUBE_ITEMS_LIMIT 100
 #define YOUTUBE_PAGES_LIMIT 10
 
+#define YOUTUBE_ITEMS QStringList() << tkn_items
+
 namespace Core {
     namespace Web {
         namespace Youtube {

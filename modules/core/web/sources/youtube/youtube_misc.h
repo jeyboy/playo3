@@ -124,22 +124,6 @@ namespace Core {
 
                 virtual bool refreshToken(const QString & refresh_token, QString & token, qint64 & expire) = 0;
 
-                inline Headers siteHeaders() {
-                    if (apiExpiration() < UNIX_TIME + 10) {
-                        QString token;
-                        qint64 expire;
-
-                        if (refreshToken(apiRefreshToken(), token, expire)) {
-                            setApiExpiration(expire);
-                            setApiToken(token);
-                        }
-                        else qCritical() << name() << "refresh of token is failed";
-                    }
-
-                    // Authorization: Bearer 1/fFBGRNJru1FQd44AzqT3Zg
-                    return Headers({{LSTR("Authorization"), LSTR("Bearer ") % apiToken()}});
-                }
-
                 // cpn
                 //                var l11 = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "-", "_"];
                 //                var l1I = "";
@@ -322,6 +306,22 @@ namespace Core {
                     }
                 }
             protected:
+                inline Headers authHeaders() {
+                    if (apiExpiration() < UNIX_TIME + 10) {
+                        QString token;
+                        qint64 expire;
+
+                        if (refreshToken(apiRefreshToken(), token, expire)) {
+                            setApiExpiration(expire);
+                            setApiToken(token);
+                        }
+                        else qCritical() << name() << "refresh of token is failed";
+                    }
+
+                    // Authorization: Bearer 1/fFBGRNJru1FQd44AzqT3Zg
+                    return Headers({{LSTR("Authorization"), LSTR("Bearer ") % apiToken()}});
+                }
+
                 QString idToUrl(const QString & id) {
                     QHash<int, FmtOption> options;
 

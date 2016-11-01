@@ -16,7 +16,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_search, {
                             videoQuery({
-                               {tkn_video_embedable, const_true}, // any // true
+//                               {tkn_video_embedable, const_true}, // any // true
                                {tkn_type, LSTR("video")}, // channel // playlist // video
                            //  Your request can also use the Boolean NOT (-) and OR (|) operators to exclude videos or to find videos that are associated with one of several
                            //  search terms. For example, to search for videos matching either "boating" or "sailing", set the q parameter value to boating|sailing.
@@ -41,13 +41,13 @@ namespace Core {
                 }
                 QJsonValue videoByCategory(const QString & category_id, const QString & token = QString()) {
                     QueriableResponse response = pRequest(
-                        baseUrlStr(qst_api, path_search, {
+                        baseUrlStr(qst_api, path_search,
                             videoQuery({
-                                {tkn_video_embedable, const_true}, // any // true
+//                                {tkn_video_embedable, const_true}, // any // true
                                 {tkn_type, LSTR("video")}, // channel // playlist // video
                                 {LSTR("videoCategoryId"), category_id}
                             })
-                        }),
+                        ),
                         call_type_json, rules(token)
                     );
 
@@ -63,19 +63,22 @@ namespace Core {
                         case sf_site:
                         case sf_api: {
                             QUrlQuery query = videoQuery({
-                                {tkn_video_embedable, const_true}, // any // true
+//                                {tkn_video_embedable, const_true}, // any // true
                                 {tkn_type, LSTR("video")}, // channel // playlist // video
                             });
 
-                            if (user_id == apiUserID())
+                            bool is_current_user = user_id == apiUserID();
+
+                            if (is_current_user)
                                 query.addQueryItem(LSTR("forMine"), const_true);
                             else
                                 query.addQueryItem(LSTR("channelId"), user_id);
 
                             QueriableResponse response = pRequest(
                                 baseUrlStr(qst_api, path_search, query),
-                                call_type_json,
-                                rules(QString())
+                                call_type_json, rules(QString()),
+                                0, proc_json_extract, YOUTUBE_ITEMS, call_method_get,
+                                is_current_user ? authHeaders() : Headers()
                             );
 
                             initDuration(response.content);
@@ -141,6 +144,7 @@ namespace Core {
                     return prepareBlock(dmt_video_set, cmd_mtd_video_categories, response);
                 }
 
+                // https://developers.google.com/youtube/v3/docs/guideCategories/list
                 QJsonValue officialVideoCategories() {
 //                    {
 //                       "kind": "youtube#videoCategory",

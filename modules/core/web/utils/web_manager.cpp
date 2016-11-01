@@ -48,9 +48,12 @@ namespace Core {
             return codec -> toUnicode(ar);
         }
         QJsonObject Response::toJson(const QString & wrap, bool destroy) { //TODO: enc not used yet
-            if (error()) qDebug() << "IOERROR" << error() << url();
-
             QByteArray ar = readAll();
+
+            if (error()) {
+                qCritical() << "IOERROR" << error() << url();
+                qCritical() << ar;
+            }
 
             QByteArray header = rawHeader("Content-Type");
 
@@ -67,7 +70,8 @@ namespace Core {
             return QJsonObject {{JSON_ERR_FIELD, QString(ar)}};
         }
         QPixmap Response::toPixmap(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error() << url();
+            if (error()) qCritical() << "IOERROR" << error() << url();
+
             QPixmap image;
             image.loadFromData(readAll());
             if (destroy) deleteLater();
@@ -75,24 +79,25 @@ namespace Core {
         }
 
         QUrl Response::toUrl(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error() << url();
+            if (error()) qCritical() << "IOERROR" << error() << url();
+
             QUrl uri = url();
             if (destroy) deleteLater();
             return uri;
         }
 
         Html::Document Response::toHtml(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error() << url();
-            QByteArray enc = encoding();
-            qDebug() << "ENC" << enc;
+            if (error()) qCritical() << "IOERROR" << error() << url();
 
+            QByteArray enc = encoding();
             Html::Document doc(this, UnicodeDecoding::toCharsetType(enc));
             if (destroy) deleteLater();
             return doc;
         }
 
         QUrl Response::toRedirectUrl(bool destroy) {
-            if (error()) qDebug() << "IOERROR" << error() << url();
+            if (error()) qCritical() << "IOERROR" << error() << url();
+
             QUrl uri = redirectUrl();
             if (destroy) deleteLater();
             return uri;

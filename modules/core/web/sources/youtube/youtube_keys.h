@@ -15,6 +15,8 @@ namespace Core {
             extern const QString path_search;
             extern const QString path_video_cats;
             extern const QString path_quide_cats;
+            extern const QString path_subscriptions;
+            extern const QString path_channels;
 
             extern const QString tkn_auth_email;
             extern const QString tkn_auth_pass;

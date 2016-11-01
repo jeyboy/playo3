@@ -13,6 +13,9 @@ namespace Core {
             extern const QString path_search           = QStringLiteral("search");
             extern const QString path_video_cats       = QStringLiteral("videoCategories");
             extern const QString path_quide_cats       = QStringLiteral("guideCategories");
+            extern const QString path_subscriptions    = QStringLiteral("subscriptions");
+            extern const QString path_channels         = QStringLiteral("channels");
+
 
             extern const QString tkn_auth_email        = QStringLiteral("Email");
             extern const QString tkn_auth_pass         = QStringLiteral("Passwd");

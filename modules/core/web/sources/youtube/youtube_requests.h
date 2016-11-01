@@ -2,8 +2,12 @@
 #define YOUTUBE_REQUEST_API
 
 #include "youtube_auth.h"
+#include "youtube_channel.h"
 #include "youtube_playlist.h"
 #include "youtube_video.h"
+#include "youtube_set.h"
+
+#include "modules/core/web/interfaces/sociable/sociable.h"
 
 ////#include "modules/core/web/interfaces/teu_auth.h"
 ////#include "modules/core/web/apis/service/recaptcha.h"
@@ -11,7 +15,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Requests : public Auth, public Playlist, public Video {
+            class Requests : public Sociable, public Auth, public Playlist, public Video, public Channel, public Set {
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
                     QJsonObject error = json.value(LSTR("error")).toObject();
                     if (error.isEmpty()) {
@@ -27,11 +31,11 @@ namespace Core {
                 }
             protected:
                 Requests() {
-//                    setSociableLimitations(true, true, true, true);
+                    setSociableLimitations(true, true, false, false);
 
                     flags = {
                         {sf_endpoint, (SourceFlags) (
-                            sf_is_primary | sf_is_content_shareable | sf_video | sf_sociable |
+                            sf_is_primary | sf_is_content_shareable | sf_video | sf_user |
                             sf_feed | sf_playlist | sf_compilation | sf_api | sf_api_connectable
                             /* | sf_site | sf_site_connectable*/
                          )
@@ -56,7 +60,7 @@ namespace Core {
 
 
 //                        {sf_user_by_id,                 sf_api},
-//                        {sf_user_by_title,              sf_api},
+                        {sf_user_by_title,              sf_api},
                     };
                 }
 
@@ -89,24 +93,52 @@ namespace Core {
 //                }
 
                 void saveAdditionals(QJsonObject & obj) {
-//                    Sociable::toJson(obj);
+                    Sociable::toJson(obj);
                     Manager::saveCookies(obj, QUrl(url_api_base));
                 }
                 void loadAdditionals(QJsonObject & obj) {
-//                    Sociable::fromJson(obj);
+                    Sociable::fromJson(obj);
                     Manager::loadCookies(obj);
                 }
                 void clearAdditionals() {
-//                    clearFriends();
+                    clearFriends();
 //                    clearGroups();
                     Manager::removeCookies(url_api_base);
                 }
+                inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
+                    int i = 0;
 
-//                void fromJson(const QJsonObject & hash);
-//                void toJson(QJsonObject & hash);
+//                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+//                        QJsonObject obj = (*obj_iter).toObject();
+//                        QString title = JSON_STR(obj, tkn_title);
+//                        if (title.isEmpty())
+//                            title = JSON_STR_CAT(obj, LSTR("first_name"), ' ', LSTR("last_name"));
 
-//                bool connectUser() { return true; }
+//                        linkables << Linkable(
+//                            JSON_CSTR(obj, tkn_id),
+//                            title,
+//                            JSON_STR(obj, tkn_screen_name),
+//                            JSON_STR(obj, tkn_photo)
+//                        );
+//                    }
+                }
 
+                QList<Linkable> findFriendsById(const QString & uid) {
+                    QList<Linkable> linkables;
+
+//                    jsonToUsers(linkables, EXTRACT_ITEMS(usersByIdOrPerma(uid).toObject()));
+
+                    return linkables;
+                }
+
+                QList<Linkable> findFriendsByName(const QString & name) {
+                    QList<Linkable> linkables;
+
+                    //TODO: write me
+//                    jsonToUsers(linkables, EXTRACT_ITEMS(usersByName(name).toObject()));
+
+                    return linkables;
+                }
             public:               
                 inline virtual ~Requests() {}
 
@@ -159,27 +191,13 @@ namespace Core {
                 QJsonValue userInfo(const QString & user_id) {
                     QJsonArray blocks;
 
-//                    QJsonObject json = audioByUser(user_id).toObject();
-//                    json.insert(tkn_dir_name, LSTR("Tracks"));
-//                    blocks << json;
+                    if (user_id == apiUserID()) {
+                        clearFriends();
+                        QJsonObject subscriptions = videoChannelsByUser(user_id).toObject();
+                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(subscriptions));
+                    }
 
-//                    json = audioByUserLikes(user_id).toObject();
-//                    json.insert(tkn_dir_name, LSTR("Likes"));
-//                    blocks << json;
-
-//                    json = playlistsByUser(user_id).toObject();
-//                    json.insert(tkn_dir_name, LSTR("Playlists"));
-//                    blocks << json;
-
-//                    if (user_id == userID()) { // ignore socials for not current user
-//                        clearFriends();
-//                        QThread::msleep(REQUEST_DELAY);
-//                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowings(user_id).toObject()));
-//                        jsonToUsers(Friendable::linkables, EXTRACT_ITEMS(userFollowers(user_id).toObject()));
-//                        clearGroups();
-//                        QThread::msleep(REQUEST_DELAY);
-//                        jsonToGroups(Groupable::linkables, EXTRACT_ITEMS(groupsByUser(user_id).toObject()));
-//                    }
+                    blocks << videoByUser(user_id);
 
                     return blocks;
                 }
