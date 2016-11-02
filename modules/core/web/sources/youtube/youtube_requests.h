@@ -29,6 +29,9 @@ namespace Core {
                         return false;
                     }
                 }
+                bool endReached(QJsonObject & response, QueriableArg * /*arg*/) {
+                    return !JSON_CSTR(response, LSTR("nextPageToken")).isEmpty();
+                }
             protected:
                 Requests() {
                     setSociableLimitations(true, true, false, false);
@@ -58,6 +61,7 @@ namespace Core {
                         {sf_video_by_category,          sf_api},
                         {sf_video_by_playlist,          sf_api},
 
+                        {sf_user_sociable,              sf_api},
 
 //                        {sf_user_by_id,                 sf_api},
                         {sf_user_by_title,              sf_api},
@@ -106,21 +110,19 @@ namespace Core {
                     Manager::removeCookies(url_api_base);
                 }
                 inline void jsonToUsers(QList<Linkable> & linkables, const QJsonArray & arr) {
-                    int i = 0;
+                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
+                        QJsonObject obj = JSON_OBJ((*obj_iter).toObject(), tkn_snippet);
 
-//                    for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
-//                        QJsonObject obj = (*obj_iter).toObject();
-//                        QString title = JSON_STR(obj, tkn_title);
-//                        if (title.isEmpty())
-//                            title = JSON_STR_CAT(obj, LSTR("first_name"), ' ', LSTR("last_name"));
-
-//                        linkables << Linkable(
-//                            JSON_CSTR(obj, tkn_id),
-//                            title,
-//                            JSON_STR(obj, tkn_screen_name),
-//                            JSON_STR(obj, tkn_photo)
-//                        );
-//                    }
+                        linkables << Linkable(
+                            JSON_CSTR(obj, LSTR("channelId")),
+                            JSON_STR(obj, LSTR("title")),
+                            JSON_STR(obj, LSTR("description")),
+                            JSON_STR(
+                                JSON_OBJ2(obj, LSTR("thumbnails"), LSTR("default")),
+                                LSTR("url")
+                            )
+                        );
+                    }
                 }
 
                 QList<Linkable> findFriendsById(const QString & uid) {

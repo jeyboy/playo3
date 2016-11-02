@@ -74,7 +74,7 @@ namespace Core {
                 QJsonValue videoChannelsByUser(const QString & user_id, const QString & token = QString()) {
                     QUrlQuery query = baseQuery(qst_api, {
                         {tkn_part, tkn_snippet},
-//                        {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
+                        {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
                         {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
                     });
 
@@ -86,7 +86,8 @@ namespace Core {
 
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_subscriptions, query),
-                        call_type_json, rules(token)
+                        call_type_json, rules(token), 0, proc_json_extract,
+                        YOUTUBE_ITEMS, call_method_get, authHeaders()
                     );
 
                     return prepareBlock(dmt_user, cmd_mtd_video_channels_by_user, response);
