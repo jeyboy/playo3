@@ -15,14 +15,34 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QLabel" name="errorStr">
-     <property name="styleSheet">
-      <string notr="true">color:red;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="errorStr">
+       <property name="styleSheet">
+        <string notr="true">color:red;</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignRight">
+      <widget class="QPushButton" name="closeButton">
+       <property name="maximumSize">
+        <size>
+         <width>24</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font-weight: bold</string>
+       </property>
+       <property name="text">
+        <string>X</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -34,32 +54,25 @@
        <string>Friends</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="2" column="0">
-        <widget class="QPushButton" name="friendById">
-         <property name="text">
-          <string>Find by id or permalink</string>
-         </property>
-        </widget>
+       <item row="0" column="0" colspan="3">
+        <widget class="QLineEdit" name="friendPredicate"/>
        </item>
-       <item row="2" column="1">
+       <item row="3" column="0" colspan="3">
+        <widget class="QListWidget" name="friendsList"/>
+       </item>
+       <item row="2" column="2">
         <widget class="QPushButton" name="friendByName">
          <property name="text">
           <string>Find by name</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
-        <widget class="QPushButton" name="friendInList">
+       <item row="2" column="0">
+        <widget class="QPushButton" name="friendById">
          <property name="text">
-          <string>Find in list</string>
+          <string>Find by id or permalink</string>
          </property>
         </widget>
-       </item>
-       <item row="0" column="0" colspan="3">
-        <widget class="QLineEdit" name="friendPredicate"/>
-       </item>
-       <item row="3" column="0" colspan="3">
-        <widget class="QListWidget" name="friendsList"/>
        </item>
       </layout>
      </widget>
@@ -68,12 +81,8 @@
        <string>Groups</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="1" column="1">
-        <widget class="QPushButton" name="groupByName">
-         <property name="text">
-          <string>Find by name</string>
-         </property>
-        </widget>
+       <item row="2" column="0" colspan="3">
+        <widget class="QListWidget" name="groupsList"/>
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="groupById">
@@ -83,27 +92,17 @@
         </widget>
        </item>
        <item row="1" column="2">
-        <widget class="QPushButton" name="groupInList">
+        <widget class="QPushButton" name="groupByName">
          <property name="text">
-          <string>Find in list</string>
+          <string>Find by name</string>
          </property>
         </widget>
        </item>
        <item row="0" column="0" colspan="3">
         <widget class="QLineEdit" name="groupPredicate"/>
        </item>
-       <item row="2" column="0" colspan="3">
-        <widget class="QListWidget" name="groupsList"/>
-       </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="cancelButton">
-     <property name="text">
-      <string>Cancel</string>
-     </property>
     </widget>
    </item>
   </layout>

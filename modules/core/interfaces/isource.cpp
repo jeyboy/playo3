@@ -149,17 +149,8 @@ void ISource::openVideoRecs() {
 
 void ISource::openRelationTab() {
     RelationsDialog dialog(this, Settings::obj().anchorWidget());
-    if (dialog.exec() == QDialog::Accepted) {
-        QString dialog_params = dialog.getId();
-
-        Presentation::Dockbars::obj().createLinkedDocBar(
-            Presentation::BarCreationNames(
-                name() % LSTR(" [") % dialog.getName() % ']',
-                uidStr(dialog_params)
-            ),
-            Models::Params(sourceType(), Models::mpf_auto_play_next, dialog_params, rec_obj_info), 0, true, true
-        );
-    }
+    connect(&dialog, SIGNAL(relationTabCreationRequired(QString,QString)), this, SLOT(createRelationTab(QString,QString)));
+    dialog.exec();
 }
 
 void ISource::openPackageTab() {
@@ -204,4 +195,14 @@ void ISource::openPackageTab() {
             0, true, true
         );
     }
+}
+
+void ISource::createRelationTab(const QString & rel_name, const QString & id) {
+    Presentation::Dockbars::obj().createLinkedDocBar(
+        Presentation::BarCreationNames(
+            name() % LSTR(" [") % rel_name % ']',
+            uidStr(id)
+        ),
+        Models::Params(sourceType(), Models::mpf_auto_play_next, id, rec_obj_info), 0, true, true
+    );
 }

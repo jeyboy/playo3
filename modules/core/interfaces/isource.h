@@ -85,6 +85,8 @@ namespace Core {
         void openVideoRecs();
         void openRelationTab();
         void openPackageTab();
+    private slots:
+        void createRelationTab(const QString & rel_name, const QString & id);
     protected:
         enum SourceSettngsType : int {
             sst_none = 0,

@@ -16,30 +16,25 @@ class RelationsDialog : public BaseDialog {
     Q_OBJECT
 
     Ui::RelationsDialog * ui;
-    QString uid, name;
     Web::Sociable * api;
-    QPushButton * default_btn;
 
     void prepareLinkablesList(const QList<Web::Linkable> & linkables, QListWidget * list);
     void done(int);
 public:
     explicit RelationsDialog(ISource * currApi, QWidget * parent = 0);
     ~RelationsDialog();
-
-    inline QString getId() const { return uid; }
-    inline QString getName() { return name; }
-
+signals:
+    void relationTabCreationRequired(const QString & rel_name, const QString & id);
 private slots:
-    void on_cancelButton_clicked();
     void on_friendsList_itemActivated(QListWidgetItem *item);
     void on_groupsList_itemActivated(QListWidgetItem *item);
     void on_groupByName_clicked();
     void on_friendByName_clicked();
     void on_friendById_clicked();
     void on_groupById_clicked();
-    void onFocusChanged(QWidget * old, QWidget * now);
-    void on_friendInList_clicked();
-    void on_groupInList_clicked();
+    void on_closeButton_clicked();
+    void on_friendPredicate_textChanged(const QString &arg1);
+    void on_groupPredicate_textChanged(const QString &arg1);
 };
 
 #endif // RELATIONS_DIALOG_H
