@@ -40,6 +40,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
     QMap<float, QString>::Iterator band = bands.begin();
     for(int num = 0; band != bands.end(); band++, num++) {
         QLabel * dbLabel = new QLabel(QStringLiteral("0") % DB_STR);
+        dbLabel -> setProperty("darkest", true);
         dbLabel -> setAlignment(Qt::AlignCenter);
         layout -> addWidget(dbLabel, 0, num, Qt::AlignCenter);
         dbOutput << dbLabel;
@@ -54,6 +55,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
 
 
         QLabel * label = new QLabel(band.value());
+        label -> setProperty("darkest", true);
         label -> setAlignment(Qt::AlignCenter);
         layout -> addWidget(label, 2, num, Qt::AlignCenter);
 

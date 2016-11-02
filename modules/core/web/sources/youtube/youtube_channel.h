@@ -18,44 +18,48 @@ namespace Core {
                         args.queryItemValue(CMD_ID)
                     );
                 }
-                QJsonValue videoChannelsById(const QString & user_id) {
-                    return QJsonObject();
+                QJsonValue videoChannelsById(const QString & channel_ids) {
+                    QUrlQuery query = baseQuery(qst_api, {
+                        {tkn_part, tkn_snippet},
+//                        {LSTR("fields"), LSTR("items(id,snippet),nextPageToken,pageInfo")},
+                        {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
+                        {LSTR("id"), channel_ids}
+                    });
+
+
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_channels, query),
+                        call_type_json, rules(), 0, proc_json_extract, YOUTUBE_ITEMS
+                    );
+
+                    return prepareBlock(dmt_user, cmd_mtd_video_channels_by_category, response);
                 }
 
                 QJsonValue videoChannelsByName(const QUrlQuery & args) {
                     return videoChannelsByName(
-                        args.queryItemValue(CMD_PREDICATE)
+                        args.queryItemValue(CMD_PREDICATE),
+                        args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoChannelsByName(const QString & name) {
+                QJsonValue videoChannelsByName(const QString & predicate, const QString & token = QString()) {
                     SourceFlags perm = permissions(sf_channel_by_title);
 
                     switch(perm) {
                         case sf_site:
                         case sf_api: {
                             QUrlQuery query = videoQuery({
-//                                {tkn_video_embedable, const_true}, // any // true
-                                {tkn_type, LSTR("video")}, // channel // playlist // video
+                                {tkn_type, LSTR("channel")}, // channel // playlist // video
+                                {tkn_q, predicate}
                             });
 
-                            bool is_current_user = user_id == apiUserID();
-
-                            if (is_current_user)
-                                query.addQueryItem(LSTR("forMine"), const_true);
-                            else
-                                query.addQueryItem(LSTR("channelId"), user_id);
-
                             QueriableResponse response = pRequest(
-                                baseUrlStr(qst_api, path_search, query),
-                                call_type_json, rules(QString()),
-                                0, proc_json_extract, YOUTUBE_ITEMS, call_method_get,
-                                is_current_user ? authHeaders() : Headers()
+                                baseUrlStr(qst_api, path_search, query), call_type_json,
+                                rules(token), 0, proc_json_extract, YOUTUBE_ITEMS
                             );
 
-                            initDuration(response.content);
-                            return prepareBlock(dmt_video, cmd_mtd_video_by_user, response);
+                            return prepareBlock(dmt_user, cmd_mtd_video_channels_by_name, response);
                         break;}
-                        default: Logger::obj().write(name(), "videoByUser", Logger::log_error);
+                        default: Logger::obj().write(name(), "videoChannelsByName", Logger::log_error);
                     }
 
                     return QJsonObject();
@@ -85,8 +89,7 @@ namespace Core {
                         call_type_json, rules(token)
                     );
 
-                    initDuration(response.content);
-                    return prepareBlock(dmt_video, cmd_mtd_video_channels_by_user, response);
+                    return prepareBlock(dmt_user, cmd_mtd_video_channels_by_user, response);
                 }
 
                 QJsonValue videoChannelsByCategory(const QUrlQuery & args) {
@@ -109,8 +112,7 @@ namespace Core {
                         call_type_json, rules(token)
                     );
 
-                    initDuration(response.content);
-                    return prepareBlock(dmt_video, cmd_mtd_video_channels_by_category, response);
+                    return prepareBlock(dmt_user, cmd_mtd_video_channels_by_category, response);
                 }
             };
         }
