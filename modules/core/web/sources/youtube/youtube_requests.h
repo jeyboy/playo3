@@ -113,8 +113,11 @@ namespace Core {
                     for(QJsonArray::ConstIterator obj_iter = arr.constBegin(); obj_iter != arr.constEnd(); obj_iter++) {
                         QJsonObject obj = JSON_OBJ((*obj_iter).toObject(), tkn_snippet);
 
+                        QString id = JSON_CSTR2(obj, LSTR("resourceId"), LSTR("channelId"));
+                        if (id.isEmpty()) id = JSON_CSTR(obj, LSTR("channelId"));
+
                         linkables << Linkable(
-                            JSON_CSTR(obj, LSTR("channelId")),
+                            id,
                             JSON_STR(obj, LSTR("title")),
                             JSON_STR(obj, LSTR("description")),
                             JSON_STR(
