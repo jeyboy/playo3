@@ -161,7 +161,10 @@ namespace Core {
         sf_video_playlist_by_user           = sf_video_playlist | sf_by_user,
         sf_video_playlist_by_group          = sf_video_playlist | sf_by_group,
 
+        sf_channel_by_id                    = sf_channel | sf_by_id,
         sf_channel_by_title                 = sf_channel | sf_by_title,
+        sf_channel_by_user                  = sf_channel | sf_by_user,
+        sf_channel_by_category              = sf_channel | sf_by_category,
 
         sf_feed_by_user                     = sf_feed | sf_by_user,
         sf_feed_by_group                    = sf_feed | sf_by_group,

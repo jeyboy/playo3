@@ -52,6 +52,11 @@ namespace Core {
 
                         {sf_compilation,                sf_api},
 
+                        {sf_channel_by_id,              sf_api},
+                        {sf_channel_by_title,           sf_api},
+                        {sf_channel_by_user,            sf_both_auth},
+                        {sf_channel_by_category,        sf_api},
+
 //                        {sf_video_playlist_by_id,       sf_site},
                         {sf_video_playlist_by_user,     sf_both_auth},
 
