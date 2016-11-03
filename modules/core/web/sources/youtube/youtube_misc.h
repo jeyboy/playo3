@@ -163,25 +163,28 @@ namespace Core {
 
 
                 bool extractJsUrl(const QString & html, QString & jsUrl) {
-                    QRegExp expression = QRegExp("html5player.+\\.js");
-                    expression.setMinimal(true);
-                    if (expression.indexIn(html) != -1) {
-                        jsUrl = "http://s.ytimg.com/yts/jsbin/" + expression.cap(0).replace("\\/", "/");
+                    QRegularExpression expression = QRegularExpression(LSTR("html5player.+\\.js"));
+                    QRegularExpressionMatch match = expression.match(html);
+
+                    if (match.hasMatch()) {
+                        jsUrl = LSTR("http://s.ytimg.com/yts/jsbin/") % match.captured().replace(LSTR("\\/"), LSTR("/"));
                         return true;
                     }
 
-                    expression = QRegExp("//[^\"]*html5player[^\"]*\\.js");
-                    expression.setMinimal(true);
-                    if (expression.indexIn(html) != -1) {
-                        jsUrl = "https:" + expression.cap(0);
+                    expression = QRegularExpression(LSTR("//[^\"]*html5player[^\"]*\\.js"));
+                    match = expression.match(html);
+
+                    if (match.hasMatch()) {
+                        jsUrl = LSTR("https:") + match.captured();
                         return true;
                     }
 
 
-                    expression = QRegExp("//[^\"]*player[^\"]*\\/base\\.js");
-                    expression.setMinimal(true);
-                    if (expression.indexIn(html) != -1) {
-                        jsUrl = "https:" + expression.cap(0);
+                    expression = QRegularExpression("//[^\"]*player[^\"]*\\/base\\.js");
+                    match = expression.match(html);
+
+                    if (match.hasMatch()) {
+                        jsUrl = LSTR("https:") + match.captured();
                         return true;
                     }
 
@@ -197,7 +200,7 @@ namespace Core {
 
                     QString escapedName = name;
                     /*escapedName = */escapedName.replace("$", "\\$");
-                    QRegExp expression("((?:function\\s*" + escapedName + "|(var\\s*|,\\s*)" + escapedName + "\\s*=(?:\\s*function)?)\\s*(\\([\\w,\\s]*\\))?\\s*)(\\{.*\\})");
+                    QRegExp expression("((?:function\\s*" + escapedName + "|(var\\s*|,\\s*)?" + escapedName + "\\s*=(?:\\s*function)?)\\s*(\\([\\w,\\s]*\\))?\\s*)(\\{.*\\})");
                     expression.setCaseSensitivity(Qt::CaseSensitive);
                     if (expression.indexIn(js) != -1) {
                         JsMethod method;
