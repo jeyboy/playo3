@@ -10,7 +10,7 @@ namespace Core {
             protected:
                 enum SetType { set_popular_video = 1, set_feed_video, set_top_video, set_history, set_liked };
 
-                QJsonValue setByType(const SetType & set_type, const SearchLimit & limits) { // rewrite on using of offset
+                QJsonValue setByType(const SetType & /*set_type*/, const SearchLimit & /*limits*/) { // rewrite on using of offset
 //                    SourceFlags perm = permissions(sf_compilation);
 //                    QJsonArray block_content;
 

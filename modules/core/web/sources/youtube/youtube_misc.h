@@ -199,7 +199,7 @@ namespace Core {
                     /*escapedName = */escapedName.replace("$", "\\$");
                     QRegExp expression("((?:function\\s*" + escapedName + "|(var\\s*|,\\s*)" + escapedName + "\\s*=(?:\\s*function)?)\\s*(\\([\\w,\\s]*\\))?\\s*)(\\{.*\\})");
                     expression.setCaseSensitivity(Qt::CaseSensitive);
-                    if (expression.indexIn((js)) != -1) {
+                    if (expression.indexIn(js) != -1) {
                         JsMethod method;
                         method.name = name;
                         QString descriptor = expression.cap(1);

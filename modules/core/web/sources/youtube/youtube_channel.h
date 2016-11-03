@@ -37,6 +37,7 @@ namespace Core {
 
                             return prepareBlock(dmt_user, cmd_mtd_video_channels_by_id, response);
                         }
+                        default: return QJsonObject();
                     }
                 }
 
