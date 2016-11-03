@@ -30,7 +30,7 @@ namespace Core {
                     }
                 }
                 bool endReached(QJsonObject & response, QueriableArg * /*arg*/) {
-                    return !JSON_CSTR(response, LSTR("nextPageToken")).isEmpty();
+                    return JSON_STR(response, LSTR("nextPageToken")).isEmpty();
                 }
             protected:
                 Requests() {

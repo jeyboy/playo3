@@ -55,8 +55,13 @@ namespace Core {
                     return prepareBlock(dmt_video, cmd_mtd_video_by_category, response);
                 }
 
-                QJsonValue videoByUser(const QUrlQuery & args) { return videoByUser(args.queryItemValue(CMD_ID)); }
-                QJsonValue videoByUser(const QString & user_id) {
+                QJsonValue videoByUser(const QUrlQuery & args) {
+                    return videoByUser(
+                        args.queryItemValue(CMD_ID),
+                        args.queryItemValue(CMD_OFFSET)
+                    );
+                }
+                QJsonValue videoByUser(const QString & user_id, const QString & token = QString()) {
                     SourceFlags perm = permissions(sf_video_by_user);
 
                     switch(perm) {
@@ -76,13 +81,13 @@ namespace Core {
 
                             QueriableResponse response = pRequest(
                                 baseUrlStr(qst_api, path_search, query),
-                                call_type_json, rules(QString()),
+                                call_type_json, rules(token),
                                 0, proc_json_extract, YOUTUBE_ITEMS, call_method_get,
                                 is_current_user ? authHeaders() : Headers()
                             );
 
                             initDuration(response.content);
-                            return prepareBlock(dmt_video, cmd_mtd_video_by_user, response);
+                            return prepareBlock(dmt_video, cmd_mtd_video_by_user, response, {}, {{CMD_ID, user_id}});
                         break;}
                         default: Logger::obj().write(name(), "videoByUser", Logger::log_error);
                     }

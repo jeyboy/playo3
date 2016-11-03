@@ -122,7 +122,7 @@ namespace Core {
                         videosUrl(ids),
                         call_type_json,
                         rules(QString(), YOUTUBE_INFO_ITEMS_LIMIT),
-                        &arr
+                        &arr, proc_json_extract, YOUTUBE_ITEMS
                     );
                 }
 
@@ -130,12 +130,14 @@ namespace Core {
                     QStringList ids;
                     QJsonArray res;
 
-                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++)
+                    for(QJsonArray::Iterator item = arr.begin(); item != arr.end(); item++) {
+                        ids << JSON_CSTR2((*item).toObject(), tkn_id, LSTR("videoId"));
+
                         if (ids.length() == YOUTUBE_INFO_ITEMS_LIMIT) {
                             proceedDurationResult(ids, res);
                             ids.clear();
-                        } else
-                            ids << (*item).toObject().value(tkn_id).toObject().value(LSTR("videoId")).toString();
+                        }
+                    }
 
                     if (!ids.isEmpty())
                         proceedDurationResult(ids, res);
