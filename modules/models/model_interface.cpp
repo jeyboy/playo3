@@ -1258,7 +1258,7 @@ void IModel::importIds(const QStringList & ids) { //TODO: fix me
         ISource * source = Web::Apis::source((DataSubType)map_it.key());
 
         if (source -> isShareable()) {
-            source -> connectUser(); // check connection and ask user to connect if it not
+            source -> connectUser(); // check connection and ask user to connect if it missed
 
             if (source -> isConnected()) {
                 blocks << source -> itemsInfo(map_it.value());

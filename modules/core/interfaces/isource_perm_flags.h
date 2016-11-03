@@ -75,6 +75,8 @@ namespace Core {
         sf_section_categories               = (quint64(1)) << 55,
     //        sf_section_chart                    = (quint64(1)) << 56,
 
+        sf_multiple_keys                    = (quint64(1)) << 57,
+
         //////////// combinations //////////////////////////
         sf_sociable                         = sf_user | sf_group,
 

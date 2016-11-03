@@ -26,7 +26,7 @@ namespace Core {
                             })
                         }),
                         call_type_json,
-                        rules(QString(), limits.items_limit)
+                        rules(QString(), limits.items_limit), 0, proc_json_extract, YOUTUBE_ITEMS
                     );
 
                     initDuration(response.content);
@@ -48,7 +48,7 @@ namespace Core {
                                 {LSTR("videoCategoryId"), category_id}
                             })
                         ),
-                        call_type_json, rules(token)
+                        call_type_json, rules(token), 0, proc_json_extract, YOUTUBE_ITEMS
                     );
 
                     initDuration(response.content);

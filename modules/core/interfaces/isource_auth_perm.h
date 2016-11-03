@@ -96,6 +96,7 @@ namespace Core {
         inline bool isConnectable()                                     { return hasApiConnection() || hasSiteConnection(); }
         inline bool isConnected()                                       { return isApiConnected() || isSiteConnected(); }
 
+        inline bool isRestoreMultipleItemsAtOnce()                      { return HAS_FLAG(flags[sf_endpoint], sf_multiple_keys); }
         inline bool isShareable()                                       { return HAS_FLAG(flags[sf_endpoint], sf_is_content_shareable); }
         inline bool isPrimary()                                         { return HAS_FLAG(flags[sf_endpoint], sf_is_primary); }
         inline bool isSociable()                                        { return HAS_FLAG(flags[sf_endpoint], sf_sociable); }
