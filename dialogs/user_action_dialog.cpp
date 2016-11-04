@@ -184,6 +184,7 @@ void UserActionDialog::createTitle(FormInput input, QGridLayout * l) {
 void UserActionDialog::createMessage(FormInput input, QGridLayout * l) {
     QLabel * msg = new QLabel(input.label, layer);
     msg -> setStyleSheet(QStringLiteral("color: red; font-weight: bold;"));
+    msg -> setProperty("danger", true);
     insertElem(l, msg);
 }
 

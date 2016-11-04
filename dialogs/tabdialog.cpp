@@ -14,6 +14,7 @@ TabDialog::TabDialog(QWidget * parent) :
 
     setWindowTitle(QStringLiteral("View settings"));
     ui -> interactive -> setEnabled(false);
+    ui -> deleteFile -> setProperty("danger", true);
 
     QMap<Core::DataSubType, QString> data_list = {
         {Core::dt_tree, LSTR("Grouped list with subgroups")},
