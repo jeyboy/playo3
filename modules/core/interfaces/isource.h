@@ -51,9 +51,22 @@ namespace Core {
 
         QJsonArray itemsInfo(const QStringList & items_uids, const DataMediaType & item_media_type, QJsonArray * result = 0) {
             QJsonArray res = result ? *result : QJsonArray();
+            QJsonValue part_res;
 
-//            for(QStringList::ConstIterator uid = items_uids.constBegin(); uid != items_uids.constEnd(); uid++)
+            for(QStringList::ConstIterator uid = items_uids.constBegin(); uid != items_uids.constEnd(); uid++) {
+                switch(item_media_type) {
+                    case dmt_audio: { part_res = audioInfo(QUrlQuery(CMD_ID % '=' % *uid)); break;}
+                    case dmt_video: { part_res = videoInfo(QUrlQuery(CMD_ID % '=' % *uid)); break;}
+                    default: part_res = QJsonArray();
+                }
 
+                if (part_res.isArray()) {
+                    QJsonArray items = part_res.toArray();
+                    for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
+                        res.append(*it);
+                } else
+                    res << part_res.toObject();
+            }
 
             return res;
         }

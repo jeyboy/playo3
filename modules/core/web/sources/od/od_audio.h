@@ -38,6 +38,8 @@ namespace Core {
                     return false;
                 }
 
+                QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
+                QJsonValue audioInfo(const QString & id) { return audioInfo(QStringList() << id); }
                 QJsonValue audioInfo(const QStringList & uids, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // need to split ids by groups with max size eql to 40 ids
                     QJsonArray block_content = sRequest(audioInfoUrl(uids), call_type_json)
                         .value(tkn_tracks).toArray();

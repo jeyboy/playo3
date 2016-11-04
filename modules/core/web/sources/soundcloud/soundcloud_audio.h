@@ -71,6 +71,7 @@ namespace Core {
                     return false;
                 }
 
+                QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
                 QJsonObject audioInfo(const QString & track_id) {
                     SourceFlags perm = permissions(sf_audio_by_id);
 

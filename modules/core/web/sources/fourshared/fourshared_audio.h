@@ -18,10 +18,22 @@ namespace Core {
                     Info::extract(res, LSTR("http"), LSTR("\""), res);
                     return res;
                 }
-
                 QString audioUrlFromPath(const QString & path) {
                     Html::Document doc = Web::Manager::prepare() -> getFollowed(path) -> toHtml();
                     return doc.find("input.jsD1PreviewUrl").value();
+                }
+
+                QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
+                //TODO: write me
+                QJsonValue audioInfo(const QString & id) {
+//                    QString url = baseUrlStr(
+//                        qst_site_base,
+//                        LSTR("web/rest/v1/playlist?itemType=file&beforeId=null&afterId=null&index=0&itemId=") % id, {}
+//                    );
+
+//                    QString res = Manager::prepare() -> putFollowed(url, siteHeaders()) -> toText();
+//                    Info::extract(res, LSTR("http"), LSTR("\""), res);
+//                    return res;
                 }
 
                 QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }

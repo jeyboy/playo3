@@ -32,6 +32,10 @@ namespace Core {
                     return QString();
                 }
 
+                QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
+                //TODO: write me
+                QJsonValue videoInfo(const QString & id) { return QJsonObject(); }
+
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits) {
                     SourceFlags perm = permissions(sf_video_by_id);

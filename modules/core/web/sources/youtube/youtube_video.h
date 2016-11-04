@@ -9,6 +9,10 @@ namespace Core {
             class Video : public virtual Base {
                 // The hl parameter specifies the language that will be used for text values in the API response. The default value is en-US.
             public:
+                QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
+                //TODO: write me
+                QJsonValue videoInfo(const QString & id) { return QJsonObject(); }
+
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits) {
                     // setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
@@ -95,7 +99,6 @@ namespace Core {
                     return QJsonObject();
                 }
 
-
                 QJsonValue videoRecommendations(const QUrlQuery & args) {
                     return videoRecommendations(
                         args.queryItemValue(CMD_ID),
@@ -117,7 +120,6 @@ namespace Core {
                     initDuration(response.content);
                     return prepareBlock(dmt_video, cmd_mtd_video_recommendations, response);
                 }
-
 
                 //https://developers.google.com/youtube/v3/docs/videoCategories/list#part
                 QJsonValue videoCategories(const QUrlQuery & args) {

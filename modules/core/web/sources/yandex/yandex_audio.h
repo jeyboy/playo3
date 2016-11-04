@@ -36,14 +36,13 @@ namespace Core {
                     return QString();
                 }
 
+                QJsonValue audioInfo(const QUrlQuery & args) {
+                    return audioInfo(args.queryItemValue(CMD_ID).split(','));
+                }
                 QJsonValue audioInfo(const QString & track_id) {
                     QJsonObject info = audioInfo(QStringList() << track_id).toObject();
                     QJsonArray content = info.value(tkn_content).toArray();
                     return content.isEmpty() ? QJsonObject() : content[0].toObject();
-                }
-
-                QJsonValue audioInfo(const QUrlQuery & args) {
-                    return audioInfo(args.queryItemValue(CMD_ID).split(','));
                 }
                 QJsonValue audioInfo(const QStringList & track_ids) {
                     SourceFlags perm = permissions(sf_audio_by_id);

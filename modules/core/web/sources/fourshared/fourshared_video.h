@@ -15,11 +15,14 @@ namespace Core {
                         )
                     );
                 }
-
                 QString videoUrlFromPath(const QString & path) {
                     QString res = Manager::prepare() -> getFollowed(path, siteHeaders()) -> toText();
                     return Info::extractLimitedBy(res, LSTR("file: \""), LSTR("\""));
                 }
+
+                QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
+                //TODO: write me
+                QJsonValue videoInfo(const QString & id) { return QJsonObject(); }
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
