@@ -155,7 +155,7 @@ namespace Core {
                 Requests() {
                     flags = {
                         {sf_endpoint, (SourceFlags)
-                            (sf_is_primary | sf_is_content_shareable | sf_track | sf_video | sf_compilation |
+                            (sf_is_primary | sf_audio | sf_video | sf_compilation |
                             sf_site /*| sf_api*/ | sf_site_connectable /*| sf_api_connectable*/)
                         },
 
@@ -163,6 +163,8 @@ namespace Core {
 
                         {sf_search,             sf_site_not_api_auth},
 //                        {sf_user_sociable,      sf_both_auth},
+
+                        {sf_is_shareable,       sf_site_not_api_auth},
 
                         {sf_popular_audio,      sf_site_not_api_auth},
                         {sf_audio_by_id,        sf_site_not_api_auth},

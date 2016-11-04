@@ -1211,11 +1211,14 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
 
 void IModel::importIds(const QStringList & ids) { //TODO: fix me
     emit moveInBackgroundProcess();
-    QHash<int, QStringList> uidsMap;
+    QHash<int, QHash<int, QStringList> > uids_map;
 
     for(QStringList::ConstIterator it = ids.constBegin(); it != ids.constEnd(); it++) {
         QStringList parts = (*it).split(SHARE_DELIMITER);
-        uidsMap[parts.first().toInt()].append(parts.last());
+        if (parts.length() != 3)
+            qCritical() << "importIds" << "wrong id" << (*it);
+        else
+            uids_map[parts[0].toInt()][parts[1].toInt()] << parts[2];
     }
 
     Playlist * parentNode = root_item;
@@ -1254,16 +1257,15 @@ void IModel::importIds(const QStringList & ids) { //TODO: fix me
 
     QJsonArray blocks;
 
-    for(QHash<int, QStringList>::Iterator map_it = uidsMap.begin(); map_it != uidsMap.end(); map_it++) {
-        ISource * source = Web::Apis::source((DataSubType)map_it.key());
+    for(QHash<int, QHash<int, QStringList> >::Iterator source_it = uids_map.begin(); source_it != uids_map.end(); source_it++) {
+        ISource * source = Web::Apis::source((DataSubType)source_it.key());
 
         if (source -> isShareable()) {
-            source -> connectUser(); // check connection and ask user to connect if it missed
-
-            if (source -> isConnected()) {
-                blocks << source -> itemsInfo(map_it.value());
+            if (source -> permissions(sf_is_shareable, true) > 0) {
+                QHash<int, QStringList> map = source_it.value();
+                for(QHash<int, QStringList>::Iterator map_it = map.begin(); map_it != map.end(); map_it++)
+                    blocks << source -> itemsInfo(map_it.value(), (DataMediaType)map_it.key());
             }
-//            else // some actions
         }
         else qDebug() << "UNSUPPORTED EXPORT TYPE";
     }

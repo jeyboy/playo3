@@ -3,15 +3,21 @@
 using namespace Core;
 
 
-SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm) {
+SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm, const bool auth_if_required) {
     SourceFlags perms = flags.value(req_perm, sf_none);
 
     if (perms > 0) {
         if (HAS_FLAG(perms, sf_site_auth_only)) {
+            if (auth_if_required && !isSiteConnected())
+                connectUser();
+
             if (isSiteConnected()) return sf_site;
         }
 
         if (HAS_FLAG(perms, sf_api_auth_only)) {
+            if (auth_if_required && !isApiConnected())
+                connectUser();
+
             if (isApiConnected()) return sf_api;
         }
 

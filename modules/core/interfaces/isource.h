@@ -49,11 +49,18 @@ namespace Core {
             loadAdditionals(root);
         }
 
-        virtual QJsonObject itemsInfo(const QStringList & /*items_uids*/) { return QJsonObject(); }
+        QJsonArray itemsInfo(const QStringList & items_uids, const DataMediaType & item_media_type, QJsonArray * result = 0) {
+            QJsonArray res = result ? *result : QJsonArray();
 
-        virtual inline QString refresh(const QString & refresh_page, const DataMediaType & itemMediaType) {
+//            for(QStringList::ConstIterator uid = items_uids.constBegin(); uid != items_uids.constEnd(); uid++)
+
+
+            return res;
+        }
+
+        virtual inline QString refresh(const QString & refresh_page, const DataMediaType & item_media_type) {
             if (refresh_page.isEmpty() || !isShareable()) return QString();
-            return refreshProc(takeRefreshPage(refresh_page), itemMediaType);
+            return refreshProc(takeRefreshPage(refresh_page), item_media_type);
         }
 
         // proc charts / tops and other ...

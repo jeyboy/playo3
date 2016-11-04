@@ -70,13 +70,15 @@ namespace Core {
 
                     flags = {
                         {sf_endpoint, (SourceFlags) (
-                            sf_is_primary | sf_is_content_shareable | sf_track | sf_video | sf_sociable |
-                            sf_feed | sf_playlist | sf_album | sf_compilation | sf_site | sf_site_connectable)
+                            sf_is_primary | sf_audio | sf_video | sf_sociable | sf_site |
+                            sf_feed | sf_playlist | sf_album | sf_compilation | sf_site_connectable)
                         },
 
                         {sf_feed,                       sf_site},
 
                         {sf_feed_by_user,               sf_site_auth_only},
+
+                        {sf_is_shareable,               sf_site},
 
                         {sf_search,                     sf_site},
 

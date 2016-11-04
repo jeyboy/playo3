@@ -55,7 +55,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
         p.drawPath(path);
 
     if (show_mini_progress && !progressRect.isEmpty()) {
-        p.setPen(QColor::fromRgb(255, 255, 255, 192));
+        p.setPen(QColor::fromRgb(255, 255, 255, 168));
         p.drawRoundedRect(progressRect, 1, 1);
     }
 

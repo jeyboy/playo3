@@ -38,8 +38,8 @@ namespace Core {
 
                     flags = {
                         {sf_endpoint, (SourceFlags) (
-                            sf_is_primary | sf_is_content_shareable | sf_video | sf_user |
-                            sf_feed | sf_playlist | sf_compilation | sf_api | sf_api_connectable
+                            sf_is_primary | sf_video | sf_user | sf_compilation |
+                            sf_feed | sf_playlist | sf_api | sf_api_connectable
                             /* | sf_site | sf_site_connectable*/
                          )
                         },
@@ -47,6 +47,8 @@ namespace Core {
                         {sf_feed,                       sf_api},
 
                         {sf_feed_by_user,               sf_both_auth},
+
+                        {sf_is_shareable,               sf_api},
 
                         {sf_search,                     sf_api},
 

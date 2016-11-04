@@ -21,7 +21,7 @@ namespace Core {
         sf_api_connectable                  = (quint64(1)) << 8,
 
         sf_is_primary                       = (quint64(1)) << 9,
-        sf_is_content_shareable             = (quint64(1)) << 10,
+        sf_is_shareable                     = (quint64(1)) << 10,
 
         sf_link                             = (quint64(1)) << 11,
         sf_search                           = (quint64(1)) << 12,
@@ -35,7 +35,7 @@ namespace Core {
         sf_user                             = (quint64(1)) << 18,
         sf_group                            = (quint64(1)) << 19,
 
-        sf_track                            = (quint64(1)) << 20,
+        sf_audio                            = (quint64(1)) << 20,
         sf_video                            = (quint64(1)) << 21,
         sf_playlist                         = (quint64(1)) << 22, // sets from sociables
         sf_compilation                      = (quint64(1)) << 23, // include charts and etc
@@ -85,37 +85,37 @@ namespace Core {
         sf_site_auth_api_not                = sf_api | sf_site_auth_only,
         sf_site_not_api_auth                = sf_api_auth_only | sf_site,
 
-        sf_audio_playlist                   = sf_playlist | sf_track,
+        sf_audio_playlist                   = sf_playlist | sf_audio,
         sf_video_playlist                   = sf_playlist | sf_video,
         sf_blog                             = sf_compilation | sf_post,
         sf_photo_album                      = sf_compilation | sf_photo,
 
-        sf_audio_stream                     = sf_stream | sf_track,
+        sf_audio_stream                     = sf_stream | sf_audio,
         sf_video_stream                     = sf_stream | sf_video,
 
-        sf_new_audio                        = sf_track | sf_section_new,
-        sf_popular_audio                    = sf_track | sf_section_popular,
-        sf_like_audio                       = sf_track | sf_status | sf_by_like,
-//        sf_audio_by_me                      = sf_track | sf_by_user | sf_my,
-        sf_audio_by_id                      = sf_track | sf_by_id,
-        sf_audio_by_title                   = sf_track | sf_by_title,
-        sf_audio_by_genre                   = sf_track | sf_by_genre,
-        sf_audio_by_mood                    = sf_track | sf_by_mood,
-        sf_audio_by_tag                     = sf_track | sf_by_tag,
-        sf_audio_by_artist                  = sf_track | sf_by_artist,
-        sf_audio_by_album                   = sf_track | sf_by_album,
-        sf_audio_by_label                   = sf_track | sf_by_label,
-        sf_audio_by_compilation             = sf_track | sf_by_compilation,
-        sf_audio_by_playlist                = sf_track | sf_by_playlist,
-        sf_audio_by_stream                  = sf_track | sf_by_stream,
-        sf_audio_by_user                    = sf_track | sf_by_user,
-        sf_audio_by_group                   = sf_track | sf_by_group,
-        sf_audio_by_like                    = sf_track | sf_by_like,
-        sf_audio_recs_by_user               = sf_user | sf_track | sf_recommendation, // tracks recs for user or group by id
+        sf_new_audio                        = sf_audio | sf_section_new,
+        sf_popular_audio                    = sf_audio | sf_section_popular,
+        sf_like_audio                       = sf_audio | sf_status | sf_by_like,
+//        sf_audio_by_me                      = sf_audio | sf_by_user | sf_my,
+        sf_audio_by_id                      = sf_audio | sf_by_id,
+        sf_audio_by_title                   = sf_audio | sf_by_title,
+        sf_audio_by_genre                   = sf_audio | sf_by_genre,
+        sf_audio_by_mood                    = sf_audio | sf_by_mood,
+        sf_audio_by_tag                     = sf_audio | sf_by_tag,
+        sf_audio_by_artist                  = sf_audio | sf_by_artist,
+        sf_audio_by_album                   = sf_audio | sf_by_album,
+        sf_audio_by_label                   = sf_audio | sf_by_label,
+        sf_audio_by_compilation             = sf_audio | sf_by_compilation,
+        sf_audio_by_playlist                = sf_audio | sf_by_playlist,
+        sf_audio_by_stream                  = sf_audio | sf_by_stream,
+        sf_audio_by_user                    = sf_audio | sf_by_user,
+        sf_audio_by_group                   = sf_audio | sf_by_group,
+        sf_audio_by_like                    = sf_audio | sf_by_like,
+        sf_audio_recs_by_user               = sf_user | sf_audio | sf_recommendation, // tracks recs for user or group by id
         sf_audio_recs_by_me                 = sf_my | sf_audio_recs_by_user, // tracks recs only for current user
-        sf_audio_recs_by_audio              = sf_track | sf_recommendation, // tracks recs by one track
-        sf_audio_recs_by_playlist           = sf_track | sf_playlist | sf_recommendation, //recs by playlist or set
-        sf_audio_recs_by_artist             = sf_track | sf_by_artist | sf_recommendation, //recs by playlist or set
+        sf_audio_recs_by_audio              = sf_audio | sf_recommendation, // tracks recs by one track
+        sf_audio_recs_by_playlist           = sf_audio | sf_playlist | sf_recommendation, //recs by playlist or set
+        sf_audio_recs_by_artist             = sf_audio | sf_by_artist | sf_recommendation, //recs by playlist or set
 
         sf_new_artist                       = sf_artist | sf_section_new,
         sf_popular_artist                   = sf_artist | sf_section_popular,
@@ -190,7 +190,7 @@ namespace Core {
         sf_new_lyric                        = sf_lyric | sf_section_new,
         sf_popular_lyric                    = sf_lyric | sf_section_popular,
         sf_lyric_by_title                   = sf_lyric | sf_by_title, // rule including search by text part
-        sf_lyric_by_audio                   = sf_lyric | sf_track, // rule including search by track id
+        sf_lyric_by_audio                   = sf_lyric | sf_audio, // rule including search by track id
         sf_lyric_by_video                   = sf_lyric | sf_video, // rule including search by video id
 
         sf_user_status                      = sf_user | sf_status,
@@ -199,7 +199,7 @@ namespace Core {
         sf_user_by_perma                    = sf_user | sf_by_perma,
         sf_user_by_id                       = sf_user | sf_by_id,
         sf_user_by_likes                    = sf_user | sf_by_like,
-        sf_user_by_audio_repost             = sf_user | sf_by_repost | sf_track,
+        sf_user_by_audio_repost             = sf_user | sf_by_repost | sf_audio,
         sf_user_by_user                     = sf_user | sf_by_user,
 
 

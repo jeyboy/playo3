@@ -87,8 +87,8 @@ namespace Core {
             return req_perm == sf_site && isSiteConnected() ? siteUserID() : apiUserID();
         }
 
+        SourceFlags permissions(const SourceFlags & req_perm, const bool auth_if_required = false);
         bool respondableTo(const SourceFlags & req_perm)                { return permissions(req_perm) > 0; }
-        SourceFlags permissions(const SourceFlags & req_perm);
 
         inline bool isApiConnected()                                    { return attrs.value(SOURCE_API_AUTH_JSON, false).toBool(); }
         inline bool isSiteConnected()                                   { return attrs.value(SOURCE_SITE_AUTH_JSON, false).toBool(); }
@@ -96,8 +96,7 @@ namespace Core {
         inline bool isConnectable()                                     { return hasApiConnection() || hasSiteConnection(); }
         inline bool isConnected()                                       { return isApiConnected() || isSiteConnected(); }
 
-        inline bool isRestoreMultipleItemsAtOnce()                      { return HAS_FLAG(flags[sf_endpoint], sf_multiple_keys); }
-        inline bool isShareable()                                       { return HAS_FLAG(flags[sf_endpoint], sf_is_content_shareable); }
+        inline bool isShareable()                                       { return flags.value(sf_is_shareable, sf_none) > 0; }
         inline bool isPrimary()                                         { return HAS_FLAG(flags[sf_endpoint], sf_is_primary); }
         inline bool isSociable()                                        { return HAS_FLAG(flags[sf_endpoint], sf_sociable); }
 

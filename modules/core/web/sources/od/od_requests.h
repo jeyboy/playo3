@@ -285,14 +285,16 @@ namespace Core {
 
                     flags = QHash<SourceFlags, SourceFlags>{
                         {sf_endpoint, (SourceFlags)(
-                            sf_online_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track | sf_video |
-                            sf_photo | sf_feed | sf_playlist | sf_compilation | sf_site | sf_site_connectable | sf_user/*sf_sociable*/)
+                            sf_online_credentials_req | sf_is_primary | sf_audio | sf_video | sf_user/*sf_sociable*/ |
+                            sf_photo | sf_feed | sf_playlist | sf_compilation | sf_site | sf_site_connectable)
                         },
 
                         {sf_feed,                   sf_site},
 
                         {sf_feed_by_user,           sf_site_auth_only},
                         {sf_feed_by_group,          sf_site_auth_only},
+
+                        {sf_is_shareable,           sf_site_auth_only},
 
                         {sf_search,                 sf_site_auth_only},
 

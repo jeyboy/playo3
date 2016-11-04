@@ -34,14 +34,16 @@ namespace Core {
 
                     flags = {
                         {sf_endpoint, (SourceFlags)(
-                            sf_offline_credentials_req | sf_is_primary | sf_is_content_shareable | sf_track |
-                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable | sf_user/*sf_sociable*/)
+                            sf_offline_credentials_req | sf_is_primary | sf_audio | sf_user/*sf_sociable*/ |
+                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable)
                         },
 
 //                        {sf_feed,                   sf_site},
 
                         {sf_feed_by_user,               sf_both_auth},
 //                        {sf_feed_by_group,          sf_site_auth_only},
+
+                        {sf_is_shareable,               sf_site_not_api_auth},
 
                         {sf_search,                     sf_site_not_api_auth},
 
