@@ -8,7 +8,7 @@ namespace Core {
         namespace Youtube {
             class Set : public virtual Base {
             protected:
-                enum SetType { set_popular_video = 1, set_feed_video, set_top_video, set_history, set_liked };
+                enum SetType { set_popular_video = 1, set_feed_video, set_top_video, set_history, set_liked, set_see_later };
 
                 QJsonValue setByType(const SetType & /*set_type*/, const SearchLimit & /*limits*/) { // rewrite on using of offset
 //                    SourceFlags perm = permissions(sf_compilation);
@@ -87,11 +87,12 @@ namespace Core {
 
                 QString setTypeToStr(const SetType & stype) {
                     switch(stype) {
-                        case set_popular_video:         return LSTR("Popular Video");
+                        case set_popular_video:         return LSTR("Popular video");
                         case set_feed_video:            return LSTR("Video from user feeds");
-                        case set_top_video:             return LSTR("Redaction choose Video");
+                        case set_top_video:             return LSTR("Redaction choose video");
                         case set_history:               return LSTR("View history");
-                        case set_liked:                 return LSTR("Liked Video");
+                        case set_liked:                 return LSTR("Liked video");
+                        case set_see_later:             return LSTR("See later video");
 
                         default:                        return LSTR("Unknown: ");
                     }

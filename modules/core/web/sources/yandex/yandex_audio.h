@@ -11,7 +11,8 @@ namespace Core {
                 QString audioUrl(const QString & track_id) {
                     // codec, bitrate, src, gain
                     QJsonObject obj = Manager::prepare() -> jsonGet(
-                        baseUrlStr(qst_site_alt1, LSTR("track/%1/download").arg(track_id), {})
+                        baseUrlStr(qst_site_alt2, LSTR("track/%1/%2/download").arg(track_id, LSTR("top-track-main")), {}),
+                        headers()
                     );
 
                     obj = Manager::prepare() -> jsonGet(

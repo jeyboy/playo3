@@ -188,7 +188,7 @@ namespace Core {
 
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = QString()) {
-                    QString locale = siteLocale(val_default_locale);
+                    QString locale = siteLocale(val_default_locale); // FIXME: need to correctly determinate locale for not authed users
 
                     //FIXME: if user opens page with logged in account in browser - our cookies is automatically expired
 
