@@ -49,7 +49,7 @@ namespace Core {
             loadAdditionals(root);
         }
 
-        QJsonArray itemsInfo(const QStringList & items_uids, const DataMediaType & item_media_type, QJsonArray * result = 0) {
+        QJsonObject itemsInfo(const QStringList & items_uids, const DataMediaType & item_media_type, QJsonArray * result = 0) {
             QJsonArray res = result ? *result : QJsonArray();
             QJsonValue part_res;
 
@@ -64,11 +64,11 @@ namespace Core {
                     QJsonArray items = part_res.toArray();
                     for(QJsonArray::ConstIterator it = items.constBegin(); it != items.constEnd(); it++)
                         res.append(*it);
-                } else
-                    res << part_res.toObject();
+                }
+                else res << part_res.toObject();
             }
 
-            return res;
+            return prepareBlock(item_media_type, res);
         }
 
         virtual inline QString refresh(const QString & refresh_page, const DataMediaType & item_media_type) {

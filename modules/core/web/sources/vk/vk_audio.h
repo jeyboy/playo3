@@ -11,8 +11,8 @@ namespace Core {
                 enum AudioSearchSort { ass_creation_date = 0, ass_duration = 1, ass_popularity = 2 };
 
                 QString audioUrl(const QString & track_id) {
-                    QJsonObject obj = audioInfo(track_id).toObject();
-                    return obj.value(tkn_url).toString();
+                    QJsonArray arr = audioInfo(track_id).toArray();
+                    return arr.isEmpty() ? QString() : JSON_STR(arr.first().toObject(), tkn_url);
                 }
 
                 QString audioLyric(const QString & lyrics_id) { //TODO: finish me // not tested
@@ -38,11 +38,7 @@ namespace Core {
 
 
                 QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
-                QJsonValue audioInfo(const QString & track_id) {
-                    QJsonObject info = audioInfo(QStringList() << track_id).toObject();
-                    QJsonArray content = info.value(tkn_content).toArray();
-                    return content.isEmpty() ? QJsonObject() : content[0].toObject();
-                }
+                QJsonValue audioInfo(const QString & track_id) { return audioInfo(QStringList() << track_id); }
                 QJsonValue audioInfo(const QStringList & track_ids) {
                     SourceFlags perm = permissions(sf_audio_by_id);
                     QJsonArray block_content;
@@ -83,7 +79,8 @@ namespace Core {
                         default: Logger::obj().write(name(), "track info is not accessable", Logger::log_error);
                     }
 
-                    return prepareBlock(dmt_audio, block_content);
+                    return block_content;
+//                    return prepareBlock(dmt_audio, block_content);
                 }
 
                 QJsonValue userAudioRecommendations(const QUrlQuery & args) {
