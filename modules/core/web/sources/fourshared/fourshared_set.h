@@ -102,12 +102,18 @@ namespace Core {
                 }
 
                 inline QMap<QString, QString> setsList() {
+                    QMap<QString, QString> res;
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
 
-                    return {
-                        {setTypeToStr(set_popular_audio), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_audio }})},
-                        {setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }})}
-                    };
+                    APPEND_SET_OPTION(res, cmd_tmpl, set_popular_audio);
+                    APPEND_SET_OPTION(res, cmd_tmpl, set_popular_video);
+
+                    return res;
+
+//                    return {
+//                        {setTypeToStr(set_popular_audio), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_audio }})},
+//                        {setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }})}
+//                    };
                 }
                 QJsonValue openSet(const QUrlQuery & attrs) {
                     return QJsonArray() << Set::setByType(attrs);

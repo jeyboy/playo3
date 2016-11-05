@@ -136,23 +136,17 @@ namespace Core {
 
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
 
-                    for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
+                    for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {                        
                         res.insert(
                             new_hot_title % opt.key(),
                             cmd_tmpl.setAttrsAsStr(
-                                {
-                                    { CMD_SET_TYPE, set_new_hot },
-                                    { CMD_GENRE, opt.value() }
-                                }
+                                {{ CMD_SET_TYPE, set_new_hot }, { CMD_GENRE, opt.value() }}
                             )
                         );
                         res.insert(
                             top_50_title % opt.key(),
                             cmd_tmpl.setAttrsAsStr(
-                                {
-                                    { CMD_SET_TYPE, set_top_50 },
-                                    { CMD_GENRE, opt.value() }
-                                }
+                                {{ CMD_SET_TYPE, set_top_50 }, { CMD_GENRE, opt.value() }}
                             )
                         );
 
@@ -162,29 +156,20 @@ namespace Core {
                             res.insert(
                                 popular_title % opt.key(),
                                 cmd_tmpl.setAttrsAsStr(
-                                    {
-                                        { CMD_SET_TYPE, set_popular },
-                                        { CMD_GENRE, opt.value() }
-                                    }
+                                    {{ CMD_SET_TYPE, set_popular }, { CMD_GENRE, opt.value() }}
                                 )
                             );
                         else {
                             res.insert(
                                 popular_title % parts.first(),
                                 cmd_tmpl.setAttrsAsStr(
-                                    {
-                                        { CMD_SET_TYPE, set_popular },
-                                        { CMD_GENRE, parts.first() }
-                                    }
+                                    {{ CMD_SET_TYPE, set_popular }, { CMD_GENRE, parts.first() }}
                                 )
                             );
                             res.insert(
                                 popular_title % parts.last(),
                                 cmd_tmpl.setAttrsAsStr(
-                                    {
-                                        { CMD_SET_TYPE, set_popular },
-                                        { CMD_GENRE, parts.last() }
-                                    }
+                                    {{ CMD_SET_TYPE, set_popular }, { CMD_GENRE, parts.last() }}
                                 )
                             );
                         }
@@ -193,17 +178,17 @@ namespace Core {
                     res.insert(
                         popular_title % PACKAGE_REPLACE_FRAGMENT_TITLE,
                         cmd_tmpl.setAttrsAsStr(
-                            {
-                                { CMD_SET_TYPE, set_popular },
-                                { CMD_GENRE, PACKAGE_REPLACE_FRAGMENT }
-                            }
+                            {{ CMD_SET_TYPE, set_popular }, { CMD_GENRE, PACKAGE_REPLACE_FRAGMENT }}
                         )
                     );
 
-                    res.insert(
-                        setTypeToStr(set_recommended_artists),
-                        cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_recommended_artists }})
-                    );
+                    if (isConnected()) {
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_recommended_artists);
+//                        res.insert(
+//                            setTypeToStr(set_recommended_artists),
+//                            cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_recommended_artists }})
+//                        );
+                    }
 
                     return res;
                 }

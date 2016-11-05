@@ -156,34 +156,63 @@ namespace Core {
                 }
 
                 inline QMap<QString, QString> setsList() {
+                    QMap<QString, QString> res;
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
 
-                    return {
-                        {setTypeToStr(set_popular_tracks), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_tracks }})},
-                        {setTypeToStr(set_popular_artists), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_artists }})},
-                        {setTypeToStr(set_popular_tuners), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_tuners }})},
-                        {setTypeToStr(set_popular_collections), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_collections }})},
-                        {setTypeToStr(set_popular_albums), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_albums }})},
-                        {setTypeToStr(set_listened), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_listened }})},
-                        {setTypeToStr(set_downloaded), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_downloaded }})},
+                    if (isConnected()) {
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_popular_tracks);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_popular_artists);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_popular_tuners);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_popular_collections);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_popular_albums);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_listened);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_downloaded);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_of_collections);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_of_radio);
 
-                        {setTypeToStr(set_of_collections), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_of_collections }})},
-                        {setTypeToStr(set_of_radio), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_of_radio }})},
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_my);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_my_liked);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_my_history);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_my_subscriptions);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_week_top);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_new);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_popular);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_serial);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_tv_show);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_kino);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_bloggers);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_children);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_music);
+                    }
 
-                        {setTypeToStr(set_video_my), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my }})},
-                        {setTypeToStr(set_video_my_liked), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_liked }})},
-                        {setTypeToStr(set_video_my_history), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_history }})},
-                        {setTypeToStr(set_video_my_subscriptions), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_subscriptions }})},
-                        {setTypeToStr(set_video_week_top), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_week_top }})},
-                        {setTypeToStr(set_video_new), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_new }})},
-                        {setTypeToStr(set_video_popular), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_popular }})},
-                        {setTypeToStr(set_video_serial), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_serial }})},
-                        {setTypeToStr(set_video_tv_show), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_tv_show }})},
-                        {setTypeToStr(set_video_kino), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_kino }})},
-                        {setTypeToStr(set_video_bloggers), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_bloggers }})},
-                        {setTypeToStr(set_video_children), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_children }})},
-                        {setTypeToStr(set_video_music), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_music }})}
-                    };
+//                    return {
+//                        {setTypeToStr(set_popular_tracks), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_tracks }})},
+//                        {setTypeToStr(set_popular_artists), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_artists }})},
+//                        {setTypeToStr(set_popular_tuners), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_tuners }})},
+//                        {setTypeToStr(set_popular_collections), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_collections }})},
+//                        {setTypeToStr(set_popular_albums), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_albums }})},
+//                        {setTypeToStr(set_listened), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_listened }})},
+//                        {setTypeToStr(set_downloaded), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_downloaded }})},
+
+//                        {setTypeToStr(set_of_collections), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_of_collections }})},
+//                        {setTypeToStr(set_of_radio), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_of_radio }})},
+
+//                        {setTypeToStr(set_video_my), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my }})},
+//                        {setTypeToStr(set_video_my_liked), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_liked }})},
+//                        {setTypeToStr(set_video_my_history), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_history }})},
+//                        {setTypeToStr(set_video_my_subscriptions), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_my_subscriptions }})},
+//                        {setTypeToStr(set_video_week_top), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_week_top }})},
+//                        {setTypeToStr(set_video_new), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_new }})},
+//                        {setTypeToStr(set_video_popular), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_popular }})},
+//                        {setTypeToStr(set_video_serial), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_serial }})},
+//                        {setTypeToStr(set_video_tv_show), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_tv_show }})},
+//                        {setTypeToStr(set_video_kino), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_kino }})},
+//                        {setTypeToStr(set_video_bloggers), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_bloggers }})},
+//                        {setTypeToStr(set_video_children), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_children }})},
+//                        {setTypeToStr(set_video_music), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_video_music }})}
+//                    };
+
+                    return res;
                 }
 
                 inline QJsonValue openSet(const QUrlQuery & attrs) { return QJsonArray() << setByType(attrs); }

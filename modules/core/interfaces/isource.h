@@ -19,6 +19,8 @@
 #define OPERATION_BLOCKED LSTR("block")
 
 #define ID_TOKEN(token1, token2, sep) token1 % sep % token2
+#define APPEND_SET_OPTION(options, cmd_tmpl, set_type)\
+    res.insert(setTypeToStr(set_type), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_type }}))
 
 namespace Core {
     class ISource : public ISourceAuthPerm, public ISourceFeeds, public ISearchable, public ICmd {

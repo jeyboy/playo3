@@ -131,28 +131,37 @@ namespace Core {
 
                 QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
-                    QMap<QString, QString> opts = audioSetOptions();
 
-                    QString popular_title = setTypeToStr(set_popular_tracks);
-                    Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
+                    if (isConnected()) {
+                        QMap<QString, QString> opts = audioSetOptions();
 
-                    for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
-                        res.insert(
-                            popular_title % opt.key(),
-                            cmd_tmpl.setAttrsAsStr(
-                                {
-                                    { CMD_SET_TYPE, set_popular_tracks },
-                                    { CMD_GENRE, opt.value() }
-                                }
-                            )
-                        );
+                        QString popular_title = setTypeToStr(set_popular_tracks);
+                        Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
+
+                        for(QMap<QString, QString>::Iterator opt = opts.begin(); opt != opts.end(); opt++) {
+                            res.insert(
+                                popular_title % opt.key(),
+                                cmd_tmpl.setAttrsAsStr(
+                                    {
+                                        { CMD_SET_TYPE, set_popular_tracks },
+                                        { CMD_GENRE, opt.value() }
+                                    }
+                                )
+                            );
+                        }
+
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_popular_video);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_feed_video);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_top_video);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_series_video);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_other_video);
+
+//                        res.insert(setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }}));
+//                        res.insert(setTypeToStr(set_feed_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_feed_video }}));
+//                        res.insert(setTypeToStr(set_top_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_top_video }}));
+//                        res.insert(setTypeToStr(set_series_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_series_video }}));
+//                        res.insert(setTypeToStr(set_other_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_other_video }}));
                     }
-
-                    res.insert(setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }}));
-                    res.insert(setTypeToStr(set_feed_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_feed_video }}));
-                    res.insert(setTypeToStr(set_top_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_top_video }}));
-                    res.insert(setTypeToStr(set_series_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_series_video }}));
-                    res.insert(setTypeToStr(set_other_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_other_video }}));
 
                     return res;
                 }
