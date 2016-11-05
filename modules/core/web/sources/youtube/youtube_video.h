@@ -18,7 +18,7 @@ namespace Core {
                     // setOrder(query, hottest ? LSTR("rating") : LSTR("relevance"));
 
                     QueriableResponse response = pRequest(
-                        baseUrlStr(qst_api, path_search, {
+                        baseUrlStr(qst_api, path_search,
                             videoQuery({
 //                               {tkn_video_embedable, const_true}, // any // true
                                {tkn_type, LSTR("video")}, // channel // playlist // video
@@ -28,7 +28,7 @@ namespace Core {
                            //  Note that the pipe character must be URL-escaped when it is sent in your API request. The URL-escaped value for the pipe character is %7C.
                                {tkn_q, limits.predicate},
                             })
-                        }),
+                        ),
                         call_type_json,
                         rules(QString(), limits.items_limit), 0, proc_json_extract, YOUTUBE_ITEMS
                     );
@@ -152,9 +152,12 @@ namespace Core {
                 }
 
                 QJsonValue videoByUserRating(const QUrlQuery & args) {
-                    return videoByUserRating(args.queryItemValue(CMD_PREDICATE) == LSTR("1"));
+                    return videoByUserRating(
+                        args.queryItemValue(CMD_PREDICATE) == LSTR("1"),
+                        args.queryItemValue(CMD_OFFSET)
+                    );
                 }
-                QJsonValue videoByUserRating(const bool liked) {
+                QJsonValue videoByUserRating(const bool liked, const QString & token = QString()) {
                     SourceFlags perm = permissions(sf_video_by_user);
 
                     switch(perm) {
@@ -162,17 +165,16 @@ namespace Core {
                         case sf_api: {
                             QueriableResponse response = pRequest(
                                 baseUrlStr(qst_api, path_videos, {
-                                    {tkn_part, tkn_snippet % ',' % LSTR("contentDetails")},
+                                    {tkn_part, QString(tkn_snippet % ',' % LSTR("contentDetails"))},
                                     {LSTR("fields"), LSTR("items(id,snippet,contentDetails),nextPageToken,pageInfo")},
-                                    {LSTR("myRating"), liked ? LSTR("like") : LSTR("dislike ")},
-                                    {LSTR("maxResults"), 50}
+                                    {LSTR("myRating"), liked ? LSTR("like") : LSTR("dislike")},
+                                    {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT}
                                 }),
                                 call_type_json, rules(token),
                                 0, proc_json_extract, YOUTUBE_ITEMS, call_method_get,
                                 authHeaders()
                             );
 
-                            initDuration(response.content);
                             return prepareBlock(dmt_video, cmd_mtd_video_by_user_rating, response, {}, {{CMD_PREDICATE, liked ? LSTR("1") : LSTR("0")}});
                         break;}
                         default: Logger::obj().write(name(), "videoByRating", Logger::log_error);

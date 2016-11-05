@@ -19,6 +19,10 @@ namespace Core {
                 void userInfoAsync(const QString & user_id, Func * func) {
                     ThreadUtils::obj().run((Requests *)this, &Requests::userInfo, user_id, func);
                 }
+
+                void openSetAsync(const QString & cutomParams, Func * func) {
+                    ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);
+                }
             };
         }
     }

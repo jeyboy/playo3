@@ -1,20 +1,44 @@
 #ifndef YOUTUBE_SET_H
 #define YOUTUBE_SET_H
 
-#include "youtube_defines.h"
+#include "youtube_video.h"
 
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Set : public virtual Base {
+            class Set : public Video {
             protected:
-                enum SetType { set_popular_video = 1, set_feed_video, set_top_video, set_history, set_liked, set_disliked, set_see_later };
+                enum SetType { set_popular_video = 1, set_feed_video, set_top_video, set_video_history, set_video_liked, set_video_disliked, set_video_see_later };
 
-                QJsonValue setByType(const SetType & /*set_type*/, const SearchLimit & /*limits*/) { // rewrite on using of offset
-//                    SourceFlags perm = permissions(sf_compilation);
-//                    QJsonArray block_content;
+                QJsonValue setByType(const SetType & set_type, const SearchLimit & /*limits*/) { // rewrite on using of offset
+                    SourceFlags perm = permissions(sf_compilation);
+                    QJsonArray block_content;
 
-//                    switch(set_type) {
+                    switch(set_type) {
+                        case set_popular_video:     {
+
+                        break;}
+
+                        case set_feed_video:        {
+
+                        break;}
+
+                        case set_top_video:         {
+
+                        break;}
+
+                        case set_video_history:     {
+
+                        break;}
+
+                        case set_video_liked:       { return videoByUserRating(true); break;}
+
+                        case set_video_disliked:    { return videoByUserRating(false); break;}
+
+                        case set_video_see_later:   {
+
+                        break;}
+
 //                        case set_popular_tracks: {
 //                            switch(perm) {
 //                                case sf_site: {
@@ -80,7 +104,7 @@ namespace Core {
 //                        case set_series_video: { return videoByCategory(LSTR("series")); break;}
 
 //                        case set_other_video: { return videoByCategory(LSTR("other")); break;}
-//                    }
+                    }
 
                     return QJsonObject();
                 }
@@ -90,10 +114,10 @@ namespace Core {
                         case set_popular_video:         return LSTR("Popular video");
                         case set_feed_video:            return LSTR("Video from user feeds");
                         case set_top_video:             return LSTR("Redaction choose video");
-                        case set_history:               return LSTR("View history");
-                        case set_liked:                 return LSTR("Liked video");
-                        case set_disliked:              return LSTR("Disliked video");
-                        case set_see_later:             return LSTR("See later video");
+                        case set_video_history:         return LSTR("View history");
+                        case set_video_liked:           return LSTR("Liked video");
+                        case set_video_disliked:        return LSTR("Disliked video");
+                        case set_video_see_later:       return LSTR("See later video");
 
                         default:                        return LSTR("Unknown: ");
                     }
@@ -130,9 +154,9 @@ namespace Core {
 
                     if (isConnected()) {
                         APPEND_SET_OPTION(res, cmd_tmpl, set_feed_video);
-                        APPEND_SET_OPTION(res, cmd_tmpl, set_history);
-                        APPEND_SET_OPTION(res, cmd_tmpl, set_liked);
-                        APPEND_SET_OPTION(res, cmd_tmpl, set_disliked);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_history);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_liked);
+                        APPEND_SET_OPTION(res, cmd_tmpl, set_video_disliked);
                     }
 
 //                    res.insert(setTypeToStr(set_popular_video), cmd_tmpl.setAttrsAsStr({{ CMD_SET_TYPE, set_popular_video }}));

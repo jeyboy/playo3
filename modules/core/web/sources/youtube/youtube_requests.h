@@ -4,7 +4,6 @@
 #include "youtube_auth.h"
 #include "youtube_channel.h"
 #include "youtube_playlist.h"
-#include "youtube_video.h"
 #include "youtube_set.h"
 
 #include "modules/core/web/interfaces/sociable/sociable.h"
@@ -15,7 +14,7 @@
 namespace Core {
     namespace Web {
         namespace Youtube {
-            class Requests : public Sociable, public Auth, public Playlist, public Video, public Channel, public Set {
+            class Requests : public Sociable, public Auth, public Playlist, public Channel, public Set {
                 bool extractStatus(QueriableArg * arg, QJsonObject & json, int & code, QString & message) {
                     QJsonObject error = json.value(LSTR("error")).toObject();
                     if (error.isEmpty()) {

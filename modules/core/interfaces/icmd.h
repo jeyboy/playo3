@@ -203,6 +203,7 @@ namespace Core {
             cmd_mtd_video_by_user,
             cmd_mtd_video_by_playlist,
             cmd_mtd_video_by_category,
+            cmd_mtd_video_by_user_rating,
 
             cmd_mtd_video_channels_by_id,
             cmd_mtd_video_channels_by_name,
@@ -282,6 +283,7 @@ namespace Core {
                 case cmd_mtd_video_by_playlist: return videoByPlaylist(params);
                 case cmd_mtd_video_by_category: return videoByCategory(params);
                 case cmd_mtd_video_recommendations: return videoRecommendations(params);
+                case cmd_mtd_video_by_user_rating: return videoByUserRating(params);
 
                 case cmd_mtd_video_channels_by_id: return videoChannelsById(params);
                 case cmd_mtd_video_channels_by_name: return videoChannelsByName(params);
@@ -362,6 +364,7 @@ namespace Core {
         virtual QJsonValue videoByPlaylist(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoByCategory(const QUrlQuery & /*args*/) { return QJsonObject(); }
         virtual QJsonValue videoRecommendations(const QUrlQuery & /*args*/) { return QJsonObject(); }
+        virtual QJsonValue videoByUserRating(const QUrlQuery & /*args*/) { return QJsonObject(); }
 
 
         virtual QJsonValue videoChannelsById(const QUrlQuery & /*args*/) { return QJsonObject(); }
