@@ -151,6 +151,36 @@ namespace Core {
                     return prepareBlock(dmt_video_set, cmd_mtd_video_categories, response);
                 }
 
+                QJsonValue videoByUserRating(const QUrlQuery & args) {
+                    return videoByUserRating(args.queryItemValue(CMD_PREDICATE) == LSTR("1"));
+                }
+                QJsonValue videoByUserRating(const bool liked) {
+                    SourceFlags perm = permissions(sf_video_by_user);
+
+                    switch(perm) {
+                        case sf_site:
+                        case sf_api: {
+                            QueriableResponse response = pRequest(
+                                baseUrlStr(qst_api, path_videos, {
+                                    {tkn_part, tkn_snippet % ',' % LSTR("contentDetails")},
+                                    {LSTR("fields"), LSTR("items(id,snippet,contentDetails),nextPageToken,pageInfo")},
+                                    {LSTR("myRating"), liked ? LSTR("like") : LSTR("dislike ")},
+                                    {LSTR("maxResults"), 50}
+                                }),
+                                call_type_json, rules(token),
+                                0, proc_json_extract, YOUTUBE_ITEMS, call_method_get,
+                                authHeaders()
+                            );
+
+                            initDuration(response.content);
+                            return prepareBlock(dmt_video, cmd_mtd_video_by_user_rating, response, {}, {{CMD_PREDICATE, liked ? LSTR("1") : LSTR("0")}});
+                        break;}
+                        default: Logger::obj().write(name(), "videoByRating", Logger::log_error);
+                    }
+
+                    return QJsonObject();
+                }
+
                 // https://developers.google.com/youtube/v3/docs/guideCategories/list
                 QJsonValue officialVideoCategories() {
 //                    {
