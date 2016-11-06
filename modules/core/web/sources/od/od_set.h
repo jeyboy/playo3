@@ -66,7 +66,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ LSTR("locale"), LSTR("ru") }}
+                                    {{ LSTR("locale"), siteLocale(const_default_locale) }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_artists
@@ -80,7 +80,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ LSTR("locale"), LSTR("ru") }}
+                                    {{ LSTR("locale"), siteLocale(const_default_locale) }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << LSTR("tuners")
@@ -94,7 +94,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ LSTR("locale"), LSTR("ru") }}
+                                    {{ LSTR("locale"), siteLocale(const_default_locale) }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_collections
@@ -108,7 +108,7 @@ namespace Core {
                             response = pRequest(
                                 audioUrlStr(
                                     path_audio_popular,
-                                    {{ LSTR("locale"), LSTR("ru") }}
+                                    {{ LSTR("locale"), siteLocale(const_default_locale) }}
                                 ),
                                 call_type_json, rules(limits.start_offset, limits.items_limit), 0,
                                 proc_json_extract, QStringList() << tkn_albums

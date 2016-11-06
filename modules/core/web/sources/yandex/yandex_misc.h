@@ -25,7 +25,7 @@ namespace Core {
                     // curl 'https://music.yandex.ua/api/v2.1/handlers/auth?external-domain=music.yandex.ua&overembed=no&__t=1474529009008' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Cache-Control: no-cache' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Pragma: no-cache' -H 'Referer: https://music.yandex.ua/genre/electronic' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Felectronic'
                     QString sign() {
                         QJsonObject response = Manager::prepare() -> jsonGet(
-                            QString(url_site_v2_1.arg(siteLocale(val_default_locale)) % LSTR("auth")),
+                            QString(url_site_v2_1.arg(siteLocale(const_default_locale)) % LSTR("auth")),
                             headers()
                         );
                         return JSON_CSTR(response, LSTR("csrf"));

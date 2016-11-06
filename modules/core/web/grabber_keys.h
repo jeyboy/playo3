@@ -63,6 +63,7 @@ namespace Core {
         extern const QString val_def_extension;
         extern const QString val_login_title_postfix;
 
+        extern const QString const_default_locale;
         extern const QString const_true;
         extern const QString const_false;
     }

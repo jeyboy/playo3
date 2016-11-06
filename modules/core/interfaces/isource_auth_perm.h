@@ -51,7 +51,7 @@ namespace Core {
 
 
         inline void setSiteAdditionalToken(const QString & token)       { attrs[SOURCE_SITE_ADDITIONAL_TOKEN_JSON] = token; }
-        inline QString siteAdditionalToken() const                      { return attrs[SOURCE_SITE_ADDITIONAL_TOKEN_JSON].toString(); }
+        virtual inline QString siteAdditionalToken()                    { return attrs[SOURCE_SITE_ADDITIONAL_TOKEN_JSON].toString(); }
 
         inline void setSiteHash(const QString & token)                  { attrs[SOURCE_SITE_HASH_JSON] = token; }
         inline QString siteHash() const                                 { return attrs[SOURCE_SITE_HASH_JSON].toString(); }

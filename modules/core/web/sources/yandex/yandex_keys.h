@@ -49,7 +49,6 @@ namespace Core {
 //            extern const QString val_sms_code_title;
             extern const QString val_name;
             extern const QString val_key_set;
-            extern const QString val_default_locale;
         }
     }
 }

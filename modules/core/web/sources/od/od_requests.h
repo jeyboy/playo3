@@ -283,6 +283,8 @@ namespace Core {
                 Requests() {
                     setSociableLimitations(true, true, true, true);
 
+                    setSiteLocale(LSTR("ru")); // INFO: temp
+
                     flags = QHash<SourceFlags, SourceFlags>{
                         {sf_endpoint, (SourceFlags)(
                             sf_online_credentials_req | sf_is_primary | sf_audio | sf_video | sf_user/*sf_sociable*/ |

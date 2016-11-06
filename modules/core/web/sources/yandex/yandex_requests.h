@@ -129,6 +129,13 @@ namespace Core {
                     };
                 }
 
+                inline QString siteAdditionalToken() {
+                    if (ISource::siteAdditionalToken().isEmpty())
+                        setSiteAdditionalToken(sign());
+
+                    return ISource::siteAdditionalToken();
+                }
+
                 void saveAdditionals(QJsonObject & obj) {
                     setSiteAdditionalToken(QString());
                     Sociable::toJson(obj);
@@ -188,7 +195,7 @@ namespace Core {
 
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate = QString()) {
-                    QString locale = siteLocale(val_default_locale); // FIXME: need to correctly determinate locale for not authed users
+                    QString locale = siteLocale(const_default_locale); // FIXME: need to correctly determinate locale for not authed users
 
                     //FIXME: if user opens page with logged in account in browser - our cookies is automatically expired
 
@@ -202,12 +209,7 @@ namespace Core {
                     switch(stype) {
                         case qst_site: {        return url_site_v1.arg(locale) % predicate; }
                         case qst_site_alt1: {   return url_site_v2.arg(locale) % predicate; }
-                        case qst_site_alt2: {
-                            if (siteAdditionalToken().isEmpty())
-                                setSiteAdditionalToken(sign());
-
-                            return url_site_v2_1.arg(locale) % predicate;
-                        }
+                        case qst_site_alt2: {   return url_site_v2_1.arg(locale) % predicate; }
                         default: {              return url_root.arg(locale) % predicate; }
                     }
                 }
@@ -220,7 +222,7 @@ namespace Core {
                                 QString(
                                     LSTR("external-domain=") % LSTR("music.yandex.ua") %
                                     LSTR("&overembed=") % const_false %
-                                    LSTR("&lang=") % siteLocale(val_default_locale)
+                                    LSTR("&lang=") % siteLocale(const_default_locale)
                                 )
                             );
 

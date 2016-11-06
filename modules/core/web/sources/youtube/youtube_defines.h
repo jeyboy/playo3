@@ -59,7 +59,7 @@ namespace Core {
                     setParam(query, tkn_part, LSTR("snippet,contentDetails"));
                     setParam(query, LSTR("fields"), LSTR("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
                     setParam(query, LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT);
-                    setParam(query, LSTR("regionCode"), LSTR("ua"));
+                    setParam(query, LSTR("regionCode"), siteLocale(const_default_locale));
 //                    setMusicVideoCategory(query);
 
                     return baseUrlStr(qst_api, LSTR("videos"), query);

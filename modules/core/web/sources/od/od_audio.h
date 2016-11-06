@@ -162,13 +162,13 @@ namespace Core {
                         args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                     );
                 }
-                QJsonValue audioByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = LSTR("ru"), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { //TODO: need to check
+                QJsonValue audioByTuner(const QString & tuner_id, int offset = 0, int count = TRACKS_AMOUNT_LIMIT, const QString & locale = QString(), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { //TODO: need to check
                     QueriableResponse response = pRequest( // artists // tracks //albums
                         audioUrlStr(
                             path_audio_radio,
                             {
                                 { tkn_tuner, tuner_id },
-                                { tkn_locale, locale }
+                                { tkn_locale, locale.isEmpty() ? siteLocale(const_default_locale) : locale }
                             }
                         ),
                         call_type_json, rules(offset, qMax(TRACKS_AMOUNT_LIMIT, count)), 0,

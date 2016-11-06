@@ -47,7 +47,6 @@ namespace Core {
 //            extern const QString val_sms_code_title =               QStringLiteral("Code from sms");
             extern const QString val_name =                         QStringLiteral("Yandex");
             extern const QString val_key_set =                      QStringLiteral("XGRlBW9FXlekgbPrRHuSiA");
-            extern const QString val_default_locale =               QStringLiteral("ua");
         }
     }
 }

@@ -140,7 +140,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_video_cats, {
                             {tkn_part,          tkn_snippet},
-                            {tkn_region_code,   siteLocale(LSTR("ua"))},
+                            {tkn_region_code,   siteLocale(const_default_locale)},
 //                           id 	string
 //                           The id parameter specifies a comma-separated list of video category IDs for the resources that you are retrieving.
                         }),
@@ -198,7 +198,7 @@ namespace Core {
                     QueriableResponse response = pRequest(
                         baseUrlStr(qst_api, path_quide_cats, {
                             {tkn_part,          tkn_snippet},
-                            {tkn_region_code,   siteLocale(LSTR("ua"))},
+                            {tkn_region_code,   siteLocale(const_default_locale)},
 //                           id 	string
 //                           The id parameter specifies a comma-separated list of video category IDs for the resources that you are retrieving.
                         }),

@@ -50,6 +50,7 @@ namespace Core {
         extern const QString val_def_extension          = QStringLiteral("mp3");
         extern const QString val_login_title_postfix    = QStringLiteral(" auth");
 
+        extern const QString const_default_locale       = QStringLiteral("ua");
         extern const QString const_true                 = QStringLiteral("true");
         extern const QString const_false                = QStringLiteral("false");
     //    extern const QString page_offset_key        = QStringLiteral("%1");

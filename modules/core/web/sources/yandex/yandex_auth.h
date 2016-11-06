@@ -12,7 +12,7 @@ namespace Core {
 
                 bool checkConnection(QString & user_id) {
                     QJsonObject response = Manager::prepare() -> jsonGet(
-                        QString(url_site_v1.arg(siteLocale(val_default_locale)) % LSTR("auth.jsx"))
+                        QString(url_site_v1.arg(siteLocale(const_default_locale)) % LSTR("auth.jsx"))
                     );
                     response = JSON_OBJ(response, LSTR("user"));
 
@@ -36,7 +36,7 @@ namespace Core {
 
                     QString login_link_href = login_link -> link().replace(LSTR("undefined"), baseUrlStr(qst_site_base).section('/', 2, 2));
                     //INFO: patch locale for auth link / why its always eq to ru ?
-                    login_link_href.replace('.' % val_default_locale % '/', '.' % siteLocale() % '/');
+                    login_link_href.replace(LSTR(".ru/"), '.' % siteLocale() % '/');
 
                     Html::Document login_doc = Manager::prepare() -> getFollowed(login_link_href) -> toHtml();
                     Html::Tag * auth_form = login_doc.findFirst("form");
