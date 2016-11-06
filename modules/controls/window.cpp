@@ -275,13 +275,9 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
             Settings::currentStyle -> mainBrush.setFinalStop(rect().bottomRight());
             painter.setBrush(Settings::currentStyle -> mainBrush);
-            if (!isResizing) {
-                painter.setPen(Settings::currentStyle -> pen);
-                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
-            }
-
-            painter.setPen(isResizing ? Settings::currentStyle -> resizePen : Settings::currentStyle -> bevelPen);
             painter.drawImage(backRect, Settings::currentStyle -> background());
+
+            painter.setPen(isResizing ? Settings::currentStyle -> resizePen : Settings::currentStyle -> pen);
             painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             painter.restore();
         break; }

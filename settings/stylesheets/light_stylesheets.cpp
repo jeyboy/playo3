@@ -146,18 +146,19 @@ void LightStylesheets::initInnerBrush() {
 }
 
 void LightStylesheets::initPens() {
-    QVector<qreal> penPattern;
-    penPattern.append(1); penPattern.append(borderWidth / 2);
+//    QVector<qreal> penPattern;
+//    penPattern.append(1); penPattern.append(borderWidth / 2);
 
-    pen.setColor(QColor::fromRgb(255, 255, 255));
+    pen.setColor(QColor::fromRgb(23, 23, 23));
+//    pen.setColor(QColor::fromRgb(255, 255, 255));
     pen.setWidth(borderWidth / 2);
     pen.setCosmetic(true);
 
-    bevelPen.setColor(QColor::fromRgb(23, 23, 23));
-    bevelPen.setWidth(borderWidth / 2);
-    bevelPen.setCosmetic(true);
-    bevelPen.setStyle(Qt::DashLine);
-    bevelPen.setDashPattern(penPattern);
+//    bevelPen.setColor(QColor::fromRgb(23, 23, 23));
+//    bevelPen.setWidth(borderWidth / 2);
+//    bevelPen.setCosmetic(true);
+//    bevelPen.setStyle(Qt::DashLine);
+//    bevelPen.setDashPattern(penPattern);
 
     resizePen.setWidth(2);
     resizePen.setColor(colorResize());
