@@ -1,6 +1,9 @@
 #ifndef YANDEX_STREAM_H
 #define YANDEX_STREAM_H
 
+
+
+
 //curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/relax/settings/n/ru/e1tHp88dt--aL4xrIiq9qQ~~-1asb9kceg16492250&external-domain=music.yandex.ua&overembed=no&__t=1473552998747' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/easy' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Feasy'
 
 // curl 'https://music.yandex.ua/api/v2.1/handlers/radio/genre/rnb/feedback/trackStarted/5570:7112/sy/net/match_r1201.html?&__t=1474438662883' -H 'Host: music.yandex.ua' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json; q=1.0, text/*; q=0.8, */*; q=0.1' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Content-Type: application/x-www-form-urlencoded' -H 'Referer: https://music.yandex.ua/genre/r-n-b' -H 'X-Retpath-Y: https%3A%2F%2Fmusic.yandex.ua%2Fgenre%2Fr-n-b' -H 'X-Requested-With: XMLHttpRequest' -H 'Cookie: yandexuid=2190563221452621883; L=WnEJRFAPV0xrQVpRcXN0SEdPV0t6bmtBXl0rEDg8e3p/cg==.1474342480.12659.397393.538aa840261797a55723bf7670f887c4; yp=1464207350.ww.1#1472199353.szm.1%3A1920x1080%3A1920x969#1788794542.multib.1; _ym_uid=1473426341377070158; lastVisitedPage=%7B%22363617853%22%3A%22%2Ffeed%22%7D; yabs-vdrf=SpDnNIW57Yqy0pDnNEmOrC0y1pDnNWG5dJ5C1pDnNDm3LUrK1WDnN5GIw4Am0VjnNDm1Aa5G1hTbN201Z8L819ifNtWF8wa009ifNt01j_nG1USbNFm2Hxje0BCXN202rAXW1ZiTNIW6T4nu0lyPNDm0H3bS16iPNRW3cBLS1TiLNDm1yArq1eiHNDm3V1oi1eiHNt02WOLW1nxvN402CAm400; spravka=dD0xNDczNjY2OTQwO2k9MTc4LjEzNy4xMTIuMjM7dT0xNDczNjY2OTQwOTQ1MjcyMDI1O2g9OTYzMWExMzk1OWQ1NDQ1MWRiNWMwZWFiYTZhNTNkNzU=; Session_id=noauth:1474430260; device_id="b79263ca059d9f7d5505a415b6cf5632af8419b20"; _ym_isad=1' -H 'Connection: keep-alive' --data 'timestamp=1474438664332&from=web-genre-radio-radio-main&batchId=99fcf62b504c765dccaf5db9bc297b29.0&trackId=5570&albumId=7112&totalPlayed=0.1&sign=d6bac9e908af2b2fd5ad19b379630cace0dbf1ca%3A1474437751320&external-domain=music.yandex.ua&overembed=no'
@@ -180,10 +183,14 @@ namespace Core {
                 QJsonValue streamsByGenre(const QUrlQuery & args) {
                     return streamsByGenre(
                         args.queryItemValue(CMD_GENRE),
+                        args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue streamsByGenre(const QString & genre, const QString & queue = QString("")) { // INFO: X-Retpath-Y header is mandatory there
+
+                QJsonValue streamsByGenre(const QString & genre, const QString & id = QString(), const QString & queue = QString()) { // INFO: X-Retpath-Y header is mandatory there
+                    QString _id = id.isEmpty() ? QString(genre % LSTR("~~") % QString::number(QDateTime::currentMSecsSinceEpoch())) : id;
+
                     QJsonArray content = saRequest(
                         baseUrlStr(
                             qst_site_alt2, LSTR("radio/genre/%1/tracks").arg(genre),
@@ -202,14 +209,15 @@ namespace Core {
 
                             QJsonObject js = Manager::prepare() -> jsonPost(
                                 baseUrlStr(
-                                    qst_site_alt2, LSTR("radio/genre/%1/feedback/trackFinished/%2").arg(genre, YANDEX_ITEM_UID(it)),
+                                    qst_site_alt2, LSTR("radio/genre/%1/feedback/trackFinished/%2/web/%3/%4")
+                                        .arg(genre, YANDEX_ITEM_UID(it), siteLocale(const_default_locale), _id),
                                     {
                                         {LSTR("timestamp"), QString::number(QDateTime::currentMSecsSinceEpoch())},
                                         {LSTR("from"), LSTR("web-genre-radio-radio-main")},
                                         {LSTR("batchId"), JSON_STR(it, LSTR("batchId"))},
                                         {LSTR("trackId"), JSON_CSTR(it, tkn_id)},
                                         {LSTR("albumId"), YANDEX_ITEM_ALBUM(it)},
-                                        {LSTR("totalPlayed"), QString::number(JSON_INT(it, LSTR("durationMs")) / 1000 - 3)},
+                                        {LSTR("totalPlayed"), LSTR("0.1")/*QString::number(JSON_INT(it, LSTR("durationMs")) / 1000.0)*/},
                                         {LSTR("sign"), siteAdditionalToken()}
                                     }
                                 ), headers()
@@ -218,7 +226,10 @@ namespace Core {
                             if (JSON_STR(js, LSTR("result")) != LSTR("ok"))
                                 qCritical() << name() << "radio item finishing failed";
                         }
-                        offset = YANDEX_ITEM_UID(content.first().toObject()) % ',' % YANDEX_ITEM_UID(content.last().toObject());
+
+                        int content_amount = content.size();
+
+                        offset = YANDEX_ITEM_UID(content[0].toObject()) % ',' % YANDEX_ITEM_UID(content[content_amount - 1].toObject());
                     }
 
                     return prepareBlock(
@@ -227,7 +238,7 @@ namespace Core {
                             {
                                 tkn_more_cmd, Cmd::build(
                                     sourceType(), cmd_mtd_streams_by_genre,
-                                    {{CMD_GENRE, genre}, {CMD_OFFSET, offset}}
+                                    {{CMD_GENRE, genre}, {CMD_OFFSET, offset}, {CMD_ID, _id}}
                                 ).toString()
                             }
                         }

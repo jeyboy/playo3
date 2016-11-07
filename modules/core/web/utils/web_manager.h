@@ -17,6 +17,7 @@
 #define USER_AGENT_HEADER_NAME QStringLiteral("User-Agent")
 #define FORM_URLENCODE QStringLiteral("application/x-www-form-urlencoded")
 
+#define SERIALIZE_JSON(json) (json.isArray() ? QJsonDocument(json.toArray()) : QJsonDocument(json.toObject())).toJson(QJsonDocument::Compact)
 
 #ifdef Q_OS_WIN
     #define DEFAULT_AGENT QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0") // QStringLiteral("Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0")
@@ -119,7 +120,7 @@ namespace Core { // requests and response has memory leaks
 
             Request withHeaders(const Headers & headers);
             Response * viaGet(bool async = false);
-            Response * viaPost(const QString & content_type = FORM_URLENCODE);
+            Response * viaPost(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE);
             Response * viaPut(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE);
             Response * viaForm(const QByteArray & data = QByteArray());
 
@@ -240,12 +241,20 @@ namespace Core { // requests and response has memory leaks
 
             inline QJsonObject jsonGet(const QUrl & url, const QString & wrap) { return getFollowed(url) -> toJson(wrap); }
             inline QJsonObject jsonGet(const QUrl & url, bool wrap = false) { return getFollowed(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
-            inline QJsonObject jsonGet(const QUrl & url, Headers headers, const QString & wrap) { return getFollowed(url, headers) -> toJson(wrap); }
-            inline QJsonObject jsonGet(const QUrl & url, Headers headers, bool wrap = false) { return getFollowed(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject jsonGet(const QUrl & url, const Headers & headers, const QString & wrap) { return getFollowed(url, headers) -> toJson(wrap); }
+            inline QJsonObject jsonGet(const QUrl & url, const Headers & headers, bool wrap = false) { return getFollowed(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
             inline QJsonObject jsonPost(const QUrl & url, const QString & wrap) { return postFollowed(url) -> toJson(wrap); }
             inline QJsonObject jsonPost(const QUrl & url, bool wrap = false) { return postFollowed(url) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
-            inline QJsonObject jsonPost(const QUrl & url, Headers headers, const QString & wrap) { return postFollowed(url, headers) -> toJson(wrap); }
-            inline QJsonObject jsonPost(const QUrl & url, Headers headers, bool wrap = false) { return postFollowed(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject jsonPost(const QUrl & url, const Headers & headers, const QString & wrap) { return postFollowed(url, headers) -> toJson(wrap); }
+            inline QJsonObject jsonPost(const QUrl & url, const Headers & headers, bool wrap = false) { return postFollowed(url, headers) -> toJson(wrap ? DEF_JSON_FIELD : QString()); }
+            inline QJsonObject jsonPost(const QUrl & url, const Headers & headers, const QString & content_type, const QByteArray & payload, bool wrap = false) {
+                return postFollowed(url, headers, content_type, payload)
+                    -> toJson(wrap ? DEF_JSON_FIELD : QString());
+            }
+            inline QJsonObject jsonPost(const QUrl & url, const Headers & headers, const QJsonValue & payload, bool wrap = false) {
+                return postFollowed(url, headers, QStringLiteral("application/json"), SERIALIZE_JSON(payload))
+                    -> toJson(wrap ? DEF_JSON_FIELD : QString());
+            }
 
             inline QPixmap pixmapGet(const QUrl & url) { return getFollowed(url) -> toPixmap(); }
             inline Response * pixmapGetAsync(const QUrl & url, const Func & response) {
@@ -264,11 +273,11 @@ namespace Core { // requests and response has memory leaks
                 return resp;
             }
 
-            inline Response * postFollowed(const QUrl & url, const QString & content_type = FORM_URLENCODE) {
-                return requestTo(url).viaPost(content_type) -> followByRedirect();
+            inline Response * postFollowed(const QUrl & url, const QString & content_type = FORM_URLENCODE, const QByteArray & payload = QByteArray()) {
+                return requestTo(url).viaPost(payload, content_type) -> followByRedirect();
             }
-            inline Response * postFollowed(const QUrl & url, const Headers & headers, const QString & content_type = FORM_URLENCODE) {
-                return requestTo(url).withHeaders(headers).viaPost(content_type) -> followByRedirect();
+            inline Response * postFollowed(const QUrl & url, const Headers & headers, const QString & content_type = FORM_URLENCODE, const QByteArray & payload = QByteArray()) {
+                return requestTo(url).withHeaders(headers).viaPost(payload, content_type) -> followByRedirect();
             }
 
             inline Response * putFollowed(const QUrl & url, const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE) {
