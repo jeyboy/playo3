@@ -217,7 +217,7 @@ namespace Core {
                                         {LSTR("batchId"), JSON_STR(it, LSTR("batchId"))},
                                         {LSTR("trackId"), JSON_CSTR(it, tkn_id)},
                                         {LSTR("albumId"), YANDEX_ITEM_ALBUM(it)},
-                                        {LSTR("totalPlayed"), LSTR("0.1")/*QString::number(JSON_INT(it, LSTR("durationMs")) / 1000.0)*/},
+                                        {LSTR("totalPlayed"), QString::number(JSON_INT(it, LSTR("durationMs")) / 1000.0)},
                                         {LSTR("sign"), siteAdditionalToken()}
                                     }
                                 ), headers()
