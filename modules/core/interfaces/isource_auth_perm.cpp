@@ -7,6 +7,12 @@ SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm, const boo
     SourceFlags perms = flags.value(req_perm, sf_none);
 
     if (perms > 0) {
+        if (HAS_FLAG(perms, sf_site))
+            return sf_site;
+
+        if (HAS_FLAG(perms, sf_api))
+            return sf_api;
+
         if (HAS_FLAG(perms, sf_site_auth_only)) {
             if (auth_if_required && !isSiteConnected())
                 connectUser();
@@ -20,12 +26,6 @@ SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm, const boo
 
             if (isApiConnected()) return sf_api;
         }
-
-        if (HAS_FLAG(perms, sf_site))
-            return sf_site;
-
-        if (HAS_FLAG(perms, sf_api))
-            return sf_api;
     }
 
     return sf_none;

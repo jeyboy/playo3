@@ -114,6 +114,36 @@ namespace Core {
                             result = !tracks.isEmpty();
                         break;}
 
+                        case proc_tracks2: {
+                            QJsonObject track_obj;
+
+                            Html::Tag * info_tag = doc.findFirst(".musicPlaylistHolder");
+
+                            Html::Tag * name_tag = doc.findFirst(".fileNameHolder");
+                            QString name = name_tag -> text().trimmed(), ext;
+                            Extensions::obj().extractExtension(name, ext);
+
+                            Html::Tag * item_tag = info_tag -> findFirst(".jsD1PlaylistItem");
+
+                            Html::Tag * img_field = item_tag -> findFirst(".jsD1BigCoverUrl");
+                            if (img_field)
+                                track_obj.insert(tkn_grab_art_url, img_field -> value());
+
+                            track_obj.insert(tkn_grab_id, item_tag -> data(LSTR("id")));
+                            track_obj.insert(tkn_skip_info, true);
+                            track_obj.insert(tkn_grab_title, name);
+                            track_obj.insert(tkn_grab_extension, ext);
+                            track_obj.insert(tkn_media_type, dmt_audio);
+                            track_obj.insert(tkn_grab_url, item_tag -> findFirst(".jsD1PreviewUrl") -> value());
+                            track_obj.insert(tkn_grab_refresh, item_tag -> findFirst(".jsD1DownloadUrl") -> value());
+//                            track_obj.insert(tkn_grab_duration, item_tag -> findFirst(".jsD1Duration") -> value());
+
+
+                            arg -> append(track_obj);
+
+                            result = true;
+                        break;}
+
                         case proc_video1: {
                             Html::Set tracks = doc.find(".listView.res_table tr[valign='top']");;
 
