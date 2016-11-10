@@ -315,7 +315,7 @@ void IView::importIds() {
 
     if (dialog.exec() == QDialog::Accepted)
         mdl -> importIds(
-            dialog.getValue(dialog.text_key).split(QRegularExpression(LSTR("[^\\w\\^]")), QString::SkipEmptyParts)
+            dialog.getValue(dialog.text_key).split(QRegularExpression(LSTR("[^\\w\\^-]")), QString::SkipEmptyParts)
         );
 }
 

@@ -1209,7 +1209,7 @@ void IModel::copyIdsToClipboard(const QModelIndexList & indexes) {
     QApplication::clipboard() -> setText(ret);
 }
 
-void IModel::importIds(const QStringList & ids) { //TODO: fix me
+void IModel::importIds(const QStringList & ids) {
     emit moveInBackgroundProcess();
     QHash<int, QHash<int, QStringList> > uids_map;
 
