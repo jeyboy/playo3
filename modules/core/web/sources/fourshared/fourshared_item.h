@@ -20,6 +20,23 @@ namespace Core {
 
                     return prepareBlock(dmt_any, block_content, block_params);
                 }
+
+                QJsonValue itemInfo(const DataMediaType & media_type, const QString & id) {
+                    QString url = baseUrlStr(
+                        qst_site_base, LSTR("web/link/download/file"), {{LSTR("fileId"), id}}
+                    );
+
+                    QJsonObject res = Manager::prepare() -> jsonPost(url, siteHeaders());
+                    url = JSON_STR(res, LSTR("link"));
+
+                    Response * response = Manager::prepare() -> getFollowed(url, siteHeaders());
+                    QString err;
+                    QJsonArray arr;
+                    QueriableArg arg(&arr, url, call_type_html, media_type == dmt_audio ? proc_tracks2 : proc_video2);
+                    htmlToJson(&arg, response, err);
+
+                    return arr;
+                }
             };
         }
     }

@@ -1,12 +1,12 @@
 #ifndef FOURSHARED_VIDEO
 #define FOURSHARED_VIDEO
 
-#include "fourshared_defines.h"
+#include "fourshared_item.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Video : public Base {
+            class Video : virtual public Item {
             public:
                 QString videoUrlFromId(const QString & id) {
                     return videoUrlFromPath(
@@ -21,8 +21,7 @@ namespace Core {
                 }
 
                 QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
-                //TODO: write me
-                QJsonValue videoInfo(const QString & id) { return QJsonObject(); }
+                QJsonValue videoInfo(const QString & id) { return itemInfo(dmt_video, id); }
 
                 QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {

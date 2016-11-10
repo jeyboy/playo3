@@ -2,7 +2,6 @@
 #define FOURSHARED_REQUESTS
 
 #include "fourshared_auth.h"
-#include "fourshared_item.h"
 #include "fourshared_audio.h"
 #include "fourshared_video.h"
 #include "fourshared_set.h"
@@ -10,7 +9,7 @@
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Requests : public Auth, public Item, public Set, public Audio, public Video {
+            class Requests : public Auth, public Set, public Audio, public Video {
                 QJsonValue procJson(const QJsonValue & json, const AdditionalProc & /*proc*/) {
                     QJsonObject user_data = json.toObject();
 
@@ -81,7 +80,7 @@ namespace Core {
 
                     switch(arg -> post_proc) {
                         case proc_tracks1: {
-                            Html::Set tracks = doc.find(".listView.res_table tr[valign='top']");;
+                            Html::Set tracks = doc.find(".listView.res_table tr[valign='top']");
 
                             for(Html::Set::Iterator track = tracks.begin(); track != tracks.end(); track++) {
                                 QJsonObject track_obj;
@@ -173,6 +172,34 @@ namespace Core {
                             }
 
                             result = !tracks.isEmpty();
+                        break;}
+
+
+                        case proc_video2: {
+                            QJsonObject track_obj;
+
+                            doc.output();
+
+                            QString name = QString(), ext;
+                            Extensions::obj().extractExtension(name, ext);
+
+//                                Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");
+
+//                                if (img)
+//                                    track_obj.insert(tkn_grab_art_url, img -> src());
+
+                            QString link = arg -> url_template;
+
+                            track_obj.insert(tkn_grab_id, link.section('/', 4, 4));
+                            track_obj.insert(tkn_grab_refresh, link);
+                            track_obj.insert(tkn_skip_info, true);
+                            track_obj.insert(tkn_grab_title, name);
+                            track_obj.insert(tkn_grab_extension, ext);
+                            track_obj.insert(tkn_media_type, dmt_video);
+
+                            arg -> append(track_obj);
+
+                            result = true;
                         break;}
 
                         default: ;

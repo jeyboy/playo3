@@ -35,11 +35,13 @@ namespace Core {
                 bool connectSite(QString & user_id, QString & err) {
                     Html::Document html = Manager::prepare() -> getFollowed(url_html_site_base) -> toHtml();
 
-                    Html::Tag * form = html.findFirst("form[name='loginForm']");
-                    if (!form) return false;
+                    Html::Tag * form;
                     QHash<QString, QString> vals;
 
                     while(true) {
+                        form = html.findFirst("form[name='loginForm']");
+                        if (!form) return false;
+
                         if (!showingLogin(name() % val_login_title_postfix, vals[LSTR("login")], vals[LSTR("password")], err))
                             return false;
 
