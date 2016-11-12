@@ -178,9 +178,20 @@ namespace Core {
                         case proc_video2: {
                             QJsonObject track_obj;
 
-                            doc.output();
+                            Html::Tag * url_script = doc.findFirst("script[text~'file:']");
 
-                            QString name = QString(), ext;
+                            if (url_script) {
+                                track_obj.insert(
+                                    tkn_grab_url,
+                                    Info::extractLimitedBy(url_script -> text(), LSTR("file: \""), LSTR("\""))
+                                );
+                            }
+
+                            Html::Tag * params_script = doc.findFirst("script[text~'epomCustomParams']");
+                            QString name = params_script ?
+                                        Info::extractLimitedBy(params_script -> text(), LSTR("fileName\":\""), LSTR("\"")) :
+                                        QString();
+                            QString ext;
                             Extensions::obj().extractExtension(name, ext);
 
 //                                Html::Tag * img = (*track) -> findFirst(".advancedThumb .imgDiv table img");

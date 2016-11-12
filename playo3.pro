@@ -19,7 +19,7 @@ win32: {
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-SUBDIRS += tests # uncomment for tests running
+SUBDIRS += tests
 
 TARGET = playo3
 TEMPLATE = app

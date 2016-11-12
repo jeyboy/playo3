@@ -4,7 +4,7 @@
 #include <qtest.h>
 #include <qfile.h>
 
-#include "../modules/core/web/utils/html_parser.h"
+#include <../modules/core/web/utils/html_parser.h>
 
 namespace Core {
     namespace Web {

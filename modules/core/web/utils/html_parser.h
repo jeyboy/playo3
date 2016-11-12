@@ -133,6 +133,7 @@ namespace Core {
                 void serializeForm(QUrl & url, QByteArray & payload, const QHash<QString, QString> & vals = QHash<QString, QString>(), const FormSerializationFlags & flags = fsf_none, const QString & default_url = QString());
                 QUrl serializeFormToUrl(const QHash<QString, QString> & vals = QHash<QString, QString>(), const FormSerializationFlags & flags = fsf_none, const QString & default_url = QString());
                 QString toText() const;
+                QString toHtml() const;
 
                 inline bool is_link() { return _name == tag_a; }
                 inline bool is_script() { return _name == tag_script; }
@@ -256,49 +257,6 @@ namespace Core {
                     code_end = 59 // ;
                 };
 
-            public:
-                inline Document(QIODevice * device, const CharsetType & doc_charset = charset_utf8, const Flags & parse_flags = skip_comment) : flags(parse_flags), charset(doc_charset), charset_finded(false), using_default_charset(false) { parse(device); }
-                inline Document(const QString & str, const CharsetType & doc_charset = charset_utf8, const Flags & parse_flags = skip_comment) : flags(parse_flags), charset(doc_charset), charset_finded(false), using_default_charset(false) {
-                    QByteArray ar = str.toUtf8();
-                    QBuffer stream(&ar);
-                    stream.open(QIODevice::ReadOnly);
-                    parse((QIODevice *)&stream);
-                    stream.close();
-                }
-
-                inline ~Document() { delete root; }
-
-                inline bool isXml() {
-                    QString name = root -> children().first() -> name();
-                    return name.contains(tag_xml, Qt::CaseInsensitive);
-                }
-                inline bool has(const char * predicate) const { return root -> has(predicate); }
-                inline bool hasStr(const QString & str) { return text.contains(str, Qt::CaseInsensitive); }
-                inline Set find(const Selector * selector, bool findFirst = false) const { return root -> children().find(selector, findFirst); }
-                inline Set find(const char * predicate) const {
-                    Selector selector(predicate);
-                    return find(&selector);
-                }
-                inline Tag * findFirst(const char * predicate) const {
-                    Selector selector(predicate);
-                    Set set = find(&selector, true);
-                    return set.isEmpty() ? 0 : set.first();
-                }
-
-//                inline void dump() {
-//                    QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QStringLiteral(".html");
-//                    QFile f(p);
-//                    if (f.open(QFile::WriteOnly)) {
-//                        QString;
-
-
-//                        f.write(readAll());
-//                        f.close();
-//                    }
-//                }
-
-                inline void output() { qDebug() << (*root); }
-            private:
                 inline bool isSolo(Tag * tag) { return solo.contains(tag -> name()); }
                 inline bool isSolo(const QString & tag_name) { return solo.contains(tag_name); }
 
@@ -358,6 +316,54 @@ namespace Core {
                 CharsetType charset;
                 bool charset_finded, using_default_charset;
                 QString text;
+
+            public:
+                inline Document(QIODevice * device, const CharsetType & doc_charset = charset_utf8, const Flags & parse_flags = skip_comment) : flags(parse_flags), charset(doc_charset), charset_finded(false), using_default_charset(false) { parse(device); }
+                inline Document(const QString & str, const CharsetType & doc_charset = charset_utf8, const Flags & parse_flags = skip_comment) : flags(parse_flags), charset(doc_charset), charset_finded(false), using_default_charset(false) {
+                    QByteArray ar = str.toUtf8();
+                    QBuffer stream(&ar);
+                    stream.open(QIODevice::ReadOnly);
+                    parse((QIODevice *)&stream);
+                    stream.close();
+                }
+
+                inline ~Document() { delete root; }
+
+                inline bool isXml() {
+                    QString name = root -> children().first() -> name();
+                    return name.contains(tag_xml, Qt::CaseInsensitive);
+                }
+
+                //FIXME: output of tags without close pair
+                inline QString toHtml() { return root -> toHtml(); }
+
+                inline bool has(const char * predicate) const { return root -> has(predicate); }
+                inline bool hasStr(const QString & str) { return text.contains(str, Qt::CaseInsensitive); }
+
+                inline Set find(const Selector * selector, bool findFirst = false) const { return root -> children().find(selector, findFirst); }
+                inline Set find(const char * predicate) const {
+                    Selector selector(predicate);
+                    return find(&selector);
+                }
+                inline Tag * findFirst(const char * predicate) const {
+                    Selector selector(predicate);
+                    Set set = find(&selector, true);
+                    return set.isEmpty() ? 0 : set.first();
+                }
+
+//                inline void dump() {
+//                    QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QStringLiteral(".html");
+//                    QFile f(p);
+//                    if (f.open(QFile::WriteOnly)) {
+//                        QString;
+
+
+//                        f.write(readAll());
+//                        f.close();
+//                    }
+//                }
+
+                inline void output() { qDebug() << (*root); }
 
                 static QHash<QString, bool> solo;
             };

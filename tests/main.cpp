@@ -1,3 +1,6 @@
+
+//The QSignalSpy class enables introspection of signal emission
+
 #include <QCoreApplication>
 #include <QTest>
 //#include <iostream>

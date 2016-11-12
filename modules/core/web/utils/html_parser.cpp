@@ -220,9 +220,25 @@ namespace Core {
 
                         return result;
                     }
+//                    const Tag * text = (_name == tkn_text_block ? this : childTag(tkn_text_block));
+//                    return text ? text -> attrs.value(tkn_text_block) : QString();
+                }
+                QString Tag::toHtml() const {
+                    if (_name == tkn_text_block)
+                        return attrs.value(tkn_text_block);
+                    else {
+                        QString result = QString(_level * 2, ' ') % '<' % _name;
 
-                    const Tag * text = (_name == tkn_text_block ? this : childTag(tkn_text_block));
-                    return text ? text -> attrs.value(tkn_text_block) : QString();
+                        for(QHash<QString, QString>::ConstIterator attr = attrs.constBegin(); attr != attrs.constEnd(); attr++)
+                            result = result % ' ' % attr.key() % QStringLiteral("=\"") % attr.value() % '"';
+
+                        result = result % '>';
+
+                        for(Set::ConstIterator tag = tags.cbegin(); tag != tags.cend(); tag++)
+                            result += (*tag) -> toHtml();
+
+                        return Document::solo.contains(_name) && tags.isEmpty() ? result : QString(result % QStringLiteral("</") % _name % '>');
+                    }
                 }
 
                 bool Tag::validTo(const Selector * selector) {
@@ -230,31 +246,35 @@ namespace Core {
                         switch(it.key()) {
                             case Selector::tag: { if (!(it.value() == tkn_any_elem || _name == it.value())) return false; break; }
                             case Selector::attr: {
-                                for(QHash<QString, QPair<char, QString> >::ConstIterator it = selector -> _attrs.cbegin(); it != selector -> _attrs.cend(); it++)
+                                for(QHash<QString, QPair<char, QString> >::ConstIterator it = selector -> _attrs.cbegin(); it != selector -> _attrs.cend(); it++) {
+                                    QString tag_value = it.key() == QStringLiteral("text") ? text() : attrs.value(it.key());
+                                    QString selector_value = it.value().second;
+
                                     switch(it.value().first) {
                                         case Selector::attr_rel_eq: {
-                                            if (!(attrs.contains(it.key()) && (it.value().second == tkn_any_elem || attrs.value(it.key()) == it.value().second)))
+                                            if (!(attrs.contains(it.key()) && (selector_value == tkn_any_elem || tag_value == selector_value)))
                                                 return false;
                                             break;}
                                         case Selector::attr_rel_begin: {
-                                            if (!attrs.value(it.key()).startsWith(it.value().second))
+                                            if (!tag_value.startsWith(selector_value))
                                                 return false;
                                             break;}
                                         case Selector::attr_rel_end: {
-                                            if (!attrs.value(it.key()).endsWith(it.value().second))
+                                            if (!tag_value.endsWith(selector_value))
                                                 return false;
                                             break;}
                                         case Selector::attr_rel_match: {
-                                            if (attrs.value(it.key()).indexOf(it.value().second) == -1)
+                                            if (tag_value.indexOf(selector_value) == -1)
                                                 return false;
                                             break;}
                                         case Selector::attr_rel_not: {
-                                            if (attrs.value(it.key()).indexOf(it.value().second) != -1)
+                                            if (tag_value.indexOf(selector_value) != -1)
                                                 return false;
                                             break;}
 
                                         default: qDebug() << "UNSUPPORTED PREDICATE " << it.value().first;
                                     };
+                                }
                                 break;
                             }
                             case Selector::id:  { if (attrs[attr_id] != it.value()) return false; break; }

@@ -2,8 +2,8 @@
 #define FILENAME_CONVERSIONS_TEST
 
 #include <qtest.h>
-#include "../modules/core/misc/file_utils/filename_conversions.h"
-#include "../modules/core/misc/file_utils/extensions.h"
+#include <../modules/core/misc/file_utils/filename_conversions.h>
+#include <../modules/core/misc/file_utils/extensions.h>
 
 namespace Core {
     class TestFilenameConversions : public QObject {

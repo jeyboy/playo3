@@ -12,6 +12,10 @@ TARGET = tests
 CONFIG   += console
 CONFIG   -= app_bundle
 
+INCLUDEPATH += \
+    ../app \
+    ../lib
+
 TEMPLATE = app
 
 SOURCES += main.cpp \
