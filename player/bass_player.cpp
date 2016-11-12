@@ -47,7 +47,7 @@ bool BassPlayer::proceedErrorState() {
     return true;
 }
 
-int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
+QPair<QUrl, int> BassPlayer::openChannel(const QUrl & url) {
     int new_chan;
 
     if (url.isLocalFile()) {
@@ -67,25 +67,23 @@ int BassPlayer::openChannel(const QUrl & url, QFutureWatcher<int> * watcher) {
     if (!new_chan) {
         qCritical() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
         proceedErrorState();
-    } else {
+    } else
         qDebug() << "OPENED" << url.toString();
-        if (watcher -> isCanceled())
-            BASS_StreamFree(new_chan);
-    }
 
-    //TODO: need to realise proc of situation when timeout is to short - because now this is fired refresh many times
-
-    return new_chan;
+    return QPair<QUrl, int>(url, new_chan);
 }
 
 void BassPlayer::afterSourceOpening() {
-    QFutureWatcher<int> * watcher = (QFutureWatcher<int> *)sender();
+    QFutureWatcher<QPair<QUrl, int> > * watcher = (QFutureWatcher<QPair<QUrl, int> > *)sender();
+    QPair<QUrl, int> result = watcher -> result();
 
-    if (!watcher -> isCanceled()) {
-        chan = watcher -> result();
-
+    if (result.first != media_url)
+        BASS_StreamFree(result.second);
+    else {
+        chan = result.second;
+        emit statusChanged(LoadedMedia);
         if (chan) playPreproccessing();
-    } else emit statusChanged(LoadedMedia);
+    }
 
     watcher -> deleteLater();
     if (watcher == openChannelWatcher)
@@ -129,12 +127,9 @@ bool BassPlayer::playProcessing(bool paused) {
     is_paused = paused;
 
     if (!media_url.isEmpty()) {
-        if (openChannelWatcher)
-            openChannelWatcher -> cancel();
-
-        openChannelWatcher = new QFutureWatcher<int>();
+        openChannelWatcher = new QFutureWatcher<QPair<QUrl, int> >();
         connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(afterSourceOpening()));
-        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url, openChannelWatcher));
+        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url));
     }
 
     return false; // skip inherited actions
@@ -152,7 +147,6 @@ bool BassPlayer::pauseProcessing() {
 }
 bool BassPlayer::stopProcessing() {
     if (openChannelWatcher) {
-        openChannelWatcher -> cancel();
         while(openChannelWatcher && !openChannelWatcher -> isFinished())
             QApplication::processEvents();
 //        openChannelWatcher -> waitForFinished();

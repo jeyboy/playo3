@@ -96,13 +96,13 @@ class BassPlayer : public IPlayer {
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
     unsigned long chan;
-    QFutureWatcher<int> * openChannelWatcher;
+    QFutureWatcher<QPair<QUrl, int> > * openChannelWatcher;
 //    QList<int> openedDevices;
 
     int default_device();
 
     bool proceedErrorState();
-    int openChannel(const QUrl & url, QFutureWatcher<int> * watcher);
+    QPair<QUrl, int> openChannel(const QUrl & url);
 
     void playPreproccessing();
 protected slots:

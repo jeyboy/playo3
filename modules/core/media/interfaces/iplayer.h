@@ -23,7 +23,7 @@ class IPlayer : public IEqualizable, public ITrackable {
     qint64 playPos, startPos, size;
     int volumeVal, panVal;
     float prebuffering_level;
-    bool muted, looped;
+    bool muted, looped;   
 protected:
     void updateState(PlayerState new_state);
     void updatePosition(qint64 newPos);
