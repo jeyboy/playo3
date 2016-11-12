@@ -40,10 +40,11 @@ namespace Core {
 
                 QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
                 QJsonValue audioInfo(const QString & id) { return audioInfo(QStringList() << id); }
-                QJsonValue audioInfo(const QStringList & uids, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // need to split ids by groups with max size eql to 40 ids
+                QJsonValue audioInfo(const QStringList & uids) { // need to split ids by groups with max size eql to 40 ids
                     QJsonArray block_content = sRequest(audioInfoUrl(uids), call_type_json)
                         .value(tkn_tracks).toArray();
-                    return prepareBlock(dmt_audio, block_content, block_params);
+//                    return prepareBlock(dmt_audio, block_content, block_params);
+                    return block_content;
                 }
 
 //                // type param // album = '1', formdlfeat = '2', collection = '3', friend = '4', search_tracks = '5', search_artists = '7', pop (popular) = '8', history = '9', 'my' = 10 , artist = '11',  personalpl = '14', formaddpl = '17', myRadio = '19', pplRecTracks = '26'

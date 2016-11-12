@@ -38,9 +38,34 @@ namespace Core {
                     return QString();
                 }
 
+                QJsonValue videoVariants(Html::Tag * video_box) {
+                    QString options = video_box -> data(LSTR("options"));
+                    QJsonObject opts_json = QJsonDocument::fromJson(options.toUtf8()).object();
+                    QString metadata = JSON_STR2(opts_json, LSTR("flashvars"), LSTR("metadata"));
+
+                    QJsonObject metadata_json = QJsonDocument::fromJson(metadata.toUtf8()).object();
+                    return JSON_ARR(metadata_json, LSTR("videos"));
+                }
+
                 QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
-                //TODO: write me
-                QJsonValue videoInfo(const QString & id) { return QJsonObject(); }
+                QJsonValue videoInfo(const QString & id) {
+                    QJsonArray videos = saRequest(
+                        baseUrlStr(
+                            qst_site_video, LSTR("video/%1").arg(id),
+                            {
+                                { LSTR("cmd"),          LSTR("PopLayerVideo") },
+                                { LSTR("st.cmd"),       LSTR("userMain") },
+                                { LSTR("st.vpl.id"),    id },
+                                { LSTR("st.vpl.mi"),    LSTR("3") },
+                                { LSTR("st.vpl.mini"),  const_false }
+                            }
+                        ),
+                        call_type_html, 0, proc_video4, QStringList(),
+                        call_method_post, tknHeaders().unite(dntHeader())
+                    );
+
+                    return videos;
+                }
 
                 QJsonValue videoSearch(const QUrlQuery & args) {
                     return videoSearch(SearchLimit::fromICmdParams(args));

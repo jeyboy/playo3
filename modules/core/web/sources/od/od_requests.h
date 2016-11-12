@@ -214,17 +214,8 @@ namespace Core {
                         case proc_video2: {
                             Html::Tag * video_box = doc.findFirst(".vp_video .vid-card_cnt");
 
-                            if ((result = !!video_box)) {
-                                QString options = video_box -> data(LSTR("options"));
-                                QJsonObject opts_json = QJsonDocument::fromJson(options.toUtf8()).object();
-                                QString metadata =
-                                    opts_json.value(LSTR("flashvars")).toObject()
-                                        .value(LSTR("metadata")).toString();
-
-                                QJsonObject metadata_json = QJsonDocument::fromJson(metadata.toUtf8()).object();
-                                QJsonArray videos = metadata_json.value(LSTR("videos")).toArray();
-                                arg -> append(videos);
-                            }
+                            if ((result = !!video_box))
+                                arg -> append(videoVariants(video_box).toArray());
                         break;}
 
                         case proc_video3: {
@@ -251,6 +242,27 @@ namespace Core {
                             }
 
                             result = !video.isEmpty();
+                        break;}
+
+                        case proc_video4: {
+                            Html::Tag * video_box = doc.findFirst(".vp-layer_cnt");
+
+                            if ((result = !!video_box)) {
+                                QJsonObject obj;
+                                obj.insert(tkn_grab_url, videoVariants(video_box -> findFirst(".vid-card_cnt")));
+
+                                obj.insert(tkn_name, video_box -> findFirst(".vp-layer-info .textWrap") -> text());
+
+                                obj.insert(tkn_id, video_box -> findFirst("#movie-comments") -> data("subjectid"));
+                                obj.insert(tkn_duration, Duration::toSecs(video_box -> findFirst(".vid-card_duration") -> text()));
+
+                                QString img_url = video_box -> findFirst(".vid-card_img") -> src();
+                                if (img_url.startsWith(LSTR("//")))
+                                    img_url = LSTR("http:") % img_url;
+                                obj.insert(tkn_art_url, img_url);
+
+                                arg -> append(obj);
+                            }
                         break;}
 
                         default: ;
