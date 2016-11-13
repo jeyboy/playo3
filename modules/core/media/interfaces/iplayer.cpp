@@ -12,7 +12,7 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
     itimer -> setInterval(300);
 }
 
-void IPlayer::updateState(PlayerState new_state) {
+void IPlayer::updateState(const PlayerState & new_state) {
     switch (pstate = new_state) {
         case InitState: {emit statusChanged(InitMedia); break;}
         case PlayingState: {
@@ -31,9 +31,9 @@ void IPlayer::updateState(PlayerState new_state) {
     emit stateChanged(pstate);
 }
 
-void IPlayer::updatePosition(qint64 newPos) {
-    ITrackable::setProgress(newPos);
-    emit positionChanged(newPos);
+void IPlayer::updatePosition(const qint64 & new_pos) {
+    ITrackable::setProgress(new_pos);
+    emit positionChanged(new_pos);
 }
 
 void IPlayer::playPostprocessing() {

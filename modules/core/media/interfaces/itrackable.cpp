@@ -25,7 +25,7 @@ void ITrackable::updateState(const bool & played, const bool & paused, const boo
 
         if (played) {
             stateProgress -> resume();
-            stateButton -> setOverlayAccessibleDescription(title());
+            stateButton -> setOverlayAccessibleDescription(mediaUrl());
         }
 
         if (paused)
