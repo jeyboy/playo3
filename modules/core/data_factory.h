@@ -11,7 +11,8 @@
 #include "modules/core/interfaces/iplaylistable.h"
 #include "modules/core/core_parts/item.h"
 
-#define MAX_ATTEMPTS 2
+#define MAX_ATTEMPTS 5
+#define MAX_RESTORE_ATTEMPTS 2
 
 namespace Core {
     class DataFactory : public QObject, public Singleton<DataFactory> {
@@ -21,17 +22,17 @@ namespace Core {
         IItem * current_item;
 
         PlayerInitState init_state_flag;
-        int attempts;
+        int attempts, restore_attempts;
     protected:
         void spoil();
-        void setState(int state);
-        void setError(ItemErrors error);
+        void setState(const int & state);
+        void setError(const ItemErrors & error);
 
-        void playNext(bool onFail = false);
+        void playNext(const bool & onFail = false);
         void restoreOrNext();
         void proceedStalledState();
     public:
-        inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0) {
+        inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0), restore_attempts(0) {
             PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
         }
         ~DataFactory() {}
@@ -45,7 +46,7 @@ namespace Core {
 
         void resetPlaying() { proceedPlaying(0, 0); }
 
-        void proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili = 0, PlayerInitState state = played);
+        void proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili = 0, const PlayerInitState & state = played);
 
         void proceedStoping() { currPlayer() -> stop(); }
         void proceedPausing() { currPlayer() -> pause(); }

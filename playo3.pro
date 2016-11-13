@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-VERSION = 0.7.0.0
+VERSION = 0.7.0.0-alpha0
 
 CONFIG += c++11
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
@@ -19,7 +19,7 @@ win32: {
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-SUBDIRS += tests
+#SUBDIRS += tests
 
 TARGET = playo3
 TEMPLATE = app

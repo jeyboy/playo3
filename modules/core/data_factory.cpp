@@ -10,7 +10,7 @@ namespace Core {
         if (!current_playlist -> spoil(playedIndex()))
             qCritical() << "STATE IS NOT CHANGED";
     }
-    void DataFactory::setState(int state) {
+    void DataFactory::setState(const int & state) {
         if (!current_playlist) {
             qCritical() << "PLAYLIST IS UNDEFINED";
             return;
@@ -21,7 +21,7 @@ namespace Core {
             qCritical() << "STATE IS NOT CHANGED";
     }
 
-    void DataFactory::setError(ItemErrors error) {
+    void DataFactory::setError(const ItemErrors & error) {
         if (!current_playlist) {
             qCritical() << "PLAYLIST IS UNDEFINED";
             return;
@@ -31,7 +31,7 @@ namespace Core {
             qCritical() << "ERROR IS NOT ATTACHED";
     }
 
-    void DataFactory::playNext(bool onFail) {
+    void DataFactory::playNext(const bool & onFail) {
         setState(IItem::flag_not_proccessing); // extra call for item clearing states!
         if (!current_playlist) {
             qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
@@ -54,10 +54,8 @@ namespace Core {
             return;
         }
 
-        if (++attempts > MAX_ATTEMPTS) {
-            attempts = 0;
+        if (++restore_attempts > MAX_RESTORE_ATTEMPTS)
             proceedStalledState();
-        }
 
         if (!current_playlist -> restoreItem(current_item)) {
             qCritical() << "RESTORE: FAILED";
@@ -75,7 +73,7 @@ namespace Core {
         playNext(true);
     }
 
-    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state) {
+    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili, const PlayerInitState & state) {
         if (item == current_item && playlist == currentPlaylist()) return;
 
         IPlayer * player = currPlayer();
@@ -96,7 +94,7 @@ namespace Core {
 
         current_playlist = playlist;
         current_item = item;
-        attempts = 0;
+        restore_attempts = 0;
 
         if (item) {
             if (item -> error().toInt() != ItemErrors::warn_not_permitted) {
@@ -137,6 +135,7 @@ namespace Core {
             break;}
 
             case PlaingMedia: {
+                attempts = 0;
                 int add_state = 0;
                 qDebug() << "PLAING MEDIA";
                 if (current_item -> isRemote() && Settings::obj().isInitiateOnPlaying()) {
