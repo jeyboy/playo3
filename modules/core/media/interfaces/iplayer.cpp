@@ -15,9 +15,16 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
 void IPlayer::updateState(const PlayerState & new_state) {
     switch (pstate = new_state) {
         case InitState: {emit statusChanged(InitMedia); break;}
-        case PlayingState: { spectrumCalcStart(); break;}
-        case StoppedState: updatePosition(0);
-        case PausedState: { spectrumCalcStop(); break;}
+        case PlayingState: {
+            itimer -> start();
+            spectrumCalcStart();
+        break;}
+        case StoppedState:
+            updatePosition(0);
+        case PausedState: {
+            spectrumCalcStop();
+            itimer -> stop();
+        break;}
         default: channelsCount(2); //INFO: update spectrum if item opening is failed
     }
     ITrackable::updateState(isPlayed(), isPaused(), isStopped(), pstate != UnknowState);
