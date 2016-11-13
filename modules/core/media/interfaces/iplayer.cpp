@@ -1,7 +1,7 @@
 #include "iplayer.h"
 
 IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
-    playPos(0), startPos(0), size(0), volumeVal(VOLUME_MULTIPLIER), panVal(0), prebuffering_level(0), muted(false), looped(false), max_duration(0)
+    play_pos(0), start_pos(0), size(0), volume_val(VOLUME_MULTIPLIER), pan_val(0), prebuffering_level(0), muted(false), looped(false), max_duration(0)
 {
     qRegisterMetaType<PlayerState>("PlayerState");
     qRegisterMetaType<PlayerStatus>("PlayerStatus");
@@ -40,9 +40,9 @@ void IPlayer::playPostprocessing() {
     if (isInitiating()) {
         initFileSize();
 
-        if (playPos > 0 && media_url.isLocalFile()) {
-            setPosition(playPos);
-            playPos = startPosition();
+        if (play_pos > 0 && media_url.isLocalFile()) {
+            setPosition(play_pos);
+            play_pos = startPosition();
         } else setPosition(0);
 
         setDuration(max_duration);
@@ -105,9 +105,9 @@ void IPlayer::setPosition(qint64 newPos) {
 
 void IPlayer::mute(bool enable) {
     if ((muted = enable)) {
-        int val = volumeVal;
+        int val = volume_val;
         setVolume(0);
-        volumeVal = val;
+        volume_val = val;
     }
-    else setVolume(volumeVal == 0 ? VOLUME_MULTIPLIER : volumeVal);
+    else setVolume(volume_val == 0 ? VOLUME_MULTIPLIER : volume_val);
 }

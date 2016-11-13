@@ -123,7 +123,7 @@ void BassPlayer::playPreproccessing() {
     }
 }
 
-bool BassPlayer::playProcessing(bool paused) {
+bool BassPlayer::playProcessing(const bool & paused) {
     is_paused = paused;
 
     if (!media_url.isEmpty()) {
@@ -166,16 +166,16 @@ bool BassPlayer::stopProcessing() {
 qint64 BassPlayer::position() const {
     return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER - startPosition();
 }
-bool BassPlayer::newPosProcessing(qint64 newPos) {
-    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, (newPos + startPosition()) / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE);
+bool BassPlayer::newPosProcessing(const qint64 & new_pos) {
+    return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, (new_pos + startPosition()) / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE);
 }
-bool BassPlayer::newVolumeProcessing(int newVol) {
-    float volumeVal = newVol > 0 ? (newVol / BASS_VOLUME_MULTIPLIER) : 0;
-    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volumeVal);
+bool BassPlayer::newVolumeProcessing(const int & new_vol) {
+    float volume_val = new_vol > 0 ? (new_vol / BASS_VOLUME_MULTIPLIER) : 0;
+    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volume_val);
 }
-bool BassPlayer::newPanProcessing(int newPan) {
-    float panVal = newPan < -BASS_PAN_MULTIPLIER ? -BASS_PAN_MULTIPLIER : newPan > BASS_PAN_MULTIPLIER ? BASS_PAN_MULTIPLIER : newPan;
-    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, (panVal / BASS_PAN_MULTIPLIER));
+bool BassPlayer::newPanProcessing(const int & new_pan) {
+    float pan_val = new_pan < -BASS_PAN_MULTIPLIER ? -BASS_PAN_MULTIPLIER : new_pan > BASS_PAN_MULTIPLIER ? BASS_PAN_MULTIPLIER : new_pan;
+    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, (pan_val / BASS_PAN_MULTIPLIER));
 }
 
 float BassPlayer::prebufferingLevelCalc() {
@@ -215,7 +215,7 @@ bool BassPlayer::unregisterEQ() {
     _fxEQ = 0;
     return res;
 }
-bool BassPlayer::processEqSetGain(int band, float gain) {
+bool BassPlayer::processEqSetGain(const int & band, const float & gain) {
     BASS_BFX_PEAKEQ eq;
     eq.lBand = band;
     BASS_FXGetParameters(_fxEQ, &eq);
@@ -323,8 +323,8 @@ float BassPlayer::bpmCalc(const QUrl & uri) {
     } else return 0;
 }
 
-bool BassPlayer::initDevice(int newDevice, int frequency) {
-    bool res = BASS_Init(newDevice, frequency, 0, NULL, NULL);
+bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
+    bool res = BASS_Init(new_device, frequency, 0, NULL, NULL);
 
     if (!res)
         qDebug() << "Init error: " << BASS_ErrorGetCode();
@@ -339,7 +339,7 @@ bool BassPlayer::initDevice(int newDevice, int frequency) {
     return res;
 }
 
-bool BassPlayer::closeDevice(int device) {
+bool BassPlayer::closeDevice(const int & device) {
     return BASS_SetDevice(device) && BASS_Free();
 }
 

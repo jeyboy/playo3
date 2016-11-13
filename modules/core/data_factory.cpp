@@ -76,6 +76,8 @@ namespace Core {
     }
 
     void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, uint startMili, PlayerInitState state) {
+        if (item == current_item && playlist == currentPlaylist()) return;
+
         IPlayer * player = currPlayer();
 
         bool continuePlaying = item && !player -> media().isEmpty() && item -> toUrl() == player -> media();

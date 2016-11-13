@@ -109,31 +109,31 @@ protected slots:
     void afterSourceOpening();
 
 protected:
-    bool initDevice(int newDevice, int frequency = 44100);
-    bool closeDevice(int device);
+    bool initDevice(const int & newDevice, const int & frequency = 44100);
+    bool closeDevice(const int & device);
     void loadPlugins();
 
-    inline unsigned long open(const QString & path, DWORD flags) {
+    inline unsigned long open(const QString & path, const DWORD & flags) {
         return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);
     }
-    inline unsigned long openRemote(const QString & path, DWORD flags) {
+    inline unsigned long openRemote(const QString & path, const DWORD & flags) {
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
-    bool playProcessing(bool paused = false);
+    bool playProcessing(const bool & paused = false);
     bool resumeProcessing();
     bool pauseProcessing();
     bool stopProcessing();
 
-    bool newPosProcessing(qint64 newPos);
-    bool newVolumeProcessing(int newVol);
-    bool newPanProcessing(int newPan);
+    bool newPosProcessing(const qint64 & new_pos);
+    bool newVolumeProcessing(const int & new_vol);
+    bool newPanProcessing(const int & new_pan);
     float prebufferingLevelCalc();
     qint64 calcFileSize();
 
     bool registerEQ();
     bool unregisterEQ();
-    bool processEqSetGain(int band, float gain);
+    bool processEqSetGain(const int & band, const float & gain);
 
     bool calcSpectrum(QVector<float> & result);
     bool calcSpectrum(QList<QVector<float> > & result);
@@ -151,8 +151,8 @@ public:
     float bpmCalc(const QUrl & uri);
 
     inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
-    inline void openTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
-    inline void proxy(const QString & proxyStr = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxyStr.isEmpty() ? NULL : QSTRING_TO_STR(proxyStr)); }
+    inline void openTimeOut(const float & sec_limit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
+    inline void proxy(const QString & proxy_str = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxy_str.isEmpty() ? NULL : QSTRING_TO_STR(proxy_str)); }
 //    inline void readTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
     inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
 };

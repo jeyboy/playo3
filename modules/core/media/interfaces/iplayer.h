@@ -20,25 +20,25 @@ class IPlayer : public IEqualizable, public ITrackable {
 
     PlayerState pstate;
     QTimer * itimer;
-    qint64 playPos, startPos, size;
-    int volumeVal, panVal;
+    qint64 play_pos, start_pos, size;
+    int volume_val, pan_val;
     float prebuffering_level;
     bool muted, looped;   
 protected:
-    void updateState(PlayerState new_state);
-    void updatePosition(qint64 newPos);
+    void updateState(const PlayerState & new_state);
+    void updatePosition(const qint64 & newPos);
 
-    virtual QString title() const { return media_url.toString(); }
+    virtual QString mediaUrl() const { return media_url.toString(); }
 
-    virtual bool playProcessing(bool paused = false) = 0;
+    virtual bool playProcessing(const bool & paused = false) = 0;
     void playPostprocessing();
     virtual bool resumeProcessing() = 0;
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
 
-    virtual bool newPosProcessing(qint64 newPos) = 0;
-    virtual bool newVolumeProcessing(int newVol) = 0;
-    virtual bool newPanProcessing(int newPan) = 0;
+    virtual bool newPosProcessing(const qint64 & new_pos) = 0;
+    virtual bool newVolumeProcessing(const int & new_vol) = 0;
+    virtual bool newPanProcessing(const int & new_pan) = 0;
     virtual float prebufferingLevelCalc() = 0;
     virtual qint64 calcFileSize() = 0;
 
@@ -47,9 +47,9 @@ protected:
         qDebug() << "FILESIZE" << size;
     }
 
-    inline void setDuration(qint64 newDuration) {
-        ITrackable::setMaxProgress(newDuration);
-        emit durationChanged((max_duration = newDuration));
+    inline void setDuration(const qint64 & new_duration) {
+        ITrackable::setMaxProgress(new_duration);
+        emit durationChanged((max_duration = new_duration));
     }
     inline virtual int slidePercentage() const { return 10.0; }
 
@@ -65,21 +65,21 @@ public:
 
     inline QUrl media() { return media_url; }
 
-    inline void setMedia(const QUrl & url, qint64 startMili = 0, qint64 maxDuration = 0, qint64 playStartMili = 0) {
+    inline void setMedia(const QUrl & url, const qint64 & new_start_mili = 0, const qint64 & new_max_duration = 0, const qint64 & play_start_mili = 0) {
         media_url = url;
-        startPos = startMili;
-        playPos = playStartMili;
-        setDuration(maxDuration);
-        updatePosition(playPos); // update ui pos // real position changing proceed in post proc method
+        start_pos = new_start_mili;
+        play_pos = play_start_mili;
+        setDuration(new_max_duration);
+        updatePosition(play_pos); // update ui pos // real position changing proceed in post proc method
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
 
-    inline void updateMedia(const QUrl & url) { setMedia(url, startPos, max_duration, playPos); }
-    inline void updateMedia(qint64 startMili, qint64 maxDuration) {
-        startPos = startMili;
-        playPos = 0;
-        setDuration(maxDuration);
-        setPosition(playPos);
+    inline void updateMedia(const QUrl & url) { setMedia(url, start_pos, max_duration, play_pos); }
+    inline void updateMedia(const qint64 & new_start_mili, const qint64 & new_max_duration) {
+        start_pos = new_start_mili;
+        play_pos = 0;
+        setDuration(new_max_duration);
+        setPosition(play_pos);
     }
 
     void closeMedia() {
@@ -98,11 +98,11 @@ public:
 
     inline PlayerState state() const { return pstate; }
 
-    qint64 startPosition() const { return startPos; }
+    qint64 startPosition() const { return start_pos; }
     virtual qint64 position() const = 0;
     qint64 duration() const { return max_duration; }
-    inline int volume() const { return muted ? 0 : volumeVal; }
-    inline int pan() const { return panVal; }
+    inline int volume() const { return muted ? 0 : volume_val; }
+    inline int pan() const { return pan_val; }
     inline int fileSize() const { return size; }
 
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
@@ -155,12 +155,12 @@ public slots:
     void mute(bool enable = false);
     void loop(bool enable = false) { looped = enable; }
     inline void setVolume(int newVol) {
-        newVolumeProcessing(volumeVal = newVol);
+        newVolumeProcessing(volume_val = newVol);
         emit volumeChanged(newVol);
         emit muteChanged((muted = newVol == 0));
     }
     inline void setPan(int newPan) {
-        newPanProcessing(panVal = newPan);
+        newPanProcessing(pan_val = newPan);
         emit panChanged(newPan);
     }
 protected slots:
