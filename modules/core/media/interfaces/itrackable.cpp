@@ -12,7 +12,7 @@ ITrackable::ITrackable(QWidget * parent) {
     #endif
 }
 
-void ITrackable::updateState(bool played, bool paused, bool stopped, bool visible) {
+void ITrackable::updateState(const bool & played, const bool & paused, const bool & stopped, const bool & visible) {
     #ifdef Q_OS_WIN
         stateProgress -> setVisible(visible);
 
@@ -38,7 +38,7 @@ void ITrackable::updateState(bool played, bool paused, bool stopped, bool visibl
     #endif
 }
 
-void ITrackable::setProgress(int pos) {
+void ITrackable::setProgress(const int & pos) {
     #ifdef Q_OS_WIN
         stateProgress -> setValue(pos);
     #else
@@ -46,10 +46,10 @@ void ITrackable::setProgress(int pos) {
     #endif
 }
 
-void ITrackable::setMaxProgress(int maxPos) {
+void ITrackable::setMaxProgress(const int & max_pos) {
     #ifdef Q_OS_WIN
         stateProgress -> setVisible(true);
-        stateProgress -> setMaximum(maxPos);
+        stateProgress -> setMaximum(max_pos);
     #else
         Q_UNUSED(maxPos);
     #endif

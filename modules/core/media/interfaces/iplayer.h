@@ -168,8 +168,7 @@ protected slots:
         int new_pos = position() + 250;
         updatePosition(new_pos);
 
-        // cue tweak
-        if (new_pos >= duration())
+        if (new_pos >= duration()) //INFO: cue tweak
             endOfPlayback();
 
         if (prebuffering_level < 1)

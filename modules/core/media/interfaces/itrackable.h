@@ -12,13 +12,13 @@ class ITrackable {
 public:
     virtual ~ITrackable() {}
 
-    virtual QString title() const = 0;
+    virtual QString mediaUrl() const = 0;
 protected:
     ITrackable(QWidget * parent);
 
-    void updateState(bool played, bool paused, bool stopped, bool visible = true);
-    void setProgress(int pos);
-    void setMaxProgress(int maxPos);
+    void updateState(const bool & played, const bool & paused, const bool & stopped, const bool & visible = true);
+    void setProgress(const int & pos);
+    void setMaxProgress(const int & max_pos);
 private:
     #ifdef Q_OS_WIN
         QWinTaskbarButton * stateButton;

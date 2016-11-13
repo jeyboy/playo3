@@ -39,7 +39,7 @@ class IEqualizable : public ISpectrumable {
 protected:
     IEqualizable(QObject * parent = 0);
 
-    virtual bool processEqSetGain(int band, float gain) = 0;
+    virtual bool processEqSetGain(const int & band, const float & gain) = 0;
     virtual bool registerEQ() = 0;
     virtual bool unregisterEQ() = 0;
     virtual bool equalizable() { return true; }
@@ -65,13 +65,13 @@ public:
 signals:
     void presetTypeChanged();
 public slots:
-    inline void changePresetType(QString newPresetType) {
-        current_preset_type = newPresetType;
+    inline void changePresetType(const QString & new_preset_type) {
+        current_preset_type = new_preset_type;
         eqBandsGains.clear();
         if (eq_in_use) registerEQ();
         emit presetTypeChanged();
     }
-    inline void activateEQ(bool activate) {
+    inline void activateEQ(const bool & activate) {
         if ((eq_in_use = activate)) registerEQ();
         else unregisterEQ();
     }
