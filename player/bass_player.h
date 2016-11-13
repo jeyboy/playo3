@@ -95,14 +95,15 @@ class BassPlayer : public IPlayer {
     HFX _fxEQ;
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
-    unsigned long chan;
-    QFutureWatcher<QPair<QUrl, int> > * openChannelWatcher;
-//    QList<int> openedDevices;
+    qint64 chan;
+    QFutureWatcher<QPair<QString, qint64> > * openChannelWatcher;
+    QList<QPair<QString, qint64> > channels;
 
     int default_device();
 
     bool proceedErrorState();
-    QPair<QUrl, int> openChannel(const QUrl & url);
+    QPair<QString, qint64> openChannel(const QUrl & url,  QPair<QString, qint64> & channel_params);
+    void closeChannel();
 
     void playPreproccessing();
 protected slots:
@@ -113,10 +114,10 @@ protected:
     bool closeDevice(const int & device);
     void loadPlugins();
 
-    inline unsigned long open(const QString & path, const DWORD & flags) {
+    inline qint64 open(const QString & path, const DWORD & flags) {
         return BASS_StreamCreateFile(false, QSTRING_TO_STR(path), 0, 0, flags);
     }
-    inline unsigned long openRemote(const QString & path, const DWORD & flags) {
+    inline qint64 openRemote(const QString & path, const DWORD & flags) {
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 

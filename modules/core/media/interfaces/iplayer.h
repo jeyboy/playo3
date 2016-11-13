@@ -96,6 +96,8 @@ public:
     inline bool isPaused() { return pstate == PausedState; }
     inline bool isStopped() { return pstate == StoppedState; }
 
+    virtual bool isSupportVideo() { return false; }
+
     inline PlayerState state() const { return pstate; }
 
     qint64 startPosition() const { return start_pos; }

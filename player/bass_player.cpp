@@ -15,22 +15,6 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     player -> prebufferingLevel();
 }
 
-int BassPlayer::default_device() {
-    QString device = Settings::obj().outputDevice();
-
-    int deviceId = device.isEmpty() ? -1 : deviceList().value(device, QVariant::fromValue(-1)).toInt();
-
-    if (deviceId < 0) {
-        #ifdef Q_OS_WIN
-            return BASS_DEVICE_ENABLED;
-        #else
-            return BASS_DEVICE_DEFAULT;
-        #endif
-    }
-
-    return deviceId;
-}
-
 bool BassPlayer::proceedErrorState() {
     qCritical() << "proceedErrorState" << BASS_ErrorGetCode();
     switch(BASS_ErrorGetCode()) {
@@ -47,15 +31,13 @@ bool BassPlayer::proceedErrorState() {
     return true;
 }
 
-QPair<QUrl, int> BassPlayer::openChannel(const QUrl & url) {
-    int new_chan;
-
+QPair<QString, qint64> BassPlayer::openChannel(const QUrl & url, QPair<QString, qint64> & channel_params) {
     if (url.isLocalFile()) {
-        new_chan = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
+        channel_params.second = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
         prebufferingChanged(1);
     } else {
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-        new_chan = openRemote(
+        channel_params.second = openRemote(
             url.toString()
                 .replace(QStringLiteral("%0D%0A"), QStringLiteral("\r\n")) %
                     QStringLiteral("\r\n") % USER_AGENT_HEADER_NAME %
@@ -64,22 +46,40 @@ QPair<QUrl, int> BassPlayer::openChannel(const QUrl & url) {
         );
     }
 
-    if (!new_chan) {
+    if (!channel_params.second) {
         qCritical() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
         proceedErrorState();
     } else
         qDebug() << "OPENED" << url.toString();
 
-    return QPair<QUrl, int>(url, new_chan);
+    return channel_params;
+}
+void BassPlayer::closeChannel() {
+    if (chan) {
+        unregisterEQ();
+        BASS_ChannelRemoveSync(chan, syncHandle);
+        BASS_ChannelRemoveSync(chan, syncDownloadHandle);
+        BASS_ChannelStop(chan);
+        BASS_StreamFree(chan);
+    }
 }
 
 void BassPlayer::afterSourceOpening() {
-    QFutureWatcher<QPair<QUrl, int> > * watcher = (QFutureWatcher<QPair<QUrl, int> > *)sender();
-    QPair<QUrl, int> result = watcher -> result();
+    QFutureWatcher<QPair<QString, qint64> > * watcher = (QFutureWatcher<QPair<QString, qint64> > *)sender();
+    QPair<QString, qint64> result = watcher -> result();
 
-    if (result.first != media_url)
+    if (channels.last().first != result.first) {
         BASS_StreamFree(result.second);
-    else {
+        QMutableListIterator<QPair<QString, qint64>> i(channels);
+        while (i.hasNext()) {
+            if (i.next().first == result.first) {
+                i.remove();
+                break;
+            }
+        }
+    } else {
+        closeChannel(); //INFO: close prev channel
+
         chan = result.second;
         emit statusChanged(LoadedMedia);
         if (chan) playPreproccessing();
@@ -127,9 +127,15 @@ bool BassPlayer::playProcessing(const bool & paused) {
     is_paused = paused;
 
     if (!media_url.isEmpty()) {
-        openChannelWatcher = new QFutureWatcher<QPair<QUrl, int> >();
+        QPair<QString, qint64> channel_params = QPair<QString, qint64>(
+            QString::number(QDateTime::currentMSecsSinceEpoch()) % media_url.toString(),
+            0
+        );
+
+        channels << channel_params;
+        openChannelWatcher = new QFutureWatcher<QPair<QString, qint64> >();
         connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(afterSourceOpening()));
-        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url));
+        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url, channel_params));
     }
 
     return false; // skip inherited actions
@@ -152,13 +158,7 @@ bool BassPlayer::stopProcessing() {
 //        openChannelWatcher -> waitForFinished();
     }
 
-    if (chan) {
-        unregisterEQ();
-        BASS_ChannelRemoveSync(chan, syncHandle);
-        BASS_ChannelRemoveSync(chan, syncDownloadHandle);
-        BASS_ChannelStop(chan);
-        BASS_StreamFree(chan);
-    }
+    closeChannel();
 
     return true;
 }
@@ -323,26 +323,6 @@ float BassPlayer::bpmCalc(const QUrl & uri) {
     } else return 0;
 }
 
-bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
-    bool res = BASS_Init(new_device, frequency, 0, NULL, NULL);
-
-    if (!res)
-        qDebug() << "Init error: " << BASS_ErrorGetCode();
-//        throw "Cannot initialize device";
-    else {
-        BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
-    //    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
-
-        openTimeOut(Settings::obj().openTimeOut());
-    }
-
-    return res;
-}
-
-bool BassPlayer::closeDevice(const int & device) {
-    return BASS_SetDevice(device) && BASS_Free();
-}
-
 void BassPlayer::loadPlugins() {
     QFileInfoList list = QDir(QCoreApplication::applicationDirPath() % QStringLiteral("/bass_plugins")).entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
     QFileInfoList::Iterator it = list.begin();
@@ -369,7 +349,6 @@ BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), openChannelWatcher(0
     loadPlugins();
     userAgent(DEFAULT_AGENT);
 }
-
 BassPlayer::~BassPlayer() {
     if (openChannelWatcher)
         openChannelWatcher -> cancel();
@@ -398,9 +377,22 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
 
     return res;
 }
-
 QVariant BassPlayer::currDevice() { return QVariant::fromValue(BASS_GetDevice()); }
+int BassPlayer::default_device() {
+    QString device = Settings::obj().outputDevice();
 
+    int deviceId = device.isEmpty() ? -1 : deviceList().value(device, QVariant::fromValue(-1)).toInt();
+
+    if (deviceId < 0) {
+        #ifdef Q_OS_WIN
+            return BASS_DEVICE_ENABLED;
+        #else
+            return BASS_DEVICE_DEFAULT;
+        #endif
+    }
+
+    return deviceId;
+}
 bool BassPlayer::setDevice(const QVariant & device) {
     int currDevice = BASS_GetDevice();
     int newDevice = device.toInt();
@@ -421,3 +413,22 @@ bool BassPlayer::setDevice(const QVariant & device) {
 
     return res;
 }
+bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
+    bool res = BASS_Init(new_device, frequency, 0, NULL, NULL);
+
+    if (!res)
+        qDebug() << "Init error: " << BASS_ErrorGetCode();
+//        throw "Cannot initialize device";
+    else {
+        BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
+    //    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
+
+        openTimeOut(Settings::obj().openTimeOut());
+    }
+
+    return res;
+}
+bool BassPlayer::closeDevice(const int & device) {
+    return BASS_SetDevice(device) && BASS_Free();
+}
+

@@ -23,8 +23,8 @@ protected:
 
     inline void spectrumCalcStart() { if (spectrumable()) itimer -> start(); }
     inline void spectrumCalcStop() {
-        if (!spectrumable()) return;
         itimer -> stop();
+        if (!spectrumable()) return;
         calcSpectrum(); // emit default spectrum level
     }
 
