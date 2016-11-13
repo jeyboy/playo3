@@ -16,8 +16,9 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 }
 
 bool BassPlayer::proceedErrorState() {
-    qCritical() << "proceedErrorState" << BASS_ErrorGetCode();
-    switch(BASS_ErrorGetCode()) {
+    int err_code = BASS_ErrorGetCode();
+    qCritical() << "proceedErrorState" << media_url.toString() << err_code;
+    switch(err_code) {
         case BASS_OK: return false;
         case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
         case BASS_ERROR_FILEOPEN: { emit statusChanged(NoMedia); break; }
@@ -45,12 +46,6 @@ QPair<QString, qint64> BassPlayer::openChannel(const QUrl & url, QPair<QString, 
             REMOTE_PLAY_ATTRS
         );
     }
-
-    if (!channel_params.second) {
-        qCritical() << "OPEN ERROR" << url.toString() << BASS_ErrorGetCode();
-        proceedErrorState();
-    } else
-        qDebug() << "OPENED" << url.toString();
 
     return channel_params;
 }
@@ -81,8 +76,13 @@ void BassPlayer::afterSourceOpening() {
         closeChannel(); //INFO: close prev channel
 
         chan = result.second;
-        emit statusChanged(LoadedMedia);
-        if (chan) playPreproccessing();
+
+        if (!chan)
+            proceedErrorState();
+        else {
+            emit statusChanged(LoadedMedia);
+            if (chan) playPreproccessing();
+        }
     }
 
     watcher -> deleteLater();
