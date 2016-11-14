@@ -277,9 +277,10 @@ void SettingsDialog::initGlobalSettings() {
     ui -> drawMetrics -> setChecked(Settings::obj().isMetricShow());
     ui -> drawMetricsNumero -> setChecked(Settings::obj().isMetricNumero());
 
-    ui -> downloadPath -> setText(Settings::obj().defaultDownloadPath());
+    QString download_path = Settings::obj().defaultDownloadPath();
+    ui -> downloadPath -> setText(download_path);
 
-    if (!QDir().mkdir(Settings::obj().defaultDownloadPath()))
+    if (download_path != SETTINGS_DEFAULT_DOWNLOAD_PATH && !QDir().mkdir(download_path))
         ui -> downloadPath -> setStyleSheet(QStringLiteral("background-color: red; color: white;"));
 
     QStringList positions;

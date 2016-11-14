@@ -63,7 +63,7 @@ namespace Core {
         } else {
             qDebug() << "RESTORE: SUCCESS";
             IPlayer * player = currPlayer();
-            player -> updateMedia(current_item -> toUrl());
+            player -> updateMedia(current_item -> toUrl(), current_item -> title().toString());
             player -> play(init_state_flag == paused);
         }
     }
@@ -74,11 +74,12 @@ namespace Core {
     }
 
     void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili, const PlayerInitState & state) {
-        if (item == current_item && playlist == currentPlaylist()) return;
+//        if (item == current_item && playlist == currentPlaylist()) return;
 
         IPlayer * player = currPlayer();
 
-        bool continuePlaying = item && !player -> media().isEmpty() && item -> toUrl() == player -> media();
+        QUrl curr_url = player -> mediaUrl();
+        bool continuePlaying = item && !curr_url.isEmpty() && item -> toUrl() == curr_url;
 
         if (!continuePlaying)
             player -> closeMedia();
@@ -110,6 +111,7 @@ namespace Core {
                 } else {
                     player -> setMedia(
                         current_item -> toUrl(),
+                        current_item -> title().toString(),
                         item -> startPosMillis(),
                         item -> durationMillis(),
                         startMili
@@ -122,7 +124,7 @@ namespace Core {
                 emit likeChanged(current_item -> is(IItem::flag_liked));
             } else playNext(false);
         }
-        else player -> setMedia(QUrl());
+        else player -> setMedia(QUrl(), QString());
 
         emit itemFeaturesChanged();
     }

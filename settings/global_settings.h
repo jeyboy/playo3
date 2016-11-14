@@ -22,6 +22,8 @@
 #define SETTINGS_TRAY_SHOW_PLAYED_KEY QStringLiteral("tray_show_played")
 #define SETTINGS_TRAY_SHOW_PERIOD_KEY QStringLiteral("tray_show_period")
 
+#define SETTINGS_DEFAULT_DOWNLOAD_PATH QCoreApplication::applicationDirPath() % QStringLiteral("/downloads/")
+
 class GlobalSettings {
 public:
     enum TrayShowInfo : uint {

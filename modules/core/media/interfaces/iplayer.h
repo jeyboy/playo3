@@ -28,8 +28,6 @@ protected:
     void updateState(const PlayerState & new_state);
     void updatePosition(const qint64 & newPos);
 
-    virtual QString mediaUrl() const { return media_url.toString(); }
-
     virtual bool playProcessing(const bool & paused = false) = 0;
     void playPostprocessing();
     virtual bool resumeProcessing() = 0;
@@ -57,15 +55,18 @@ protected:
     inline bool seekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }
 
     QUrl media_url;
+    QString media_title;
     qint64 max_pos, max_duration;
 
 public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
 
-    inline QUrl media() { return media_url; }
+    QUrl mediaUrl() const { return media_url; }
+    QString title() const { return media_title; }
 
-    inline void setMedia(const QUrl & url, const qint64 & new_start_mili = 0, const qint64 & new_max_duration = 0, const qint64 & play_start_mili = 0) {
+    inline void setMedia(const QUrl & url, const QString & name = QString(), const qint64 & new_start_mili = 0, const qint64 & new_max_duration = 0, const qint64 & play_start_mili = 0) {
+        media_title = name;
         media_url = url;
         start_pos = new_start_mili;
         play_pos = play_start_mili;
@@ -74,7 +75,7 @@ public:
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
 
-    inline void updateMedia(const QUrl & url) { setMedia(url, start_pos, max_duration, play_pos); }
+    inline void updateMedia(const QUrl & url, const QString & name) { setMedia(url, name, start_pos, max_duration, play_pos); }
     inline void updateMedia(const qint64 & new_start_mili, const qint64 & new_max_duration) {
         start_pos = new_start_mili;
         play_pos = 0;

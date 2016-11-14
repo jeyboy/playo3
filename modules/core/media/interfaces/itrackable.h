@@ -12,7 +12,8 @@ class ITrackable {
 public:
     virtual ~ITrackable() {}
 
-    virtual QString mediaUrl() const = 0;
+    virtual QUrl mediaUrl() const = 0;
+    virtual QString title() const = 0;
 protected:
     ITrackable(QWidget * parent);
 

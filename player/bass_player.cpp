@@ -63,16 +63,9 @@ void BassPlayer::afterSourceOpening() {
     QFutureWatcher<QPair<QString, qint64> > * watcher = (QFutureWatcher<QPair<QString, qint64> > *)sender();
     QPair<QString, qint64> result = watcher -> result();
 
-    if (channels.last().first != result.first) {
+    if (proc_channel.first != result.first)
         BASS_StreamFree(result.second);
-        QMutableListIterator<QPair<QString, qint64>> i(channels);
-        while (i.hasNext()) {
-            if (i.next().first == result.first) {
-                i.remove();
-                break;
-            }
-        }
-    } else {
+    else {
         closeChannel(); //INFO: close prev channel
 
         chan = result.second;
@@ -127,15 +120,14 @@ bool BassPlayer::playProcessing(const bool & paused) {
     is_paused = paused;
 
     if (!media_url.isEmpty()) {
-        QPair<QString, qint64> channel_params = QPair<QString, qint64>(
-            QString::number(QDateTime::currentMSecsSinceEpoch()) % media_url.toString(),
+        proc_channel = QPair<QString, qint64>(
+            QString::number(QDateTime::currentMSecsSinceEpoch()) % media_title,
             0
         );
 
-        channels << channel_params;
         openChannelWatcher = new QFutureWatcher<QPair<QString, qint64> >();
         connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(afterSourceOpening()));
-        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url, channel_params));
+        openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url, proc_channel));
     }
 
     return false; // skip inherited actions

@@ -97,7 +97,7 @@ class BassPlayer : public IPlayer {
     bool is_paused;
     qint64 chan;
     QFutureWatcher<QPair<QString, qint64> > * openChannelWatcher;
-    QList<QPair<QString, qint64> > channels;
+    QPair<QString, qint64> proc_channel;
 
     int default_device();
 

@@ -4,7 +4,7 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
     _showMetric = settings.value(SETTINGS_SHOW_METRICS_KEY).toBool(true);
     _showMetricNumero = settings.value(SETTINGS_SHOW_METRICS_NUMERO_KEY).toBool(false);
 
-    _defaultDownloadPath = settings.value(SETTINGS_DOWNLOAD_PATH_KEY).toString(QCoreApplication::applicationDirPath() % QStringLiteral("/downloads/"));
+    _defaultDownloadPath = settings.value(SETTINGS_DOWNLOAD_PATH_KEY).toString(SETTINGS_DEFAULT_DOWNLOAD_PATH);
     _tabPosition = settings.value(SETTINGS_TAB_POSITION_KEY).toInt(0);
 
     _saveCommonTab = settings.value(SETTINGS_SAVE_COMMON_TAB_KEY).toBool(false);
