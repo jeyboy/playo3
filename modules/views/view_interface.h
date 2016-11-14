@@ -150,8 +150,8 @@ namespace Views {
         void removeProccessing(QModelIndexList & index_list, bool remove, int flags = none);
         void removeSelectedItems(bool remove = true, int flags = none);
 
-        void downloadItems(const QModelIndexList & nodes, QString savePath);
-        void downloadBranch(const QModelIndex & node, QString savePath);
+        void downloadItems(const QModelIndexList & nodes, const QString & save_path);
+        void downloadBranch(const QModelIndex & node, const QString & save_path);
 
         QModelIndex activeIndex();
         void findExecutable(QModelIndex &);

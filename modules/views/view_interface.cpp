@@ -677,12 +677,13 @@ void IView::removeSelectedItems(bool remove, int flags) {
     }
 }
 
-void IView::downloadItems(const QModelIndexList & nodes, QString savePath) {
+void IView::downloadItems(const QModelIndexList & nodes, const QString & save_path) {
+    if (nodes.isEmpty()) return;
     QDropEvent * event = new QDropEvent(QPointF(0,0), Qt::CopyAction, mdl -> mimeData(nodes), Qt::NoButton, Qt::NoModifier);
-    DownloadView::obj().proceedDrop(event, savePath);
+    DownloadView::obj().proceedDrop(event, save_path);
 }
 
-void IView::downloadBranch(const QModelIndex & node, QString savePath) {
+void IView::downloadBranch(const QModelIndex & node, const QString & save_path) {
     Playlist * curr = mdl -> item<Playlist>(node);
     IItem * item;
     QModelIndexList list;
@@ -691,12 +692,12 @@ void IView::downloadBranch(const QModelIndex & node, QString savePath) {
         item = curr -> child(i);
 
         if (item -> isContainer())
-            downloadBranch(mdl -> index(item), savePath);
+            downloadBranch(mdl -> index(item), save_path);
         else
             list << mdl -> index(item);
     }
 
-    downloadItems(list, savePath);
+    downloadItems(list, save_path);
 }
 
 void IView::downloadAll() {

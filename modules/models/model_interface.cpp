@@ -1565,7 +1565,7 @@ bool IModel::decodeInnerData(int row, int /*column*/, const QModelIndex & parent
 }
 
 QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
-    if (indexes.isEmpty())
+    if (indexes.isEmpty()) // FIXME: return empty mime
         return 0;
 
     QMimeData * mimeData = new QMimeData();
