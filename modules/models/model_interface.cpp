@@ -333,11 +333,12 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
     bool is_collapsed = parent != root_item;
 
     if (JSON_HAS_KEY(block, tkn_more_cmd))
-        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));   
+        parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
-//    int pos = parent -> playlistsAmount();
-//    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
-    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
+
+    int pos = parent -> playlistsAmount();
+    for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
+//    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
 
         if (itm.isEmpty()) continue;
@@ -359,7 +360,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
                     folder,
                     JSON_STR(itm, tkn_loadable_cmd),
                     title,
-                    playlist_id
+                    playlist_id, pos++
                 ))
                     update_amount++;
             } else {
@@ -370,8 +371,8 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
                         folder,
                         wType,
                         playlist_id,
-                        title/*,
-                        pos*/
+                        title,
+                        pos++
                     ))
                         update_amount++;
 
@@ -421,7 +422,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
                     owner, id,
                     Duration::fromSeconds(JSON_INT(itm, Vk::tkn_duration)),
                     clear_media_type
-                )/*, pos*/);
+                ), pos);
 
                 stores[parent].insert(uid, new_item);
 
@@ -434,8 +435,6 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
                 for(QList<IItem *>::Iterator it_it = items.begin(); it_it != items.end(); it_it++)
                     (*it_it) -> setPath(uri);
             }
-
-    //        pos++;
         }
     }
 
