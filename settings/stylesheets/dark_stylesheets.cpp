@@ -7,6 +7,7 @@ QString DarkStylesheets::appStyles() {
         "QToolBox QLabel, QToolBox QCheckBox, QToolBox QGroupBox, QToolBox QRadioButton { color: #000000; }"
         "QLabel[darkest=\"true\"] { background-color: #333; border-radius: 6px; padding: 2px; }"
         "*[danger=\"true\"] { background-color: #CCC; border-radius: 6px; padding: 2px; }"
+        "QMessageBox QLabel { background-color: #FFF; color: #000; }"
     )   % checkboxStyles() % scrollStyles() % treeViewStyles() % listViewStyles()
         % tokenableStyles() % toolbarStyles() % downloadProgressStyles();
 }
