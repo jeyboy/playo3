@@ -366,6 +366,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     Settings::currentStyle -> applyProperty(slider, "position", true);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
+    slider -> setSingleStep(5000);
 
     PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
     PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
@@ -385,6 +386,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setOrientation(Qt::Horizontal);
     pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
+    slider -> setSingleStep(250);
 
     PlayerFactory::obj().registerCallback(call_in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
     PlayerFactory::obj().registerCallback(call_out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
@@ -429,11 +431,11 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     ClickableSlider * slider = new ClickableSlider(100000000, ptb, LSTR("volume|4000|7500"));
 
-    slider -> setTickInterval(2000);
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(45, 30);
     slider -> setMaximum(10000);
     slider -> setValue(VOLUME_MULTIPLIER);
+    slider -> setSingleStep(250);
 
     PlayerFactory::obj().registerCallback(call_in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
     PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));

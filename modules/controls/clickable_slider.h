@@ -17,6 +17,13 @@ namespace Controls {
         int default_value, low_level, up_level;
     protected:
         void contextMenuEvent(QContextMenuEvent * event);
+        bool event(QEvent * event) {
+            switch(event -> type()) {
+                case QEvent::HoverEnter: { setFocus(); break;}
+                default: ;
+            }
+            return QSlider::event(event);
+        }
     public:
         ClickableSlider(int default_value = -1, QWidget * parent = 0, const QString & css_rule = QString());
         ~ClickableSlider() { delete slider_style; }
