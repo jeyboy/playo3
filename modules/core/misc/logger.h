@@ -14,6 +14,8 @@
 #include "modules/core/misc/format.h"
 #include "modules/core/interfaces/singleton.h"
 
+#define TIME_MARK QDateTime::currentDateTime().toString(QStringLiteral("dd.MM.yyyy hh:mm:ss "))
+
 class Logger : public QObject, public Core::Singleton<Logger> {
     Q_OBJECT
 public:

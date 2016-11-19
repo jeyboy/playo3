@@ -69,7 +69,7 @@ void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
 
 void Logger::toFile(const QString & initiator, const QString & value) {
     if (file) {
-        (*out) << initiator << " : " << value << "\n";
+        (*out) << TIME_MARK << " ||| " << initiator << " : " << value << "\n";
         out -> flush();
     }
 }
@@ -92,7 +92,7 @@ void Logger::toEditor(const QString & initiator, const QString & value) {
 
         text = QString("%1%2 ::: %3").arg(
             text,
-            (m_showDate ? QStringLiteral("<b>") % QDateTime::currentDateTime().toString(QStringLiteral("dd.MM.yyyy hh:mm:ss ")) % QStringLiteral("</b>") : QStringLiteral("")),
+            (m_showDate ? QStringLiteral("<b>") % TIME_MARK % QStringLiteral("</b>") : QStringLiteral("")),
             cval/*value*/
         );
 
