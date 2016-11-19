@@ -14,7 +14,7 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
 
 void IPlayer::updateState(const PlayerState & new_state) {
     switch (pstate = new_state) {
-        case InitState: {emit statusChanged(InitMedia); break;}
+        case InitState: {emit statusChanged(media_title, InitMedia); break;}
         case PlayingState: {
             itimer -> start();
             spectrumCalcStart();
@@ -46,7 +46,7 @@ void IPlayer::playPostprocessing() {
         } else setPosition(0);
 
         setDuration(max_duration);
-        emit statusChanged(PlaingMedia);
+        emit statusChanged(media_title, PlaingMedia);
     }
     updateState(PlayingState);
 }
@@ -55,17 +55,17 @@ void IPlayer::play(bool paused) {
     bool res;
     if (isPaused()) {
         if (!(res = resumeProcessing()))
-            emit statusChanged(StalledMedia);
+            emit statusChanged(media_title, StalledMedia);
     } else {
         if (!isInitiating()) updateState(InitState);
         size = 0;
         prebuffering_level = 0;
 
         if (media_url.isEmpty()) {
-            emit statusChanged(NoMedia);
+            emit statusChanged(media_title, NoMedia);
             return;
         } else {
-            emit statusChanged(LoadingMedia);
+            emit statusChanged(media_title, LoadingMedia);
             res = playProcessing(paused);
         }
     }

@@ -21,8 +21,8 @@ public:
     void setHotKeys(QList<HotkeyModelItem *>);
     void setHotKeys(const QJsonObject & hotkeysHash = QJsonObject());
 
-    void disableHotkeys(bool disable) { _disabled = disable; }
-    bool hotkeysIsDisabled() { return _disabled; }
+    void disableHotkeys(const bool & disable) { _disabled = disable; }
+    bool isHotkeysDisabled() { return _disabled; }
 
 protected:
     bool _disabled;

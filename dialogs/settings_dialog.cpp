@@ -115,7 +115,7 @@ void SettingsDialog::registerHotkeys(QWidget * receiver) {
     }
 
     qDeleteAll(list);
-    if (Settings::obj().hotkeysIsDisabled())
+    if (Settings::obj().isHotkeysDisabled())
         HotkeyManager::obj().clear();
 
 }
@@ -402,7 +402,7 @@ void SettingsDialog::initHotkeysSettings() {
     ui -> hotkeysList -> hideColumn(2);
     ui -> hotkeysList -> setColumnWidth(0, 230);
 
-    ui -> disableHotkeys -> setChecked(Settings::obj().hotkeysIsDisabled());
+    ui -> disableHotkeys -> setChecked(Settings::obj().isHotkeysDisabled());
 }
 void SettingsDialog::initSpectrumSettings() {
     ui -> autoBarsAmount -> setChecked(Settings::obj().isAutoBarsAmount());
@@ -538,7 +538,7 @@ void SettingsDialog::saveHotkeysSettings() {
 
     HotkeyManager::obj().clear();
 
-    if (!Settings::obj().hotkeysIsDisabled())
+    if (!Settings::obj().isHotkeysDisabled())
         for(QList<HotkeyModelItem *>::Iterator it = list.begin(); it != list.end(); it++)
             HotkeyManager::obj().registerSequence((*it) -> data(2).toInt(), (*it) -> data(1).toString());
 }

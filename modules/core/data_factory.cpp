@@ -1,6 +1,10 @@
 #include "data_factory.h"
 
 namespace Core {
+    DataFactory::DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0), restore_attempts(0) {
+        PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(statusChanged(QString, PlayerStatus)), SLOT(playerStatusChanged(QString, PlayerStatus)));
+    }
+
     void DataFactory::spoil() {
         if (!current_playlist) {
             qCritical() << "PLAYLIST IS UNDEFINED";
@@ -10,13 +14,13 @@ namespace Core {
         if (!current_playlist -> spoil(playedIndex()))
             qCritical() << "STATE IS NOT CHANGED";
     }
-    void DataFactory::setState(const int & state) {
+    void DataFactory::setState(const QString & name, const int & state) {
         if (!current_playlist) {
             qCritical() << "PLAYLIST IS UNDEFINED";
             return;
         }
 
-        qDebug() << "STATE" << state;
+        qDebug() << "STATE" << state << ':' << name;
         if (!current_playlist -> setState(playedIndex(), state))
             qCritical() << "STATE IS NOT CHANGED";
     }
@@ -32,9 +36,9 @@ namespace Core {
     }
 
     void DataFactory::playNext(const bool & onFail) {
-        setState(IItem::flag_not_proccessing); // extra call for item clearing states!
+        setState(currPlayer() -> title(), IItem::flag_not_proccessing); // extra call for item clearing states!
         if (!current_playlist) {
-            qDebug() << "NEXT: PLAYLIST IS UNDEFINED";
+            qCritical() << "NEXT: PLAYLIST IS UNDEFINED";
             return;
         }
         if (current_playlist -> isAutoPlayNext()) {
@@ -76,6 +80,9 @@ namespace Core {
     void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili, const PlayerInitState & state) {
 //        if (item == current_item && playlist == currentPlaylist()) return;
 
+        if (item)
+            qDebug() << "********** PROCEED PLAYING:" << item -> title().toString();
+
         IPlayer * player = currPlayer();
 
         QUrl curr_url = player -> mediaUrl();
@@ -85,7 +92,7 @@ namespace Core {
             player -> closeMedia();
         else {
             player -> pause();
-            playerStatusChanged(CloseMedia);
+            playerStatusChanged(player -> title(), CloseMedia);
         }
 
         if (current_playlist && current_item && item && current_playlist != playlist)
@@ -106,8 +113,8 @@ namespace Core {
                         item -> startPosMillis(),
                         item -> durationMillis()
                     );
-                    playerStatusChanged(InitMedia);
-                    playerStatusChanged(PlaingMedia);
+                    playerStatusChanged(player -> title(), InitMedia);
+                    playerStatusChanged(player -> title(), PlaingMedia);
                 } else {
                     player -> setMedia(
                         current_item -> toUrl(),
@@ -129,42 +136,42 @@ namespace Core {
         emit itemFeaturesChanged();
     }
 
-    void DataFactory::playerStatusChanged(const PlayerStatus & status) {
+    void DataFactory::playerStatusChanged(const QString & name, const PlayerStatus & status) {
         switch(status) {
             case InitMedia: {
-                qDebug() << "INIT MEDIA";
-                setState(IItem::flag_played | IItem::flag_proccessing);
+                qDebug() << "INIT MEDIA" << name;
+                setState(name, IItem::flag_played | IItem::flag_proccessing);
             break;}
 
             case PlaingMedia: {
                 attempts = 0;
                 int add_state = 0;
-                qDebug() << "PLAING MEDIA";
+                qDebug() << "PLAING MEDIA" << name;
                 if (current_item -> isRemote() && Settings::obj().isInitiateOnPlaying()) {
                     Library::obj().initItemData(current_item, false);
                     add_state = IItem::flag_proceeded;
                 }
 
-                setState(IItem::flag_not_proccessing | IItem::flag_listened | add_state); // IItem::flag_not_proccessing is duplicated for cue items
+                setState(name, IItem::flag_not_proccessing | IItem::flag_listened | add_state); // IItem::flag_not_proccessing is duplicated for cue items
             break;}
 
             case CloseMedia: {
-                qDebug() << "CLOSE MEDIA";
-                setState(IItem::flag_not_proccessing | IItem::flag_not_played);
+                qDebug() << "CLOSE MEDIA" << name;
+                setState(name, IItem::flag_not_proccessing | IItem::flag_not_played);
             break;}
 
             case LoadingMedia: {
-                qDebug() << "LOADING MEDIA";
-//                setState(ItemState::proccessing);
+                qDebug() << "LOADING MEDIA" << name;
+//                setState(name, ItemState::proccessing);
             break;}
 
             case UnknownMediaStatus: {
-                qCritical() << "UNKNOOW STATUS MEDIA";
+                qCritical() << "UNKNOOW STATUS MEDIA" << name;
                 playNext(true);
             break;}
 
             case StalledMedia: {
-                qCritical() << "STALLED MEDIA";
+                qCritical() << "STALLED MEDIA" << name;
 
                 if (current_item -> isRemote())
                     restoreOrNext();
@@ -172,17 +179,18 @@ namespace Core {
             break;}
 
             case EndPlaingMedia: {
-                qDebug() << "END PLAYING MEDIA";
+                qDebug() << "END PLAYING MEDIA" << name;
                 playNext();
             break;}
 
             case LoadedMedia: {
-                setState(IItem::flag_not_proccessing);
+                qDebug() << "LOADED MEDIA" << name;
+                setState(name, IItem::flag_not_proccessing);
                 setError(ItemErrors::err_none);
             break;}
 
             case InvalidMedia: {
-                qCritical() << "INVALID MEDIA";
+                qCritical() << "INVALID MEDIA" << name;
 
                 if (current_item -> isRemote())
                     restoreOrNext();
@@ -190,11 +198,10 @@ namespace Core {
                     setError(ItemErrors::warn_not_supported);
                     playNext(true);
                 }
-//                playNext(true);
             break;}
 
             case NoMedia: {
-                qCritical() << "NO MEDIA";
+                qCritical() << "NO MEDIA" << name;
 
                 if (current_item) {
                     if (current_item -> isRemote()) {
@@ -206,7 +213,7 @@ namespace Core {
                 }
                 else emit newPlaylistNeed();
             break;}
-            default: { qCritical() << "WTF MEDIA"; }
+            default: { qCritical() << "WTF MEDIA" << name; }
         }
     }
 }

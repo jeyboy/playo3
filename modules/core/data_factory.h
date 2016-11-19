@@ -25,17 +25,14 @@ namespace Core {
         int attempts, restore_attempts;
     protected:
         void spoil();
-        void setState(const int & state);
+        void setState(const QString & name, const int & state);
         void setError(const ItemErrors & error);
 
         void playNext(const bool & onFail = false);
         void restoreOrNext();
         void proceedStalledState();
     public:
-        inline DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0), restore_attempts(0) {
-            PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(statusChanged(PlayerStatus)), SLOT(playerStatusChanged(PlayerStatus)));
-        }
-        ~DataFactory() {}
+        DataFactory();
 
         inline IPlayer * currPlayer() { return PlayerFactory::obj().currPlayer(); }
 
@@ -59,9 +56,9 @@ namespace Core {
         void playedItemChanged(QString, QString);
 
     public slots:
-        void changeLikeStatus(bool is_liked) { setState(is_liked ? IItem::flag_liked : IItem::flag_not_liked); }
+        void changeLikeStatus(bool is_liked) { setState(currPlayer() -> title(), is_liked ? IItem::flag_liked : IItem::flag_not_liked); }
 
-        void playerStatusChanged(const PlayerStatus & status);
+        void playerStatusChanged(const QString & name, const PlayerStatus & status);
 
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex) {
             Library::obj().registerListSync(mdl, mutex);

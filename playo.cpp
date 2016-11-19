@@ -162,7 +162,6 @@ void Playo::dragMoveEvent(QDragMoveEvent * event) {
         event -> accept();
     else event -> ignore();
 }
-
 void Playo::dropEvent(QDropEvent * event) {
     if (event -> mimeData() -> hasUrls())
         putToCommonTab(event -> mimeData() -> urls());

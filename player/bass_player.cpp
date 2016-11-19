@@ -16,19 +16,20 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
 }
 
 bool BassPlayer::proceedErrorState() {
+    updateState(UnknowState);
+
     int err_code = BASS_ErrorGetCode();
     qCritical() << "proceedErrorState" << media_url.toString() << err_code;
     switch(err_code) {
         case BASS_OK: return false;
-        case BASS_ERROR_FILEFORM: { emit statusChanged(InvalidMedia); break; }
-        case BASS_ERROR_FILEOPEN: { emit statusChanged(NoMedia); break; }
+        case BASS_ERROR_FILEFORM: { emit statusChanged(media_title, InvalidMedia); break; }
+        case BASS_ERROR_FILEOPEN: { emit statusChanged(media_title, NoMedia); break; }
         // BASS_ERROR_TIMEOUT
         default:
             qDebug() << "UNKNOWN ERROR: " << BASS_ErrorGetCode();
-            emit statusChanged(StalledMedia);
+            emit statusChanged(media_title, StalledMedia);
     }
 
-    updateState(UnknowState);
     return true;
 }
 
@@ -73,7 +74,7 @@ void BassPlayer::afterSourceOpening() {
         if (!chan)
             proceedErrorState();
         else {
-            emit statusChanged(LoadedMedia);
+            emit statusChanged(media_title, LoadedMedia);
             if (chan) playPreproccessing();
         }
     }
@@ -84,7 +85,7 @@ void BassPlayer::afterSourceOpening() {
 }
 
 void BassPlayer::playPreproccessing() {
-    emit statusChanged(LoadedMedia);
+    emit statusChanged(media_title, LoadedMedia);
     newVolumeProcessing(volume());
     newPanProcessing(pan());
 

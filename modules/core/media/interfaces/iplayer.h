@@ -85,7 +85,7 @@ public:
 
     void closeMedia() {
         stop();
-        emit statusChanged(CloseMedia);
+        emit statusChanged(media_title, CloseMedia);
     }
 
     virtual QHash<QString, QVariant> deviceList() = 0;
@@ -120,7 +120,7 @@ public:
     virtual float bpmCalc(const QUrl & /*uri*/) { return 0; }
 signals:
     void stateChanged(const PlayerState &);
-    void statusChanged(const PlayerStatus &);
+    void statusChanged(const QString &, const PlayerStatus &);
 
     void muteChanged(bool);
     void panChanged(int);
@@ -139,7 +139,7 @@ protected slots:
 
         if (!looped) {
             pause();
-            emit statusChanged(EndPlaingMedia);
+            emit statusChanged(media_title, EndPlaingMedia);
         }
     }
 public slots:
