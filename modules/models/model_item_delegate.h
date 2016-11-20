@@ -40,17 +40,17 @@ public:
 
     inline void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
         if (Settings::obj().itemPresentType() == 1)
-            paintVar1(painter, option, index);
+            paintOldVar1(painter, option, index);
         else
             paintVar2(painter, option, index);
     }
 
 protected:
-    void paintVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+    void paintOldVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
     void paintVar2(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
 
 public slots:
-    void recalcAttrs(int item_icon_size);
+    void recalcAttrs(const int & item_icon_size);
 
 private:
     void drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem & option) const;

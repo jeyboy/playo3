@@ -40,17 +40,17 @@ ModelItemDelegate::ModelItemDelegate(QObject * parent)
 //                          const QStyleOptionViewItem &option,
 //                          const QModelIndex &index) const;
 
-void ModelItemDelegate::recalcAttrs(int item_icon_size) {
+void ModelItemDelegate::recalcAttrs(const int & item_icon_size) {
     itemFont = Settings::obj().itemFont();
     itemInfoFont = Settings::obj().itemInfoFont();
     fmf = new QFontMetrics(itemFont);
     fmfInfo = new QFontMetrics(itemInfoFont);
     icon_size = item_icon_size - 2;
 
-    int size = icon_size - state_width * 2;
+    int size = icon_size - (icon_size < 24 ? 0 : state_width * 2);
 
-    icons.insert(-1000,                                                 PIXMAP(QStringLiteral(":/download"), size));
-    icons.insert(-1000 + SELECTION_ITER,                                PIXMAP(QStringLiteral(":/download_on"), size));
+    icons.insert(-1000,                                                 PIXMAP(QStringLiteral(":/download"), icon_size));
+    icons.insert(-1000 + SELECTION_ITER,                                PIXMAP(QStringLiteral(":/download_on"), icon_size));
 
     icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));
     icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
@@ -95,7 +95,7 @@ void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QP
     QApplication::style() -> drawControl(QStyle::CE_CheckBox, &checkboxstyle, painter, &templateCheckbox);
 }
 
-void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
+void ModelItemDelegate::paintOldVar1(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const {
     painter -> save();
     painter -> setRenderHint(QPainter::Antialiasing, true);
     painter -> setRenderHint(QPainter::TextAntialiasing, true);
@@ -344,6 +344,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     QVariant loadable = attrs.value(Keys::loadable);
 
     int background_state = attrs.value(Keys::state).toInt();
+    int checkable_offset = (checkable.isValid() ? 14 : 0);
     int angle = bodyRect.height() / 2, right_offset = bodyRect.right() - 12, top = option.rect.bottom(), left_offset = bodyRect.left() + 6;
     bool is_folder = false, is_selected = option.state & (QStyle::State_Selected);
 
@@ -386,7 +387,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     );
     painter -> drawRoundedRect(bodyRect, angle, angle);
 
-    left_offset += is_folder ? (checkable.isValid() ? 14 : 0) : 6;
+    left_offset += is_folder ? checkable_offset : 6;
 
 //    painter -> setClipRect(bodyRect);
 
@@ -498,11 +499,11 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         }
     } else {
         if (loadable.isValid()) {
-            QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
-            QRect rect(icoRect.left() + state_width + (checkable.isValid() ? 14 : 0), option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
-            painter -> drawPixmap(rect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
+            QRect icoRect = QRect(bodyRect.left() + (icon_size / 20) + state_width + checkable_offset, option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
+//            QRect rect(icoRect.left() + state_width + (checkable.isValid() ? 14 : 0), option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
+            painter -> drawPixmap(icoRect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
 
-            left_offset += rect.width() + 6;
+            left_offset += icoRect.width() + 6;
         }
     }
 
