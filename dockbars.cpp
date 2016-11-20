@@ -169,8 +169,15 @@ DockBar * Dockbars::createLinkedDocBar(const BarCreationNames & names, const Mod
 //        if (refresh) view(bar) -> refresh();
     }
     else {
-        activate(bar);
-        if (refresh) view(bar) -> refresh();
+        if (active == bar) {
+            bar -> hide();
+            active = 0;
+
+        } else {
+            bar -> show();
+            activate(bar);
+            if (refresh) view(bar) -> refresh();
+        }
     }
 
     return bar;
