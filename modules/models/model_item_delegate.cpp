@@ -155,7 +155,7 @@ void ModelItemDelegate::paintVar1(QPainter * painter, const QStyleOptionViewItem
         }
     }
 
-//    painter -> setClipRect(bodyRect);
+    painter -> setClipRect(bodyRect);
     painter -> setPen(Qt::NoPen);
     painter -> drawRoundedRect(bodyRect, angle, angle);
     painter -> setPen(textColor);
@@ -388,11 +388,17 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
 
     left_offset += is_folder ? (checkable.isValid() ? 14 : 0) : 6;
 
-    //    painter -> setClipRect(bodyRect);
+//    painter -> setClipRect(bodyRect);
 
     if (!is_folder) {
         QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
+
+        if (rect.width() < 24) {
+            rect = QRect(rect.right() + icon_size / 2, icoRect.top(), icon_size, icon_size);
+            left_offset += icon_size;
+        }
+
         painter -> setBrush(Qt::NoBrush);
 
         if (attrs[Keys::undefined].toBool())
@@ -412,10 +418,8 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
                         painter -> drawPixmap(rect, icon.pixmap(QSize(icon_size, icon_size)));
                     }
                 } else {
-                    if (icon_size > 24) {
-                        int selection = (is_selected ? SELECTION_ITER : 0);
-                        painter -> drawPixmap(rect, icons.value(attrs[Keys::type].toInt() + selection, icons[dt_web + selection]));
-                    }
+                    int selection = (is_selected ? SELECTION_ITER : 0);
+                    painter -> drawPixmap(rect, icons.value(attrs[Keys::type].toInt() + selection, icons[dt_web + selection]));
                 }
             }
         }
