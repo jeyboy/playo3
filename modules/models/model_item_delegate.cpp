@@ -394,8 +394,8 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
         QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
         QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
 
-        if (rect.width() < 24) {
-            rect = QRect(rect.right() + icon_size / 2, icoRect.top(), icon_size, icon_size);
+        if (icon_size < 24) {
+            rect = QRect(icoRect.right() + 4, icoRect.top(), icon_size, icon_size);
             left_offset += icon_size;
         }
 
@@ -499,7 +499,7 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     } else {
         if (loadable.isValid()) {
             QRect icoRect = QRect(bodyRect.left() + (icon_size / 20), option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
-            QRect rect(icoRect.left() + state_width, option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
+            QRect rect(icoRect.left() + state_width + (checkable.isValid() ? 14 : 0), option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
             painter -> drawPixmap(rect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
 
             left_offset += rect.width() + 6;
