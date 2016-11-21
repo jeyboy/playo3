@@ -414,6 +414,8 @@ QToolBar * ToolBars::createTempoMediaBar() {
     pslider -> setMinimumSize(60, 30);
     slider -> setSingleStep(25);
 
+    Settings::currentStyle -> applyProperty(pslider, "tempo", true);
+
     PlayerFactory::obj().registerCallback(call_to_player, pslider, SIGNAL(valueChanged(int)), SLOT(setTempo(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, pslider, SIGNAL(tempoChanged(int)), SLOT(setValueSilently(int)));
 

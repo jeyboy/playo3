@@ -92,6 +92,10 @@ QString IStylesheets::_sliderStyles() {
             "height: 18px;"
         "}"
 
+        "QSlider::handle[tempo=\"true\"] {"
+            "image: url(:/controls/tempo);"
+        "}"
+
         "QSlider::handle[pan=\"full\"] {"
             "image: url(:/controls/pan_btn);"
         "}"

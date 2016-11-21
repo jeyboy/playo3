@@ -100,6 +100,7 @@
         <file alias="volume_semi_btn">images/elements/volume_small_semi.png</file>
         <file alias="pan_half_btn">images/elements/pan_small_half.png</file>
         <file alias="pan_semi_btn">images/elements/pan_small_semi.png</file>
+        <file alias="tempo">images/elements/tempo.png</file>
     </qresource>
     <qresource prefix="/item_tools">
         <file alias="item_label">images/elements/item_tools/sl/item_label.png</file>
