@@ -183,9 +183,11 @@ void BassPlayer::applyTempoToChannel() {
        qCritical() << "e:" << BASS_ErrorGetCode();
 }
 bool BassPlayer::newTempoProcessing(const int & new_tempo) {
+    if (!chan) return false;
+
     float tempo = new_tempo;
     if (tempo != 0) // -95%...0...+5000%
-        tempo = (new_tempo / (float)tempoMax()) * (tempo < 0 ? 95 : 500); // take only 500 %
+        tempo = (new_tempo / (float)tempoMax()) * (tempo < 0 ? 95 : 200); // take only 200 %
 
     bool res = BASS_ChannelSetAttribute(chan, BASS_ATTRIB_TEMPO, tempo);
     if (!res)

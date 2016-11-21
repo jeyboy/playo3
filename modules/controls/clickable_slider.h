@@ -16,6 +16,7 @@ namespace Controls {
 
         int default_value, low_level, up_level;
     protected:
+        void paintEvent(QPaintEvent *ev);
         void contextMenuEvent(QContextMenuEvent * event);
         bool event(QEvent * event) {
             switch(event -> type()) {

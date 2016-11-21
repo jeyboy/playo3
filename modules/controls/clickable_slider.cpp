@@ -1,6 +1,7 @@
 #include "clickable_slider.h"
 #include "settings.h"
 #include "toolbars.h"
+#include <qstylepainter.h>
 
 using namespace Controls;
 
@@ -17,6 +18,56 @@ ClickableSlider::ClickableSlider(int default_value, QWidget * parent, const QStr
 
     if (default_value != -1)
         setContextMenuPolicy(Qt::DefaultContextMenu);
+}
+
+void ClickableSlider::paintEvent(QPaintEvent * ev) {
+    TickPosition tpos = tickPosition();
+
+    if (tpos == NoTicks) {
+        QSlider::paintEvent(ev);
+        return;
+    }
+
+    QStylePainter p(this);
+    QStyleOptionSlider opt;
+    initStyleOption(&opt);
+
+    QRect handle = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
+    QRect main_rect = rect();
+
+    int h = 4;
+    int ty = main_rect.top();
+    int by = main_rect.bottom();
+
+    int min = minimum();
+    int max = maximum();
+    double range = (double)(max - min);
+
+
+    // draw tick marks
+    // do this manually because they are very badly behaved with style sheets
+    int interval = tickInterval();
+    if (interval == 0)
+        interval = pageStep();
+
+    p.setPen(QPen(QColor("#fff"), 3));
+    for (int i = min; i <= max; i += interval) {
+        int x = round((double)((double)((double)(i - min) / range) * (double)(width() - handle.width()) + (double)(handle.width() / 2.0))) - 1;
+
+        if (tpos == TicksBothSides || tpos == TicksAbove)
+            p.drawLine(x, ty, x, ty + h);
+
+        if (tpos == TicksBothSides || tpos == TicksBelow)
+            p.drawLine(x, by, x, by - h);
+    }
+
+    // draw the slider (this is basically copy/pasted from QSlider::paintEvent)
+    opt.subControls = QStyle::SC_SliderGroove;
+    p.drawComplexControl(QStyle::CC_Slider, opt);
+
+    // draw the slider handle
+    opt.subControls = QStyle::SC_SliderHandle;
+    p.drawComplexControl(QStyle::CC_Slider, opt);
 }
 
 void ClickableSlider::contextMenuEvent(QContextMenuEvent * event) {

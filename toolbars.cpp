@@ -412,7 +412,9 @@ QToolBar * ToolBars::createTempoMediaBar() {
     ClickableSlider * pslider = new ClickableSlider(0, ptb);
     pslider -> setOrientation(Qt::Horizontal);
     pslider -> setMinimumSize(60, 30);
-    slider -> setSingleStep(25);
+    pslider -> setSingleStep(25);
+    pslider -> setTickPosition(QSlider::TicksBothSides);
+    pslider -> setTickInterval(IPlayer::tempoMax());
 
     Settings::currentStyle -> applyProperty(pslider, "tempo", true);
 
