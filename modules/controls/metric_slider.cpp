@@ -11,7 +11,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition, int default_valu
 
     setMouseTracking(show_position);
 
-    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
+    PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
 //    connect(Settings::obj().currPlayer(), SIGNAL(prebufferingChanged(float)), this, SLOT(prebufferingChanged(float)));
 }
 
@@ -55,7 +55,7 @@ void MetricSlider::paintEvent(QPaintEvent * event) {
         p.drawPath(path);
 
     if (show_mini_progress && !progressRect.isEmpty()) {
-        p.setPen(QColor::fromRgb(255, 255, 255, 168));
+        p.setPen(QColor::fromRgb(0, 255, 0, 168));
         p.drawRoundedRect(progressRect, 1, 1);
     }
 

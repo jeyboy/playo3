@@ -2,7 +2,7 @@
 
 namespace Core {
     DataFactory::DataFactory() : QObject(), current_playlist(0), current_item(0), attempts(0), restore_attempts(0) {
-        PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(statusChanged(QString, PlayerStatus)), SLOT(playerStatusChanged(QString, PlayerStatus)));
+        PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(statusChanged(QString, PlayerStatus)), SLOT(playerStatusChanged(QString, PlayerStatus)));
     }
 
     void DataFactory::spoil() {

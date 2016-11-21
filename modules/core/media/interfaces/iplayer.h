@@ -11,17 +11,13 @@
 #include "modules/core/media/interfaces/imediainfo.h"
 #include "modules/core/web/utils/web_manager.h"
 
-#define VOLUME_MULTIPLIER 10000.0
-#define POSITION_MULTIPLIER 1000.0
-#define PAN_MULTIPLIER 1000.0
-
 class IPlayer : public IEqualizable, public ITrackable {
     Q_OBJECT
 
     PlayerState pstate;
     QTimer * itimer;
     qint64 play_pos, start_pos, size;
-    int volume_val, pan_val;
+    int volume_val, pan_val, tempo_val;
     float prebuffering_level;
     bool muted, looped;   
 protected:
@@ -34,6 +30,7 @@ protected:
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
 
+    virtual bool newTempoProcessing(const int & /*new_tempo*/) { return false; }
     virtual bool newPosProcessing(const qint64 & new_pos) = 0;
     virtual bool newVolumeProcessing(const int & new_vol) = 0;
     virtual bool newPanProcessing(const int & new_pan) = 0;
@@ -61,6 +58,20 @@ protected:
 public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
+
+    //INFO: position calcs in millis by default
+
+    static int volumeMin() { return 0; }
+    static int volumeMax() { return 1000; }
+    static int volumeDefault() { return 1000; }
+
+    static int panMin() { return -1000; }
+    static int panMax() { return 1000; }
+    static int panDefault() { return 0; }
+
+    static int tempoMin() { return -1000; }
+    static int tempoMax() { return 1000; }
+    static int tempoDefault() { return 0; }
 
     QUrl mediaUrl() const { return media_url; }
     QString title() const { return media_title; }
@@ -98,6 +109,7 @@ public:
     inline bool isStopped() { return pstate == StoppedState; }
 
     virtual bool isSupportVideo() { return false; }
+    virtual bool isSupportTempoChanging() { return false; }
 
     inline PlayerState state() const { return pstate; }
 
@@ -106,6 +118,7 @@ public:
     qint64 duration() const { return max_duration; }
     inline int volume() const { return muted ? 0 : volume_val; }
     inline int pan() const { return pan_val; }
+    inline int tempo() const { return tempo_val; }
     inline int fileSize() const { return size; }
 
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
@@ -125,6 +138,7 @@ signals:
     void muteChanged(bool);
     void panChanged(int);
     void volumeChanged(int);
+    void tempoChanged(int);
 //    void position64Changed(qint64);
     void positionChanged(int);
 //    void duration64Changed(qint64);
@@ -153,22 +167,44 @@ public slots:
     void slideVolForward();
     void slideVolBackward();
 
-    void setPosition(int newPos) { setPosition(qint64(newPos)); }
-    void setPosition(qint64 newPos);
-    void mute(bool enable = false);
-    void loop(bool enable = false) { looped = enable; }
-    inline void setVolume(int newVol) {
-        newVolumeProcessing(volume_val = newVol);
-        emit volumeChanged(newVol);
-        emit muteChanged((muted = newVol == 0));
+    void setTempo(const int & new_tempo) {
+        if (!isSupportTempoChanging()) return;
+
+        tempo_val = new_tempo;
+
+        tempo_val = qMax(tempo_val, tempoMin());
+        tempo_val = qMin(tempo_val, tempoMax());
+
+        newTempoProcessing(tempo_val);
+        emit tempoChanged(tempo_val);
     }
-    inline void setPan(int newPan) {
-        newPanProcessing(pan_val = newPan);
-        emit panChanged(newPan);
+
+    void setPosition(const int & new_pos) { setPosition(qint64(new_pos)); }
+    void setPosition(const qint64 & new_pos);
+    void mute(const bool & enable = false);
+    void loop(const bool & enable = false) { looped = enable; }
+    inline void setVolume(const int & new_vol) {
+        volume_val = new_vol;
+
+        volume_val = qMax(volume_val, volumeMin());
+        volume_val = qMin(volume_val, volumeMax());
+
+        newVolumeProcessing(volume_val);
+        emit volumeChanged(volume_val);
+        emit muteChanged((muted = volume_val == 0));
+    }
+    inline void setPan(const int & new_pan) {
+        pan_val = new_pan;
+
+        pan_val = qMax(pan_val, panMin());
+        pan_val = qMin(pan_val, panMax());
+
+        newPanProcessing(pan_val);
+        emit panChanged(pan_val);
     }
 protected slots:
     void recalcPosition() {
-        int new_pos = position() + 250;
+        int new_pos = position() + 250; // INFO: tweak for compensation of float disbalance
         updatePosition(new_pos);
 
         if (new_pos >= duration()) //INFO: cue tweak

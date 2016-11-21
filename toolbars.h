@@ -25,6 +25,7 @@
 #define TOOLBAR_MEDIA_PLUS_KEY          LSTR("Media+")
 #define TOOLBAR_MEDIA_POS_KEY           LSTR("Media+Position")
 #define TOOLBAR_MEDIA_PAN_KEY           LSTR("Media+Pan")
+#define TOOLBAR_MEDIA_TEMPO_KEY         LSTR("Media+Tempo")
 #define TOOLBAR_MEDIA_TIME_KEY          LSTR("Media+Time")
 #define TOOLBAR_MEDIA_VOLUME_KEY        LSTR("Media+Volume")
 #define TOOLBAR_CONTROLS_KEY            LSTR("Controls")
@@ -121,6 +122,7 @@ namespace Presentation {
         QToolBar * createAdditionalMediaBar();
         QToolBar * createPositionMediaBar();
         QToolBar * createPanMediaBar();
+        QToolBar * createTempoMediaBar();
         QToolBar * createTimeMediaBar();
         QToolBar * createVolumeMediaBar();
         QToolBar * createControlToolBar();

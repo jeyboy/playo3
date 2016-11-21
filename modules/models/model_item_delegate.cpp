@@ -500,7 +500,6 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
     } else {
         if (loadable.isValid()) {
             QRect icoRect = QRect(bodyRect.left() + (icon_size / 20) + state_width + checkable_offset, option.rect.top() + (option.rect.height() - icon_size) / 2, icon_size, icon_size);
-//            QRect rect(icoRect.left() + state_width + (checkable.isValid() ? 14 : 0), option.rect.top() + state_width * 1.5 + icon_size % 2, icon_size - state_width * 2, icon_size - state_width * 2);
             painter -> drawPixmap(icoRect, icons[-1000 + (is_selected ? SELECTION_ITER : 0)]);
 
             left_offset += icoRect.width() + 6;

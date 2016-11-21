@@ -79,12 +79,14 @@ void
     #define QSTRING_TO_STR(str) str.toStdString().c_str()
 #endif
 
-#define BASS_VOLUME_MULTIPLIER VOLUME_MULTIPLIER
-#define BASS_POSITION_MULTIPLIER POSITION_MULTIPLIER
-#define BASS_PAN_MULTIPLIER PAN_MULTIPLIER
+#define BASS_POSITION_MULTIPLIER 1000.0
 
-#define LOCAL_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_ASYNCFILE
-#define REMOTE_PLAY_ATTRS BASS_SAMPLE_FLOAT /*| BASS_STREAM_PRESCAN*/
+#define LOCAL_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_ASYNCFILE | BASS_STREAM_DECODE
+#define REMOTE_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE /*| BASS_STREAM_PRESCAN*/
+
+// without tempo
+//#define LOCAL_PLAY_ATTRS BASS_SAMPLE_FLOAT | BASS_ASYNCFILE
+//#define REMOTE_PLAY_ATTRS BASS_SAMPLE_FLOAT /*| BASS_STREAM_PRESCAN*/
 
 #define LOCAL_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN //| BASS_SAMPLE_MONO
 #define REMOTE_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE //| BASS_SAMPLE_MONO
@@ -110,6 +112,14 @@ protected slots:
     void afterSourceOpening();
 
 protected:
+    bool isSupportTempoChanging() { return true; }
+
+    void setSampleRateQuality() {
+        // On Windows, sample rate conversion is handled by Windows or the output device/driver rather than BASS, so this setting has no effect on playback there.
+        // 0 = linear interpolation, 1 = 8 point sinc interpolation, 2 = 16 point sinc interpolation, 3 = 32 point sinc interpolation
+        BASS_ChannelSetAttribute(chan, BASS_ATTRIB_SRC, 3);
+    }
+
     bool initDevice(const int & newDevice, const int & frequency = 44100);
     bool closeDevice(const int & device);
     void loadPlugins();
@@ -126,6 +136,8 @@ protected:
     bool pauseProcessing();
     bool stopProcessing();
 
+    void applyTempoToChannel();
+    bool newTempoProcessing(const int & new_tempo);
     bool newPosProcessing(const qint64 & new_pos);
     bool newVolumeProcessing(const int & new_vol);
     bool newPanProcessing(const int & new_pan);

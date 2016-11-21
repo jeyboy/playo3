@@ -89,8 +89,13 @@ void BassPlayer::playPreproccessing() {
     newVolumeProcessing(volume());
     newPanProcessing(pan());
 
+    applyTempoToChannel();
+    newTempoProcessing(tempo());
+
+    setSampleRateQuality();
+
     if (max_duration == 0)
-        max_duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * POSITION_MULTIPLIER;
+        max_duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * BASS_POSITION_MULTIPLIER;
 
     BASS_CHANNELINFO info;
     if (BASS_ChannelGetInfo(chan, &info))
@@ -157,18 +162,36 @@ bool BassPlayer::stopProcessing() {
 }
 
 qint64 BassPlayer::position() const {
-    return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * POSITION_MULTIPLIER - startPosition();
+    return BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetPosition(chan, BASS_POS_BYTE)) * BASS_POSITION_MULTIPLIER - startPosition();
 }
 bool BassPlayer::newPosProcessing(const qint64 & new_pos) {
     return BASS_ChannelSetPosition(chan, BASS_ChannelSeconds2Bytes(chan, (new_pos + startPosition()) / BASS_POSITION_MULTIPLIER), BASS_POS_BYTE);
 }
 bool BassPlayer::newVolumeProcessing(const int & new_vol) {
-    float volume_val = new_vol > 0 ? (new_vol / BASS_VOLUME_MULTIPLIER) : 0;
+    float volume_val = new_vol > 0 ? (new_vol / (float)volumeMax()) : 0;
     return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, volume_val);
 }
 bool BassPlayer::newPanProcessing(const int & new_pan) {
-    float pan_val = new_pan < -BASS_PAN_MULTIPLIER ? -BASS_PAN_MULTIPLIER : new_pan > BASS_PAN_MULTIPLIER ? BASS_PAN_MULTIPLIER : new_pan;
-    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, (pan_val / BASS_PAN_MULTIPLIER));
+    float pan_val = new_pan == 0 ? 0 : (new_pan / (float)panMax());
+    return BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, pan_val);
+}
+
+
+void BassPlayer::applyTempoToChannel() {
+    chan = BASS_FX_TempoCreate(chan, BASS_FX_FREESOURCE);
+    if (!chan)
+       qCritical() << "e:" << BASS_ErrorGetCode();
+}
+bool BassPlayer::newTempoProcessing(const int & new_tempo) {
+    float tempo = new_tempo;
+    if (tempo != 0) // -95%...0...+5000%
+        tempo = (new_tempo / (float)tempoMax()) * (tempo < 0 ? 95 : 500); // take only 500 %
+
+    bool res = BASS_ChannelSetAttribute(chan, BASS_ATTRIB_TEMPO, tempo);
+    if (!res)
+        qCritical() << "err:" << BASS_ErrorGetCode();
+
+    return res;
 }
 
 float BassPlayer::prebufferingLevelCalc() {
@@ -331,7 +354,7 @@ void BassPlayer::loadPlugins() {
     ///////////////////////////////////////////////
 }
 
-BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), openChannelWatcher(0) {
+BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannelWatcher(0) {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 
@@ -424,4 +447,3 @@ bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
 bool BassPlayer::closeDevice(const int & device) {
     return BASS_SetDevice(device) && BASS_Free();
 }
-

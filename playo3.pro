@@ -11,7 +11,7 @@ DEFINES += APP_VERSION=\\\"$$VERSION\\\"
 #DEFINES *= QT_USE_QSTRINGBUILDER
 
 QT  += core gui network
-#QT       += multimedia multimediawidgets opengl
+QT  += multimedia multimediawidgets opengl # temp
 
 win32: {
     QT  += winextras
@@ -345,7 +345,8 @@ HEADERS += \
     modules/core/web/sources/youtube/youtube_auth.h \
     modules/core/web/sources/youtube/youtube_channel.h \
     item_toolbar_features.h \
-    modules/core/web/sources/youtube/youtube_set.h
+    modules/core/web/sources/youtube/youtube_set.h \
+    player/qt_player.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

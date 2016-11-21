@@ -283,10 +283,13 @@
       </rect>
      </property>
      <property name="minimum">
-      <number>18</number>
+      <number>20</number>
+     </property>
+     <property name="maximum">
+      <number>60</number>
      </property>
      <property name="value">
-      <number>18</number>
+      <number>20</number>
      </property>
     </widget>
     <widget class="QLabel" name="label_14">
@@ -1312,7 +1315,7 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-48</y>
+      <y>0</y>
       <width>340</width>
       <height>350</height>
      </rect>

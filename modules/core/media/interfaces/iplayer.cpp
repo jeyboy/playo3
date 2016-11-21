@@ -1,7 +1,8 @@
 #include "iplayer.h"
 
 IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
-    play_pos(0), start_pos(0), size(0), volume_val(VOLUME_MULTIPLIER), pan_val(0), prebuffering_level(0), muted(false), looped(false), max_duration(0)
+    play_pos(0), start_pos(0), size(0), volume_val(volumeDefault()), pan_val(panDefault()),
+    tempo_val(tempoDefault()), prebuffering_level(0), muted(false), looped(false), max_duration(0)
 {
     qRegisterMetaType<PlayerState>("PlayerState");
     qRegisterMetaType<PlayerStatus>("PlayerStatus");
@@ -92,22 +93,22 @@ void IPlayer::slidePosBackward() {
 }
 
 void IPlayer::slideVolForward() {
-    setVolume(qMin(VOLUME_MULTIPLIER, volume() + VOLUME_MULTIPLIER / slidePercentage()));
+    setVolume(qMin(volumeMax(), volume() + volumeMax() / slidePercentage()));
 }
 void IPlayer::slideVolBackward() {
-    setVolume(qMax(0.0, volume() - VOLUME_MULTIPLIER / slidePercentage()));
+    setVolume(qMax(volumeMin(), volume() - volumeMax() / slidePercentage()));
 }
 
-void IPlayer::setPosition(qint64 newPos) {
+void IPlayer::setPosition(const qint64 & newPos) {
     newPosProcessing(newPos);
     updatePosition(newPos);
 }
 
-void IPlayer::mute(bool enable) {
+void IPlayer::mute(const bool & enable) {
     if ((muted = enable)) {
         int val = volume_val;
         setVolume(0);
         volume_val = val;
     }
-    else setVolume(volume_val == 0 ? VOLUME_MULTIPLIER : volume_val);
+    else setVolume(volume_val == volumeMin() ? volumeMax() : volume_val);
 }

@@ -13,9 +13,9 @@ SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar
     setAttribute(Qt::WA_TranslucentBackground, true);
 //    setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(spectrumChanged(const QList<QVector<float> > &)), SLOT(dataUpdated(const QList<QVector<float> > &)));
-    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(channelsCountChanged()), SLOT(recalcAttrs()));
-    PlayerFactory::obj().registerCallback(call_in, this, SIGNAL(changeMultichannelRendering(bool)), SLOT(setMultichannelRendering(bool)));
+    PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(spectrumChanged(const QList<QVector<float> > &)), SLOT(dataUpdated(const QList<QVector<float> > &)));
+    PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(channelsCountChanged()), SLOT(recalcAttrs()));
+    PlayerFactory::obj().registerCallback(call_to_player, this, SIGNAL(changeMultichannelRendering(bool)), SLOT(setMultichannelRendering(bool)));
 
     connect(this, SIGNAL(movableChanged(bool)), this, SLOT(onMovableChanged(bool)));
     connect(this, SIGNAL(orientationChanged(Qt::Orientation)), this, SLOT(onOrientationChanged(Qt::Orientation)));

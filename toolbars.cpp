@@ -88,6 +88,7 @@ void ToolBars::load(const QJsonArray & bars) {
             << TOOLBAR_MEDIA_PLUS_KEY
             << TOOLBAR_MEDIA_POS_KEY
             << TOOLBAR_MEDIA_PAN_KEY
+            << TOOLBAR_MEDIA_TEMPO_KEY
             << TOOLBAR_SEARCH_KEY
             << TOOLBAR_MEDIA_TIME_KEY
             << TOOLBAR_MEDIA_VOLUME_KEY
@@ -206,6 +207,8 @@ void ToolBars::createToolbars() {
     container -> addToolBar(Qt::LeftToolBarArea, createSettingsButtonBar());
     container -> addToolBar(Qt::LeftToolBarArea, createEqualizerButtonBar());
     container -> addToolBar(Qt::LeftToolBarArea, createPanMediaBar());
+
+    container -> addToolBar(Qt::RightToolBarArea, createTempoMediaBar());
 }
 
 void ToolBars::updateBarStyle(QToolBar * bar) {
@@ -225,22 +228,23 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
     return 0;
 }
 
-QToolBar * ToolBars::linkNameToToolbars(const QString & barName) {
-    if (barName == TOOLBAR_MEDIA_KEY)                   return createMediaBar();
-    else if (barName == TOOLBAR_PL_ITEM_FEATURES_KEY)   return createPlayedItemFeaturesBar();
-    else if (barName == TOOLBAR_SL_ITEM_FEATURES_KEY)   return createSelectedItemFeaturesBar();
-    else if (barName == TOOLBAR_EQUALIZER_BUTTON_KEY)   return createEqualizerButtonBar();
-    else if (barName == TOOLBAR_MEDIA_PLUS_KEY)         return createAdditionalMediaBar();
-    else if (barName == TOOLBAR_MEDIA_POS_KEY)          return createPositionMediaBar();
-    else if (barName == TOOLBAR_MEDIA_TIME_KEY)         return createTimeMediaBar();
-    else if (barName == TOOLBAR_MEDIA_VOLUME_KEY)       return createVolumeMediaBar();
-    else if (barName == TOOLBAR_CONTROLS_KEY)           return createControlToolBar();
-    else if (barName == TOOLBAR_SPECTRUM_KEY)           return getSpectrum();
-    else if (barName == TOOLBAR_EQUALIZER_KEY)          return createEqualizerToolBar();
-    else if (barName == TOOLBAR_MEDIA_PAN_KEY)          return createPanMediaBar();
-    else if (barName == TOOLBAR_SEARCH_KEY)             return createSearchButtonBar();
-    else if (barName == TOOLBAR_SETTINGS_KEY)           return createSettingsButtonBar();
-    else                                                return createToolBar(barName);
+QToolBar * ToolBars::linkNameToToolbars(const QString & bar_name) {
+    if (bar_name == TOOLBAR_MEDIA_KEY)                   return createMediaBar();
+    else if (bar_name == TOOLBAR_PL_ITEM_FEATURES_KEY)   return createPlayedItemFeaturesBar();
+    else if (bar_name == TOOLBAR_SL_ITEM_FEATURES_KEY)   return createSelectedItemFeaturesBar();
+    else if (bar_name == TOOLBAR_EQUALIZER_BUTTON_KEY)   return createEqualizerButtonBar();
+    else if (bar_name == TOOLBAR_MEDIA_PLUS_KEY)         return createAdditionalMediaBar();
+    else if (bar_name == TOOLBAR_MEDIA_POS_KEY)          return createPositionMediaBar();
+    else if (bar_name == TOOLBAR_MEDIA_TIME_KEY)         return createTimeMediaBar();
+    else if (bar_name == TOOLBAR_MEDIA_VOLUME_KEY)       return createVolumeMediaBar();
+    else if (bar_name == TOOLBAR_CONTROLS_KEY)           return createControlToolBar();
+    else if (bar_name == TOOLBAR_SPECTRUM_KEY)           return getSpectrum();
+    else if (bar_name == TOOLBAR_EQUALIZER_KEY)          return createEqualizerToolBar();
+    else if (bar_name == TOOLBAR_MEDIA_PAN_KEY)          return createPanMediaBar();
+    else if (bar_name == TOOLBAR_MEDIA_TEMPO_KEY)        return createTempoMediaBar();
+    else if (bar_name == TOOLBAR_SEARCH_KEY)             return createSearchButtonBar();
+    else if (bar_name == TOOLBAR_SETTINGS_KEY)           return createSettingsButtonBar();
+    else                                                 return createToolBar(bar_name);
 }
 
 QToolBar * ToolBars::createToolBar(const QString & name) {
@@ -312,22 +316,22 @@ QToolBar * ToolBars::createMediaBar() {
     QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_KEY);
 
     play_btn = ptb -> addAction(QIcon(LSTR(":/play")), LSTR("Play"));
-    PlayerFactory::obj().registerCallback(call_in, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
+    PlayerFactory::obj().registerCallback(call_to_player, play_btn, SIGNAL(triggered(bool)), SLOT(play()));
 
     pause_btn = ptb -> addAction(QIcon(LSTR(":/pause")), LSTR("Pause"));
-    PlayerFactory::obj().registerCallback(call_in, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
+    PlayerFactory::obj().registerCallback(call_to_player, pause_btn, SIGNAL(triggered(bool)), SLOT(pause()));
     pause_btn -> setVisible(false);
 
     stop_btn = ptb -> addAction(QIcon(LSTR(":/stop")), LSTR("Stop"));
-    PlayerFactory::obj().registerCallback(call_in, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
+    PlayerFactory::obj().registerCallback(call_to_player, stop_btn, SIGNAL(triggered(bool)), SLOT(stop()));
     stop_btn -> setVisible(false);
 
 
     QAction * act = ptb -> addAction(QIcon(LSTR(":/cycling")), LSTR("Looping current track"));
     act -> setCheckable(true);
-    PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
+    PlayerFactory::obj().registerCallback(call_to_player, act, SIGNAL(triggered(bool)), SLOT(loop(bool)));
 
-    PlayerFactory::obj().registerCallback(call_out, this, SIGNAL(stateChanged(const PlayerState &)), SLOT(playerStateChanged(const PlayerState &)));
+    PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(stateChanged(const PlayerState &)), SLOT(playerStateChanged(const PlayerState &)));
 
     ptb -> setMinimumWidth(55);
     ptb -> adjustSize();
@@ -368,9 +372,9 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setMaximum(0);
     slider -> setSingleStep(5000);
 
-    PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
-    PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
-    PlayerFactory::obj().registerCallback(call_in, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
+    PlayerFactory::obj().registerCallback(call_to_player, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
 
     ptb -> addWidget(slider);
     ptb -> setMinimumWidth(70);
@@ -382,18 +386,40 @@ QToolBar * ToolBars::createPositionMediaBar() {
 QToolBar * ToolBars::createPanMediaBar() {
     QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_PAN_KEY, true);
 
-    ClickableSlider * pslider = new ClickableSlider(0, ptb, LSTR("pan|0|0"));
+    ClickableSlider * pslider = new ClickableSlider(0, ptb, LSTR("pan|%1|%2").arg(IPlayer::panDefault(), IPlayer::panDefault()));
     pslider -> setOrientation(Qt::Horizontal);
     pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
     slider -> setSingleStep(250);
 
-    PlayerFactory::obj().registerCallback(call_in, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
-    PlayerFactory::obj().registerCallback(call_out, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(call_to_player, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
 
-    pslider -> setMinimum(-1000);
-    pslider -> setMaximum(1000);
-    pslider -> setValue(0);
+    pslider -> setMinimum(IPlayer::panMin());
+    pslider -> setMaximum(IPlayer::panMax());
+    pslider -> setValue(IPlayer::panDefault());
+
+    ptb -> addWidget(pslider);
+    ptb -> setMinimumWidth(70);
+    ptb -> adjustSize();
+
+    return ptb;
+}
+
+QToolBar * ToolBars::createTempoMediaBar() {
+    QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_TEMPO_KEY, true);
+
+    ClickableSlider * pslider = new ClickableSlider(0, ptb);
+    pslider -> setOrientation(Qt::Horizontal);
+    pslider -> setMinimumSize(60, 30);
+    slider -> setSingleStep(25);
+
+    PlayerFactory::obj().registerCallback(call_to_player, pslider, SIGNAL(valueChanged(int)), SLOT(setTempo(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, pslider, SIGNAL(tempoChanged(int)), SLOT(setValueSilently(int)));
+
+    pslider -> setMinimum(IPlayer::tempoMin());
+    pslider -> setMaximum(IPlayer::tempoMax());
+    pslider -> setValue(IPlayer::tempoDefault());
 
     ptb -> addWidget(pslider);
     ptb -> setMinimumWidth(70);
@@ -409,8 +435,8 @@ QToolBar * ToolBars::createTimeMediaBar() {
     Settings::currentStyle -> applyProperty(timeLabel, "timer", true);
     ptb -> addWidget(timeLabel);
 
-    PlayerFactory::obj().registerCallback(call_out, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
-    PlayerFactory::obj().registerCallback(call_out, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, timeLabel, SIGNAL(positionChanged(int)), SLOT(setPos(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, timeLabel, SIGNAL(durationChanged(int)), SLOT(setTotal(int)));
 
 //    ptb -> adjustSize();
 
@@ -426,19 +452,22 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
     QAction * act = ptb -> addAction(ico, LSTR("Mute"));
     act -> setCheckable(true);
-    PlayerFactory::obj().registerCallback(call_in, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
-    PlayerFactory::obj().registerCallback(call_out, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
+    PlayerFactory::obj().registerCallback(call_to_player, act, SIGNAL(triggered(bool)), SLOT(mute(bool)));
+    PlayerFactory::obj().registerCallback(answer_from_player, act, SIGNAL(muteChanged(bool)), SLOT(setChecked(bool)));
 
-    ClickableSlider * slider = new ClickableSlider(100000000, ptb, LSTR("volume|4000|7500"));
+
+    int vol_max = IPlayer::volumeMax();
+    ClickableSlider * slider = new ClickableSlider(vol_max + 1, ptb, LSTR("volume|%1|%2").arg(QString::number(vol_max * 0.4), QString::number(vol_max * 0.75)));
 
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimumSize(45, 30);
-    slider -> setMaximum(10000);
-    slider -> setValue(VOLUME_MULTIPLIER);
+    slider -> setMinimum(IPlayer::volumeMin());
+    slider -> setMaximum(vol_max);
+    slider -> setValue(IPlayer::volumeDefault());
     slider -> setSingleStep(250);
 
-    PlayerFactory::obj().registerCallback(call_in, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
-    PlayerFactory::obj().registerCallback(call_out, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
+    PlayerFactory::obj().registerCallback(call_to_player, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
+    PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
     ptb -> addWidget(slider);
     ptb -> setMinimumWidth(55);
