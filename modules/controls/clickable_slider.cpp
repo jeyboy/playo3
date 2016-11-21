@@ -28,6 +28,7 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
         return;
     }
 
+    //TODO: improve me
     QStylePainter p(this);
     QStyleOptionSlider opt;
     initStyleOption(&opt);
@@ -35,13 +36,15 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
     QRect handle = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
     QRect main_rect = rect();
 
-    int h = 4;
+    int r = 2;
     int ty = main_rect.top();
     int by = main_rect.bottom();
 
     int min = minimum();
     int max = maximum();
     double range = (double)(max - min);
+    double work_width = (double)(width() - handle.width());
+    double hanle_half = (double)(handle.width() / 2.0);
 
 
     // draw tick marks
@@ -50,15 +53,18 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
     if (interval == 0)
         interval = pageStep();
 
-    p.setPen(QPen(QColor("#fff"), 3));
+    QColor color = Settings::currentStyle -> pen.color();
+    p.setPen(color);
+    p.setBrush(color);
+
     for (int i = min; i <= max; i += interval) {
-        int x = round((double)((double)((double)(i - min) / range) * (double)(width() - handle.width()) + (double)(handle.width() / 2.0))) - 1;
+        int x = round((double)((double)((double)(i - min) / range) * work_width + hanle_half)) - 1;
 
         if (tpos == TicksBothSides || tpos == TicksAbove)
-            p.drawLine(x, ty, x, ty + h);
+            p.drawEllipse(x - r / 2, ty, r, r);
 
         if (tpos == TicksBothSides || tpos == TicksBelow)
-            p.drawLine(x, by, x, by - h);
+            p.drawEllipse(x - r / 2, by - r, r, r);
     }
 
     // draw the slider (this is basically copy/pasted from QSlider::paintEvent)

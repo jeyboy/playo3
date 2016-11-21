@@ -390,6 +390,8 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setOrientation(Qt::Horizontal);
     pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
+    pslider -> setTickPosition(QSlider::TicksBothSides);
+    pslider -> setTickInterval(IPlayer::panMax());
     slider -> setSingleStep(250);
 
     PlayerFactory::obj().registerCallback(call_to_player, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
@@ -469,6 +471,8 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setMaximum(vol_max);
     slider -> setValue(IPlayer::volumeDefault());
     slider -> setSingleStep(250);
+    slider -> setTickPosition(QSlider::TicksBothSides);
+    slider -> setTickInterval(IPlayer::volumeMax() / 5);
 
     PlayerFactory::obj().registerCallback(call_to_player, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
