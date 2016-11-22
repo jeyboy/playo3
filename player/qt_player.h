@@ -3,30 +3,26 @@
 
 #include "modules/core/media/interfaces/iplayer.h"
 
-//#define BASS_POSITION_MULTIPLIER 1000.0
+#include <qmediaplayer.h>
+
+#define QT_VOLUME_MULTIPLIER 10.0
 
 class QtPlayer : public IPlayer {
     Q_OBJECT
 
-//    bool is_paused;
-//    QFutureWatcher<QPair<QString, qint64> > * openChannelWatcher;
-//    QPair<QString, qint64> proc_channel;
-
-    int default_device();
-
-    bool proceedErrorState();
-    QPair<QString, qint64> openChannel(const QUrl & url,  QPair<QString, qint64> & channel_params);
-    void closeChannel();
-
-    void playPreproccessing();
-protected slots:
-    void afterSourceOpening();
-
+    QMediaPlayer * player;
 protected:
     bool deviceable() const { return false; }
     bool spectrumable() { return false; }
     bool equalizable() { return false; }
     bool isSupportTempoChanging() { return true; }
+    bool seekingBlocked() { return player -> isSeekable(); }
+
+    bool hasAudio() const { return player -> isAudioAvailable(); }
+    bool hasVideo() const { return player -> isVideoAvailable(); }
+
+    bool supportVideo() const { return true; }
+    void setVideoOutput(QWidget * output) { player -> setVideoOutput((QVideoWidget *)output); }
 
     bool playProcessing(const bool & paused = false);
     bool resumeProcessing();
@@ -36,7 +32,6 @@ protected:
     bool newTempoProcessing(const int & new_tempo);
     bool newPosProcessing(const qint64 & new_pos);
     bool newVolumeProcessing(const int & new_vol);
-    bool newPanProcessing(const int & new_pan);
 
     float prebufferingLevelCalc() { return 1; } // stub
     qint64 calcFileSize();
@@ -47,6 +42,9 @@ protected:
 
 //    bool calcSpectrum(QVector<float> & result);
 //    bool calcSpectrum(QList<QVector<float> > & result);
+private slots:
+    void mediaStatusChanged(QMediaPlayer::MediaStatus status);
+
 public:
     explicit QtPlayer(QWidget * parent);
     ~QtPlayer();
@@ -57,7 +55,7 @@ public:
 
     qint64 position() const;
 
-//    bool fileInfo(const QUrl & uri, IMediaInfo * info);
+    bool fileInfo(const QUrl & uri, IMediaInfo * info);
 //    float bpmCalc(const QUrl & uri);
 
 //    inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
@@ -66,8 +64,5 @@ public:
 ////    inline void readTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
 //    inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
 };
-
-#endif // PLAYER
-
 
 #endif // QT_PLAYER_H

@@ -84,11 +84,11 @@ void IPlayer::stop() {
 }
 
 void IPlayer::slidePosForward() {
-    if (seekable())
+    if (isSeekable())
         setPosition(qMin(max_duration, position() + max_duration / slidePercentage()));
 }
 void IPlayer::slidePosBackward() {
-    if (seekable())
+    if (isSeekable())
         setPosition(qMax(qint64(0), position() - max_duration / slidePercentage()));
 }
 

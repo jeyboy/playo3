@@ -5,12 +5,14 @@
 
 #include "player_callback.h"
 #include "bass_player.h"
+#include "qt_player.h"
 
 #include "settings.h"
 
 enum PlayerType {
     none = 0,
-    bass_player = 1
+    bass_player = 1,
+    qt_player
 };
 
 enum PlayerInitState {
@@ -30,7 +32,7 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
 public:
     inline IPlayer * currPlayer() { return player; }
 
-    void registerCallback(CallbackTurn turn, QObject * obj, const char * signal, const char * slot) {
+    void registerCallback(const CallbackTurn & turn, QObject * obj, const char * signal, const char * slot) {
         PlayerCallback pl(turn, obj, signal, slot);
         callbacks << pl;
         if (player) pl.use(player);
@@ -40,7 +42,7 @@ public:
         IPlayer * old_player = player;
 
         switch(newPlayerType) {
-    //        case bass_player: break;
+            case qt_player: player = new QtPlayer(anchor); break;
             default: player = new BassPlayer(anchor);
         }
 

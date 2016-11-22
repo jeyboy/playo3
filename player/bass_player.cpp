@@ -178,16 +178,19 @@ bool BassPlayer::newPanProcessing(const int & new_pan) {
 
 
 void BassPlayer::applyTempoToChannel() {
-    chan = BASS_FX_TempoCreate(chan, BASS_FX_FREESOURCE);
-    if (!chan)
-       qCritical() << "e:" << BASS_ErrorGetCode();
+    tempo_chan = BASS_FX_TempoCreate(chan, BASS_FX_FREESOURCE);
+    if (!tempo_chan) {
+        //FIXME: block tempo func
+        qCritical() << "e:" << BASS_ErrorGetCode();
+    } else
+        chan = tempo_chan;
 }
 bool BassPlayer::newTempoProcessing(const int & new_tempo) {
     if (!chan) return false;
 
     float tempo = new_tempo;
     if (tempo != 0) // -95%...0...+5000%
-        tempo = (new_tempo / (float)tempoMax()) * (tempo < 0 ? 95 : 200); // take only 200 %
+        tempo = (new_tempo / (float)tempoMax()) * (tempo < 0 ? 50 : 200); // take only 200 %
 
     bool res = BASS_ChannelSetAttribute(chan, BASS_ATTRIB_TEMPO, tempo);
     if (!res)

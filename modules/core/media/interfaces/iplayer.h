@@ -26,15 +26,15 @@ protected:
     void updatePosition(const qint64 & newPos);
 
     virtual bool playProcessing(const bool & paused = false) = 0;
-    void playPostprocessing();
     virtual bool resumeProcessing() = 0;
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
+    void playPostprocessing();
 
     virtual bool newTempoProcessing(const int & /*new_tempo*/) { return false; }
+    virtual bool newPanProcessing(const int & /*new_pan*/) { return false; }
     virtual bool newPosProcessing(const qint64 & new_pos) = 0;
     virtual bool newVolumeProcessing(const int & new_vol) = 0;
-    virtual bool newPanProcessing(const int & new_pan) = 0;
     virtual float prebufferingLevelCalc() { return 1; }
     virtual qint64 calcFileSize() { return -1; }
 
@@ -50,7 +50,6 @@ protected:
     inline virtual int slidePercentage() const { return 10.0; }
 
     virtual inline bool seekingBlocked() { return false; }
-    inline bool seekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }
 
     QUrl media_url;
     QString media_title;
@@ -86,7 +85,6 @@ public:
         updatePosition(play_pos); // update ui pos // real position changing proceed in post proc method
         updateState(url.isEmpty() ? UnknowState : InitState);
     }
-
     inline void updateMedia(const QUrl & url, const QString & name) { setMedia(url, name, start_pos, max_duration, play_pos); }
     inline void updateMedia(const qint64 & new_start_mili, const qint64 & new_max_duration) {
         start_pos = new_start_mili;
@@ -94,15 +92,10 @@ public:
         setDuration(new_max_duration);
         setPosition(play_pos);
     }
-
     void closeMedia() {
         stop();
         emit statusChanged(media_title, CloseMedia);
     }
-
-    virtual QHash<QString, QVariant> deviceList() = 0;
-    virtual QVariant currDevice() = 0;
-    virtual bool setDevice(const QVariant & device) = 0;
 
     inline bool isInitiating() { return pstate == InitState; }
     inline bool isPlayed() { return pstate == PlayingState; }
@@ -111,6 +104,13 @@ public:
 
     virtual bool isSupportVideo() { return false; }
     virtual bool isSupportTempoChanging() { return false; }
+    virtual bool isSupportPanChanging() { return false; }
+    bool isSeekable() { return !seekingBlocked() && max_duration > 0 && (state() == PlayingState || state() == PausedState); }
+
+    virtual bool hasAudio() const { return true; }
+    virtual bool hasVideo() const { return false; }
+
+    virtual void setVideoOutput(QWidget *) {}
 
     inline PlayerState state() const { return pstate; }
 
@@ -122,8 +122,9 @@ public:
     inline int tempo() const { return tempo_val; }
     inline int fileSize() const { return size; }
 
-    inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
-    inline virtual void proxy(const QString & /*proxyStr*/ = QString()) { /*stub*/ }
+    virtual bool setOpenTimeOut(const float & /*sec_limit*/) { return false; }
+    virtual bool setReadTimeOut(const float & /*sec_limit*/) { return false; }
+    virtual bool setProxy(const QString & /*proxy_str*/ = QString()) { return false; }
 
     inline void prebufferingLevel(const float & level = 1) {
         emit prebufferingChanged(prebuffering_level = level);
@@ -163,28 +164,28 @@ public slots:
     void playPause() { isPlayed() ? pause() : play(); }
     void stop();
 
+    void mute(const bool & enable = false);
+    void loop(const bool & enable = false) { looped = enable; }
+
     void slidePosForward();
     void slidePosBackward();
     void slideVolForward();
     void slideVolBackward();
 
     void setTempo(const int & new_tempo) {
-        if (!isSupportTempoChanging()) return;
-
         tempo_val = new_tempo;
 
         tempo_val = qMax(tempo_val, tempoMin());
         tempo_val = qMin(tempo_val, tempoMax());
 
+        if (!isSupportTempoChanging()) return;
+
         newTempoProcessing(tempo_val);
         emit tempoChanged(tempo_val);
     }
-
     void setPosition(const int & new_pos) { setPosition(qint64(new_pos)); }
     void setPosition(const qint64 & new_pos);
-    void mute(const bool & enable = false);
-    void loop(const bool & enable = false) { looped = enable; }
-    inline void setVolume(const int & new_vol) {
+    void setVolume(const int & new_vol) {
         volume_val = new_vol;
 
         volume_val = qMax(volume_val, volumeMin());
@@ -194,11 +195,13 @@ public slots:
         emit volumeChanged(volume_val);
         emit muteChanged((muted = volume_val == 0));
     }
-    inline void setPan(const int & new_pan) {
+    void setPan(const int & new_pan) {
         pan_val = new_pan;
 
         pan_val = qMax(pan_val, panMin());
         pan_val = qMin(pan_val, panMax());
+
+        if (!isSupportPanChanging()) return;
 
         newPanProcessing(pan_val);
         emit panChanged(pan_val);

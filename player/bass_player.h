@@ -131,6 +131,8 @@ protected:
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
+    bool isSupportPanChanging() { return true; }
+
     bool playProcessing(const bool & paused = false);
     bool resumeProcessing();
     bool pauseProcessing();
@@ -163,11 +165,12 @@ public:
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
     float bpmCalc(const QUrl & uri);
 
-    inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
-    inline void openTimeOut(const float & sec_limit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
-    inline void proxy(const QString & proxy_str = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxy_str.isEmpty() ? NULL : QSTRING_TO_STR(proxy_str)); }
-//    inline void readTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
-    inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
+    inline bool setReadTimeOut(const float & sec_limit) { return BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
+    inline bool setOpenTimeOut(const float & sec_limit) { return BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
+    inline bool setProxy(const QString & proxy_str = QString()) { return BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxy_str.isEmpty() ? NULL : QSTRING_TO_STR(proxy_str)); }
+
+//    inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
+//    inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
 };
 
 #endif // BASS_PLAYER
