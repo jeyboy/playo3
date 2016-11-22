@@ -12,7 +12,7 @@ void endTrackSync(HSYNC, DWORD, DWORD, void * user) {
 
 void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     BassPlayer * player = static_cast<BassPlayer *>(user);
-    player -> prebufferingLevel();
+    player -> setDownloadingLevel();
 }
 
 bool BassPlayer::proceedErrorState() {
@@ -36,7 +36,7 @@ bool BassPlayer::proceedErrorState() {
 QPair<QString, qint64> BassPlayer::openChannel(const QUrl & url, QPair<QString, qint64> & channel_params) {
     if (url.isLocalFile()) {
         channel_params.second = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
-        prebufferingChanged(1);
+        setDownloadingLevel(1);
     } else {
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
         channel_params.second = openRemote(
@@ -178,7 +178,7 @@ bool BassPlayer::newPanProcessing(const int & new_pan) {
 
 
 void BassPlayer::applyTempoToChannel() {
-    tempo_chan = BASS_FX_TempoCreate(chan, BASS_FX_FREESOURCE);
+    quint64 tempo_chan = BASS_FX_TempoCreate(chan, BASS_FX_FREESOURCE);
     if (!tempo_chan) {
         //FIXME: block tempo func
         qCritical() << "e:" << BASS_ErrorGetCode();
@@ -199,7 +199,7 @@ bool BassPlayer::newTempoProcessing(const int & new_tempo) {
     return res;
 }
 
-float BassPlayer::prebufferingLevelCalc() {
+float BassPlayer::downloadingLevelCalc() {
     if (fileSize() > 0)
         return ((BASS_StreamGetFilePosition(chan, BASS_FILEPOS_DOWNLOAD)) / (float)fileSize());
     else return 1;
@@ -368,7 +368,7 @@ BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannel
 
     initDevice(default_device());
     loadPlugins();
-    userAgent(DEFAULT_AGENT);
+    setUserAgent(DEFAULT_AGENT);
 }
 BassPlayer::~BassPlayer() {
     if (openChannelWatcher)
@@ -444,7 +444,7 @@ bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
         BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     //    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
 
-        openTimeOut(Settings::obj().openTimeOut());
+        setOpenTimeOut(Settings::obj().openTimeOut());
     }
 
     return res;

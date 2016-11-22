@@ -6,7 +6,7 @@
 
 class IDeviceable {
 protected:
-    virtual bool deviceable() const { return true; }
+    virtual bool IsSupportDeviceChange() const { return false; }
 public:
     virtual QHash<QString, QVariant> deviceList() { return {}; }
     virtual QVariant currDevice() { return QVariant(); }

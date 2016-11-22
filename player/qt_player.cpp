@@ -35,7 +35,7 @@ void QtPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status) {
     }
 }
 
-bool QtPlayer::playProcessing(const bool & paused = false) {
+bool QtPlayer::playProcessing(const bool & paused) {
     emit statusChanged(title(), InitMedia);
     player -> setMedia(QMediaContent(media_url));
     player -> play();
@@ -45,9 +45,9 @@ bool QtPlayer::playProcessing(const bool & paused = false) {
 
     if (paused) player -> pause();
 }
-bool QtPlayer::resumeProcessing() { player -> play(); }
-bool QtPlayer::pauseProcessing() { player -> pause(); }
-bool QtPlayer::stopProcessing() { player -> stop(); }
+bool QtPlayer::resumeProcessing() { player -> play(); return true; }
+bool QtPlayer::pauseProcessing() { player -> pause(); return true; }
+bool QtPlayer::stopProcessing() { player -> stop(); return true; }
 
 bool QtPlayer::newTempoProcessing(const int & new_tempo) {
     float tempo = new_tempo;
@@ -55,12 +55,15 @@ bool QtPlayer::newTempoProcessing(const int & new_tempo) {
         tempo = (new_tempo / (float)tempoMax()) * (tempo < 0 ? 0.5 : 2);
 
     player -> setPlaybackRate(1 + tempo);
+    return true;
 }
 bool QtPlayer::newPosProcessing(const qint64 & new_pos) {
     player -> setPosition(new_pos);
+    return true;
 }
 bool QtPlayer::newVolumeProcessing(const int & new_vol) {
-    player -> setVolume(new_volume == 0 ? 0 : new_volume / QT_VOLUME_MULTIPLIER);
+    player -> setVolume(new_vol == 0 ? 0 : new_vol / QT_VOLUME_MULTIPLIER);
+    return true;
 }
 
 bool QtPlayer::fileInfo(const QUrl & uri, IMediaInfo * /*info*/) {
@@ -83,7 +86,7 @@ bool QtPlayer::fileInfo(const QUrl & uri, IMediaInfo * /*info*/) {
     return false;
 }
 
-qint64 QtPlayer::calcFileSize() { player -> mediaStream() -> size(); }
+qint64 QtPlayer::calcFileSize() { return player -> mediaStream() -> size(); }
 
 //    bool registerEQ();
 //    bool unregisterEQ();
@@ -93,7 +96,7 @@ qint64 QtPlayer::calcFileSize() { player -> mediaStream() -> size(); }
 //    bool calcSpectrum(QList<QVector<float> > & result);
 
 
-QtPlayer::QtPlayer(QWidget * parent) : player(new QMediaPlayer(parent)) {
+QtPlayer::QtPlayer(QWidget * parent) : IPlayer(parent), player(new QMediaPlayer(parent)) {
     connect(player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), this, SLOT(mediaStatusChanged(QMediaPlayer::MediaStatus)));
 }
 

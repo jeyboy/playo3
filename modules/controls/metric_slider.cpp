@@ -11,8 +11,7 @@ MetricSlider::MetricSlider(QWidget * parent, bool showPosition, int default_valu
 
     setMouseTracking(show_position);
 
-    PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(prebufferingChanged(float)), SLOT(prebufferingChanged(float)));
-//    connect(Settings::obj().currPlayer(), SIGNAL(prebufferingChanged(float)), this, SLOT(prebufferingChanged(float)));
+    PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(downloadingLevelChanged(float)), SLOT(downloadingLevelChanged(float)));
 }
 
 void MetricSlider::resizeEvent(QResizeEvent *) {
@@ -88,7 +87,7 @@ void MetricSlider::mouseMoveEvent(QMouseEvent * ev) {
     QSlider::mouseMoveEvent(ev);
 }
 
-void MetricSlider::prebufferingChanged(float level) {
+void MetricSlider::downloadingLevelChanged(float level) {
     if ((progressVal = level) == 1)
         progressRect = QRect();
     else {

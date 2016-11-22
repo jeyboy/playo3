@@ -19,7 +19,7 @@ class IPlayer : public IEqualizable, public ITrackable, public IDeviceable {
     QTimer * itimer;
     qint64 play_pos, start_pos, size;
     int volume_val, pan_val, tempo_val;
-    float prebuffering_level;
+    float downloading_level;
     bool muted, looped;   
 protected:
     void updateState(const PlayerState & new_state);
@@ -35,7 +35,7 @@ protected:
     virtual bool newPanProcessing(const int & /*new_pan*/) { return false; }
     virtual bool newPosProcessing(const qint64 & new_pos) = 0;
     virtual bool newVolumeProcessing(const int & new_vol) = 0;
-    virtual float prebufferingLevelCalc() { return 1; }
+    virtual float downloadingLevelCalc() { return 1; }
     virtual qint64 calcFileSize() { return -1; }
 
     void initFileSize() {
@@ -125,11 +125,12 @@ public:
     virtual bool setOpenTimeOut(const float & /*sec_limit*/) { return false; }
     virtual bool setReadTimeOut(const float & /*sec_limit*/) { return false; }
     virtual bool setProxy(const QString & /*proxy_str*/ = QString()) { return false; }
+    virtual bool setUserAgent(const QString & /*user_agent*/ = QString()) { return false; }
 
-    inline void prebufferingLevel(const float & level = 1) {
-        emit prebufferingChanged(prebuffering_level = level);
+    inline void setDownloadingLevel(const float & level = 1) {
+        emit downloadingLevelChanged(downloading_level = level);
     }
-    inline float prebufferingLevel() const { return prebuffering_level; }
+    inline float downloadingLevel() const { return downloading_level; }
 
     virtual bool fileInfo(const QUrl & /*uri*/, IMediaInfo * /*info*/) { return false; }
     virtual float bpmCalc(const QUrl & /*uri*/) { return 0; }
@@ -146,7 +147,7 @@ signals:
 //    void duration64Changed(qint64);
     void durationChanged(int);
 
-    void prebufferingChanged(float level); // 0 .. 1
+    void downloadingLevelChanged(float level); // 0 .. 1
     void playbackEnding();
 
 protected slots:
@@ -214,8 +215,8 @@ protected slots:
         if (new_pos >= duration()) //INFO: cue tweak
             endOfPlayback();
 
-        if (prebuffering_level < 1)
-            prebufferingLevel(prebufferingLevelCalc());
+        if (downloading_level < 1)
+            setDownloadingLevel(downloadingLevelCalc());
     }
 };
 

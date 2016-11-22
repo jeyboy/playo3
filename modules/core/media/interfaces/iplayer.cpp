@@ -2,7 +2,7 @@
 
 IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
     play_pos(0), start_pos(0), size(0), volume_val(volumeDefault()), pan_val(panDefault()),
-    tempo_val(tempoDefault()), prebuffering_level(0), muted(false), looped(false), max_duration(0)
+    tempo_val(tempoDefault()), downloading_level(0), muted(false), looped(false), max_duration(0)
 {
     qRegisterMetaType<PlayerState>("PlayerState");
     qRegisterMetaType<PlayerStatus>("PlayerStatus");
@@ -60,7 +60,7 @@ void IPlayer::play(bool paused) {
     } else {
         if (!isInitiating()) updateState(InitState);
         size = 0;
-        prebuffering_level = 0;
+        downloading_level = 0;
 
         if (media_url.isEmpty()) {
             emit statusChanged(media_title, NoMedia);

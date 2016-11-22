@@ -39,10 +39,10 @@ class IEqualizable : public ISpectrumable {
 protected:
     IEqualizable(QObject * parent = 0);
 
-    virtual bool processEqSetGain(const int & band, const float & gain) = 0;
-    virtual bool registerEQ() = 0;
-    virtual bool unregisterEQ() = 0;
-    virtual bool equalizable() { return true; }
+    virtual bool processEqSetGain(const int & /*band*/, const float & /*gain*/) { return false; }
+    virtual bool registerEQ() { return false; }
+    virtual bool unregisterEQ() { return false; }
+    virtual bool IsSupportEqualizer() { return false; }
 
     bool eq_in_use;
     QString current_preset_type;

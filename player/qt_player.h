@@ -12,6 +12,8 @@ class QtPlayer : public IPlayer {
 
     QMediaPlayer * player;
 protected:
+    bool proceedErrorState();
+
     bool deviceable() const { return false; }
     bool spectrumable() { return false; }
     bool equalizable() { return false; }
@@ -33,7 +35,7 @@ protected:
     bool newPosProcessing(const qint64 & new_pos);
     bool newVolumeProcessing(const int & new_vol);
 
-    float prebufferingLevelCalc() { return 1; } // stub
+    float downloadingLevelCalc() { return 1; } // stub
     qint64 calcFileSize();
 
 //    bool registerEQ();

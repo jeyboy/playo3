@@ -112,8 +112,6 @@ protected slots:
     void afterSourceOpening();
 
 protected:
-    bool isSupportTempoChanging() { return true; }
-
     void setSampleRateQuality() {
         // On Windows, sample rate conversion is handled by Windows or the output device/driver rather than BASS, so this setting has no effect on playback there.
         // 0 = linear interpolation, 1 = 8 point sinc interpolation, 2 = 16 point sinc interpolation, 3 = 32 point sinc interpolation
@@ -131,6 +129,10 @@ protected:
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
+    bool IsSupportEqualizer() { return true; }
+    bool IsSupportDeviceChange() const { return true; }
+    bool IsSupportSpectrumCalc() { return true; }
+    bool isSupportTempoChanging() { return true; }
     bool isSupportPanChanging() { return true; }
 
     bool playProcessing(const bool & paused = false);
@@ -143,7 +145,7 @@ protected:
     bool newPosProcessing(const qint64 & new_pos);
     bool newVolumeProcessing(const int & new_vol);
     bool newPanProcessing(const int & new_pan);
-    float prebufferingLevelCalc();
+    float downloadingLevelCalc();
     qint64 calcFileSize();
 
     bool registerEQ();
@@ -168,9 +170,9 @@ public:
     inline bool setReadTimeOut(const float & sec_limit) { return BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
     inline bool setOpenTimeOut(const float & sec_limit) { return BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
     inline bool setProxy(const QString & proxy_str = QString()) { return BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxy_str.isEmpty() ? NULL : QSTRING_TO_STR(proxy_str)); }
+    inline bool setUserAgent(const QString & user_agent = QString()) { return BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
 
 //    inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
-//    inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
 };
 
 #endif // BASS_PLAYER

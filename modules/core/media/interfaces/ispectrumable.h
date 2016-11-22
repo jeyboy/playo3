@@ -21,19 +21,19 @@ protected:
         connect(itimer, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
     }
 
-    inline void spectrumCalcStart() { if (spectrumable()) itimer -> start(); }
+    inline void spectrumCalcStart() { if (IsSupportSpectrumCalc()) itimer -> start(); }
     inline void spectrumCalcStop() {
+        if (!IsSupportSpectrumCalc()) return;
         itimer -> stop();
-        if (!spectrumable()) return;
         calcSpectrum(); // emit default spectrum level
     }
 
     void channelsCount(int newChannelsCount);
 
     virtual PlayerState state() const = 0;
-    virtual bool calcSpectrum(QVector<float> & result) = 0;
-    virtual bool calcSpectrum(QList<QVector<float> > & result) = 0;
-    virtual bool spectrumable() { return true; }
+    virtual bool calcSpectrum(QVector<float> & /*result*/) { return false; }
+    virtual bool calcSpectrum(QList<QVector<float> > & /*result*/) { return false; }
+    virtual bool IsSupportSpectrumCalc() { return false; }
 
     virtual bool respondToMultichannelSpectrumCalc() { return !block_multichannel && channels_count != 1; }
 

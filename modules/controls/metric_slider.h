@@ -34,7 +34,7 @@ namespace Controls {
             repaint();
         }
     protected slots:
-        void prebufferingChanged(float level);
+        void downloadingLevelChanged(float level);
 
     protected:
         int posToVal(int pos) const;
