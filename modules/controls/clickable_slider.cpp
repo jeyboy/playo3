@@ -36,36 +36,38 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
     QRect handle = style() -> subControlRect(QStyle::CC_Slider, &opt, QStyle::SC_SliderHandle, this);
     QRect main_rect = rect();
 
-    int r = 2;
-    int ty = main_rect.top();
-    int by = main_rect.bottom();
-
     int min = minimum();
     int max = maximum();
+
+    double r = 3;
     double range = (double)(max - min);
     double work_width = (double)(width() - handle.width());
     double hanle_half = (double)(handle.width() / 2.0);
 
+    QPointF tcenter(0, main_rect.top() + r / 2);
+    QPointF bcenter(0, main_rect.bottom() - r / 2);
 
-    // draw tick marks
-    // do this manually because they are very badly behaved with style sheets
+    // draw tick marks // do this manually because they are very badly behaved with style sheets
     int interval = tickInterval();
     if (interval == 0)
         interval = pageStep();
 
     QColor color = Settings::currentStyle -> pen.color();
-    p.setPen(color);
-    p.setBrush(color);
+    p.setPen(QPen(color, r));
+    QPolygonF points;
 
-    for (int i = min; i <= max; i += interval) {
-        int x = round((double)((double)((double)(i - min) / range) * work_width + hanle_half)) - 1;
+    int intervals_amount = (range - 1) / interval;
+    double interval_step = ((double)interval / range) * work_width + hanle_half;
 
+    for (int i = 0; i < intervals_amount; ++i) {
         if (tpos == TicksBothSides || tpos == TicksAbove)
-            p.drawEllipse(x - r / 2, ty, r, r);
+            points << (tcenter += QPointF(interval_step, 0));
 
         if (tpos == TicksBothSides || tpos == TicksBelow)
-            p.drawEllipse(x - r / 2, by - r, r, r);
+             points << (bcenter += QPointF(interval_step, 0));
     }
+
+    p.drawPoints(points);
 
     // draw the slider (this is basically copy/pasted from QSlider::paintEvent)
     opt.subControls = QStyle::SC_SliderGroove;
