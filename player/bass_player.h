@@ -1,5 +1,5 @@
-#ifndef PLAYER
-#define PLAYER
+#ifndef BASS_PLAYER
+#define BASS_PLAYER
 
 #include <qdir.h>
 
@@ -170,4 +170,4 @@ public:
     inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
 };
 
-#endif // PLAYER
+#endif // BASS_PLAYER

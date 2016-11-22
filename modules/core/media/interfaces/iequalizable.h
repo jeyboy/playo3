@@ -51,7 +51,7 @@ protected:
 public:
     virtual ~IEqualizable() {}
 
-    void eqBand(int band, float gain) {
+    void eqBand(const int & band, const float & gain) {
         processEqSetGain(band, gain);
         eqBandsGains.insert(band, gain);
     }

@@ -369,7 +369,7 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
     QMenu menu(this);
 
     if (isConfigurable()) {
-        menu.addAction(QIcon(LSTR(":/settings")), LSTR("View settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
+        menu.addAction(QIcon(LSTR(":/settings")), LSTR("Playlist settings"), &Presentation::Dockbars::obj(), SLOT(editActiveBar()));
         menu.addSeparator();
     }
 

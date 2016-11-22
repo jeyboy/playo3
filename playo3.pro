@@ -346,7 +346,8 @@ HEADERS += \
     modules/core/web/sources/youtube/youtube_channel.h \
     item_toolbar_features.h \
     modules/core/web/sources/youtube/youtube_set.h \
-    player/qt_player.h
+    player/qt_player.h \
+    modules/core/media/interfaces/ideviceable.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -479,4 +480,5 @@ SOURCES += \
     modules/core/web/sources/yandex/yandex_keys.cpp \
     modules/core/web/sources/youtube/youtube_keys.cpp \
     modules/core/web/sources/youtube_queries.cpp \
-    item_toolbar_features.cpp
+    item_toolbar_features.cpp \
+    player/qt_player.cpp

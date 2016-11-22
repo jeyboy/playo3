@@ -6,12 +6,13 @@
 
 #include "itrackable.h"
 #include "iequalizable.h"
+#include "ideviceable.h"
 
 #include "player_statuses.h"
 #include "modules/core/media/interfaces/imediainfo.h"
 #include "modules/core/web/utils/web_manager.h"
 
-class IPlayer : public IEqualizable, public ITrackable {
+class IPlayer : public IEqualizable, public ITrackable, public IDeviceable {
     Q_OBJECT
 
     PlayerState pstate;
@@ -34,8 +35,8 @@ protected:
     virtual bool newPosProcessing(const qint64 & new_pos) = 0;
     virtual bool newVolumeProcessing(const int & new_vol) = 0;
     virtual bool newPanProcessing(const int & new_pan) = 0;
-    virtual float prebufferingLevelCalc() = 0;
-    virtual qint64 calcFileSize() = 0;
+    virtual float prebufferingLevelCalc() { return 1; }
+    virtual qint64 calcFileSize() { return -1; }
 
     void initFileSize() {
         size = calcFileSize();
@@ -124,7 +125,7 @@ public:
     inline virtual void openTimeOut(float /*secLimit*/) { /*stub*/ }
     inline virtual void proxy(const QString & /*proxyStr*/ = QString()) { /*stub*/ }
 
-    inline void prebufferingLevel(float level = 1) {
+    inline void prebufferingLevel(const float & level = 1) {
         emit prebufferingChanged(prebuffering_level = level);
     }
     inline float prebufferingLevel() const { return prebuffering_level; }
