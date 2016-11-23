@@ -94,9 +94,6 @@ void BassPlayer::playPreproccessing() {
 
     setSampleRateQuality();
 
-    if (max_duration == 0)
-        max_duration = round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * BASS_POSITION_MULTIPLIER;
-
     BASS_CHANNELINFO info;
     if (BASS_ChannelGetInfo(chan, &info))
         channelsCount(info.chans);

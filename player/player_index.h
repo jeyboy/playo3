@@ -29,11 +29,11 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
     inline ~PlayerFactory() {}
 
     IPlayer * player;
-    QWidget * video_output;
+    QObject * video_output;
 public:
     inline IPlayer * currPlayer() { return player; }
 
-    void registerVideoOutput(QWidget * new_video_output) {
+    void registerVideoOutput(QObject * new_video_output) {
         video_output = new_video_output;
         if (player && player -> isSupportVideo())
             player -> setVideoOutput(video_output);

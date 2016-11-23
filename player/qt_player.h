@@ -15,6 +15,7 @@
 class QtPlayer : public IPlayer {
     Q_OBJECT
 
+    bool is_paused;
     QMediaPlayer * player;
 
     QAudioOutputSelectorControl * outputControl() {
@@ -36,8 +37,12 @@ protected:
     bool hasAudio() const { return player -> isAudioAvailable(); }
     bool hasVideo() const { return player -> isVideoAvailable(); }
 
-    bool supportVideo() const { return true; }
-    void setVideoOutput(QWidget * output) { player -> setVideoOutput((QVideoWidget *)output); }
+    bool isSupportVideo() { return true; }
+    void setVideoOutput(QObject * output) {
+        QVideoWidget * vw = reinterpret_cast<QVideoWidget *>(output);
+//        QGraphicsVideoItem * vw = reinterpret_cast<QGraphicsVideoItem *>(output);
+        player -> setVideoOutput(vw);
+    }
 
     bool playProcessing(const bool & paused = false);
     bool resumeProcessing();
@@ -48,8 +53,9 @@ protected:
     bool newPosProcessing(const qint64 & new_pos);
     bool newVolumeProcessing(const int & new_vol);
 
-    float downloadingLevelCalc() { return 1; } // stub
+    float downloadingLevelCalc() { return player -> bufferStatus() / 100.0 /*1*/; } // stub
     qint64 calcFileSize();
+    quint64 calcDuration() { return player -> duration(); }
 
 //    bool registerEQ();
 //    bool unregisterEQ();

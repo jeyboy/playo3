@@ -144,6 +144,8 @@ namespace Core {
             break;}
 
             case PlaingMedia: {
+                setError(ItemErrors::err_none);
+
                 attempts = 0;
                 int add_state = 0;
                 qDebug() << "PLAING MEDIA" << name;
@@ -184,9 +186,8 @@ namespace Core {
             break;}
 
             case LoadedMedia: {
-                qDebug() << "LOADED MEDIA" << name;
                 setState(name, IItem::flag_not_proccessing);
-                setError(ItemErrors::err_none);
+                qDebug() << "LOADED MEDIA" << name;
             break;}
 
             case InvalidMedia: {

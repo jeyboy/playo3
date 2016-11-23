@@ -117,6 +117,9 @@ protected:
         // 0 = linear interpolation, 1 = 8 point sinc interpolation, 2 = 16 point sinc interpolation, 3 = 32 point sinc interpolation
         BASS_ChannelSetAttribute(chan, BASS_ATTRIB_SRC, 3);
     }
+    quint64 calcDuration() {
+        return round(BASS_ChannelBytes2Seconds(chan, BASS_ChannelGetLength(chan, BASS_POS_BYTE))) * BASS_POSITION_MULTIPLIER;
+    }
 
     bool initOutputDevice(const int & newDevice, const int & frequency = 44100);
     bool closeOutputDevice(const int & device);

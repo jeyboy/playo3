@@ -30,18 +30,20 @@ void QtPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status) {
         case QMediaPlayer::EndOfMedia:      { emit statusChanged(title(), EndPlaingMedia); break; }
         case QMediaPlayer::InvalidMedia:    { emit statusChanged(title(), InvalidMedia); break; }
         case QMediaPlayer::BufferingMedia:  { qDebug() << "BUFFERING"; return;} //not used
-        case QMediaPlayer::BufferedMedia:   { qDebug() << "END BUFFERING"; return;} //not used
+        case QMediaPlayer::BufferedMedia:   { playPostprocessing(is_paused); qDebug() << "END BUFFERING"; return;} //not used
         default: emit statusChanged(title(), UnknownMediaStatus);
     }
 }
 
-bool QtPlayer::playProcessing(const bool & /*paused*/) {
+// QMediaPlayer* player = new QMediaPlayer(this, QMediaPlayer::StreamPlayback);
+bool QtPlayer::playProcessing(const bool & paused) {
+    is_paused = paused;
    //FIXME: need to use QNetworkRequest
     player -> setMedia(QMediaContent(media_url));
 
     player -> play();
 
-    return player -> error() == QMediaPlayer::NoError;
+    return false; //player -> error() == QMediaPlayer::NoError;
 }
 bool QtPlayer::resumeProcessing() { player -> play(); return true; }
 bool QtPlayer::pauseProcessing() { player -> pause(); return true; }

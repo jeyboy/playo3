@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
 
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
+    setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
     titleWidget = new WindowTitle(
         false,

@@ -1,4 +1,5 @@
 #include "dockbars.h"
+//#include "modules/controls/video_view.h"
 #include "modules/controls/video_widget.h"
 
 using namespace Presentation;
@@ -122,9 +123,12 @@ void Dockbars::save(DataStore * settings) {
 QDockWidget * Dockbars::linkNameToDockbar(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs) {
     if (names.is(SCREEN_TAB)) {
         if (screen) return screen;
-        VideoWidget * video_output = new VideoWidget(container);
 
-        PlayerFactory::obj().registerVideoOutput(video_output);
+//        VideoView * video_output = new VideoView(container);
+        VideoWidget * video_output = new VideoWidget(container);
+        video_output -> show();
+
+        PlayerFactory::obj().registerVideoOutput(video_output/*video_output -> videoItem()*/);
         screen = createDocBar(names, false, video_output);
 
         return screen;

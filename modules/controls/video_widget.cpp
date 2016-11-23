@@ -10,6 +10,7 @@ VideoWidget::VideoWidget(QWidget * parent) : QVideoWidget(parent) {
     setPalette(p);
 
     setAttribute(Qt::WA_OpaquePaintEvent);
+    setAttribute(Qt::WA_TranslucentBackground, false);
 
     setMinimumSize(VIDEO_DEFAULT_SIZE, VIDEO_DEFAULT_SIZE);
 }

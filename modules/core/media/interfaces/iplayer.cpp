@@ -41,6 +41,8 @@ void IPlayer::playPostprocessing(const bool & paused) {
     if (isInitiating()) {
         if (paused) pause();
 
+        if (max_duration == 0)
+            setDuration(calcDuration());
         initFileSize();
 
         if (play_pos > 0 && media_url.isLocalFile()) {

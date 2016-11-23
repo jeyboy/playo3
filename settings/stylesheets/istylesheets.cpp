@@ -34,11 +34,6 @@ QString IStylesheets::appStyles() {
 //                "   opacity: 300; "
         "}"
 
-//        "VideoWidget {"
-//        "   background-color: #000;"
-//        "   border-radius: 8px;"
-//        "}"
-
     ) % _sliderStyles() % _treeViewStyles() % _toolbarStyles() %
     _toolbarButtonStyles() % _mainWindowTabsStyles();
 }

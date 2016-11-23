@@ -43,7 +43,8 @@ protected:
         qDebug() << "FILESIZE" << size;
     }
 
-    inline void setDuration(const qint64 & new_duration) {
+    virtual quint64 calcDuration() = 0;
+    inline void setDuration(const quint64 & new_duration) {
         ITrackable::setMaxProgress(new_duration);
         emit durationChanged((max_duration = new_duration));
     }
@@ -110,7 +111,7 @@ public:
     virtual bool hasAudio() const { return true; }
     virtual bool hasVideo() const { return false; }
 
-    virtual void setVideoOutput(QWidget *) {}
+    virtual void setVideoOutput(QObject *) {}
 
     inline PlayerState state() const { return pstate; }
 
