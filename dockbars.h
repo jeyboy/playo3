@@ -135,6 +135,7 @@ namespace Presentation {
         void showViewSettingsDialog(DockBar * bar = 0);
 
     private slots:
+        void videoOutputRequired(bool required) { screen -> setVisible(required); }
         void onDownloadProceeded(QString to);
         void barClosed();
     private:
@@ -147,6 +148,7 @@ namespace Presentation {
         friend class Singleton<Dockbars>;
         inline Dockbars() : QWidget(), active(0), played(0), common(0), screen(0) {
             connect(&DataFactory::obj(), SIGNAL(newPlaylistNeed()), this, SLOT(playNext()));
+            PlayerFactory::obj().registerCallback(answer_from_player, this, SIGNAL(videoOutputRequired(bool)), SLOT(videoOutputRequired(bool)));
         }
 
         inline ~Dockbars() {}

@@ -124,7 +124,7 @@ QDockWidget * Dockbars::linkNameToDockbar(const BarCreationNames & names, Models
         if (screen) return screen;
         VideoWidget * video_output = new VideoWidget(container);
 
-
+        PlayerFactory::obj().registerVideoOutput(video_output);
         screen = createDocBar(names, false, video_output);
 
         return screen;

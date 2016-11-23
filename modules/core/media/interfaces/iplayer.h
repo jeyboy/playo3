@@ -138,6 +138,7 @@ signals:
     void stateChanged(const PlayerState &);
     void statusChanged(const QString &, const PlayerStatus &);
 
+    void videoOutputRequired(bool required);
     void muteChanged(bool);
     void panChanged(int);
     void volumeChanged(int);

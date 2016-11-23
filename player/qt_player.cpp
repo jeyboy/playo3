@@ -46,7 +46,11 @@ bool QtPlayer::playProcessing(const bool & paused) {
     if (player -> state() == QMediaPlayer::PlayingState)
         playPostprocessing();
 
+    emit videoOutputRequired(hasVideo());
+
     if (paused) player -> pause();
+
+    return player -> error() == QMediaPlayer::NoError;
 }
 bool QtPlayer::resumeProcessing() { player -> play(); return true; }
 bool QtPlayer::pauseProcessing() { player -> pause(); return true; }
