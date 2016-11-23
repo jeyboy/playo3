@@ -37,8 +37,10 @@ void IPlayer::updatePosition(const qint64 & new_pos) {
     emit positionChanged(new_pos);
 }
 
-void IPlayer::playPostprocessing() {
+void IPlayer::playPostprocessing(const bool & paused) {
     if (isInitiating()) {
+        if (paused) pause();
+
         initFileSize();
 
         if (play_pos > 0 && media_url.isLocalFile()) {
@@ -47,8 +49,11 @@ void IPlayer::playPostprocessing() {
         } else setPosition(0);
 
         setDuration(max_duration);
+
+        emit videoOutputRequired(hasVideo());
         emit statusChanged(media_title, PlaingMedia);
     }
+
     updateState(PlayingState);
 }
 
@@ -71,7 +76,7 @@ void IPlayer::play(bool paused) {
         }
     }
 
-    if (res) playPostprocessing();
+    if (res) playPostprocessing(paused);
 }
 void IPlayer::pause() {
    if (pauseProcessing())

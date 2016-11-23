@@ -29,26 +29,17 @@ void QtPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status) {
         case QMediaPlayer::StalledMedia:    { emit statusChanged(title(), StalledMedia); break; }
         case QMediaPlayer::EndOfMedia:      { emit statusChanged(title(), EndPlaingMedia); break; }
         case QMediaPlayer::InvalidMedia:    { emit statusChanged(title(), InvalidMedia); break; }
-        case QMediaPlayer::BufferingMedia:  return; //not used
-        case QMediaPlayer::BufferedMedia:   return; //not used
+        case QMediaPlayer::BufferingMedia:  { qDebug() << "BUFFERING"; return;} //not used
+        case QMediaPlayer::BufferedMedia:   { qDebug() << "END BUFFERING"; return;} //not used
         default: emit statusChanged(title(), UnknownMediaStatus);
     }
 }
 
-bool QtPlayer::playProcessing(const bool & paused) {
-    emit statusChanged(title(), InitMedia);
-
-    //FIXME: need to use QNetworkRequest
+bool QtPlayer::playProcessing(const bool & /*paused*/) {
+   //FIXME: need to use QNetworkRequest
     player -> setMedia(QMediaContent(media_url));
 
     player -> play();
-
-    if (player -> state() == QMediaPlayer::PlayingState)
-        playPostprocessing();
-
-    emit videoOutputRequired(hasVideo());
-
-    if (paused) player -> pause();
 
     return player -> error() == QMediaPlayer::NoError;
 }
@@ -205,7 +196,10 @@ bool QtPlayer::fileInfo(const QUrl & uri, IMediaInfo * /*info*/) {
     return false;
 }
 
-qint64 QtPlayer::calcFileSize() { return player -> mediaStream() -> size(); }
+qint64 QtPlayer::calcFileSize() {
+    const QIODevice * device = player -> mediaStream();
+    return device ? device -> size() : -1;
+}
 
 //    bool registerEQ();
 //    bool unregisterEQ();

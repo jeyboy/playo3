@@ -29,7 +29,7 @@ protected:
     virtual bool resumeProcessing() = 0;
     virtual bool pauseProcessing() = 0;
     virtual bool stopProcessing() = 0;
-    void playPostprocessing();
+    void playPostprocessing(const bool & paused);
 
     virtual bool newTempoProcessing(const int & /*new_tempo*/) { return false; }
     virtual bool newPanProcessing(const int & /*new_pan*/) { return false; }

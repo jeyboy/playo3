@@ -26,7 +26,7 @@ class QtPlayer : public IPlayer {
 protected:
     bool proceedErrorState();
 
-    bool isSupportOutputDeviceChange() const { return true; }
+    bool isSupportOutputDeviceChange() const { return false; } // true
     bool isSupportTempoChanging() { return true; }
     bool isSupportSpectrumCalc() { return false; }
     bool isSupportEqualizer() { return false; }

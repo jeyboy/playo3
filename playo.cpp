@@ -47,7 +47,7 @@ void Playo::activation() {
     UserDialogBox::obj(); // link dialog with current thread
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
-    PlayerFactory::obj().build(this, bass_player); // initiate default player for correct settings initialization
+    PlayerFactory::obj().build(this, qt_player); // initiate default player for correct settings initialization
     connect(&DataFactory::obj(), SIGNAL(playedItemChanged(QString,QString)), this, SLOT(playedItemChanged(QString,QString)));
 }
 

@@ -106,7 +106,7 @@ void BassPlayer::playPreproccessing() {
     if (eq_in_use) registerEQ();
 
     if (BASS_ChannelPlay(chan, true)) { // stalled with big sized video files
-        playPostprocessing();
+        playPostprocessing(is_paused);
 
         syncHandle = BASS_ChannelSetSync((HSYNC)chan, BASS_SYNC_END, 0, &endTrackSync, this);
         syncDownloadHandle = BASS_ChannelSetSync(chan, BASS_SYNC_DOWNLOAD, 0, &endTrackDownloading, this);
@@ -114,8 +114,6 @@ void BassPlayer::playPreproccessing() {
 //        BASS_SYNC_STALL
 //        mixtime only	Sync when playback of the channel is stalled/resumed.
 //        param : not used. data : 0 = stalled, 1 = resumed.
-
-        if (is_paused) pause();
     } else {
         proceedErrorState();
         qCritical() << "IS NOT PLAYED";

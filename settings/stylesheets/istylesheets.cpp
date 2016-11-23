@@ -19,7 +19,7 @@ void IStylesheets::applyProperty(QWidget * widget, const char * propertyName, co
     widget -> update();
 }
 
-QString IStylesheets::appStyles() {
+QString IStylesheets::appStyles() {   
     return QStringLiteral(
         "QLabel[timer=\"true\"] {"
         "   font-weight: bold;"
@@ -33,6 +33,12 @@ QString IStylesheets::appStyles() {
 //                "   border-radius: 8px;"
 //                "   opacity: 300; "
         "}"
+
+//        "VideoWidget {"
+//        "   background-color: #000;"
+//        "   border-radius: 8px;"
+//        "}"
+
     ) % _sliderStyles() % _treeViewStyles() % _toolbarStyles() %
     _toolbarButtonStyles() % _mainWindowTabsStyles();
 }
