@@ -37,7 +37,10 @@ void QtPlayer::mediaStatusChanged(QMediaPlayer::MediaStatus status) {
 
 bool QtPlayer::playProcessing(const bool & paused) {
     emit statusChanged(title(), InitMedia);
+
+    //FIXME: need to use QNetworkRequest
     player -> setMedia(QMediaContent(media_url));
+
     player -> play();
 
     if (player -> state() == QMediaPlayer::PlayingState)
@@ -67,6 +70,118 @@ bool QtPlayer::newVolumeProcessing(const int & new_vol) {
 }
 
 bool QtPlayer::fileInfo(const QUrl & uri, IMediaInfo * /*info*/) {
+//    QString Title;
+//    QString SubTitle;
+//    QString Author;
+//    QString Comment;
+//    QString Description;
+//    QString Category;
+//    QString Genre;
+//    QString Year;
+//    QString Date;
+//    QString UserRating;
+//    QString Keywords;
+//    QString Language;
+//    QString Publisher;
+//    QString Copyright;
+//    QString ParentalRating;
+//    QString RatingOrganization;
+
+//    // Media
+//    QString Size;
+//    QString MediaType;
+//    QString Duration;
+
+//    // Audio
+//    QString AudioBitRate;
+//    QString AudioCodec;
+//    QString AverageLevel;
+//    QString ChannelCount;
+//    QString PeakValue;
+//    QString SampleRate;
+
+//    // Music
+//    QString AlbumTitle;
+//    QString AlbumArtist;
+//    QString ContributingArtist;
+//    QString Composer;
+//    QString Conductor;
+//    QString Lyrics;
+//    QString Mood;
+//    QString TrackNumber;
+//    QString TrackCount;
+
+//    QString CoverArtUrlSmall;
+//    QString CoverArtUrlLarge;
+
+//    // Image/Video
+//    QString Resolution;
+//    QString PixelAspectRatio;
+
+//    // Video
+//    QString VideoFrameRate;
+//    QString VideoBitRate;
+//    QString VideoCodec;
+
+//    QString PosterUrl;
+
+//    // Movie
+//    QString ChapterNumber;
+//    QString Director;
+//    QString LeadPerformer;
+//    QString Writer;
+
+//    // Photos
+//    QString CameraManufacturer;
+//    QString CameraModel;
+//    QString Event;
+//    QString Subject;
+//    QString Orientation;
+//    QString ExposureTime;
+//    QString FNumber;
+//    QString ExposureProgram;
+//    QString ISOSpeedRatings;
+//    QString ExposureBiasValue;
+//    QString DateTimeOriginal;
+//    QString DateTimeDigitized;
+//    QString SubjectDistance;
+//    QString MeteringMode;
+//    QString LightSource;
+//    QString Flash;
+//    QString FocalLength;
+//    QString ExposureMode;
+//    QString WhiteBalance;
+//    QString DigitalZoomRatio;
+//    QString FocalLengthIn35mmFilm;
+//    QString SceneCaptureType;
+//    QString GainControl;
+//    QString Contrast;
+//    QString Saturation;
+//    QString Sharpness;
+//    QString DeviceSettingDescription;
+
+//    // Location
+//    QString GPSLatitude;
+//    QString GPSLongitude;
+//    QString GPSAltitude;
+//    QString GPSTimeStamp;
+//    QString GPSSatellites;
+//    QString GPSStatus;
+//    QString GPSDOP;
+//    QString GPSSpeed;
+//    QString GPSTrack;
+//    QString GPSTrackRef;
+//    QString GPSImgDirection;
+//    QString GPSImgDirectionRef;
+//    QString GPSMapDatum;
+//    QString GPSProcessingMethod;
+//    QString GPSAreaInformation;
+
+//    QString PosterImage;
+//    QString CoverArtImage;
+//    QString ThumbnailImage;
+
+
     if (player -> currentMedia().canonicalUrl() == uri) {
         if (player -> isMetaDataAvailable()) {
             QStringList keys = player -> availableMetaData();

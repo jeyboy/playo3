@@ -101,7 +101,7 @@ class BassPlayer : public IPlayer {
     QFutureWatcher<QPair<QString, qint64> > * openChannelWatcher;
     QPair<QString, qint64> proc_channel;
 
-    int default_device();
+    int defaultOutputDevice();
 
     bool proceedErrorState();
     QPair<QString, qint64> openChannel(const QUrl & url,  QPair<QString, qint64> & channel_params);
@@ -118,8 +118,8 @@ protected:
         BASS_ChannelSetAttribute(chan, BASS_ATTRIB_SRC, 3);
     }
 
-    bool initDevice(const int & newDevice, const int & frequency = 44100);
-    bool closeDevice(const int & device);
+    bool initOutputDevice(const int & newDevice, const int & frequency = 44100);
+    bool closeOutputDevice(const int & device);
     void loadPlugins();
 
     inline qint64 open(const QString & path, const DWORD & flags) {
@@ -129,9 +129,9 @@ protected:
         return BASS_StreamCreateURL(QSTRING_TO_STR(path), 0, flags, NULL, 0);
     }
 
-    bool IsSupportEqualizer() { return true; }
-    bool IsSupportDeviceChange() const { return true; }
-    bool IsSupportSpectrumCalc() { return true; }
+    bool isSupportEqualizer() { return true; }
+    bool isSupportOutputDeviceChange() const { return true; }
+    bool isSupportSpectrumCalc() { return true; }
     bool isSupportTempoChanging() { return true; }
     bool isSupportPanChanging() { return true; }
 
@@ -158,9 +158,9 @@ public:
     explicit BassPlayer(QWidget * parent);
     ~BassPlayer();
 
-    QHash<QString, QVariant> deviceList();
-    QVariant currDevice();
-    bool setDevice(const QVariant & device);
+    QHash<QString, QVariant> outputDeviceList();
+    QVariant currOutputDevice();
+    bool setOutputDevice(const QVariant & device);
 
     qint64 position() const;
 

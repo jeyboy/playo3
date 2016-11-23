@@ -111,7 +111,7 @@ namespace Presentation {
 
         QToolBar * deiterateToToolBar(QWidget * obj);
 
-        QToolBar * linkNameToToolbars(const QString & barName);
+        QToolBar * linkNameToToolbar(const QString & barName);
 
         QToolBar * createToolBar(const QString & name);
         QToolBar * precreateToolBar(const QString & name, bool oriented = false);

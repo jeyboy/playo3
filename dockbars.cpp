@@ -1,4 +1,5 @@
 #include "dockbars.h"
+#include "modules/controls/video_widget.h"
 
 using namespace Presentation;
 using namespace Dialogs;
@@ -6,7 +7,7 @@ using namespace Dialogs;
 void Dockbars::load(const QJsonArray & bars) {
     int userTabsAmount = 0;
     QList<QString> barsList;
-    barsList << DOWNLOADS_TAB << LOGS_TAB /*<< SCREEN_TAB*/;
+    barsList << DOWNLOADS_TAB << LOGS_TAB << SCREEN_TAB;
 
     if (bars.count() > 0) {
         for(QJsonArray::ConstIterator it = bars.constBegin(); it != bars.constEnd(); it++) {
@@ -15,7 +16,7 @@ void Dockbars::load(const QJsonArray & bars) {
             userTabsAmount += (!barsList.removeOne(barName));
 
             Models::Params params(JSON_OBJ(obj, LSTR("set")));
-            QDockWidget * curr_bar = linkNameToToolbars(
+            QDockWidget * curr_bar = linkNameToDockbar(
                 BarCreationNames(barName, JSON_STR(obj, LSTR("link")), JSON_STR(obj, LSTR("name"))),
                 params,
                 JSON_OBJ(obj, LSTR("cont"))
@@ -54,7 +55,7 @@ void Dockbars::load(const QJsonArray & bars) {
     QJsonObject def;
     Models::Params defSettings;
     while(barsList.length() > 0) {
-        QDockWidget * widg = linkNameToToolbars(barsList.takeFirst(), defSettings, def);
+        QDockWidget * widg = linkNameToDockbar(barsList.takeFirst(), defSettings, def);
         if (widg) {
             widg -> hide();
             container -> addDockWidget(Qt::TopDockWidgetArea, widg);
@@ -118,9 +119,15 @@ void Dockbars::save(DataStore * settings) {
     }
 }
 
-QDockWidget * Dockbars::linkNameToToolbars(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs) {
+QDockWidget * Dockbars::linkNameToDockbar(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs) {
     if (names.is(SCREEN_TAB)) {
-        return 0; // stub
+        if (screen) return screen;
+        VideoWidget * video_output = new VideoWidget(container);
+
+
+        screen = createDocBar(names, false, video_output);
+
+        return screen;
     } else if (names.is(COMMON_TAB)) {
         if (common) return 0;
         //settings.playlist = true; settings.common = true;
@@ -203,7 +210,7 @@ DockBar * Dockbars::createDocBar(const BarCreationNames & names, const Models::P
     return bar;
 }
 
-DockBar * Dockbars::createDocBar(const BarCreationNames & names, bool closable, QWidget * content) {
+DockBar * Dockbars::createDocBar(const BarCreationNames & names, const bool & closable, QWidget * content) {
     DockBar * dock = new DockBar(names.name, container, closable, Qt::WindowMinMaxButtonsHint, names.innerName);
 
     connect(dock, SIGNAL(closing()), this, SLOT(barClosed()));

@@ -42,7 +42,7 @@ protected:
     virtual bool processEqSetGain(const int & /*band*/, const float & /*gain*/) { return false; }
     virtual bool registerEQ() { return false; }
     virtual bool unregisterEQ() { return false; }
-    virtual bool IsSupportEqualizer() { return false; }
+    virtual bool isSupportEqualizer() { return false; }
 
     bool eq_in_use;
     QString current_preset_type;
@@ -56,7 +56,13 @@ public:
         eqBandsGains.insert(band, gain);
     }
     inline QMap<int, float> eqGains() const { return eqBandsGains; }
-    inline void eqGains(QMap<int, float> gains) { eqBandsGains = gains; }
+    inline void eqGains(const QMap<int, float> & gains, const bool & attach = false) {
+        if (attach) {
+            for(QMap<int, float>::ConstIterator gain = gains.constBegin(); gain != gains.constEnd(); gain++)
+                eqBand(gain.key(), gain.value());
+        }
+        else eqBandsGains = gains;
+    }
     inline QMap<float, QString> bands() const { return presets[current_preset_type].bandsList(); }
     inline float currentPresetBase() { return presets[current_preset_type].presetBase(); }
     inline QString currentPresetType() const { return current_preset_type; }

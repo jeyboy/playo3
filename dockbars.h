@@ -60,7 +60,7 @@ namespace Presentation {
 
         void load(const QJsonArray & bars);
         void save(DataStore * settings);
-        QDockWidget * linkNameToToolbars(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs);
+        QDockWidget * linkNameToDockbar(const BarCreationNames & names, Models::Params & settings, QJsonObject attrs);
 
         inline QList<DockBar *> dockbars() { return container -> findChildren<DockBar *>(); }
 
@@ -84,7 +84,7 @@ namespace Presentation {
         DockBar * commonBar();
         //TODO: use enum for bools
         DockBar * createDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool add_to_view = false, SearchLimitLayers * search_settings = 0);
-        DockBar * createDocBar(const BarCreationNames & names, bool closable = true, QWidget * content = 0);
+        DockBar * createDocBar(const BarCreationNames & names, const bool & closable = true, QWidget * content = 0);
         DockBar * createLinkedDocBar(const BarCreationNames & names, const Models::Params & settings, QJsonObject * attrs = 0, bool closable = true, bool add_to_view = false, SearchLimitLayers * search_settings = 0, bool refresh = false);
 
         inline IView * view(DockBar * bar) { return bar ? qobject_cast<IView *>(bar -> mainWidget()) : 0; }
@@ -139,13 +139,13 @@ namespace Presentation {
         void barClosed();
     private:
         TabifyParams lastTabData;
-        DockBar * active, * played, * common;
+        DockBar * active, * played, * common, * screen;
         QMainWindow * container;
 
         QHash<QString, DockBar *> linkedTabs;
 
         friend class Singleton<Dockbars>;
-        inline Dockbars() : QWidget(), active(0), played(0), common(0) {
+        inline Dockbars() : QWidget(), active(0), played(0), common(0), screen(0) {
             connect(&DataFactory::obj(), SIGNAL(newPlaylistNeed()), this, SLOT(playNext()));
         }
 

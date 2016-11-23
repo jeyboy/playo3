@@ -366,7 +366,7 @@ BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannel
     if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS_FX.DLL was loaded";
 
-    initDevice(default_device());
+    initOutputDevice(defaultOutputDevice());
     loadPlugins();
     setUserAgent(DEFAULT_AGENT);
 }
@@ -381,7 +381,7 @@ BassPlayer::~BassPlayer() {
     BASS_Free();
 }
 
-QHash<QString, QVariant> BassPlayer::deviceList() {
+QHash<QString, QVariant> BassPlayer::outputDeviceList() {
     QHash<QString, QVariant> res;
 
 //    res.insert(QStringLiteral("System Default"), -1);
@@ -398,11 +398,11 @@ QHash<QString, QVariant> BassPlayer::deviceList() {
 
     return res;
 }
-QVariant BassPlayer::currDevice() { return QVariant::fromValue(BASS_GetDevice()); }
-int BassPlayer::default_device() {
+QVariant BassPlayer::currOutputDevice() { return QVariant::fromValue(BASS_GetDevice()); }
+int BassPlayer::defaultOutputDevice() {
     QString device = Settings::obj().outputDevice();
 
-    int deviceId = device.isEmpty() ? -1 : deviceList().value(device, QVariant::fromValue(-1)).toInt();
+    int deviceId = device.isEmpty() ? -1 : outputDeviceList().value(device, QVariant::fromValue(-1)).toInt();
 
     if (deviceId < 0) {
         #ifdef Q_OS_WIN
@@ -414,7 +414,7 @@ int BassPlayer::default_device() {
 
     return deviceId;
 }
-bool BassPlayer::setDevice(const QVariant & device) {
+bool BassPlayer::setOutputDevice(const QVariant & device) {
     int currDevice = BASS_GetDevice();
     int newDevice = device.toInt();
 
@@ -423,18 +423,18 @@ bool BassPlayer::setDevice(const QVariant & device) {
 
     bool res = false;
 
-    if ((res = initDevice(newDevice))) {
+    if ((res = initOutputDevice(newDevice))) {
         res = BASS_SetDevice(newDevice);
         if (res && (isPlayed() || isPaused()))
             res &= BASS_ChannelSetDevice(chan, newDevice);
     }
 
     if (res)
-        closeDevice(currDevice);
+        closeOutputDevice(currDevice);
 
     return res;
 }
-bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
+bool BassPlayer::initOutputDevice(const int & new_device, const int & frequency) {
     bool res = BASS_Init(new_device, frequency, 0, NULL, NULL);
 
     if (!res)
@@ -449,6 +449,6 @@ bool BassPlayer::initDevice(const int & new_device, const int & frequency) {
 
     return res;
 }
-bool BassPlayer::closeDevice(const int & device) {
+bool BassPlayer::closeOutputDevice(const int & device) {
     return BASS_SetDevice(device) && BASS_Free();
 }

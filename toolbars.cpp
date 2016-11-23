@@ -108,7 +108,7 @@ void ToolBars::load(const QJsonArray & bars) {
             obj = (*bar).toObject();
             barName = obj.value(Keys::title).toString();
             barsList.removeOne(barName);
-            curr_bar = linkNameToToolbars(barName);
+            curr_bar = linkNameToToolbar(barName);
             curr_bar -> setObjectName(obj.value(Keys::name).toString(curr_bar -> objectName()));
             curr_bar -> setMovable(obj.value(Keys::movable).toBool());
 
@@ -125,7 +125,7 @@ void ToolBars::load(const QJsonArray & bars) {
         }
 
         while(barsList.length() > 0)
-            container -> addToolBar(Qt::BottomToolBarArea, linkNameToToolbars(barsList.takeFirst()));
+            container -> addToolBar(Qt::BottomToolBarArea, linkNameToToolbar(barsList.takeFirst()));
     }
     else createToolbars();
 
@@ -228,7 +228,7 @@ QToolBar * ToolBars::deiterateToToolBar(QWidget * obj) {
     return 0;
 }
 
-QToolBar * ToolBars::linkNameToToolbars(const QString & bar_name) {
+QToolBar * ToolBars::linkNameToToolbar(const QString & bar_name) {
     if (bar_name == TOOLBAR_MEDIA_KEY)                   return createMediaBar();
     else if (bar_name == TOOLBAR_PL_ITEM_FEATURES_KEY)   return createPlayedItemFeaturesBar();
     else if (bar_name == TOOLBAR_SL_ITEM_FEATURES_KEY)   return createSelectedItemFeaturesBar();

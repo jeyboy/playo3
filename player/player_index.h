@@ -25,12 +25,19 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
     QList<PlayerCallback> callbacks;
 
     friend class Core::Singleton<PlayerFactory>;
-    inline PlayerFactory() : player(0) {}
+    inline PlayerFactory() : player(0), video_output(0) {}
     inline ~PlayerFactory() {}
 
     IPlayer * player;
+    QWidget * video_output;
 public:
     inline IPlayer * currPlayer() { return player; }
+
+    void registerVideoOutput(QWidget * new_video_output) {
+        video_output = new_video_output;
+        if (player && player -> isSupportVideo())
+            player -> setVideoOutput(video_output);
+    }
 
     void registerCallback(const CallbackTurn & turn, QObject * obj, const char * signal, const char * slot) {
         PlayerCallback pl(turn, obj, signal, slot);
@@ -49,14 +56,17 @@ public:
         for(QList<PlayerCallback>::Iterator cl = callbacks.begin(); cl != callbacks.end(); cl++)
             (*cl).use(player);
 
-        player -> spectrumFreq(Settings::obj().spectrumFreqRate());
+        player -> setVideoOutput(video_output);
+        player -> setSpectrumFreq(Settings::obj().spectrumFreqRate());
+        player -> setOutputDevice(Settings::obj().outputDevice());
+
         //TODO: connect other settings
 
         if (old_player) {
             player -> setVolume(old_player -> volume());
             player -> setPan(old_player -> pan());
             player -> activateEQ(old_player -> eqInUse());
-            player -> eqGains(old_player -> eqGains());
+            player -> eqGains(old_player -> eqGains(), true);
             player -> setMedia(old_player -> mediaUrl(), old_player -> title(), old_player -> startPosition(), old_player -> duration(), old_player -> position());
 
             delete old_player;

@@ -4,20 +4,33 @@
 #include "modules/core/media/interfaces/iplayer.h"
 
 #include <qmediaplayer.h>
+#include <qmediaservice.h>
+#include <qaudiodeviceinfo.h>
+#include <qaudiooutputselectorcontrol.h>
 
 #define QT_VOLUME_MULTIPLIER 10.0
+
+//player -> isAvailable()
 
 class QtPlayer : public IPlayer {
     Q_OBJECT
 
     QMediaPlayer * player;
+
+    QAudioOutputSelectorControl * outputControl() {
+        QMediaService * svc = player -> service(); \
+        return svc != nullptr ?
+            reinterpret_cast<QAudioOutputSelectorControl *>(svc -> requestControl(QAudioOutputSelectorControl_iid)) :
+            nullptr;
+    }
 protected:
     bool proceedErrorState();
 
-    bool deviceable() const { return false; }
-    bool spectrumable() { return false; }
-    bool equalizable() { return false; }
+    bool isSupportOutputDeviceChange() const { return true; }
     bool isSupportTempoChanging() { return true; }
+    bool isSupportSpectrumCalc() { return false; }
+    bool isSupportEqualizer() { return false; }
+
     bool seekingBlocked() { return player -> isSeekable(); }
 
     bool hasAudio() const { return player -> isAudioAvailable(); }
@@ -51,20 +64,47 @@ public:
     explicit QtPlayer(QWidget * parent);
     ~QtPlayer();
 
-//    QHash<QString, QVariant> deviceList();
-//    QVariant currDevice();
-//    bool setDevice(const QVariant & device);
+    QHash<QString, QVariant> outputDeviceList() {
+        QHash<QString, QVariant> res;
+
+        QAudioOutputSelectorControl * out = outputControl();
+
+        if (out) {
+            QStringList devices = out -> availableOutputs();
+            foreach(QString device, devices)
+                res.insert(device, device);
+
+            player -> service() -> releaseControl(out);
+        } else {
+            QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
+            foreach(QAudioDeviceInfo device, devices)
+                res.insert(device.deviceName(), device.deviceName());
+        }
+
+        return res;
+    }
+    QVariant currOutputDevice() {
+        QAudioOutputSelectorControl * out = outputControl();
+        QVariant res = out ? out -> activeOutput() : QVariant();
+        player -> service() -> releaseControl(out);
+        return res;
+    }
+    bool setOutputDevice(const QVariant & device) {
+        QAudioOutputSelectorControl * out = outputControl();
+        if (out != nullptr) {
+            out -> setActiveOutput(device.toString());
+            player -> service() -> releaseControl(out);
+            return true;
+        }
+
+        return false;
+    }
 
     qint64 position() const;
 
     bool fileInfo(const QUrl & uri, IMediaInfo * info);
-//    float bpmCalc(const QUrl & uri);
 
-//    inline bool isTryingToOpenMedia() { return openChannelWatcher != 0 && openChannelWatcher -> isRunning(); }
-//    inline void openTimeOut(const float & sec_limit) { BASS_SetConfig(BASS_CONFIG_NET_TIMEOUT, qMax(1000, (int)(sec_limit * 1000))); }
-//    inline void proxy(const QString & proxy_str = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_PROXY, proxy_str.isEmpty() ? NULL : QSTRING_TO_STR(proxy_str)); }
-////    inline void readTimeOut(float secLimit) { BASS_SetConfig(BASS_CONFIG_NET_READTIMEOUT, qMax(1000, (int)(secLimit * 1000))); }
-//    inline void userAgent(const QString & user_agent = QString()) { BASS_SetConfigPtr(BASS_CONFIG_NET_AGENT, user_agent.isEmpty() ? NULL : QSTRING_TO_STR(user_agent)); }
+//    bool setProxy(const QString & /*proxy_str*/ = QString()) { return false; }
 };
 
 #endif // QT_PLAYER_H

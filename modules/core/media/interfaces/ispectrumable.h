@@ -21,9 +21,9 @@ protected:
         connect(itimer, SIGNAL(timeout()), this, SLOT(calcSpectrum()));
     }
 
-    inline void spectrumCalcStart() { if (IsSupportSpectrumCalc()) itimer -> start(); }
+    inline void spectrumCalcStart() { if (isSupportSpectrumCalc()) itimer -> start(); }
     inline void spectrumCalcStop() {
-        if (!IsSupportSpectrumCalc()) return;
+        if (!isSupportSpectrumCalc()) return;
         itimer -> stop();
         calcSpectrum(); // emit default spectrum level
     }
@@ -33,7 +33,7 @@ protected:
     virtual PlayerState state() const = 0;
     virtual bool calcSpectrum(QVector<float> & /*result*/) { return false; }
     virtual bool calcSpectrum(QList<QVector<float> > & /*result*/) { return false; }
-    virtual bool IsSupportSpectrumCalc() { return false; }
+    virtual bool isSupportSpectrumCalc() { return false; }
 
     virtual bool respondToMultichannelSpectrumCalc() { return !block_multichannel && channels_count != 1; }
 
@@ -59,7 +59,7 @@ public:
     void spectrumBandsCount(int bandsCount, bool update = true);
     inline int spectrumBandsCount() const { return sbands_count; }
 
-    inline void spectrumFreq(int millis) { itimer -> setInterval(millis); }
+    inline void setSpectrumFreq(const int & millis) { itimer -> setInterval(millis); }
 
     inline int channelsCount() const { return channels_count; }
     inline int calcSpectrumBandsGroupCount() { return sbands_count / (respondToMultichannelSpectrumCalc() ? (channels_count / 2) : channels_count); }

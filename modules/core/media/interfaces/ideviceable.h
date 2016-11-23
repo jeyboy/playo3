@@ -6,11 +6,11 @@
 
 class IDeviceable {
 protected:
-    virtual bool IsSupportDeviceChange() const { return false; }
+    virtual bool isSupportOutputDeviceChange() const { return false; }
 public:
-    virtual QHash<QString, QVariant> deviceList() { return {}; }
-    virtual QVariant currDevice() { return QVariant(); }
-    virtual bool setDevice(const QVariant & /*device*/) { return false; }
+    virtual QHash<QString, QVariant> outputDeviceList() { return {}; }
+    virtual QVariant currOutputDevice() { return QVariant(); }
+    virtual bool setOutputDevice(const QVariant & /*device*/) { return false; }
 };
 
 #endif // IDEVICEABLE_H

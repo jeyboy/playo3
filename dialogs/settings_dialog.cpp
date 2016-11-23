@@ -261,11 +261,11 @@ void SettingsDialog::initGlobalSettings() {
     ui -> tray_notify_played -> setCheckState((Qt::CheckState)Settings::obj().showPlayedInTrayMessage());
     ui -> tray_notify_period -> setValue(Settings::obj().showTrayMessageTime() / 1000);
 
-    QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> deviceList();
+    QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> outputDeviceList();
     QString current_device = Settings::obj().outputDevice();
     ui -> outputDeviceSelect -> insertItems(0, devices.keys());
     if (!devices.contains(current_device))
-        current_device = devices.key(PlayerFactory::obj().currPlayer() -> currDevice());
+        current_device = devices.key(PlayerFactory::obj().currPlayer() -> currOutputDevice());
     ui -> outputDeviceSelect -> setCurrentText(current_device);
 
     ui -> autorunned -> blockSignals(true);
@@ -475,8 +475,8 @@ void SettingsDialog::saveGlobalSettings() {
 
     qDebug() << "!!!" << ui -> outputDeviceSelect -> currentText() << Settings::obj().outputDevice();
     if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
-        QVariant device = PlayerFactory::obj().currPlayer() -> deviceList().value(ui -> outputDeviceSelect -> currentText());
-        if (PlayerFactory::obj().currPlayer() -> setDevice(device))
+        QVariant device = PlayerFactory::obj().currPlayer() -> outputDeviceList().value(ui -> outputDeviceSelect -> currentText());
+        if (PlayerFactory::obj().currPlayer() -> setOutputDevice(device))
             Settings::obj().setOutputDevice(ui -> outputDeviceSelect -> currentText());
     }
 }

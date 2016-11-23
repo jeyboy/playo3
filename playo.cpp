@@ -211,7 +211,7 @@ void Playo::showSettingsDialog() {
         ToolBars::obj().updateMetricSliders();
         ToolBars::obj().setIconsSize(Settings::obj().toolIconSize());
         ToolBars::obj().getSpectrum() -> updateSettings();
-        DataFactory::obj().currPlayer() -> spectrumFreq(Settings::obj().spectrumFreqRate());
+        DataFactory::obj().currPlayer() -> setSpectrumFreq(Settings::obj().spectrumFreqRate());
         setTabPosition((QTabWidget::TabPosition)Settings::obj().tabPosition());
         Dockbars::obj().updateAllViews();
     }
