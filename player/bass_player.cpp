@@ -402,9 +402,9 @@ QVariant BassPlayer::currOutputDevice() { return QVariant::fromValue(BASS_GetDev
 int BassPlayer::defaultOutputDevice() {
     QString device = Settings::obj().outputDevice();
 
-    int deviceId = device.isEmpty() ? -1 : outputDeviceList().value(device, QVariant::fromValue(-1)).toInt();
+    int device_id = device.isEmpty() ? -1 : outputDeviceList().value(device, QVariant::fromValue(-1)).toInt();
 
-    if (deviceId < 0) {
+    if (device_id < 0) {
         #ifdef Q_OS_WIN
             return BASS_DEVICE_ENABLED;
         #else
@@ -412,11 +412,14 @@ int BassPlayer::defaultOutputDevice() {
         #endif
     }
 
-    return deviceId;
+    return device_id;
 }
 bool BassPlayer::setOutputDevice(const QVariant & device) {
     int currDevice = BASS_GetDevice();
-    int newDevice = device.toInt();
+    int newDevice =
+        device.type() == QVariant::String ?
+            outputDeviceList().value(device.toString()).toInt() :
+            device.toInt();
 
     if (currDevice == newDevice)
         return true;
