@@ -16,7 +16,6 @@ public:
     }
 
     StyleType styleType() const { return dark; }
-    virtual bool isTransparent() { return true; }
 
     QImage loadableTabIcon() { return QImage(QStringLiteral(":/download_on")); }
     virtual QImage background() {

@@ -1,6 +1,4 @@
 #include "dockbar.h"
-//#include "video_widget_style.h"
-
 #include <qdatetime.h>
 
 using namespace Controls;
@@ -18,13 +16,15 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
 
-    setAttribute(Qt::WA_TranslucentBackground, true);
+
+    if (Settings::currentStyle -> isTransparent())
+        setAttribute(Qt::WA_TranslucentBackground, true);
+
     setAttribute(Qt::WA_DeleteOnClose, closable);
 
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
     useVerticalTitles(false);
-//    setStyle(new Controls::VideoWidegtStyle());
 }
 
 //bool DockBar::event(QEvent * event) {
@@ -115,12 +115,19 @@ void DockBar::paintEvent(QPaintEvent * event) {
 
             if (isFloating()) {
                 painter.setPen(Settings::currentStyle -> pen);
-                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+                if (Settings::currentStyle -> isTransparent())
+                    painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+                else
+                    painter.drawRect(borderRect);
+
                 painter.setPen(Settings::currentStyle -> bevelPen);
             }
             else painter.setPen(Settings::currentStyle -> foregroundPen);
 
-            painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+            if (Settings::currentStyle -> isTransparent())
+                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+            else
+                painter.drawRect(borderRect);
 
             painter.restore();
             event -> accept();

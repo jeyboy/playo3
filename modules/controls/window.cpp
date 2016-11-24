@@ -15,7 +15,10 @@ MainWindow::MainWindow(QWidget * parent) : QMainWindow(parent),
     setMouseTracking(true);
 
     setWindowFlags(windowFlags() | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint);
-    setAttribute(Qt::WA_TranslucentBackground, true);
+
+    if (Settings::currentStyle -> isTransparent())
+        setAttribute(Qt::WA_TranslucentBackground, true);
+
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
     titleWidget = new WindowTitle(
@@ -279,7 +282,12 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             painter.drawImage(backRect, Settings::currentStyle -> background());
 
             painter.setPen(isResizing ? Settings::currentStyle -> resizePen : Settings::currentStyle -> pen);
-            painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+
+            if (Settings::currentStyle -> isTransparent())
+                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+            else
+                painter.drawRect(borderRect);
+
             painter.restore();
         break; }
 
@@ -290,7 +298,12 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             Settings::currentStyle -> initMainBrush(rect());
             painter.setBrush(Settings::currentStyle -> mainBrush);
             painter.setPen(Qt::NoPen);
-            painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+
+            if (Settings::currentStyle -> isTransparent())
+                painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
+            else
+                painter.drawRect(borderRect);
+
             painter.drawImage(backRect, Settings::currentStyle -> background());
             painter.restore();
         break; }

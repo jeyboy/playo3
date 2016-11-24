@@ -4,7 +4,6 @@
 #include <qevent.h>
 
 VideoWidget::VideoWidget(QWidget * parent) : QVideoWidget(parent) {
-    setWindowFlags(Qt::Window);
     setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
     QPalette p = palette();
