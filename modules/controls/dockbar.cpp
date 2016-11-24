@@ -1,5 +1,4 @@
 #include "dockbar.h"
-#include "video_widget_style.h"
 
 #include <qdatetime.h>
 
@@ -24,7 +23,6 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     connect(this, SIGNAL(topLevelChanged(bool)), this, SLOT(floatingChanged(bool)));
     connect(this, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(onDockLocationChanged(Qt::DockWidgetArea)));
     useVerticalTitles(false);
-    setStyle(new Controls::VideoWidegtStyle());
 }
 
 //bool DockBar::event(QEvent * event) {

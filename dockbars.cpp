@@ -1,5 +1,5 @@
 #include "dockbars.h"
-//#include "modules/controls/video_view.h"
+#include "modules/controls/video_view.h"
 #include "modules/controls/video_widget.h"
 
 using namespace Presentation;
@@ -124,11 +124,11 @@ QDockWidget * Dockbars::linkNameToDockbar(const BarCreationNames & names, Models
     if (names.is(SCREEN_TAB)) {
         if (screen) return screen;
 
-//        VideoView * video_output = new VideoView(container);
-        VideoWidget * video_output = new VideoWidget(container);
-        video_output -> show();
+        VideoView * video_output = new VideoView(container);
+//        VideoWidget * video_output = new VideoWidget(container);
+//        video_output -> show();
 
-        PlayerFactory::obj().registerVideoOutput(video_output/*video_output -> videoItem()*/);
+        PlayerFactory::obj().registerVideoOutput(/*video_output*/video_output -> videoItem());
         screen = createDocBar(names, false, video_output);
 
         return screen;

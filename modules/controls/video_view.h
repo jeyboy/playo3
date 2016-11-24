@@ -4,9 +4,18 @@
 #include <qgraphicsvideoitem.h>
 #include <qgraphicsview.h>
 #include <qevent.h>
+#include <QStyleOptionGraphicsItem>
 //#include <qpainter.h>
 
 #define VIDEO_DEFAULT_SIZE 100
+
+class GraphicsVideoItem : public QGraphicsVideoItem {
+protected:
+    void paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = Q_NULLPTR) {
+        painter -> setCompositionMode(QPainter::RasterOp_SourceXorDestination);
+        QGraphicsVideoItem::paint(painter, option, widget);
+    }
+};
 
 class VideoView : public QGraphicsView {
     Q_OBJECT

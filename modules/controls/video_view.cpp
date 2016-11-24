@@ -10,7 +10,7 @@ VideoView::VideoView(QWidget * parent) : QGraphicsView(parent) {
     setMinimumSize(VIDEO_DEFAULT_SIZE, VIDEO_DEFAULT_SIZE);
 
     QGraphicsScene * scene = new QGraphicsScene(this);
-    item = new QGraphicsVideoItem();
+    item = new GraphicsVideoItem();
     item -> setOpacity(1);
 
     setScene(scene);

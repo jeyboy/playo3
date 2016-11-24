@@ -40,8 +40,12 @@ protected:
     bool isSupportVideo() { return true; }
     void setVideoOutput(QObject * output) {
         QVideoWidget * vw = reinterpret_cast<QVideoWidget *>(output);
-//        QGraphicsVideoItem * vw = reinterpret_cast<QGraphicsVideoItem *>(output);
-        player -> setVideoOutput(vw);
+        if (vw)
+            player -> setVideoOutput(vw);
+        else {
+            QGraphicsVideoItem * vw = reinterpret_cast<QGraphicsVideoItem *>(output);
+            if (vw) player -> setVideoOutput(vw);
+        }
     }
 
     bool playProcessing(const bool & paused = false);

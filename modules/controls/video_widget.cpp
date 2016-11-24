@@ -9,10 +9,11 @@ VideoWidget::VideoWidget(QWidget * parent) : QVideoWidget(parent) {
     p.setColor(QPalette::Window, Qt::black);
     setPalette(p);
 
-    setAttribute(Qt::WA_OpaquePaintEvent);
-    setAttribute(Qt::WA_TranslucentBackground, false);
+//    setAttribute(Qt::WA_OpaquePaintEvent);
+//    setAttribute(Qt::WA_PaintOnScreen);
 
     setMinimumSize(VIDEO_DEFAULT_SIZE, VIDEO_DEFAULT_SIZE);
+    setAutoFillBackground(true);
 }
 
 void VideoWidget::keyPressEvent(QKeyEvent * event) {
