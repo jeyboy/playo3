@@ -2,6 +2,7 @@
 #define VIDEO_WIDGET_H
 
 #include <qvideowidget.h>
+#include <qpainter.h>
 
 #define VIDEO_DEFAULT_SIZE 100
 
@@ -12,6 +13,11 @@ public:
 protected:
     void keyPressEvent(QKeyEvent * event);
     void mouseDoubleClickEvent(QMouseEvent * event);
+//    void paintEvent(QPaintEvent * event) {
+//        QPainter painter(this);
+//        painter.setCompositionMode(QPainter::RasterOp_SourceXorDestination);
+//        QVideoWidget::paintEvent(event);
+//    }
 
     void toggleFullScreen();
 };
