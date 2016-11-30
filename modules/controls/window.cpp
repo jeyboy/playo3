@@ -274,7 +274,6 @@ void MainWindow::paintEvent(QPaintEvent * event) {
         case IStylesheets::light: {
             bool isResizing = (resizeFlagX || resizeFlagY);
             QPainter painter(this);
-            painter.save();
 
             Settings::currentStyle -> mainBrush.setStart(rect().topLeft());
             Settings::currentStyle -> mainBrush.setFinalStop(rect().bottomRight());
@@ -286,14 +285,12 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             if (Settings::currentStyle -> isTransparent())
                 painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             else
-                painter.drawRect(borderRect);
+                painter.drawRect(rect());
 
-            painter.restore();
         break; }
 
         case IStylesheets::dark: {
             QPainter painter(this);
-            painter.save();
 
             Settings::currentStyle -> initMainBrush(rect());
             painter.setBrush(Settings::currentStyle -> mainBrush);
@@ -302,10 +299,9 @@ void MainWindow::paintEvent(QPaintEvent * event) {
             if (Settings::currentStyle -> isTransparent())
                 painter.drawRoundedRect(borderRect, Settings::currentStyle -> borderRadius, Settings::currentStyle -> borderRadius, Qt::AbsoluteSize);
             else
-                painter.drawRect(borderRect);
+                painter.drawRect(rect());
 
             painter.drawImage(backRect, Settings::currentStyle -> background());
-            painter.restore();
         break; }
 
         default: { QMainWindow::paintEvent(event); }
