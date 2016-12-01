@@ -149,7 +149,7 @@ namespace Models {
 
         QJsonValue proceedLoadable(const QString & cmd) { return Web::Apis::run(cmd); }
 
-        int proceedBlocks(const QJsonArray & blocks, Playlist * parent);
+        int proceedBlocks(const QJsonArray & blocks, Playlist * parent, const bool & is_loadable = false);
 
         int proceedVkList(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);
 //        int proceedVkSet(const QJsonObject & block, Playlist * parent, int & update_amount, QHash<Playlist *, QHash<QString, IItem *> > & stores, const DataMediaType & fdmtype = dmt_unknow, const DataSubType & wType = dt_web_vk);

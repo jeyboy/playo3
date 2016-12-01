@@ -233,7 +233,7 @@ bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelI
     return true;
 }
 
-int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
+int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent, const bool & is_loadable) {
     int (IModel::*proc_func)(const QJsonObject &, Playlist *, int &, QHash<Playlist *, QHash<QString, IItem *> > & , const DataMediaType &, const DataSubType &);
     int (IModel::*proc_set_func)(const QJsonObject &, Playlist *, int &, QHash<Playlist *, QHash<QString, IItem *> > &, const DataMediaType &, const DataSubType &);
 
@@ -302,6 +302,9 @@ int IModel::proceedBlocks(const QJsonArray & blocks, Playlist * parent) {
                     proc_set_func = &IModel::proceedGrabberList;
             }
 
+            if (is_loadable)
+                block_obj.insert(tkn_is_loadable, true);
+
             if (dmt_type & dmt_any || dmt_type & dmt_set)
                 block_amount = (*this.*proc_set_func)(block_obj, curr_parent, update_amount, stores, dmt_type, wType);
             else
@@ -335,8 +338,11 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
     if (JSON_HAS_KEY(block, tkn_more_cmd))
         parent -> setFetchableAttrs(JSON_STR(block, tkn_more_cmd));
 
-
     int pos = parent -> playlistsAmount();
+
+    if (JSON_HAS_KEY(block, tkn_is_loadable)) // didnt add new items to begin of list if we have additional loads
+        pos = -(collection.size() + 10);
+
     for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
 //    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {
         QJsonObject itm = (*it).toObject();
@@ -1349,7 +1355,7 @@ void IModel::finishSetLoading(const QJsonValue & json, void * params) {
         if (no_errors) {
             playlist -> removeLoader(cmd); // remove old loader before blocks proc
 
-            proceedBlocks(blocks, playlist);
+            proceedBlocks(blocks, playlist, true);
 
             if (temp_item -> dataType() == dt_dummy) {
 
