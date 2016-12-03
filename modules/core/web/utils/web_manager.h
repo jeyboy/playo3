@@ -120,9 +120,9 @@ namespace Core { // requests and response has memory leaks
 
             Request withHeaders(const Headers & headers);
             Response * viaGet(bool async = false);
-            Response * viaPost(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE);
-            Response * viaPut(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE);
-            Response * viaForm(const QByteArray & data = QByteArray());
+            Response * viaPost(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE, bool async = false);
+            Response * viaPut(const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE, bool async = false);
+            Response * viaForm(const QByteArray & data = QByteArray(), bool async = false);
 
             static QByteArray extractParams(QUrl & url) {
                 QByteArray params = url.query().toUtf8();
@@ -278,6 +278,12 @@ namespace Core { // requests and response has memory leaks
             }
             inline Response * postFollowed(const QUrl & url, const Headers & headers, const QString & content_type = FORM_URLENCODE, const QByteArray & payload = QByteArray()) {
                 return requestTo(url).withHeaders(headers).viaPost(payload, content_type) -> followByRedirect();
+            }
+            inline Response * postFollowedAsync(const QUrl & url, const Func & response, const Headers & headers, const QString & content_type = FORM_URLENCODE, const QByteArray & payload = QByteArray()) {
+                Response * resp = requestTo(url).withHeaders(headers).viaPost(payload, content_type, true);
+                connect(resp, SIGNAL(finished()), this, SLOT(requestFinished()));
+                asyncRequests.insert(resp -> url(), response);
+                return resp;
             }
 
             inline Response * putFollowed(const QUrl & url, const QByteArray & data = QByteArray(), const QString & content_type = FORM_URLENCODE) {

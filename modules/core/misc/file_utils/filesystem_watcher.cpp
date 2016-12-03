@@ -9,32 +9,36 @@
 #endif
 
 bool FileSystemWatcher::registerPathProc(qintptr & ptr, const QString & path, bool recursive) {
-    #ifdef Q_OS_WIN
-        return WinWatcher::obj().registerPath(ptr, path, recursive);
-    #elif Q_OS_MAC
-        return MacWatcher::obj().registerPath(ptr, path, recursive);
-    #else
-        return X11Watcher::obj().registerPath(ptr, path, recursive);
-    #endif
+    return
+        #ifdef Q_OS_WIN
+            WinWatcher::obj()
+        #elif Q_OS_MAC
+            MacWatcher::obj()
+        #else
+            X11Watcher::obj()
+        #endif
+            .registerPath(ptr, path, recursive);
 }
 void FileSystemWatcher::unregisterPathProc(qintptr ptr) {
     #ifdef Q_OS_WIN
-        WinWatcher::obj().unregisterPath(ptr);
+        WinWatcher::obj()
     #elif Q_OS_MAC
-        MacWatcher::obj().unregisterPath(ptr);
+        MacWatcher::obj()
     #else
-        X11Watcher::obj().unregisterPath(ptr);
+        X11Watcher::obj()
     #endif
+        .unregisterPath(ptr);
 }
 
 FileSystemWatcher::~FileSystemWatcher() {
     clear();
 
     #ifdef Q_OS_WIN
-        WinWatcher::destruct();
+        WinWatcher
     #elif Q_OS_MAC
-        MacWatcher::destruct();
+        MacWatcher
     #else
-        X11Watcher::destruct();
+        X11Watcher
     #endif
+        ::destruct();
 }

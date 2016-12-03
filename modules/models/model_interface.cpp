@@ -341,7 +341,7 @@ int IModel::proceedVkList(const QJsonObject & block, Playlist * parent, int & up
     int pos = parent -> playlistsAmount();
 
     if (JSON_HAS_KEY(block, tkn_is_loadable)) // didnt add new items to begin of list if we have additional loads
-        pos = -(collection.size() + 10);
+        pos = -(collection.size() + 2);
 
     for(QJsonArray::ConstIterator it = collection.constEnd(); it-- != collection.constBegin();) {
 //    for(QJsonArray::ConstIterator it = collection.constBegin(); it != collection.constEnd(); it++) {

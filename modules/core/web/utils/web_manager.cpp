@@ -121,7 +121,7 @@ namespace Core {
 
         Response * Request::viaGet(bool async) { return manager -> get(*this, async); }
 
-        Response * Request::viaPost(const QByteArray & data, const QString & content_type) {
+        Response * Request::viaPost(const QByteArray & data, const QString & content_type, bool async) {
             QByteArray payload = data;
 
             if (payload.isEmpty()) {
@@ -141,10 +141,10 @@ namespace Core {
             //            }
 
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
-            return manager -> post(*this, payload);
+            return manager -> post(*this, payload, async);
         }
 
-        Response * Request::viaPut(const QByteArray & data, const QString & content_type) {
+        Response * Request::viaPut(const QByteArray & data, const QString & content_type, bool async) {
             QByteArray payload = data;
 
             if (payload.isEmpty()) {
@@ -154,10 +154,10 @@ namespace Core {
             }
 
             setHeader(QNetworkRequest::ContentTypeHeader, content_type);
-            return manager -> put(*this, payload);
+            return manager -> put(*this, payload, async);
         }
 
-        Response * Request::viaForm(const QByteArray & data) { return viaPost(data, FORM_URLENCODE); }
+        Response * Request::viaForm(const QByteArray & data, bool async) { return viaPost(data, FORM_URLENCODE, async); }
 
         //////////////////////////     WEB_MANAGER     /////////////////////////////
 
