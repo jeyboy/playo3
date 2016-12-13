@@ -12,8 +12,15 @@ VideoWidget::VideoWidget(QWidget * parent) : QVideoWidget(parent) {
 
     setAttribute(Qt::WA_OpaquePaintEvent);
 
+    panel = new Controls::ControlPanel(this);
+
     setMinimumSize(VIDEO_DEFAULT_SIZE, VIDEO_DEFAULT_SIZE);
     show();
+}
+
+void VideoWidget::showEvent(QShowEvent * event) {
+    panel -> setRegion(rect());
+    QVideoWidget::showEvent(event);
 }
 
 void VideoWidget::keyPressEvent(QKeyEvent * event) {
@@ -29,9 +36,21 @@ void VideoWidget::keyPressEvent(QKeyEvent * event) {
     else QVideoWidget::keyPressEvent(event);
 }
 
+void VideoWidget::mousePressEvent(QMouseEvent * event) {
+    if (event -> buttons() & Qt::LeftButton)
+        emit clicked();
+
+    QVideoWidget::mousePressEvent(event);
+}
+
 void VideoWidget::mouseDoubleClickEvent(QMouseEvent * event) {
     toggleFullScreen();
     event -> accept();
+}
+
+void VideoWidget::resizeEvent(QResizeEvent * event) {
+    panel -> setRegion(rect());
+    QVideoWidget::resizeEvent(event);
 }
 
 void VideoWidget::toggleFullScreen() {

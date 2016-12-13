@@ -349,8 +349,8 @@ HEADERS += \
     player/qt_player.h \
     modules/core/media/interfaces/ideviceable.h \
     modules/controls/video_widget.h \
-    modules/controls/video_widget_style.h \
-    modules/controls/video_view.h
+    modules/controls/video_view.h \
+    modules/controls/control_panel.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
@@ -486,4 +486,5 @@ SOURCES += \
     item_toolbar_features.cpp \
     player/qt_player.cpp \
     modules/controls/video_widget.cpp \
-    modules/controls/video_view.cpp
+    modules/controls/video_view.cpp \
+    modules/controls/control_panel.cpp
