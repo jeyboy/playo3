@@ -29,12 +29,6 @@ protected:
     void keyPressEvent(QKeyEvent * event);
     void mouseDoubleClickEvent(QMouseEvent * event);
     void resizeEvent(QResizeEvent * event);
-//    void paintEvent(QPaintEvent * event) {
-//        QPainter painter(this);
-//        painter.setCompositionMode(QPainter::RasterOp_SourceAndDestination);
-//        QVideoWidget::paintEvent(event);
-//    }
-
     void toggleFullScreen();
 };
 

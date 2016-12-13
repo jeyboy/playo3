@@ -1,5 +1,5 @@
 #include "video_widget.h"
-//#include "video_widget_style.h"
+#include "player/player_index.h"
 
 #include <qevent.h>
 
@@ -14,6 +14,8 @@ VideoWidget::VideoWidget(QWidget * parent) : QVideoWidget(parent) {
 
     panel = new Controls::ControlPanel(this);
 
+    PlayerFactory::obj().registerCallback(call_to_player, this, SIGNAL(clicked()), SLOT(playPause()));
+//
     setMinimumSize(VIDEO_DEFAULT_SIZE, VIDEO_DEFAULT_SIZE);
     show();
 }

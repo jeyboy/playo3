@@ -3,6 +3,8 @@
 #include <qpainter.h>
 #include <qstyleoption.h>
 
+#include "player/player_index.h"
+
 using namespace Controls;
 
 ControlPanel::ControlPanel(QWidget * parent) : QFrame(parent) {
