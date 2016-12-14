@@ -227,9 +227,10 @@ namespace Core {
                                 qCritical() << name() << "radio item finishing failed";
                         }
 
-                        int content_amount = content.size();
+//                        int content_amount = content.size();
 
-                        offset = YANDEX_ITEM_UID(content[0].toObject()) % ',' % YANDEX_ITEM_UID(content[content_amount - 1].toObject());
+//                        offset = YANDEX_ITEM_UID(content[0].toObject()) % ',' % YANDEX_ITEM_UID(content[content_amount - 1].toObject());
+                        offset = YANDEX_ITEM_UID(content[0].toObject());
                     }
 
                     return prepareBlock(

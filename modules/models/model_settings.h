@@ -19,6 +19,7 @@ namespace Models {
         mpf_del_file = 128,
         mpf_interactive = 256,
         mpf_auto_play_next = 512,
+        mpf_use_ignore_list = 1024,
 
         mpf_common_playlist = mpf_common | mpf_auto_play_next
     };
@@ -60,6 +61,7 @@ namespace Models {
         }
         void setFlags(int new_flags) { flags = (ParamFlags)((flags & 31) | new_flags); }
 
+        bool isUseIgnoreList() { return flags & mpf_use_ignore_list; }
         bool isAutoPlayNext() { return flags & mpf_auto_play_next; }
         bool isInteractive() { return flags & mpf_interactive; }
         bool isDeleteFile() { return flags & mpf_del_file; }

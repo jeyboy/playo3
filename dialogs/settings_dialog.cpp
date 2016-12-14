@@ -325,6 +325,7 @@ void SettingsDialog::initGlobalSettings() {
 }
 void SettingsDialog::initApisSettings() {
     ui -> ignoreCaptcha -> setChecked(Settings::obj().isIgnoreCaptcha());
+    ui -> useIgnoreList -> setChecked(Settings::obj().isUseIgnoreList());
 }
 void SettingsDialog::initItemsSettings() {
     ui -> openTimeOut -> setValue(Settings::obj().openTimeOut());
@@ -482,6 +483,7 @@ void SettingsDialog::saveGlobalSettings() {
 }
 void SettingsDialog::saveApisSettings() {
     Settings::obj().setIgnoreCaptcha(ui -> ignoreCaptcha -> isChecked());
+    Settings::obj().useIgnoreList(ui -> useIgnoreList -> isChecked());
 }
 void SettingsDialog::saveItemsSettings() {
     Settings::obj().setOpenTimeOut(ui -> openTimeOut -> value());

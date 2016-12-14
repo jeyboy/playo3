@@ -438,6 +438,12 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
 
         menu.addAction(QIcon(LSTR(":/shuffle")), LSTR("Shuffle"), this, SLOT(shuffle()));
 
+        if (mdl -> ignoreListHasItems()) {
+            menu.addSeparator();
+            menu.addAction(QIcon(), LSTR("Clear ignore list"), mdl, SLOT(clearIgnoreList()));
+        }
+
+
         if (mdl -> playlistType() != dt_level) {
             menu.addSeparator();
 

@@ -16,6 +16,8 @@ namespace Models {
         void ignoreListAddUid(const QStringList & uids);
         void ignoreListRemoveUid(const QString & uid);
         bool ignoreListContainUid(const QString & uid);
+        inline bool ignoreListIsEmpty() { return list.isEmpty(); }
+        void ignoreListClear();
 
         QJsonObject & ignoreListToJson(QJsonObject &);
         void ignoreListFromJson(const QJsonObject &);

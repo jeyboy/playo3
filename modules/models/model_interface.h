@@ -201,7 +201,8 @@ namespace Models {
         int search(const SearchLimit & params, Playlist * destination, Playlist * search_source = 0);
         int search(const QString & predicate, Playlist * destination, Playlist * search_source = 0, int count = 9999999);
 
-        inline virtual bool ignoreListContainUid(const QString & /*uid*/) { return false; }
+        inline virtual bool ignoreListContainUid(const QString & /*uid*/) { return false; } // for web models
+        inline virtual bool ignoreListHasItems() { return false; } // for web models
     public slots:
         void updateIcon() {
             emit changeIco(
@@ -223,6 +224,7 @@ namespace Models {
         void collapsed(const QModelIndex & index);
         void collapseAll();
         virtual inline void refresh() {} // for web models
+        virtual inline void clearIgnoreList() {} // for web models
 
     protected slots:
         void finishingItemsAdding();

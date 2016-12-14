@@ -46,6 +46,9 @@ void TabDialog::setSettings(const Models::Params & params) {
     ui -> deleteFile -> setChecked(settings.isDeleteFile());
     ui -> interactive -> setChecked(settings.isInteractive());
     ui -> autoPlayNext -> setChecked(settings.isAutoPlayNext());
+    ui -> ignoreList -> setChecked(settings.isUseIgnoreList());
+
+    ui -> ignoreList -> setEnabled(settings.isSourceConfigurable());
 
     int index = 0;
     Core::DataSubType data_type = DST_EXTRACT_FLAGS(settings.data_type);

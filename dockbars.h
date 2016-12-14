@@ -103,7 +103,7 @@ namespace Presentation {
 
 
         inline void createNewBar() { showViewSettingsDialog(); }
-        inline void createNewBar(QString name, QUrl url) {
+        inline void createNewBar(const QString & name, const QUrl & url) {
             DockBar * bar = createDocBar(
                 name,
                 Params(

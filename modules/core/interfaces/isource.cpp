@@ -124,7 +124,7 @@ void ISource::openTab() {
 
         Presentation::Dockbars::obj().createLinkedDocBar(
             Presentation::BarCreationNames(QString(name() % " [YOU]"), uidStr(user_id)),
-            Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_obj_info), 0, true, true, 0, true
+            Models::Params(sourceType(), (Models::ParamFlags)(Models::mpf_auto_play_next | (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none) | Models::mpf_source_configurable), user_id, rec_obj_info), 0, true, true, 0, true
         );
     }
 }
@@ -134,7 +134,7 @@ void ISource::openAudioRecs() {
 
     Presentation::Dockbars::obj().createDocBar(
         LSTR("Audio Rec for YOU"),
-        Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_user_audio), 0, true, true
+        Models::Params(sourceType(), (Models::ParamFlags)(Models::mpf_auto_play_next | (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none) | Models::mpf_source_configurable), user_id, rec_user_audio), 0, true, true
     );
 }
 
@@ -143,7 +143,7 @@ void ISource::openVideoRecs() {
 
     Presentation::Dockbars::obj().createDocBar(
         LSTR("Video Rec for YOU"),
-        Models::Params(sourceType(), Models::mpf_auto_play_next, user_id, rec_user_video), 0, true, true
+        Models::Params(sourceType(), (Models::ParamFlags)(Models::mpf_auto_play_next | (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none) | Models::mpf_source_configurable), user_id, rec_user_video), 0, true, true
     );
 }
 
@@ -161,14 +161,15 @@ void ISource::openPackageTab() {
         QVariantMap params_data;
         Cmd cmnd = Cmd(dialog_params); // we should use source type from cmd, because it contains additional flags clarification
 
-        bool source_configurable = cmnd.attrs.hasQueryItem(CMD_SOURCE_CONFIGURABLE); // INFO: reserved
+        bool source_configurable = true; //cmnd.attrs.hasQueryItem(CMD_SOURCE_CONFIGURABLE); // INFO: reserved
         bool stream_configurable = cmnd.attrs.hasQueryItem(CMD_STREAM_CONFIGURABLE);
         bool feeds_configurable = cmnd.attrs.hasQueryItem(CMD_FEEDS_CONFIGURABLE);
 
         Models::ParamFlags configs = (Models::ParamFlags)(
             (source_configurable ? Models::mpf_source_configurable : Models::mpf_none) |
             (feeds_configurable ? Models::mpf_feeds_configurable : Models::mpf_none) |
-            (stream_configurable ? Models::mpf_stream_configurable : Models::mpf_none)
+            (stream_configurable ? Models::mpf_stream_configurable : Models::mpf_none) |
+            (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none)
         );
 
         if (feeds_configurable) {
@@ -203,6 +204,6 @@ void ISource::createRelationTab(const QString & rel_name, const QString & id) {
             name() % LSTR(" [") % rel_name % ']',
             uidStr(id)
         ),
-        Models::Params(sourceType(), Models::mpf_auto_play_next, id, rec_obj_info), 0, true, true
+        Models::Params(sourceType(), (Models::ParamFlags)(Models::mpf_auto_play_next | (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none) | Models::mpf_source_configurable), id, rec_obj_info), 0, true, true
     );
 }

@@ -155,6 +155,22 @@
        <string>Delete file with item</string>
       </property>
      </widget>
+     <widget class="QCheckBox" name="ignoreList">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>40</y>
+        <width>121</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Use ignore list</string>
+      </property>
+     </widget>
     </widget>
    </item>
   </layout>

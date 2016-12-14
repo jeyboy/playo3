@@ -2015,17 +2015,17 @@
       <string>Ignore captcha</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_31">
+    <widget class="QCheckBox" name="useIgnoreList">
      <property name="geometry">
       <rect>
-       <x>60</x>
-       <y>130</y>
-       <width>211</width>
-       <height>21</height>
+       <x>200</x>
+       <y>10</y>
+       <width>111</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>Soon there should be other api settings</string>
+      <string>Use ignore list</string>
      </property>
     </widget>
    </widget>

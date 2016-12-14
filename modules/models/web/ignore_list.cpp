@@ -23,3 +23,5 @@ QJsonObject & IgnoreList::ignoreListToJson(QJsonObject & obj) {
     return obj;
 }
 void IgnoreList::ignoreListFromJson(const QJsonObject & obj) {  list = obj.toVariantHash(); qDebug() << "IGNORE LIST" << list; }
+
+void IgnoreList::ignoreListClear() { list.clear(); }

@@ -80,10 +80,10 @@ void WebModel::proceedJson(QJsonValue & hash) {
 ///////////////////////////////////////////////////////////
 bool WebModel::removeRows(int position, int rows, const QModelIndex & parent) {
     Playlist * parentItem = item<Playlist>(parent);
-    QStringList uids = parentItem -> childrenUids(position, rows);
+    QStringList uids = sttngs.isUseIgnoreList() ? parentItem -> childrenUids(position, rows) : QStringList();
 
     bool res = IModel::removeRows(position, rows, parent);
-    if (res)
+    if (res && !uids.isEmpty())
         ignoreListAddUid(uids);
 
     return res;
