@@ -443,7 +443,6 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
             menu.addAction(QIcon(), LSTR("Clear ignore list"), mdl, SLOT(clearIgnoreList()));
         }
 
-
         if (mdl -> playlistType() != dt_level) {
             menu.addSeparator();
 
@@ -452,6 +451,8 @@ void IView::contextMenuEvent(QContextMenuEvent * event) { // FIXME: shortcuts is
             menu.addAction(QIcon(LSTR(":/collapse")), LSTR("Collapse all"), this, SLOT(collapseAll()));
             menu.addAction(QIcon(LSTR(":/expand")), LSTR("Expand all"), this, SLOT(expandAll()));
         }
+
+        menu.addAction(QIcon(), LSTR("Clear"), this, SLOT(clear()));
     }
 
     if (!menu.isEmpty()) {

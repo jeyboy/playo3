@@ -425,4 +425,7 @@ void Dockbars::barClosed() {
 
     if (v && DataFactory::obj().currentPlaylist() == v)
         DataFactory::obj().resetPlaying();
+
+    if (v && bar == common && Settings::obj().isClearCommonTab())
+        v -> clear();
 }

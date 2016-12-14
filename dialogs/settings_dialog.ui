@@ -1315,16 +1315,16 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>0</y>
-      <width>340</width>
-      <height>350</height>
+      <y>-82</y>
+      <width>323</width>
+      <height>370</height>
      </rect>
     </property>
     <widget class="QComboBox" name="colorScheme">
      <property name="geometry">
       <rect>
        <x>110</x>
-       <y>290</y>
+       <y>310</y>
        <width>211</width>
        <height>22</height>
       </rect>
@@ -1334,7 +1334,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>150</y>
+       <y>146</y>
        <width>171</width>
        <height>17</height>
       </rect>
@@ -1347,7 +1347,7 @@
      <property name="geometry">
       <rect>
        <x>160</x>
-       <y>180</y>
+       <y>200</y>
        <width>161</width>
        <height>22</height>
       </rect>
@@ -1402,7 +1402,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>290</y>
+       <y>310</y>
        <width>81</width>
        <height>21</height>
       </rect>
@@ -1415,7 +1415,7 @@
      <property name="geometry">
       <rect>
        <x>180</x>
-       <y>150</y>
+       <y>146</y>
        <width>141</width>
        <height>17</height>
       </rect>
@@ -1427,8 +1427,8 @@
     <widget class="QCheckBox" name="saveCommonTab">
      <property name="geometry">
       <rect>
-       <x>180</x>
-       <y>130</y>
+       <x>10</x>
+       <y>174</y>
        <width>131</width>
        <height>17</height>
       </rect>
@@ -1441,7 +1441,7 @@
      <property name="geometry">
       <rect>
        <x>110</x>
-       <y>260</y>
+       <y>280</y>
        <width>211</width>
        <height>22</height>
       </rect>
@@ -1451,7 +1451,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>260</y>
+       <y>280</y>
        <width>81</width>
        <height>21</height>
       </rect>
@@ -1464,7 +1464,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>130</y>
+       <y>125</y>
        <width>131</width>
        <height>17</height>
       </rect>
@@ -1487,7 +1487,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>180</y>
+       <y>200</y>
        <width>141</width>
        <height>31</height>
       </rect>
@@ -1501,7 +1501,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>320</y>
+       <y>340</y>
        <width>101</width>
        <height>21</height>
       </rect>
@@ -1517,7 +1517,7 @@
      <property name="geometry">
       <rect>
        <x>120</x>
-       <y>320</y>
+       <y>340</y>
        <width>81</width>
        <height>22</height>
       </rect>
@@ -1569,7 +1569,7 @@
      <property name="geometry">
       <rect>
        <x>240</x>
-       <y>220</y>
+       <y>240</y>
        <width>51</width>
        <height>21</height>
       </rect>
@@ -1588,7 +1588,7 @@
      <property name="geometry">
       <rect>
        <x>300</x>
-       <y>220</y>
+       <y>240</y>
        <width>21</width>
        <height>21</height>
       </rect>
@@ -1601,7 +1601,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>210</y>
+       <y>230</y>
        <width>221</width>
        <height>41</height>
       </rect>
@@ -1612,6 +1612,19 @@
      </property>
      <property name="tristate">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="clearCommonTab">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>174</y>
+       <width>161</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Clear common tab on close</string>
      </property>
     </widget>
    </widget>

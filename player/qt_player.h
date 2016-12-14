@@ -82,7 +82,7 @@ public:
         if (out) {
             QStringList devices = out -> availableOutputs();
             foreach(QString device, devices)
-                res.insert(device, device);
+                res.insert(device.split('\\').last(), device);
 
             player -> service() -> releaseControl(out);
         } else {

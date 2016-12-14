@@ -8,6 +8,8 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
     _tabPosition = settings.value(SETTINGS_TAB_POSITION_KEY).toInt(0);
 
     _saveCommonTab = settings.value(SETTINGS_SAVE_COMMON_TAB_KEY).toBool(false);
+    _clear_common_tab_on_exit = settings.value(SETTINGS_CLEAR_COMMON_TAB_KEY).toBool(true);
+
     _openDropPointInTab = settings.value(SETTINGS_OPEN_DROP_IN_TAB_KEY).toBool(false);
     _openDropPointInTabType = (Core::DataSubType)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Core::dt_tree);
 
@@ -31,6 +33,8 @@ void GlobalSettings::toJson(QJsonObject & settings) {
     settings.insert(SETTINGS_TAB_POSITION_KEY, QJsonValue::fromVariant(_tabPosition));
 
     settings.insert(SETTINGS_SAVE_COMMON_TAB_KEY, QJsonValue::fromVariant(_saveCommonTab));
+    settings.insert(SETTINGS_CLEAR_COMMON_TAB_KEY, QJsonValue::fromVariant(_clear_common_tab_on_exit));
+
     settings.insert(SETTINGS_OPEN_DROP_IN_TAB_KEY, QJsonValue::fromVariant(_openDropPointInTab));
     settings.insert(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY, QJsonValue::fromVariant(_openDropPointInTabType));
 

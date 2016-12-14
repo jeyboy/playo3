@@ -86,6 +86,10 @@ namespace Views {
         void searchFinished();
 
     public slots:
+        inline void clear() {
+            mdl -> clear();
+            reset();
+        }
         inline void refresh() { mdl -> refresh(); }
         bool startInnerSearch(const QString & predicate, const QModelIndex & it = QModelIndex());
         void endInnerSearch();

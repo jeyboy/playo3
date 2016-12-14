@@ -294,6 +294,8 @@ void SettingsDialog::initGlobalSettings() {
 
 
     ui -> saveCommonTab -> setChecked(Settings::obj().isSaveCommonTab());
+    ui -> clearCommonTab -> setChecked(Settings::obj().isClearCommonTab());
+
     ui -> openDropPointInTab -> setChecked(Settings::obj().isOpenDropPointInTab());
     if (!Settings::obj().isOpenDropPointInTab())
         on_openDropPointInTab_toggled(false);
@@ -460,6 +462,8 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setTabPosition(ui -> tabPositionSelect -> currentIndex());
 
     Settings::obj().setSaveCommonTab(ui -> saveCommonTab -> isChecked());
+    Settings::obj().setClearCommonTab(ui -> clearCommonTab -> isChecked());
+
     Settings::obj().setOpenDropPointInTab(ui -> openDropPointInTab -> isChecked());
 
     int ind;

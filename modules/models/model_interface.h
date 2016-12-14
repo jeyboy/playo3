@@ -184,6 +184,11 @@ namespace Models {
 
         void blockFetching(bool blocked = true) { block_fetching = blocked; }
 
+        void clear() {
+            delete root_item;
+            root_item = new Playlist();
+        }
+
         void shuffle();
         virtual inline QJsonObject toJson() { return root_item -> toJson(); }
 

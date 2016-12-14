@@ -13,6 +13,7 @@
 #define SETTINGS_AUTORUNNED_KEY QStringLiteral("autorunned")
 #define SETTINGS_TAB_POSITION_KEY QStringLiteral("tab_position")
 #define SETTINGS_SAVE_COMMON_TAB_KEY QStringLiteral("save_common_tab")
+#define SETTINGS_CLEAR_COMMON_TAB_KEY QStringLiteral("clear_common_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
 #define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
 #define SETTINGS_COLOR_SCHEME_KEY QStringLiteral("color_scheme")
@@ -53,6 +54,9 @@ public:
     inline bool isSaveCommonTab() const { return _saveCommonTab; }
     inline void setSaveCommonTab(bool save) { _saveCommonTab = save; }
 
+    inline bool isClearCommonTab() const { return _clear_common_tab_on_exit; }
+    inline void setClearCommonTab(bool clear) { _clear_common_tab_on_exit = clear; }
+
     inline bool isOpenDropPointInTab() const { return _openDropPointInTab; }
     inline void setOpenDropPointInTab(bool open) { _openDropPointInTab = open; }
 
@@ -85,6 +89,7 @@ protected:
     bool _isAutorunned;
 
     bool _saveCommonTab;
+    bool _clear_common_tab_on_exit;
     bool _openDropPointInTab;
     Core::DataSubType _openDropPointInTabType;
     int _tabPosition;
