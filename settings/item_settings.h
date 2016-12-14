@@ -38,75 +38,75 @@ public:
 
     QBrush buildGradient(const QRect & rect, const QColor & color, bool dark);
 
-    inline QBrush defaultState(const QRect & rect, bool dark) { return buildGradient(rect, _defaultItemColor, dark); }
-    inline QBrush listenedState(const QRect & rect, bool dark) { return buildGradient(rect, _listenedItemColor, dark); }
-    inline QBrush likedState(const QRect & rect, bool dark) { return buildGradient(rect, _likedItemColor, dark); }
-    inline QBrush playedState(const QRect & rect, bool dark) { return buildGradient(rect, _playedItemColor, dark); }
-    inline QBrush itemState(const QRect & rect, bool dark) { return buildGradient(rect, _itemColor, dark); }
+    inline QBrush defaultState(const QRect & rect, bool dark) { return buildGradient(rect, _default_item_color, dark); }
+    inline QBrush listenedState(const QRect & rect, bool dark) { return buildGradient(rect, _listened_item_color, dark); }
+    inline QBrush likedState(const QRect & rect, bool dark) { return buildGradient(rect, _liked_item_color, dark); }
+    inline QBrush playedState(const QRect & rect, bool dark) { return buildGradient(rect, _played_item_color, dark); }
+    inline QBrush itemState(const QRect & rect, bool dark) { return buildGradient(rect, _item_color, dark); }
 
     QBrush unprocessedState(const QRect & rect, bool dark);
 
-    inline bool isUseGradient() const { return _useGradient; }
-    inline void setUseGradient(bool use) { _useGradient = use; }
+    inline bool isUseGradient() const { return _use_gradient; }
+    inline void setUseGradient(const bool & use) { _use_gradient = use; }
 
-    inline QColor defaultItemColor() const { return _defaultItemColor; }
-    inline void setDefaultItemColor(QColor newColor) { _defaultItemColor = newColor; }
+    inline QColor defaultItemColor() const { return _default_item_color; }
+    inline void setDefaultItemColor(const QColor & new_color) { _default_item_color = new_color; }
 
-    inline QColor listenedItemColor() const { return _listenedItemColor; }
-    inline void setListenedItemColor(QColor newColor) { _listenedItemColor = newColor; }
+    inline QColor listenedItemColor() const { return _listened_item_color; }
+    inline void setListenedItemColor(const QColor & new_color) { _listened_item_color = new_color; }
 
-    inline QColor likedItemColor() const { return _likedItemColor; }
-    inline void setLikedItemColor(QColor newColor) { _likedItemColor = newColor; }
+    inline QColor likedItemColor() const { return _liked_item_color; }
+    inline void setLikedItemColor(const QColor & new_color) { _liked_item_color = new_color; }
 
-    inline QColor playedItemColor() const { return _playedItemColor; }
-    inline void setPlayedItemColor(QColor newColor) { _playedItemColor = newColor; }
+    inline QColor playedItemColor() const { return _played_item_color; }
+    inline void setPlayedItemColor(const QColor & new_color) { _played_item_color = new_color; }
 
-    inline QColor folderItemColor() const { return _folderItemColor; }
-    inline void setFolderItemColor(QColor newColor) { _folderItemColor = newColor; }
+    inline QColor folderItemColor() const { return _folder_item_color; }
+    inline void setFolderItemColor(const QColor & new_color) { _folder_item_color = new_color; }
 
-    inline QColor itemColor() const { return _itemColor; }
-    inline void setItemColor(QColor newColor) { _itemColor = newColor; }
+    inline QColor itemColor() const { return _item_color; }
+    inline void setItemColor(const QColor & new_color) { _item_color = new_color; }
 
-    inline int itemHeight() { return _itemHeight; }
-    inline void setItemHeight(int newHeight) { _itemHeight = newHeight; }
+    inline int itemHeight() { return _item_height; }
+    inline void setItemHeight(const int & new_height) { _item_height = new_height; }
 
 
     inline QString itemFontName() { return __title.fontName; }
-    inline void setItemFontName(QString newFontName) { __title.fontName = newFontName; }
+    inline void setItemFontName(const QString & new_font_name) { __title.fontName = new_font_name; }
 
     inline int itemFontSize() { return __title.fontSize; }
-    inline void setItemFontSize(int newFontSize) { __title.fontSize = newFontSize; }
+    inline void setItemFontSize(const int & new_font_size) { __title.fontSize = new_font_size; }
 
     inline QColor itemTextColor() { return __title.textColor; }
-    inline void setItemTextColor(QColor newColor) { __title.textColor = newColor; }
+    inline void setItemTextColor(const QColor & new_color) { __title.textColor = new_color; }
 
     inline QColor selectedItemTextColor() { return __title.selectedTextColor; }
-    inline void setSelectedItemTextColor(QColor newColor) { __title.selectedTextColor = newColor; }
+    inline void setSelectedItemTextColor(const QColor & new_color) { __title.selectedTextColor = new_color; }
 
 
     inline QString itemInfoFontName() { return __info.fontName; }
-    inline void setItemInfoFontName(QString newFontName) { __info.fontName = newFontName; }
+    inline void setItemInfoFontName(const QString & new_font_name) { __info.fontName = new_font_name; }
 
     inline int itemInfoFontSize() { return __info.fontSize; }
-    inline void setItemInfoFontSize(int newFontSize) { __info.fontSize = newFontSize; }
+    inline void setItemInfoFontSize(const int & new_font_size) { __info.fontSize = new_font_size; }
 
     inline QColor itemInfoTextColor() { return __info.textColor; }
-    inline void setItemInfoTextColor(QColor newColor) { __info.textColor = newColor; }
+    inline void setItemInfoTextColor(const QColor & new_color) { __info.textColor = new_color; }
 
     inline QColor selectedItemInfoTextColor() { return __info.selectedTextColor; }
-    inline void setSelectedItemInfoTextColor(QColor newColor) { __info.selectedTextColor = newColor; }
+    inline void setSelectedItemInfoTextColor(const QColor & new_color) { __info.selectedTextColor = new_color; }
 
     inline QFont itemFont() { return QFont(itemFontName(), itemFontSize(), QFont::Normal); }
     inline QFont itemInfoFont() { return QFont(itemInfoFontName(), itemInfoFontSize(), QFont::Bold); }
 
-    inline float openTimeOut() { return _openTimeOut; }
-    inline void setOpenTimeOut(int newTimeOut) { _openTimeOut = newTimeOut; }
+    inline float openTimeOut() { return _open_time_out; }
+    inline void setOpenTimeOut(int new_time_out) { _open_time_out = new_time_out; }
 protected:
-    bool _useGradient;
-    int _itemHeight;
-    QColor _defaultItemColor, _listenedItemColor, _likedItemColor, _playedItemColor, _folderItemColor, _itemColor;
+    bool _use_gradient;
+    int _item_height;
+    QColor _default_item_color, _listened_item_color, _liked_item_color, _played_item_color, _folder_item_color, _item_color;
     ItemTextAttrs __title, __info;
-    float _openTimeOut;
+    float _open_time_out;
 };
 
 #endif // ITEM_SETTINGS

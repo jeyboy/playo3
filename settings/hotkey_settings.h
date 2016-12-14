@@ -27,7 +27,7 @@ public:
 protected:
     bool _disabled;
     QJsonObject _hotkeys;
-    QHash<int, QString> _humanizeHotkeyText;
+    QHash<int, QString> _humanize_hotkey_text;
 };
 
 #endif // HOTKEY_SETTINGS
