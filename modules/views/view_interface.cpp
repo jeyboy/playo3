@@ -294,9 +294,19 @@ void IView::runItemCmd(IItem * it) {
         mdl -> fetchMore(index(item -> parent()));
 }
 
-void IView::onCurrentRowChanging(QModelIndex,QModelIndex) {
+void IView::onCurrentRowChanging(QModelIndex, QModelIndex) {
     if (Presentation::Dockbars::obj().activeView() == this)
         Presentation::ToolBars::obj().selectedItemFeatures() -> updateToolbar();
+}
+
+void IView::onDoubleClick(const QModelIndex node) {
+    if (!execIndex(node) && !node.data(IFOLDER).toBool()) { // find first valid for exec
+        if (Settings::obj().isCheckboxShow()) {
+            QModelIndex node = QModelIndex();
+            findExecutable(node);
+            execIndex(node);
+        }
+    }
 }
 
 void IView::openLocation() {
