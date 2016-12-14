@@ -27,53 +27,53 @@ public:
     void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
-    inline bool isCustomColorSpectrum() { return _customColorSpectrum; }
-    inline void setCustomColorSpectrum(bool use) { _customColorSpectrum = use; }
+    inline bool isCustomColorSpectrum() { return _custom_color_spectrum; }
+    inline void setCustomColorSpectrum(const bool & use) { _custom_color_spectrum = use; }
 
-    inline bool isAutoBarsAmount() { return _autoBarsAmount; }
-    inline void setAutoBarsAmount(bool use) { _autoBarsAmount = use; }
+    inline bool isAutoBarsAmount() { return _auto_bars_amount; }
+    inline void setAutoBarsAmount(const bool & use) { _auto_bars_amount = use; }
 
-    inline int autoBarWidth() { return _autoBarWidth; }
-    inline void setAutoBarWidth(int newWidth) { _autoBarWidth = newWidth; }
+    inline int autoBarWidth() { return _auto_bar_width; }
+    inline void setAutoBarWidth(const int & new_width) { _auto_bar_width = new_width; }
 
-    inline QColor spectrumColor() { return _spectrumColor; }
-    inline void setSpectrumColor(QColor newColor) { _spectrumColor = newColor; }
+    inline QColor spectrumColor() { return _spectrum_color; }
+    inline void setSpectrumColor(const QColor & new_color) { _spectrum_color = new_color; }
 
-    inline QColor spectrumColor2() { return _spectrumColor2; }
-    inline void setSpectrumColor2(QColor newColor) { _spectrumColor2 = newColor; }
+    inline QColor spectrumColor2() { return _spectrum_color2; }
+    inline void setSpectrumColor2(const QColor & new_color) { _spectrum_color2 = new_color; }
 
-    inline QColor spectrumColor3() { return _spectrumColor3; }
-    inline void setSpectrumColor3(QColor newColor) { _spectrumColor3 = newColor; }
+    inline QColor spectrumColor3() { return _spectrum_color3; }
+    inline void setSpectrumColor3(const QColor & new_color) { _spectrum_color3 = new_color; }
 
-    inline int spectrumFreqRate() { return _spectrumFreqRate; }
-    inline void setSpectrumFreqRate(int newRate) { _spectrumFreqRate = newRate; }
+    inline int spectrumFreqRate() { return _spectrum_freq_rate; }
+    inline void setSpectrumFreqRate(const int & new_rate) { _spectrum_freq_rate = new_rate; }
 
-    inline int spectrumBarsCount() { return _spectrumBarsCount; }
-    inline void setSpectrumBarsCount(int newCount) { _spectrumBarsCount = newCount; }
+    inline int spectrumBarsCount() { return _spectrum_bars_count; }
+    inline void setSpectrumBarsCount(const int & new_count) { _spectrum_bars_count = new_count; }
 
-    inline int spectrumHeight() { return _spectrumHeight; }
-    inline void setSpectrumHeight(int newHeight) { _spectrumHeight = newHeight; }
+    inline int spectrumHeight() { return _spectrum_height; }
+    inline void setSpectrumHeight(const int & new_height) { _spectrum_height = new_height; }
 
-    inline int spectrumMultiplier() { return _spectrumMultiplier; }
-    inline void setSpectrumMultiplier(int newMultiplier) { _spectrumMultiplier = newMultiplier; }
+    inline int spectrumMultiplier() { return _spectrum_multiplier; }
+    inline void setSpectrumMultiplier(const int & new_multiplier) { _spectrum_multiplier = new_multiplier; }
 
-    inline SpectrumType spectrumType() { return _spectrumType; }
-    inline void setSpectrumType(SpectrumType newSpectrumType) { _spectrumType = newSpectrumType; }
+    inline SpectrumType spectrumType() { return _spectrum_type; }
+    inline void setSpectrumType(const SpectrumType & new_spectrum_type) { _spectrum_type = new_spectrum_type; }
 
 protected:
-    QColor _spectrumColor;
-    QColor _spectrumColor2;
-    QColor _spectrumColor3;
+    QColor _spectrum_color;
+    QColor _spectrum_color2;
+    QColor _spectrum_color3;
 
-    int _spectrumMultiplier;
-    int _spectrumFreqRate;
-    int _spectrumBarsCount;
-    int _spectrumHeight;
-    int _autoBarWidth;
-    SpectrumType _spectrumType;
+    int _spectrum_multiplier;
+    int _spectrum_freq_rate;
+    int _spectrum_bars_count;
+    int _spectrum_height;
+    int _auto_bar_width;
+    SpectrumType _spectrum_type;
 
-    bool _customColorSpectrum;
-    bool _autoBarsAmount;
+    bool _custom_color_spectrum;
+    bool _auto_bars_amount;
 };
 
 #endif // SPECTRUM_SETTINGS

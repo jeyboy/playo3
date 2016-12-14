@@ -13,25 +13,25 @@ public:
     void fromJson(const QJsonObject & settings);
     void toJson(QJsonObject & settings);
 
-    inline bool isShowInfo() const { return _showInfo; }
-    inline void setShowInfo(bool show) { _showInfo = show; }
+    inline bool isShowInfo() const { return _show_info; }
+    inline void setShowInfo(bool show) { _show_info = show; }
 
     inline bool isInitiateOnPlaying() const { return _initiate_on_play; }
     inline void setInitiateOnPlaying(bool on_play) { _initiate_on_play = on_play; }
 
-    inline bool isUsedDelayForRemote() const { return _remoteItemsProcDelay > 0; }
+    inline bool isUsedDelayForRemote() const { return _remote_items_proc_delay > 0; }
 
-    inline int remoteItemsProcDelay() const { return _remoteItemsProcDelay; }
-    inline void setRemoteItemsProcDelay(int new_delay) { _remoteItemsProcDelay = new_delay; }
+    inline int remoteItemsProcDelay() const { return _remote_items_proc_delay; }
+    inline void setRemoteItemsProcDelay(int new_delay) { _remote_items_proc_delay = new_delay; }
 
-    inline int saveLibDelay() const { return _saveLibDelay; }
-    inline void setSaveLibDelay(int new_delay) { _saveLibDelay = new_delay; }
+    inline int saveLibDelay() const { return _save_lib_delay; }
+    inline void setSaveLibDelay(int new_delay) { _save_lib_delay = new_delay; }
 protected:
-    int _remoteItemsProcDelay;
-    int _saveLibDelay;
+    int _remote_items_proc_delay;
+    int _save_lib_delay;
 
     bool _initiate_on_play;
-    bool _showInfo;
+    bool _show_info;
 };
 
 #endif // LIBRARY_SETTINGS
