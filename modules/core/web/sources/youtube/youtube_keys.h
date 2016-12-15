@@ -2,6 +2,7 @@
 #define YOUTUBE_KEYS
 
 #include <qstringbuilder.h>
+#include "modules/core/web/grabber_keys.h"
 
 namespace Core {
     namespace Web {
@@ -18,6 +19,7 @@ namespace Core {
             extern const QString path_subscriptions;
             extern const QString path_channels;
             extern const QString path_videos;
+            extern const QString path_activities;
 
             extern const QString tkn_auth_email;
             extern const QString tkn_auth_pass;

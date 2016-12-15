@@ -139,7 +139,6 @@ namespace Core {
                     jsonToUsers(linkables, EXTRACT_ITEMS(videoChannelsById(uid).toObject()));
                     return linkables;
                 }
-
                 QList<Linkable> findFriendsByName(const QString & name) {
                     QList<Linkable> linkables;
                     jsonToUsers(linkables, EXTRACT_ITEMS(videoChannelsByName(name).toObject()));

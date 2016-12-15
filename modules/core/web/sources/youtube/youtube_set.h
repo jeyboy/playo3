@@ -19,17 +19,13 @@ namespace Core {
 
                         break;}
 
-                        case set_feed_video:        {
-
-                        break;}
+                        case set_feed_video:        { return videoRecommendationsByUser(); break;}
 
                         case set_top_video:         {
 
                         break;}
 
-                        case set_video_history:     {
-
-                        break;}
+                        case set_video_history:     { return videoByUserHistory(); break;}
 
                         case set_video_liked:       { return videoByUserRating(true); break;}
 

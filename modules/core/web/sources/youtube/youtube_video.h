@@ -65,7 +65,7 @@ namespace Core {
                         args.queryItemValue(CMD_OFFSET)
                     );
                 }
-                QJsonValue videoByUser(const QString & user_id, const QString & token = QString()) {
+                QJsonValue videoByUser(const QString & user_id, const QString & offset_token = QString()) {
                     SourceFlags perm = permissions(sf_video_by_user);
 
                     switch(perm) {
@@ -85,7 +85,7 @@ namespace Core {
 
                             QueriableResponse response = pRequest(
                                 baseUrlStr(qst_api, path_search, query),
-                                call_type_json, rules(token),
+                                call_type_json, rules(offset_token),
                                 0, proc_json_extract, YOUTUBE_ITEMS, call_method_get,
                                 is_current_user ? authHeaders() : Headers()
                             );
@@ -99,11 +99,41 @@ namespace Core {
                     return QJsonObject();
                 }
 
-                QJsonValue videoRecommendations(const QUrlQuery & args) {
-                    return videoRecommendations(
+                QJsonValue videoByVideoChannel(const QUrlQuery & args) {
+                    return videoByVideoChannel(
                         args.queryItemValue(CMD_ID),
                         args.queryItemValue(CMD_OFFSET)
                     );
+                }
+                QJsonValue videoByVideoChannel(const QString & channel_id, const QString & offset_token = QString()) {
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_activities,
+                            {
+                               // publishedAfter // publishedBefore // SO8601 (YYYY-MM-DDThh:mm:ss.sZ) format.
+                               {tkn_part, LSTR("id,snippet,contentDetails")},
+                               {LSTR("channelId"), channel_id},
+                               {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT}
+                            }
+                        ),
+                        call_type_json,
+                        rules(offset_token)
+                    );
+
+                    initDuration(response.content);
+                    return prepareBlock(dmt_video, cmd_mtd_video_recommendations, response, {}, {{CMD_ID, channel_id}});
+                }
+
+
+                QJsonValue videoRecommendations(const QUrlQuery & args) {
+                    if (args.hasQueryItem(CMD_ID))
+                        return videoRecommendations(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET)
+                        );
+                    else
+                        return videoRecommendationsByUser(
+                            args.queryItemValue(CMD_OFFSET)
+                        );
                 }
                 QJsonValue videoRecommendations(const QString & video_id, const QString & offset_token = QString()) {
                     QueriableResponse response = pRequest(
@@ -112,6 +142,24 @@ namespace Core {
                               {tkn_type, LSTR("video")},
                               {LSTR("relatedToVideoId"), video_id}
                            })
+                        ),
+                        call_type_json,
+                        rules(offset_token)
+                    );
+
+                    initDuration(response.content);
+                    return prepareBlock(dmt_video, cmd_mtd_video_recommendations, response);
+                }
+                QJsonValue videoRecommendationsByUser(const QString & offset_token = QString()) {
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_activities,
+                            {
+                               // publishedAfter // publishedBefore // SO8601 (YYYY-MM-DDThh:mm:ss.sZ) format.
+                               {tkn_part, LSTR("id,snippet,contentDetails")},
+                               {LSTR("home"), const_true},
+                               {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT},
+                               {LSTR("regionCode"), siteLocale(const_default_locale)},
+                            }
                         ),
                         call_type_json,
                         rules(offset_token)
@@ -181,6 +229,29 @@ namespace Core {
                     }
 
                     return QJsonObject();
+                }
+
+                QJsonValue videoByUserHistory(const QUrlQuery & args) {
+                    return videoByUserHistory(
+                        args.queryItemValue(CMD_OFFSET)
+                    );
+                }
+                QJsonValue videoByUserHistory(const QString & offset_token = QString()) {
+                    QueriableResponse response = pRequest(
+                        baseUrlStr(qst_api, path_activities,
+                            {
+                               // publishedAfter // publishedBefore // SO8601 (YYYY-MM-DDThh:mm:ss.sZ) format.
+                               {tkn_part, LSTR("id,snippet,contentDetails")},
+                               {LSTR("mine"), const_true},
+                               {LSTR("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT}
+                            }
+                        ),
+                        call_type_json,
+                        rules(offset_token)
+                    );
+
+                    initDuration(response.content);
+                    return prepareBlock(dmt_video, cmd_mtd_video_by_user_history, response);
                 }
 
                 // https://developers.google.com/youtube/v3/docs/guideCategories/list
