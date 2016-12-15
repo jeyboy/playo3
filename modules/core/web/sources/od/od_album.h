@@ -8,7 +8,6 @@ namespace Core {
         namespace Od {
             class Album : public virtual Base {
             protected:
-                QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue albumsSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // need to check
                     QueriableResponse response = pRequest(
                         audioUrlStr(

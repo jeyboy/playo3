@@ -350,7 +350,9 @@ HEADERS += \
     modules/core/media/interfaces/ideviceable.h \
     modules/controls/video_widget.h \
     modules/controls/video_view.h \
-    modules/controls/control_panel.h
+    modules/controls/control_panel.h \
+    modules/core/web/sources/fourshared/fourshared_layer.h \
+    modules/core/web/sources/od/od_layer.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \

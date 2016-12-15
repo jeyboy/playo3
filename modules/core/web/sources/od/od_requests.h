@@ -1,21 +1,12 @@
 #ifndef OD_REQUESTS
 #define OD_REQUESTS
 
-#include "od_user.h"
-#include "od_group.h"
-#include "od_auth.h"
-#include "od_playlist.h"
-#include "od_set.h"
-#include "od_audio.h"
-#include "od_video.h"
-
-#include "modules/core/web/interfaces/sociable/sociable.h"
+#include "od_layer.h"
 
 namespace Core {
     namespace Web {
         namespace Od {
-            class Requests : public Sociable, public User, public Auth, public Group,
-                    public Playlist, public Set, public Audio, public Video {
+            class Requests : public Layer {
 
                 QString regPart() { return tkn_coma_dot % tkn_jsessionid % siteToken(); }
 
@@ -441,7 +432,7 @@ namespace Core {
 //                    return sessionIsValid();
                 }
 
-                QJsonValue loadSetData(const QString & attrs) {
+                QJsonValue loadContainerData(const QString & attrs) {
                     return audioByPlaylist(QUrlQuery(attrs).queryItemValue(CMD_ID));
                 }
 

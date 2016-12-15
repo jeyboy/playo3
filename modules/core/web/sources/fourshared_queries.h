@@ -19,7 +19,7 @@ namespace Core {
                 QString cookies() const { return Web::Manager::cookiesAsHeaderStr(url_html_site_base, QHash<QString, bool>({{LSTR("Login"), true}, {LSTR("Password"), true}})); }
 
                 inline void userInfoAsync(const QString & uid, Func * func) { ThreadUtils::obj().run(this, &Queries::userInfo, uid, func); }
-                QJsonValue userInfo(const QString & uid) { return QJsonArray() << loadSetData(CMD_ID % '=' % uid); }
+                QJsonValue userInfo(const QString & uid) { return QJsonArray() << loadContainerData(CMD_ID % '=' % uid); }
 
                 inline void openSetAsync(const QString & cutomParams, Func * func) {
                     ThreadUtils::obj().run((Set *)this, &Set::openSet, Cmd::extractQuery(cutomParams), func);

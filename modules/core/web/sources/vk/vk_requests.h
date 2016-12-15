@@ -206,7 +206,7 @@ namespace Core {
                     } else return code == 0;
                 }
 
-                QJsonValue loadSetData(const QUrlQuery & query) {
+                QJsonValue loadContainerData(const QUrlQuery & query) {
                     QString id = query.queryItemValue(CMD_ID);
 
                     switch(query.queryItemValue(CMD_MEDIA_TYPE).toInt()) {
@@ -217,7 +217,7 @@ namespace Core {
 
                     return QJsonArray();
                 }
-                QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
+                QJsonValue loadContainerData(const QString & attrs) { return loadContainerData(QUrlQuery(attrs)); }
 
                 void procSociables(QJsonObject & json) {
                     clearFriends();

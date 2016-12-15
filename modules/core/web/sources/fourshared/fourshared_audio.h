@@ -23,10 +23,43 @@ namespace Core {
                     return doc.find("input.jsD1PreviewUrl").value();
                 }
 
-                QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
+                QueriableResponse audioPopular(const SearchLimit & limits) {
+                    SourceFlags perm = permissions(sf_compilation);
+
+                    switch(perm) {
+                        case sf_api: {
+                            return pRequest(
+                                baseUrlStr(
+                                    qst_api_search, tkn_files,
+                                    {{ tkn_category, music }}
+                                ),
+                                call_type_json,
+                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0, proc_json_extract, QStringList() << tkn_files
+                            );
+                        break;}
+
+                        case sf_site: {
+                            return pRequest(
+                                baseUrlStr(
+                                    qst_site_search,
+                                    LSTR("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                    {}
+                                ),
+                                call_type_html,
+                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0, proc_tracks1
+                            );
+                        break;}
+
+                        default: Logger::obj().write(name(), "SET BY TYPE is not accessable", Logger::log_error);
+                    }
+
+                    return QueriableResponse();
+                }
+
                 QJsonValue audioInfo(const QString & id) { return itemInfo(dmt_audio, id); }
 
-                QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue audioSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     SourceFlags perm = permissions(sf_audio_by_title);
                     QueriableResponse response;

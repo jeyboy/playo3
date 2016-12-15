@@ -20,10 +20,41 @@ namespace Core {
                     return Info::extractLimitedBy(res, LSTR("file: \""), LSTR("\""));
                 }
 
-                QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
+                QueriableResponse videoPopular(const SearchLimit & limits) {
+                    SourceFlags perm = permissions(sf_compilation);
+
+                    switch(perm) {
+                        case sf_api: {
+                            return pRequest(
+                                baseUrlStr(
+                                    qst_api_search, tkn_files,
+                                    {{ tkn_category, video }}
+                                ),
+                                call_type_json,
+                                rulesApi(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0, proc_json_extract, QStringList() << tkn_files
+                            );
+                        break;}
+
+                        case sf_site: {
+                            return pRequest(
+                                baseUrlStr(
+                                    qst_site_search,
+                                    LSTR("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                    {}
+                                ),
+                                call_type_html,
+                                rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),
+                                0, proc_video1
+                            );
+                        break;}
+
+                        default: Logger::obj().write(name(), "SET BY TYPE is not accessable", Logger::log_error);
+                    }
+                }
+
                 QJsonValue videoInfo(const QString & id) { return itemInfo(dmt_video, id); }
 
-                QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     SourceFlags perm = permissions(sf_video_by_title);
                     QueriableResponse response;

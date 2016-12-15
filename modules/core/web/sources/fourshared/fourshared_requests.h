@@ -1,15 +1,12 @@
 #ifndef FOURSHARED_REQUESTS
 #define FOURSHARED_REQUESTS
 
-#include "fourshared_auth.h"
-#include "fourshared_audio.h"
-#include "fourshared_video.h"
-#include "fourshared_set.h"
+#include "fourshared_layer.h"
 
 namespace Core {
     namespace Web {
         namespace Fourshared {
-            class Requests : public Auth, public Set, public Audio, public Video {
+            class Requests : public Layer {
                 QJsonValue procJson(const QJsonValue & json, const AdditionalProc & /*proc*/) {
                     QJsonObject user_data = json.toObject();
 
@@ -220,34 +217,7 @@ namespace Core {
                 }
                 inline bool endReached(QJsonObject & response, QueriableArg * arg) { return response.value(tkn_files).toArray().size() < arg -> per_request_limit; }
             protected:
-                Requests() {
-                    flags = {
-                        {sf_endpoint, (SourceFlags)
-                            (sf_is_primary | sf_audio | sf_video | sf_compilation |
-                            sf_site /*| sf_api*/ | sf_site_connectable /*| sf_api_connectable*/)
-                        },
-
-                        {sf_compilation,        sf_site_not_api_auth},
-
-                        {sf_search,             sf_site_not_api_auth},
-//                        {sf_user_sociable,      sf_both_auth},
-
-                        {sf_is_shareable,       sf_site_not_api_auth},
-
-                        {sf_popular_audio,      sf_site_not_api_auth},
-                        {sf_audio_by_id,        sf_site_not_api_auth},
-                        {sf_audio_by_title,     sf_site_not_api_auth},
-                        {sf_audio_by_genre,     sf_site_not_api_auth},
-                        {sf_audio_by_tag,       sf_site_not_api_auth},
-                        {sf_audio_by_artist,    sf_site_not_api_auth},
-                        {sf_audio_by_album,     sf_site_not_api_auth},
-
-                        {sf_popular_video,      sf_site_not_api_auth},
-                        {sf_video_by_title,     sf_site_not_api_auth},
-                        {sf_video_by_genre,     sf_site_not_api_auth},
-                        {sf_video_by_tag,       sf_site_not_api_auth}
-                    };
-                }
+                Requests() {}
                 inline virtual ~Requests() {}
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
@@ -270,11 +240,6 @@ namespace Core {
                     Manager::addCookie(val_lang_cookie);
                 }
                 void clearAdditionals() { Manager::removeCookies(url_html_site_base); }
-
-                QJsonValue loadSetData(const QUrlQuery & attrs) {
-                    return itemsByCollection(attrs.queryItemValue(CMD_ID));
-                }
-                QJsonValue loadSetData(const QString & attrs) { return loadSetData(QUrlQuery(attrs)); }
 
                 bool connectUserSite() {
                     QString user_id;

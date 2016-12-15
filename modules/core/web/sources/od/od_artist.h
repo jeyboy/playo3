@@ -17,7 +17,6 @@ namespace Core {
                     ).value(tkn_artists).toArray();
                 }
 
-                QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue artistsSearch(const SearchLimit & limits, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) { // need to check
                     QueriableResponse response = pRequest(
                         audioUrlStr(

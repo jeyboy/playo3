@@ -69,7 +69,7 @@ namespace Core {
                 return prepareBlock(dmt_audio, cmd_mtd_unknown, response, limits);
             }
 
-            QJsonValue loadSetData(const QString & attrs) {
+            QJsonValue loadContainerData(const QString & attrs) {
                 QUrlQuery query(attrs);
 
                 return saRequest(
