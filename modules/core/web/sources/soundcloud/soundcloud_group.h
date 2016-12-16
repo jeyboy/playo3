@@ -35,13 +35,6 @@ namespace Core {
                     return QJsonObject();
                 }
 
-                QJsonValue groupsById(const QUrlQuery & args) {
-                    return groupsById(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsById(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_group_by_id);
 
@@ -72,13 +65,6 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, group_id}});
                 }
 
-                QJsonValue groupsByAudio(const QUrlQuery & args) {
-                    return groupsByAudio(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByAudio(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_group_by_audio);
                     QueriableResponse response;
@@ -98,13 +84,6 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_audio, response, {}, {{CMD_ID, track_id}});
                 }
 
-                QJsonValue groupsByUser(const QUrlQuery & args) {
-                    return groupsByUser(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_group_by_user);
                     QueriableResponse response;
@@ -134,13 +113,6 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue groupsByName(const QUrlQuery & args) {
-                    return groupsByName(
-                        args.queryItemValue(CMD_PREDICATE),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByName(const QString & gname, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_group_by_title);
                     QueriableResponse response;

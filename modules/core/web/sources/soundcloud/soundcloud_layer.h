@@ -67,7 +67,93 @@ namespace Core {
                     };
                 }
 
+                QJsonValue audio(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crelt_audio: return audioByTag(
+                            args.queryItemValue(CMD_PREDICATE),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
 
+                        case crelt_group: return audioByGroup(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+
+                        case crelt_user: return audioByUser(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+
+                        case crelt_user_likes: return audioByUserLikes(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue search(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+                        case crelt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
+                        default: QJsonObject();
+                    }
+                }
+
+
+                QJsonValue group(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crelt_id: return groupsById(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+                        case crelt_audio: return groupsByAudio(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+                        case crelt_user: return groupsByUser(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+                        case crelt_name: return groupsByName(
+                            args.queryItemValue(CMD_PREDICATE),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue info(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crelt_audio: return audioInfo(args.queryItemValue(CMD_ID));
+                        case crelt_group: return groupInfo(args.queryItemValue(CMD_ID));
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue recommendations(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+                        case crt_audio: {
+                            switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                                case crelt_user: return audioRecommendations(
+                                    args.queryItemValue(CMD_ID),
+                                    args.queryItemValue(CMD_OFFSET).toInt(),
+                                    args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                                );
+                                default: QJsonObject();
+                            }
+                        break;}
+                        default: QJsonObject();
+                    }
+                }
             };
         }
     }

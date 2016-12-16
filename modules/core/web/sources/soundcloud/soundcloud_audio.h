@@ -71,7 +71,6 @@ namespace Core {
                     return false;
                 }
 
-                QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
                 QJsonObject audioInfo(const QString & track_id) {
                     SourceFlags perm = permissions(sf_audio_by_id);
 
@@ -131,13 +130,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, response);
                 }
 
-                QJsonValue audioRecommendations(const QUrlQuery & args) {
-                    return audioRecommendations(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue audioRecommendations(const QString & track_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_audio_recs_by_audio);
                     QueriableResponse response;
@@ -164,7 +156,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_audio_recommendations, response, {}, {{CMD_ID, track_id}});
                 }
 
-                QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue audioSearch(const SearchLimit & limits) {
                     SourceFlags perm = permissions(sf_audio_by_title);
                     QueriableResponse response;
@@ -204,13 +195,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_audio_search, response, limits);
                 }
 
-                QJsonValue audioByTag(const QUrlQuery & args) {
-                    return audioByTag(
-                        args.queryItemValue(CMD_PREDICATE),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue audioByTag(const QString & tag, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_audio_by_tag);
                     QueriableResponse response;
@@ -243,13 +227,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_audio_by_tag, response, {}, {{CMD_PREDICATE, tag}});
                 }
 
-                QJsonValue audioByGroup(const QUrlQuery & args) {
-                    return audioByGroup(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue audioByGroup(const QString & group_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_audio_by_group);
                     QueriableResponse response;
@@ -277,13 +254,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_audio_by_group, response, {}, {{CMD_ID, group_id}});
                 }
 
-                QJsonValue audioByUser(const QUrlQuery & args) {
-                    return audioByUser(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue audioByUser(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_audio_by_user);
                     QueriableResponse response;
@@ -313,13 +283,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_audio_by_user, response, {}, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue audioByUserLikes(const QUrlQuery & args) {
-                    return audioByUserLikes(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue audioByUserLikes(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_audio_by_like);
                     QueriableResponse response;

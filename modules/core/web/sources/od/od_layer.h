@@ -155,6 +155,8 @@ namespace Core {
                             args.queryItemValue(CMD_REQUESTS_LIMIT).toInt(),
                             args.queryItemValue(CMD_OFFSET)
                         );
+
+                        default: QJsonObject();
                     }
                 }
 
@@ -167,8 +169,10 @@ namespace Core {
 //                                    args.queryItemValue(CMD_OFFSET).toInt(),
 //                                    args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
                                 );
+                                default: QJsonObject();
                             }
                         break;}
+                        default: QJsonObject();
                     }
                 }
 
@@ -199,8 +203,7 @@ namespace Core {
 
                         case crelt_id:
                         case crelt_perma: return groupsByIdOrPerma(args.queryItemValue(CMD_ID));
-
-
+                        default: QJsonObject();
                     }
                 }
             };
