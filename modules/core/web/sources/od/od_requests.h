@@ -287,64 +287,8 @@ namespace Core {
                     setSociableLimitations(true, true, true, true);
 
                     setSiteLocale(LSTR("ru")); // INFO: temp
-
-                    flags = QHash<SourceFlags, SourceFlags>{
-                        {sf_endpoint, (SourceFlags)(
-                            sf_online_credentials_req | sf_is_primary | sf_audio | sf_video | sf_user/*sf_sociable*/ |
-                            sf_photo | sf_feed | sf_playlist | sf_compilation | sf_site | sf_site_connectable)
-                        },
-
-                        {sf_feed,                   sf_site},
-
-                        {sf_feed_by_user,           sf_site_auth_only},
-                        {sf_feed_by_group,          sf_site_auth_only},
-
-                        {sf_is_shareable,           sf_site_auth_only},
-
-                        {sf_search,                 sf_site_auth_only},
-
-                        {sf_compilation,            sf_site_auth_only},
-
-                        {sf_stream_list,            sf_site_auth_only},
-
-                        {sf_album_by_title,         sf_site_auth_only},
-
-                        {sf_artist_by_id,           sf_site_auth_only},
-                        {sf_artist_by_title,        sf_site_auth_only},
-
-                        {sf_popular_artist,         sf_site_auth_only},
-
-                        {sf_popular_audio,          sf_site_auth_only},
-                        {sf_audio_by_id,            sf_site_auth_only},
-                        {sf_audio_by_title,         sf_site_auth_only},
-                        {sf_audio_by_stream,        sf_site_auth_only},
-                        {sf_audio_by_artist,        sf_site_auth_only},
-                        {sf_audio_by_compilation,   sf_site_auth_only},
-                        {sf_audio_by_playlist,      sf_site_auth_only},
-                        {sf_audio_by_album,         sf_site_auth_only},
-                        {sf_audio_by_user,          sf_site_auth_only},
-                        {sf_audio_recs_by_user,     sf_site_auth_only},
-//                        {sf_audio_recs_by_track,    sf_site_auth_only},
-
-                        {sf_audio_playlist_by_id,   sf_site_auth_only},
-
-                        {sf_video_by_id,            sf_site_auth_only},
-                        {sf_video_by_title,         sf_site_auth_only},
-                        {sf_video_by_user,          sf_site_auth_only},
-                        {sf_video_by_category,      sf_site_auth_only},
-                        {sf_video_by_playlist,      sf_site_auth_only},
-
-
-                        {sf_user_sociable,          sf_site_auth_only},
-                        {sf_user_by_id,             sf_site_auth_only},
-                        {sf_user_by_title,          sf_site_auth_only},
-
-//                        {sf_group_sociable,         sf_site_auth_only}, // not finished
-                        {sf_group_by_user,          sf_site_auth_only},
-                        {sf_group_by_title,         sf_site_auth_only},
-                        {sf_group_by_id,            sf_site_auth_only},
-                    };
                 }
+                virtual ~Requests() {}
 
                 void saveAdditionals(QJsonObject & obj) {
                     setSiteHash(QString());

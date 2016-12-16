@@ -8,13 +8,6 @@ namespace Core {
         namespace Od {
             class Group : public virtual Base {
             public:
-                QJsonValue groupsByUser(const QUrlQuery & args) {
-                    return groupsByUser(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByUser(const QString & user_id, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                                 baseUrlStr(
@@ -32,13 +25,6 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_user, response, block_params, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue groupsByName(const QUrlQuery & args) {
-                    return groupsByName(
-                        args.queryItemValue(CMD_PREDICATE),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByName(const QString & name, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
 //                    dirty	1
 //                    st._aid
@@ -95,9 +81,6 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_name, response, block_params, {{CMD_PREDICATE, name}});
                 }
 
-                QJsonValue groupsById(const QUrlQuery & args) {
-                    return groupsByIdOrPerma(args.queryItemValue(CMD_ID));
-                }
                 QJsonValue groupsByIdOrPerma(const QString & group_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QString url = Info::isNumber(group_id) ?
                         baseUrlStr(qst_site, LSTR("group/") % group_id, {}) :

@@ -164,7 +164,7 @@ namespace Core {
 
     enum CmdRelationType : int {
         crelt_none = 0, crelt_id, crelt_name, crelt_audio, crelt_video, crelt_audio_likes,
-        crelt_audio_reposting, crelt_artist, crelt_album, crelt_feed, crelt_playlist,
+        crelt_audio_reposting, crelt_artist, crelt_album, crelt_feed, crelt_playlist, crelt_perma,
         crelt_user, crelt_group, crelt_tag, crelt_user_likes, crelt_collection, crelt_tuner,
         crelt_category, crelt_user_rating, crelt_user_history, crelt_channel, crelt_genre
     };
@@ -180,7 +180,6 @@ namespace Core {
             cmd_mtd_load_container_data,
 
             cmd_mtd_info, //2: audio, video, artist, album, feed, playlist
-            cmd_mtd_search, //1: items, audio, video, playlist, artist, album
 
             cmd_mtd_users, //2: id, name, audio_likes, audio_reposting
             cmd_mtd_groups, //2: id, name, user, audio
@@ -190,12 +189,13 @@ namespace Core {
             cmd_mtd_video, //2: user, playlist, category, user_rating, user_history, channel
             cmd_mtd_items, //2: collection
 
+            cmd_mtd_search, //1: items, audio, video, playlist, artist, album
+
             cmd_mtd_channels, //1: audio, video //2: id, name, user, category
             cmd_mtd_streams, //1: audio, video //2: genre, artist
             cmd_mtd_recommendations, //1: audio, video, stream //2: user, artist, audio, video
             cmd_mtd_albums, //1: audio, video //2: artist,
             cmd_mtd_playlists, //1: audio, video //2: tag, audio, user, group ? predicate
-
 
             cmd_mtd_categories, //1: video, audio
             cmd_mtd_configure, //1: stream

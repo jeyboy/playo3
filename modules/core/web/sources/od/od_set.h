@@ -148,13 +148,6 @@ namespace Core {
                     return prepareBlock(dmt_val, cmd_mtd_set_by_type, response, limits, block_params, {{CMD_SET_TYPE, set_type}});
                 }   
             public:
-                QJsonValue setByType(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-
                 inline QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
                     Cmd cmd_tmpl(sourceType(), cmd_mtd_open_set, {});
@@ -188,7 +181,6 @@ namespace Core {
                     return res;
                 }
 
-                inline QJsonValue openSet(const QUrlQuery & attrs) { return QJsonArray() << setByType(attrs); }
 //                inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
             };                    
         }

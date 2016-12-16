@@ -1,87 +1,17 @@
 #ifndef SOUNDCLOUD_REQUESTS
 #define SOUNDCLOUD_REQUESTS
 
-#include "soundcloud_auth.h"
-#include "soundcloud_group.h"
-#include "soundcloud_playlist.h"
-#include "soundcloud_set.h"
-#include "soundcloud_audio.h"
-#include "soundcloud_user.h"
-
-#include "modules/core/web/interfaces/sociable/sociable.h"
+#include "soundcloud_layer.h"
 
 namespace Core {
     namespace Web {
         namespace Soundcloud {
-            class Requests : public Sociable, public Auth, public Group,
-                     public Playlist, public Set, public Audio, public User
-            {
+            class Requests : public Layer {
             protected:
-                //                inline SourceFlags defaultFlags() {
-                //                    return (SourceFlags)(
-                //                        sf_auth_api_has | /*sf_auth_site_has |*/ |
-                //                        sf_items_serachable | sf_sets_serachable | sf_users_serachable |
-                //                        sf_groups_serachable | sf_by_tags_serachable | sf_by_genres_serachable |
-                //                        sf_sociable_users | sf_sociable_groups | sf_shareable | sf_packable |
-                //                        sf_recommendable_by_item | sf_newable | sf_taggable | sf_genreable |
-                //                        sf_recommendable_by_user | sf_api_auth_mandatory |
-                //                        sf_site_object_content_auth_only
-                //                    );
-                //                }
-
                 Requests() {
                     setSociableLimitations(true, true, false, false/*true, true*/);
-
-                    flags = {
-                        {sf_endpoint, (SourceFlags)(
-                            sf_offline_credentials_req | sf_is_primary | sf_audio | sf_user/*sf_sociable*/ |
-                            sf_feed | sf_playlist | sf_compilation | sf_site | sf_api | sf_api_connectable)
-                        },
-
-//                        {sf_feed,                   sf_site},
-
-                        {sf_feed_by_user,               sf_both_auth},
-//                        {sf_feed_by_group,          sf_site_auth_only},
-
-                        {sf_is_shareable,               sf_site_not_api_auth},
-
-                        {sf_search,                     sf_site_not_api_auth},
-
-                        {sf_compilation,                sf_site_not_api_auth},
-
-//                        {sf_popular_audio,          sf_site_auth_only},
-                        {sf_like_audio,                 sf_both_auth},
-                        {sf_audio_by_id,                sf_site_not_api_auth},
-                        {sf_audio_by_title,             sf_site_not_api_auth},
-                        {sf_audio_by_genre,             sf_site_not_api_auth},
-                        {sf_audio_by_tag,               sf_site_not_api_auth},
-                        {sf_audio_by_group,             sf_site_not_api_auth},
-                        {sf_audio_by_like,              sf_site_not_api_auth},
-                        {sf_audio_by_user,              sf_site_not_api_auth},
-                        {sf_audio_recs_by_user,         sf_site},
-                        {sf_audio_recs_by_audio,        sf_site_not_api_auth},
-
-//                        {sf_audio_playlist_by_id,   sf_site_auth_only},
-                        {sf_audio_playlist_by_title,    sf_site_not_api_auth},
-                        {sf_audio_playlist_by_tag,      sf_site},
-                        {sf_audio_playlist_by_audio,    sf_site_not_api_auth},
-                        {sf_audio_playlist_by_user,     sf_site_not_api_auth},
-
-                        {sf_user_sociable,              sf_site_not_api_auth},
-//                        {sf_group_sociable,             sf_site_not_api_auth},
-
-                        {sf_user_by_id,                 sf_site_not_api_auth},
-                        {sf_user_by_title,              sf_site_not_api_auth},
-                        {sf_user_by_likes,              sf_site_not_api_auth},
-                        {sf_user_by_audio_repost,       sf_site_not_api_auth},
-
-//                        {sf_group_by_user,              sf_site_not_api_auth},
-//                        {sf_group_by_title,             sf_site_not_api_auth},
-//                        {sf_group_by_id,                sf_site_not_api_auth},
-//                        {sf_group_by_audio,             sf_site}
-                    };
                 }
-                inline virtual ~Requests() {}
+                virtual ~Requests() {}
 
                 inline QString baseUrlStr(const QuerySourceType & stype, const QString & predicate) {
                     if (!isConnected()) takeOfflineCredentials();

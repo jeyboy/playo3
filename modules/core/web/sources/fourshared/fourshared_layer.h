@@ -49,7 +49,7 @@ namespace Core {
                 }
 
                 QJsonValue search(const QUrlQuery & args) {
-                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
                         case crelt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
                         case crelt_video: return videoSearch(SearchLimit::fromICmdParams(args));
                         default: QJsonObject();
@@ -62,9 +62,7 @@ namespace Core {
                         SearchLimit::fromICmdParams(attrs)
                     );
                 }
-                QJsonValue openSet(const QUrlQuery & attrs) {
-                    return QJsonArray() << setByType(attrs);
-                }
+                QJsonValue openSet(const QUrlQuery & attrs) { return QJsonArray() << setByType(attrs); }
 
                 QJsonValue loadContainerData(const QUrlQuery & attrs) {
                     return itemsByCollection(attrs.queryItemValue(CMD_ID));
