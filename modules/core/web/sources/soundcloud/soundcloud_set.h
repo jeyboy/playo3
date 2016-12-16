@@ -119,13 +119,6 @@ namespace Core {
                 }
 
             public:
-                QJsonValue setByType(const QUrlQuery & attrs) {
-                    return setByType(
-                        (SetType)attrs.queryItemValue(CMD_SET_TYPE).toInt(),
-                        SearchLimit::fromICmdParams(attrs)
-                    );
-                }
-
                 QMap<QString, QString> setsList() {
                     QMap<QString, QString> res;
                     QMap<QString, QString> opts = audioSetOptions();
@@ -192,9 +185,6 @@ namespace Core {
 
                     return res;
                 }
-
-                //inline QJsonValue openSet(const QString & attrs) { return openSet(Cmd::extractQuery(attrs)); }
-                QJsonValue openSet(const QUrlQuery & attrs) { return QJsonArray() << setByType(attrs); }
             };
         }
     }

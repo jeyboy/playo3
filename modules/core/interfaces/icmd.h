@@ -159,7 +159,7 @@ namespace Core {
     };
 
     enum CmdResultType : int {
-        crt_none = 0, crt_items, crt_audio, crt_video, crt_playlist, crt_artist, crt_album
+        crt_none = 0, crt_items, crt_audio, crt_video, crt_playlist, crt_artist, crt_album, crt_stream
     };
 
     enum CmdRelationType : int {

@@ -13,14 +13,6 @@ namespace Core {
 
                 // streams by ids splited by comma
                 //curl 'https://api-v2.soundcloud.com/stations?urns=soundcloud%3Atrack-stations%3A194303455%2Csoundcloud%3Atrack-stations%3A216648507%2Csoundcloud%3Atrack-stations%3A241788972%2Csoundcloud%3Atrack-stations%3A268174503%2Csoundcloud%3Atrack-stations%3A274566663%2Csoundcloud%3Atrack-stations%3A274793736%2Csoundcloud%3Atrack-stations%3A277352869%2Csoundcloud%3Atrack-stations%3A277729275%2Csoundcloud%3Atrack-stations%3A277855506&client_id=02gUJC0hH2ct1EGOcYXQIzRFU91c72Ea&app_version=1472742050' -H 'Accept: application/json, text/javascript, */*; q=0.1' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Authorization: OAuth 1-138878-99021496-f2129f62c04ca7' -H 'Connection: keep-alive' -H 'Content-Type: application/json' -H 'DNT: 1' -H 'Host: api-v2.soundcloud.com' -H 'Origin: https://soundcloud.com' -H 'Referer: https://soundcloud.com/' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0'
-
-                QJsonValue streamsRecommendations(const QUrlQuery & args) {
-                    return streamsRecommendations(
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
-
                 QJsonValue streamsRecommendations(int offset = 0, int limit = 25) {
                     SourceFlags perm = permissions(sf_stream_by_artist);
                     QueriableResponse response;
