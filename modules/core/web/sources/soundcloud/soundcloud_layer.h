@@ -205,7 +205,12 @@ namespace Core {
                     switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
                         case crt_audio: {
                             switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
-                                case crelt_user: return audioRecommendations(
+                                case crelt_audio: return audioRecommendations(
+                                    args.queryItemValue(CMD_ID),
+                                    args.queryItemValue(CMD_OFFSET).toInt(),
+                                    args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                                );
+                                case crelt_user: return userAudioRecommendations(
                                     args.queryItemValue(CMD_ID),
                                     args.queryItemValue(CMD_OFFSET).toInt(),
                                     args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
@@ -222,6 +227,27 @@ namespace Core {
                                 default: QJsonObject();
                             }
                         break;}
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue followings(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crelt_user: return userFollowings(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
+                        default: QJsonObject();
+                    }
+                }
+                QJsonValue followers(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crelt_user: return userFollowers(
+                            args.queryItemValue(CMD_ID),
+                            args.queryItemValue(CMD_OFFSET).toInt(),
+                            args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
+                        );
                         default: QJsonObject();
                     }
                 }

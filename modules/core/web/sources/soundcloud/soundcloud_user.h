@@ -114,13 +114,6 @@ namespace Core {
                     return prepareBlock(dmt_user, cmd_mtd_users_by_audio_reposting, response, {}, {{CMD_ID, track_id}});
                 }
 
-                QJsonValue userFollowings(const QUrlQuery & args) {
-                    return userFollowings(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue userFollowings(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_user_by_user);
                     QueriableResponse response;
@@ -147,13 +140,6 @@ namespace Core {
                     return prepareBlock(dmt_user, cmd_mtd_user_followings, response, {}, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue userFollowers(const QUrlQuery & args) {
-                    return userFollowers(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue userFollowers(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_user_by_user);
                     QueriableResponse response;
@@ -180,13 +166,6 @@ namespace Core {
                     return prepareBlock(dmt_user, cmd_mtd_user_followers, response, {}, {{CMD_ID, user_id}});
                 }
 
-                QJsonValue userAudioRecommendations(const QUrlQuery & args) {
-                    return userAudioRecommendations(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue userAudioRecommendations(const QString & user_id, int offset = 0, int count = SOUNDCLOUD_ITEMS_LIMIT) {
                     SourceFlags perm = permissions(sf_audio_recs_by_user);
                     QueriableResponse response;
