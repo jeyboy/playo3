@@ -353,7 +353,8 @@ HEADERS += \
     modules/controls/control_panel.h \
     modules/core/web/sources/fourshared/fourshared_layer.h \
     modules/core/web/sources/od/od_layer.h \
-    modules/core/web/sources/soundcloud/soundcloud_layer.h
+    modules/core/web/sources/soundcloud/soundcloud_layer.h \
+    modules/core/web/sources/vk/vk_layer.h
 
 SOURCES += \
     dialogs/extension_dialog.cpp \
