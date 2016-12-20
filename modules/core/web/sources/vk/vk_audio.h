@@ -36,8 +36,6 @@ namespace Core {
                     return QString();
                 }
 
-
-                QJsonValue audioInfo(const QUrlQuery & args) { return audioInfo(args.queryItemValue(CMD_ID)); }
                 QJsonValue audioInfo(const QString & track_id) { return audioInfo(QStringList() << track_id); }
                 QJsonValue audioInfo(const QStringList & track_ids) {
                     SourceFlags perm = permissions(sf_audio_by_id);
@@ -83,13 +81,6 @@ namespace Core {
 //                    return prepareBlock(dmt_audio, block_content);
                 }
 
-                QJsonValue userAudioRecommendations(const QUrlQuery & args) {
-                    return userAudioRecommendations(
-                        args.queryItemValue(CMD_ID),
-                        (bool)args.queryItemValue(CMD_PREDICATE).toInt(),
-                        args.queryItemValue(CMD_OFFSET).toInt()
-                    );
-                }
                 QJsonValue userAudioRecommendations(const QString & user_id, bool randomize, int offset = 0) { // ~50 per request
                     SourceFlags perm = permissions(sf_audio_recs_by_user);
                     QJsonArray block_content;
@@ -144,13 +135,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, block_content);
                 }
 
-                QJsonValue audioRecommendations(const QUrlQuery & args) {
-                    return audioRecommendations(
-                        args.queryItemValue(CMD_ID),
-                        (bool)args.queryItemValue(CMD_PREDICATE).toInt(),
-                        args.queryItemValue(CMD_OFFSET).toInt()
-                    );
-                }
                 QJsonValue audioRecommendations(const QString & track_id, bool randomize, int offset = 0) {
                     SourceFlags perm = permissions(sf_audio_recs_by_user);
                     QJsonArray block_content;
@@ -230,7 +214,6 @@ namespace Core {
 ////                    return sQuery(audioSearchLimitedUrl(predicate, limitation), extract);
 //                }
 
-                QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue audioSearch(const SearchLimit & limits, QJsonArray * arr = 0, bool autoFix = false) {
                     SourceFlags perm = permissions(sf_audio_by_title);
                     QJsonArray block_content;
@@ -275,13 +258,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, block_content);
                 }
 
-                QJsonValue audioByPlaylist(const QUrlQuery & args) {
-                    return audioByPlaylist(
-                        args.queryItemValue(CMD_ID)/*,
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()*/
-                    );
-                }
                 QJsonValue audioByPlaylist(const QString & playlist_id) { // not finished
                     SourceFlags perm = permissions(sf_audio_by_playlist);
                     QJsonArray block_content;
