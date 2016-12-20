@@ -9,13 +9,6 @@ namespace Core {
             class Group : public Base {
             public:
 
-                QJsonValue groupsById(const QUrlQuery & args) {
-                    return groupsByIdOrPerma(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByIdOrPermas(const QStringList & ids) {
                     return groupsByIdOrPerma(ids.join(','));
                 }
@@ -49,13 +42,6 @@ namespace Core {
                     return prepareBlock(dmt_group, cmd_mtd_groups_by_id, response, {}, {{CMD_ID, id}});
                 }
 
-                QJsonValue groupsByName(const QUrlQuery & args) {
-                    return groupsByName(
-                        args.queryItemValue(CMD_PREDICATE),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue groupsByName(const QString & gname, int offset = 0, int count = 100) {
                     SourceFlags perm = permissions(sf_group_by_title);
                     QueriableResponse response;

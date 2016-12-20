@@ -54,11 +54,9 @@ namespace Core {
                     return QString();
                 }
 
-                QJsonValue videoInfo(const QUrlQuery & args) { return videoInfo(args.queryItemValue(CMD_ID)); }
                 //TODO: write me
                 QJsonValue videoInfo(const QString & id) { return QJsonObject(); }
 
-                QJsonValue videoSearch(const QUrlQuery & args) { return videoSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue videoSearch(const SearchLimit & limits, QJsonArray * arr = 0) { // count max eq 200 , limit is 1000
                     SourceFlags perm = permissions(sf_video_by_title);
                     QJsonArray block_content;
@@ -101,12 +99,6 @@ namespace Core {
                     return prepareBlock(dmt_video, block_content);
                 }
 
-                QJsonValue videoByUser(const QUrlQuery & args) {
-                    return videoByUser(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET).toInt()
-                    );
-                }
                 QJsonValue videoByUser(const QString & user_id, int offset = 0) {
                     SourceFlags perm = permissions(sf_video_by_user);
                     QJsonArray block_content;
@@ -212,9 +204,6 @@ namespace Core {
                     return QJsonArray();
                 }
 
-                QJsonValue videoByPlaylist(const QUrlQuery & args) {
-                    return videoByPlaylist(args.queryItemValue(CMD_ID));
-                }
                 QJsonValue videoByPlaylist(const QString & playlist_id) { // not finished
                     SourceFlags perm = permissions(sf_video_by_playlist);
                     QJsonArray block_content;
@@ -256,12 +245,6 @@ namespace Core {
                     return prepareBlock(dmt_video, block_content);
                 }
 
-                QJsonValue videoByCategory(const QUrlQuery & args) {
-                    return videoByCategory(
-                        args.queryItemValue(CMD_ID),
-                        args.queryItemValue(CMD_OFFSET)
-                    );
-                }
                 QJsonValue videoByCategory(const QString & category_id) {
                     QJsonArray cats = EXTRACT_ITEMS(videoCategories().toObject());
 
@@ -321,9 +304,6 @@ namespace Core {
 //                    }
                 }
 
-                QJsonValue videoCategories(const QUrlQuery & args) {
-                    return videoCategories(args.queryItemValue(CMD_OFFSET));
-                }
                 QJsonValue videoCategories(const QString & offset_token = QString()) {
                     SourceFlags perm = permissions(sf_video_categories);
                     QJsonArray block_content;

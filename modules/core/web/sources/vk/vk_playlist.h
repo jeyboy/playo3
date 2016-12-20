@@ -8,14 +8,6 @@ namespace Core {
         namespace Vk {
             class Playlist : public Base {
             public:
-                QJsonValue audioPlaylistsByUser(const QUrlQuery & args) {
-                    return audioPlaylistsByUser(
-                        args.queryItemValue(CMD_ID),
-                        0,
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue audioPlaylistsByUser(const QString & user_id, QJsonArray * arr = 0, int offset = 0, int count = 10) {
                     SourceFlags perm = permissions(sf_audio_playlist_by_user);
                     QueriableResponse response;

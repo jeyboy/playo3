@@ -31,13 +31,6 @@ namespace Core {
                 QJsonValue usersByIdsOrPermas(const QStringList & ids) {
                     return usersByIdOrPerma(ids.join(','));
                 }
-                QJsonValue usersById(const QUrlQuery & args) {
-                    return usersByIdOrPerma(
-                        args.queryItemValue(CMD_ID)/*,
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()*/
-                    );
-                }
                 QJsonValue usersByIdOrPerma(const QString & id) {
                     SourceFlags perm = permissions(sf_user_by_id);
                     QJsonArray block_content;
@@ -63,13 +56,6 @@ namespace Core {
                     return prepareBlock(dmt_user, block_content);
                 }
 
-                QJsonValue usersByName(const QUrlQuery & args) {
-                    return usersByName(
-                        args.queryItemValue(CMD_PREDICATE),
-                        args.queryItemValue(CMD_OFFSET).toInt(),
-                        args.queryItemValue(CMD_ITEMS_LIMIT).toInt()
-                    );
-                }
                 QJsonValue usersByName(const QString & uname, int offset = 0, int count = 100) {
                     SourceFlags perm = permissions(sf_user_by_title);
                     QueriableResponse response;
