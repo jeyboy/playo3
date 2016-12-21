@@ -104,8 +104,8 @@ namespace Core {
 
                 QJsonValue search(const QUrlQuery & args) {
                     switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
-                        case crelt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
-                        case crelt_video: return videoSearch(SearchLimit::fromICmdParams(args));
+                        case crt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
+                        case crt_video: return videoSearch(SearchLimit::fromICmdParams(args));
                         default: QJsonObject();
                     }
                 }

@@ -42,16 +42,16 @@ namespace Core {
 
                 QJsonValue info(const QUrlQuery & args) {
                     switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
-                        case crelt_audio: return audioInfo(args.queryItemValue(CMD_ID));
-                        case crelt_video: return videoInfo(args.queryItemValue(CMD_ID));
+                        case crel_audio: return audioInfo(args.queryItemValue(CMD_ID));
+                        case crel_video: return videoInfo(args.queryItemValue(CMD_ID));
                         default: QJsonObject();
                     }
                 }
 
                 QJsonValue search(const QUrlQuery & args) {
                     switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
-                        case crelt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
-                        case crelt_video: return videoSearch(SearchLimit::fromICmdParams(args));
+                        case crel_audio: return audioSearch(SearchLimit::fromICmdParams(args));
+                        case crel_video: return videoSearch(SearchLimit::fromICmdParams(args));
                         default: QJsonObject();
                     }
                 }

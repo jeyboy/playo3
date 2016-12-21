@@ -158,15 +158,64 @@ namespace Core {
         QUrlQuery attrs;
     };
 
-    enum CmdResultType : int {
-        crt_none = 0, crt_items, crt_audio, crt_video, crt_playlist, crt_artist, crt_album, crt_stream
-    };
+    enum CmdRelType : quint64 {
+        crel_none                   = 0,
 
-    enum CmdRelationType : int {
-        crelt_none = 0, crelt_id, crelt_name, crelt_audio, crelt_video, crelt_audio_likes,
-        crelt_audio_reposting, crelt_artist, crelt_album, crelt_feed, crelt_playlist, crelt_perma,
-        crelt_user, crelt_group, crelt_tag, crelt_user_likes, crelt_collection, crelt_tuner,
-        crelt_category, crelt_user_rating, crelt_user_history, crelt_channel, crelt_genre
+        crel_id                     = 1,
+        crel_perma                  = (quint64(1)) << 1,
+        crel_name                   = (quint64(1)) << 2,
+        crel_genre                  = (quint64(1)) << 3,
+        crel_category               = (quint64(1)) << 4,
+        crel_tag                    = (quint64(1)) << 5,
+
+        crel_like                   = (quint64(1)) << 6,
+        crel_dislike                = (quint64(1)) << 7,
+        crel_history                = (quint64(1)) << 8,
+        crel_reposting              = (quint64(1)) << 9,
+
+
+        crel_audio                  = (quint64(1)) << 10,
+        crel_video                  = (quint64(1)) << 11,
+        crel_artist                 = (quint64(1)) << 12,
+
+        crel_album                  = (quint64(1)) << 13,
+        crel_playlist               = (quint64(1)) << 14,
+        crel_recommendation         = (quint64(1)) << 15,
+
+        crel_collection             = (quint64(1)) << 16,
+        crel_channel                = (quint64(1)) << 17,
+        crel_stream                 = (quint64(1)) << 18,
+        crel_tuner                  = (quint64(1)) << 19,
+
+        crel_user                   = (quint64(1)) << 20,
+        crel_group                  = (quint64(1)) << 21,
+
+        crel_feed                   = (quint64(1)) << 22,
+        crel_item                   = (quint64(1)) << 23,
+
+        // 1 level
+
+        crel_audio_album            = crel_audio | crel_album,
+        crel_audio_playlist         = crel_audio | crel_playlist,
+        crel_audio_stream           = crel_audio | crel_stream,
+        crel_audio_channel          = crel_audio | crel_channel,
+        crel_audio_recommendation   = crel_audio | crel_recommendation,
+
+        crel_audio_like             = crel_audio | crel_like,
+        crel_audio_reposting        = crel_audio | crel_reposting,
+
+        crel_video_album            = crel_video | crel_album,
+        crel_video_playlist         = crel_video | crel_playlist,
+        crel_video_stream           = crel_video | crel_stream,
+        crel_video_channel          = crel_video | crel_channel,
+        crel_video_recommendation   = crel_video | crel_recommendation,
+
+        crel_stream_recommendation  = crel_stream | crel_recommendation,
+
+        crel_user_like              = crel_user | crel_like,
+        crel_user_history           = crel_user | crel_history,
+
+        // 2 level
     };
 
     class ICmd {

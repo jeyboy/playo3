@@ -4,7 +4,6 @@
 #include <qurlquery.h>
 #include "modules/core/data_sub_types.h"
 
-#define CMD_RESULT_TYPE QStringLiteral("res_type")
 #define CMD_RELATION_TYPE QStringLiteral("rel_type")
 
 #define CMD_OFFSET QStringLiteral("offset")

@@ -77,6 +77,40 @@ namespace Core {
 //                        {sf_user_by_title,          sf_site_auth_only},
                     };
                 }
+
+                QJsonValue info(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crelt_album:
+                            switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+                                case crelt_artist: return albumsByArtist(args.queryItemValue(CMD_ID));
+                                default: QJsonObject();
+                            }
+
+                            return albumsInfo(args.queryItemValue(CMD_ID).split(','));
+//                        case crelt_audio: return audioInfo(args.queryItemValue(CMD_ID));
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue search(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+//                        case crelt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
+                        default: QJsonObject();
+                    }
+                }
+
+
+                QJsonValue albums(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+                        case crt_audio: {
+                            switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+                                case crelt_artist: return albumsByArtist(args.queryItemValue(CMD_ID));
+                                default: QJsonObject();
+                            }
+                        break;}
+                        default: QJsonObject();
+                    }
+                }
             };
         }
     }

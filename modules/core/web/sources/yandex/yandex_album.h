@@ -8,9 +8,6 @@ namespace Core {
         namespace Yandex {
             class Album : public virtual Base {
             public:
-                QJsonValue albumsInfo(const QUrlQuery & args) {
-                    return albumsInfo(args.queryItemValue(CMD_ID).split(','));
-                }
                 QJsonValue albumsInfo(const QStringList & album_ids) {// not tested
                     SourceFlags perm = permissions(sf_album_by_id);
                     QJsonArray block_content;
@@ -38,7 +35,6 @@ namespace Core {
                     return prepareBlock(dmt_audio_set, block_content);
                 }
 
-                QJsonValue albumsByArtist(const QUrlQuery & args) { return albumsByArtist(args.queryItemValue(CMD_ID)); }
                 QJsonValue albumsByArtist(const QString & artist_id) {
                     QJsonArray blocks;
 
