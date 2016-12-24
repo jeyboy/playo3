@@ -55,7 +55,7 @@ namespace Core {
 
     #define EXTRACT_MEDIA_TYPE(val) (DataMediaType)(val & 3)
 
-    #define DATA_SUB_TYPE_BASE 10
+    #define DATA_SUB_TYPE_BASE 100
     enum DataSubType : int {
         dt_level                    = -9000,
         dt_level_tree               = -8000,

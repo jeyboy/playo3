@@ -80,34 +80,47 @@ namespace Core {
 
                 QJsonValue info(const QUrlQuery & args) {
                     switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
-                        case crelt_album:
-                            switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
-                                case crelt_artist: return albumsByArtist(args.queryItemValue(CMD_ID));
-                                default: QJsonObject();
-                            }
-
-                            return albumsInfo(args.queryItemValue(CMD_ID).split(','));
-//                        case crelt_audio: return audioInfo(args.queryItemValue(CMD_ID));
+                        case crel_album: return albumsInfo(args.queryItemValue(CMD_ID).split(','));
+                        case crel_album | crel_artist: return albumsByArtist(args.queryItemValue(CMD_ID));
+                        case crel_audio: return audioInfo(args.queryItemValue(CMD_ID).split(','));
+                        case crel_artist: return artistInfo(args.queryItemValue(CMD_ID));
                         default: QJsonObject();
                     }
                 }
 
                 QJsonValue search(const QUrlQuery & args) {
-                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
-//                        case crelt_audio: return audioSearch(SearchLimit::fromICmdParams(args));
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crel_audio: return audioSearch(SearchLimit::fromICmdParams(args));
+                        case crel_audio | crel_album: return albumsSearch(SearchLimit::fromICmdParams(args));
+                        case crel_artist: return artistsSearch(SearchLimit::fromICmdParams(args));
                         default: QJsonObject();
                     }
                 }
 
 
                 QJsonValue albums(const QUrlQuery & args) {
-                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
-                        case crt_audio: {
-                            switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
-                                case crelt_artist: return albumsByArtist(args.queryItemValue(CMD_ID));
-                                default: QJsonObject();
-                            }
-                        break;}
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crel_audio | crel_artist: return albumsByArtist(args.queryItemValue(CMD_ID));
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue recommendations(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crel_artist: return artistRecommendations(args.queryItemValue(CMD_ID));
+                        default: QJsonObject();
+                    }
+                }
+
+                QJsonValue audio(const QUrlQuery & args) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
+                        case crel_artist: return audioByArtist(args.queryItemValue(CMD_ID));
+                        case crel_album: return audioByAlbum(args.queryItemValue(CMD_ID));
+                        case crel_playlist: return audioByPlaylist(
+                            args.queryItemValue(CMD_OWNER),
+                            args.queryItemValue(CMD_ID)
+                        );
+                        case crel_user: return audioByUser(args.queryItemValue(CMD_ID));
                         default: QJsonObject();
                     }
                 }

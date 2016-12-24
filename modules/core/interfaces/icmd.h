@@ -214,8 +214,6 @@ namespace Core {
 
         crel_user_like              = crel_user | crel_like,
         crel_user_history           = crel_user | crel_history,
-
-        // 2 level
     };
 
     class ICmd {

@@ -58,7 +58,7 @@ namespace Core {
                 //filter = : genre, tracks, artists, albums, pics
 //                inline QString genresUrl(QString genre = QString(), const QString & filter = QString()) { return url_site_v1 + LSTR("genre.jsx?genre=%1&filter=%2").arg(genre, filter); }
 
-                QJsonObject prepareTracksBlock(QJsonObject & obj, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
+                QJsonObject prepareTracksBlock(QJsonObject & obj, const int & mtd, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonArray tracks = JSON_ARR(obj, tkn_tracks);
                     QJsonArray track_ids = JSON_ARR(obj, LSTR("trackIds"));
                     QJsonObject tracks_block = prepareBlock(dmt_audio, prepareTracks(tracks), block_params);
@@ -71,7 +71,7 @@ namespace Core {
 
                         tracks_block.insert(
                             Web::tkn_more_cmd,
-                            Cmd::build(sourceType(), cmd_mtd_audio_info, {{CMD_ID, ids}}).toString()
+                            Cmd::build(sourceType(), mtd, {{CMD_ID, ids}}).toString()
                         );
                     }
 

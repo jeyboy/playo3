@@ -54,7 +54,6 @@ namespace Core {
                     return blocks;
                 }
 
-                QJsonValue albumsSearch(const QUrlQuery & args) { return albumsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue albumsSearch(const SearchLimit & limits) {
                     SourceFlags perm = permissions(sf_album_by_title);
                     QueriableResponse response;

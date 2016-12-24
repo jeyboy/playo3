@@ -9,9 +9,6 @@ namespace Core {
         namespace Yandex {
             class Artist : public virtual Audio, public virtual Album {
             protected:
-                QJsonValue artistInfo(const QUrlQuery & args) {
-                    return artistInfo(args.queryItemValue(CMD_ID));
-                }
                 QJsonValue artistInfo(const QString & artist_id) {
                     QJsonArray blocks;
 
@@ -32,7 +29,7 @@ namespace Core {
 //                    );
 
 //                    //////////////////// TRACKS ///////////////////////
-//                    blocks << prepareTracksBlock(info, {{tkn_dir_name, LSTR("Tracks")}});
+//                    blocks << prepareTracksBlock(info, cmd_mtd_..., {{tkn_dir_name, LSTR("Tracks")}});
 
 //                    //////////////////// ALBUMS ///////////////////////
 //                    QJsonArray albums = JSON_ARR(info, tkn_albums);
@@ -49,9 +46,6 @@ namespace Core {
                     return blocks;
                 }
 
-                QJsonValue artistRecommendations(const QUrlQuery & args) {
-                    return artistRecommendations(args.queryItemValue(CMD_ID));
-                }
                 QJsonValue artistRecommendations(const QString & artist_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonObject info = sRequest(
                         baseUrlStr(
@@ -68,7 +62,6 @@ namespace Core {
                     return prepareBlock(dmt_audio_set, prepareArtists(similar_artists), block_params);
                 }
 
-                QJsonValue artistsSearch(const QUrlQuery & args) { return artistsSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue artistsSearch(const SearchLimit & limits) {
                     SourceFlags perm = permissions(sf_artist_by_title);
                     QueriableResponse response;

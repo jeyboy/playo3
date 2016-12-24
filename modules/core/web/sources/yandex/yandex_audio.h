@@ -37,9 +37,6 @@ namespace Core {
                     return QString();
                 }
 
-                QJsonValue audioInfo(const QUrlQuery & args) {
-                    return audioInfo(args.queryItemValue(CMD_ID).split(','));
-                }
                 QJsonValue audioInfo(const QString & track_id) {
                     QJsonObject info = audioInfo(QStringList() << track_id).toObject();
                     QJsonArray content = info.value(tkn_content).toArray();
@@ -73,7 +70,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, block_content);
                 }
 
-                QJsonValue audioSearch(const QUrlQuery & args) { return audioSearch(SearchLimit::fromICmdParams(args)); }
                 QJsonValue audioSearch(const SearchLimit & limits) {
                     SourceFlags perm = permissions(sf_audio_by_title);
                     QueriableResponse response;
@@ -101,7 +97,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, cmd_mtd_audio_search, response, limits);
                 }
 
-                QJsonValue audioByArtist(const QUrlQuery & args) { return audioByArtist(args.queryItemValue(CMD_ID)); }
                 QJsonValue audioByArtist(const QString & artist_id, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QJsonObject info = sRequest(
                         baseUrlStr(
@@ -114,14 +109,9 @@ namespace Core {
                         call_type_json
                     );
 
-                    return prepareTracksBlock(info, block_params);
+                    return prepareTracksBlock(info, cmd_mtd_..., block_params);
                 }
 
-                QJsonValue audioByAlbum(const QUrlQuery & args) {
-                    return audioByAlbum(
-                        args.queryItemValue(CMD_ID)
-                    );
-                }
                 QJsonValue audioByAlbum(const QString & album_id) {
                     // curl 'https://music.yandex.ua/handlers/album.jsx?album=2211661&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.36949077823991205' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.5' -H 'Connection: keep-alive' -H 'DNT: 1' -H 'Host: music.yandex.ua' -H 'Referer: https://music.yandex.ua/genre/country/albums?page=109' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'X-Requested-With: XMLHttpRequest' -H 'X-Retpath-Y: https://music.yandex.ua/genre/country/albums?page=109'
 
@@ -137,12 +127,6 @@ namespace Core {
                     return prepareBlock(dmt_audio, tracks);
                 }
 
-                QJsonValue audioByPlaylist(const QUrlQuery & args) {
-                    return audioByPlaylist(
-                        args.queryItemValue(CMD_OWNER),
-                        args.queryItemValue(CMD_ID)
-                    );
-                }
                 QJsonValue audioByPlaylist(const QString & owner_uid, const QString & kinds) {
                     // curl 'https://music.yandex.ua/handlers/playlist.jsx?owner=music.partners&kinds=1767&light=true&lang=uk&external-domain=music.yandex.ua&overembed=false&ncrnd=0.6619828515219549' -H 'Host: music.yandex.ua' -H 'User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0' -H 'Accept: application/json, text/javascript, */*; q=0.01' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate, br' -H 'DNT: 1' -H 'Referer: https://music.yandex.ua/genre/metal' -H 'X-Retpath-Y: https://music.yandex.ua/genre/metal' -H 'X-Requested-With: XMLHttpRequest'
 
@@ -160,10 +144,9 @@ namespace Core {
                         call_method_post, Headers(), 0, false
                     );
 
-                    return prepareTracksBlock(obj);
+                    return prepareTracksBlock(obj, cmd_mtd_...);
                 }
 
-                QJsonValue audioByUser(const QUrlQuery & args) { return audioByUser(args.queryItemValue(CMD_ID)); }
                 QJsonValue audioByUser(const QString & user_id) {
                     QJsonObject info = sRequest(
                         baseUrlStr(
@@ -176,7 +159,7 @@ namespace Core {
                         call_type_json
                     );
 
-                    return prepareTracksBlock(info);
+                    return prepareTracksBlock(info, cmd_mtd_...);
                 }
             };
         }

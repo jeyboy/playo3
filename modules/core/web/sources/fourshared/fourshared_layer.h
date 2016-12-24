@@ -49,7 +49,7 @@ namespace Core {
                 }
 
                 QJsonValue search(const QUrlQuery & args) {
-                    switch(args.queryItemValue(CMD_RESULT_TYPE).toInt()) {
+                    switch(args.queryItemValue(CMD_RELATION_TYPE).toInt()) {
                         case crel_audio: return audioSearch(SearchLimit::fromICmdParams(args));
                         case crel_video: return videoSearch(SearchLimit::fromICmdParams(args));
                         default: QJsonObject();
