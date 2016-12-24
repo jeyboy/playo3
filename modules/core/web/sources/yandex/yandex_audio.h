@@ -114,7 +114,7 @@ namespace Core {
                         call_type_json
                     );
 
-                    return prepareTracksBlock(info, block_params);
+                    return prepareTracksBlock(info, cmd_mtd_audio_by_artist, block_params);
                 }
 
                 QJsonValue audioByAlbum(const QUrlQuery & args) {
@@ -160,7 +160,7 @@ namespace Core {
                         call_method_post, Headers(), 0, false
                     );
 
-                    return prepareTracksBlock(obj);
+                    return prepareTracksBlock(obj, cmd_mtd_audio_by_playlist);
                 }
 
                 QJsonValue audioByUser(const QUrlQuery & args) { return audioByUser(args.queryItemValue(CMD_ID)); }
@@ -176,7 +176,7 @@ namespace Core {
                         call_type_json
                     );
 
-                    return prepareTracksBlock(info);
+                    return prepareTracksBlock(info, cmd_mtd_audio_by_user);
                 }
             };
         }
