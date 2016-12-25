@@ -39,13 +39,12 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
     int min = minimum();
     int max = maximum();
 
+    bool is_horizontal = orientation() == Qt::Horizontal;
+
     double r = 3;
     double range = (double)(max - min);
-    double work_width = (double)(width() - handle.width());
+    double work_dim = (double) is_horizontal ? (width() - handle.width()) : (height() - handle.height());
     double hanle_half = (double)(handle.width() / 2.0);
-
-    QPointF tcenter(0, main_rect.top() + r / 2);
-    QPointF bcenter(0, main_rect.bottom() - r / 2);
 
     // draw tick marks // do this manually because they are very badly behaved with style sheets
     int interval = tickInterval();
@@ -57,14 +56,28 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
     QPolygonF points;
 
     int intervals_amount = (range - 1) / interval;
-    double interval_step = ((double)interval / range) * work_width + hanle_half;
+    double interval_step = ((double)interval / range) * work_dim + hanle_half;
 
-    for (int i = 0; i < intervals_amount; ++i) {
-        if (tpos == TicksBothSides || tpos == TicksAbove)
-            points << (tcenter += QPointF(interval_step, 0));
+    if (is_horizontal) {
+        QPointF tcenter(0, main_rect.top() + r / 2);
+        QPointF bcenter(0, main_rect.bottom() - r / 2);
+        for (int i = 0; i < intervals_amount; ++i) {
+            if (tpos == TicksBothSides || tpos == TicksAbove)
+                points << (tcenter += QPointF(interval_step, 0));
 
-        if (tpos == TicksBothSides || tpos == TicksBelow)
-             points << (bcenter += QPointF(interval_step, 0));
+            if (tpos == TicksBothSides || tpos == TicksBelow)
+                 points << (bcenter += QPointF(interval_step, 0));
+        }
+    } else {
+        QPointF tcenter(main_rect.left() + r / 2, 0);
+        QPointF bcenter(main_rect.right() - r / 2, 0);
+        for (int i = 0; i < intervals_amount; ++i) {
+            if (tpos == TicksBothSides || tpos == TicksAbove)
+                points << (tcenter += QPointF(0, interval_step));
+
+            if (tpos == TicksBothSides || tpos == TicksBelow)
+                 points << (bcenter += QPointF(0, interval_step));
+        }
     }
 
     p.drawPoints(points);

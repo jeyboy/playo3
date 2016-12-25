@@ -48,6 +48,9 @@ QPair<QString, qint64> BassPlayer::openChannel(const QUrl & url, QPair<QString, 
         );
     }
 
+    if (!channel_params.second)
+        proceedErrorState();
+
     return channel_params;
 }
 void BassPlayer::closeChannel() {
@@ -89,8 +92,10 @@ void BassPlayer::playPreproccessing() {
     newVolumeProcessing(volume());
     newPanProcessing(pan());
 
-    applyTempoToChannel();
-    newTempoProcessing(tempo());
+    #ifdef BASS_USE_TEMPO
+        applyTempoToChannel();
+        newTempoProcessing(tempo());
+    #endif
 
     setSampleRateQuality();
 

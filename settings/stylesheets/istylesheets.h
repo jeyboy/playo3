@@ -32,7 +32,7 @@ public:
     IStylesheets();
     virtual ~IStylesheets() {}
     virtual StyleType styleType() const { return stub; }
-    virtual bool isTransparent() { return false; } // main flag for transparency
+    virtual bool isTransparent() { return true; } // main flag for transparency
 
     virtual QImage loadableTabIcon() { return QImage(); }
     virtual QImage background() { return QImage(BACKGROUN_IMG); }

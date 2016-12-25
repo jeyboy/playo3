@@ -253,7 +253,7 @@ QToolBar * ToolBars::createToolBar(const QString & name) {
     ptb -> setFloatable(false);
     Settings::currentStyle -> applyProperty(ptb, "state", LSTR("movable"));
 
-    ptb -> setMinimumSize(60, 60);
+    ptb -> setMinimumSize(30, 30);
     ptb -> setToolButtonStyle(Qt::ToolButtonTextOnly);
 
     connect(ptb, SIGNAL(folderDropped(QString, QString)), this, SLOT(onFolderDrop(QString, QString)));
@@ -269,7 +269,7 @@ QToolBar * ToolBars::precreateToolBar(const QString & name, bool oriented) {
 
     ptb -> setProperty(TOOLBAR_SERVICE_MARK, true);
     ptb -> setObjectName('_' % name);
-    ptb -> setMinimumSize(icoSize, 30);
+    ptb -> setMinimumSize(30, 30);
     ptb -> setIconSize(QSize(icoSize, icoSize));
 
     ptb -> setAttribute(Qt::WA_NoSystemBackground, true);
@@ -366,7 +366,6 @@ QToolBar * ToolBars::createPositionMediaBar() {
 
     slider = new MetricSlider(ptb);
     slider -> setOrientation(Qt::Horizontal);
-    slider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(slider, "position", true);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
@@ -376,8 +375,11 @@ QToolBar * ToolBars::createPositionMediaBar() {
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
     PlayerFactory::obj().registerCallback(call_to_player, slider, SIGNAL(valueChanged(int)), SLOT(setPosition(int)));
 
-    ptb -> addWidget(slider);
-    ptb -> setMinimumWidth(70);
+    QWidget * container = new QWidget(ptb);
+    QHBoxLayout * l = new QHBoxLayout(container);
+    l -> addWidget(slider);
+
+    ptb -> addWidget(container);
     ptb -> adjustSize();
 
     return ptb;
@@ -388,7 +390,6 @@ QToolBar * ToolBars::createPanMediaBar() {
 
     ClickableSlider * pslider = new ClickableSlider(0, ptb, LSTR("pan|%1|%2").arg(IPlayer::panDefault(), IPlayer::panDefault()));
     pslider -> setOrientation(Qt::Horizontal);
-    pslider -> setMinimumSize(60, 30);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
     pslider -> setTickPosition(QSlider::TicksBothSides);
     pslider -> setTickInterval(IPlayer::panMax());
@@ -401,8 +402,11 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setMaximum(IPlayer::panMax());
     pslider -> setValue(IPlayer::panDefault());
 
-    ptb -> addWidget(pslider);
-    ptb -> setMinimumWidth(70);
+    QWidget * container = new QWidget(ptb);
+    QHBoxLayout * l = new QHBoxLayout(container);
+    l -> addWidget(pslider);
+
+    ptb -> addWidget(container);
     ptb -> adjustSize();
 
     return ptb;
@@ -413,7 +417,6 @@ QToolBar * ToolBars::createTempoMediaBar() {
 
     ClickableSlider * pslider = new ClickableSlider(0, ptb);
     pslider -> setOrientation(Qt::Horizontal);
-    pslider -> setMinimumSize(60, 30);
     pslider -> setSingleStep(25);
     pslider -> setTickPosition(QSlider::TicksBothSides);
     pslider -> setTickInterval(IPlayer::tempoMax());
@@ -427,8 +430,11 @@ QToolBar * ToolBars::createTempoMediaBar() {
     pslider -> setMaximum(IPlayer::tempoMax());
     pslider -> setValue(IPlayer::tempoDefault());
 
-    ptb -> addWidget(pslider);
-    ptb -> setMinimumWidth(70);
+    QWidget * container = new QWidget(ptb);
+    QHBoxLayout * l = new QHBoxLayout(container);
+    l -> addWidget(pslider);
+
+    ptb -> addWidget(container);
     ptb -> adjustSize();
 
     return ptb;
@@ -466,7 +472,6 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     ClickableSlider * slider = new ClickableSlider(vol_max + 1, ptb, LSTR("volume|%1|%2").arg(QString::number(vol_max * 0.4), QString::number(vol_max * 0.75)));
 
     slider -> setOrientation(Qt::Horizontal);
-    slider -> setMinimumSize(45, 30);
     slider -> setMinimum(IPlayer::volumeMin());
     slider -> setMaximum(vol_max);
     slider -> setValue(IPlayer::volumeDefault());
@@ -477,8 +482,11 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     PlayerFactory::obj().registerCallback(call_to_player, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
-    ptb -> addWidget(slider);
-    ptb -> setMinimumWidth(55);
+    QWidget * container = new QWidget(ptb);
+    QHBoxLayout * l = new QHBoxLayout(container);
+    l -> addWidget(slider);
+
+    ptb -> addWidget(container);
     ptb -> adjustSize();
 
     return ptb;
