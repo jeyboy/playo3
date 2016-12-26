@@ -370,6 +370,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     slider -> setMinimum(0);
     slider -> setMaximum(0);
     slider -> setSingleStep(5000);
+    slider -> setMinimumSize(30, 30);
 
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(durationChanged(int)), SLOT(setMax(int)));
@@ -377,6 +378,8 @@ QToolBar * ToolBars::createPositionMediaBar() {
 
     QWidget * container = new QWidget(ptb);
     QHBoxLayout * l = new QHBoxLayout(container);
+    l -> setContentsMargins(0,0,0,0);
+    l -> setSpacing(0);
     l -> addWidget(slider);
 
     ptb -> addWidget(container);
@@ -394,6 +397,7 @@ QToolBar * ToolBars::createPanMediaBar() {
     pslider -> setTickPosition(QSlider::TicksBothSides);
     pslider -> setTickInterval(IPlayer::panMax());
     slider -> setSingleStep(250);
+    slider -> setMinimumSize(30, 30);
 
     PlayerFactory::obj().registerCallback(call_to_player, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
@@ -404,6 +408,8 @@ QToolBar * ToolBars::createPanMediaBar() {
 
     QWidget * container = new QWidget(ptb);
     QHBoxLayout * l = new QHBoxLayout(container);
+    l -> setContentsMargins(0,0,0,0);
+    l -> setSpacing(0);
     l -> addWidget(pslider);
 
     ptb -> addWidget(container);
@@ -420,6 +426,7 @@ QToolBar * ToolBars::createTempoMediaBar() {
     pslider -> setSingleStep(25);
     pslider -> setTickPosition(QSlider::TicksBothSides);
     pslider -> setTickInterval(IPlayer::tempoMax());
+    pslider -> setMinimumSize(30, 30);
 
     Settings::currentStyle -> applyProperty(pslider, "tempo", true);
 
@@ -432,6 +439,8 @@ QToolBar * ToolBars::createTempoMediaBar() {
 
     QWidget * container = new QWidget(ptb);
     QHBoxLayout * l = new QHBoxLayout(container);
+    l -> setContentsMargins(0,0,0,0);
+    l -> setSpacing(0);
     l -> addWidget(pslider);
 
     ptb -> addWidget(container);
@@ -478,12 +487,15 @@ QToolBar * ToolBars::createVolumeMediaBar() {
     slider -> setSingleStep(250);
     slider -> setTickPosition(QSlider::TicksBothSides);
     slider -> setTickInterval(IPlayer::volumeMax() / 5);
+    slider -> setMinimumSize(30, 30);
 
     PlayerFactory::obj().registerCallback(call_to_player, slider, SIGNAL(valueChanged(int)), SLOT(setVolume(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(volumeChanged(int)), SLOT(setValueSilently(int)));
 
     QWidget * container = new QWidget(ptb);
     QHBoxLayout * l = new QHBoxLayout(container);
+    l -> setContentsMargins(0,0,0,0);
+    l -> setSpacing(0);
     l -> addWidget(slider);
 
     ptb -> addWidget(container);
