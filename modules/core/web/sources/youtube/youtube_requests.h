@@ -146,19 +146,9 @@ namespace Core {
                     return linkables;
                 }
             public:               
-                inline virtual ~Requests() {}
+                virtual ~Requests() {}
 
-                QJsonValue popular(const SearchLimit & limits) {
-                    QueriableResponse response;
-
-                    response = pRequest(
-                        videosUrl(),
-                        call_type_json,
-                        rules()
-                    );
-
-                    return prepareBlock(dmt_set, cmd_mtd_set_by_type, response, limits, {}/*, {{CMD_SET_TYPE, set_type}}*/);
-                }
+                QJsonValue popular(const SearchLimit & limits) { return setByType(set_popular_video, limits); }
 
                 QJsonValue searchProc(const SearchLimit & limits) { //count = 5
                     QJsonArray res;
