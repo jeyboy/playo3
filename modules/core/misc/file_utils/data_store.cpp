@@ -1,9 +1,10 @@
 #include "data_store.h"
+#include "settings.h"
 
 using namespace Core;
 
-DataStore::DataStore(QString name) {
-    filename = name;
+DataStore::DataStore(const QString & name) {
+    filename = APP_PATH(name);
     state = load();
 }
 DataStore::~DataStore() {
@@ -50,27 +51,27 @@ QJsonValue DataStore::read(QString key) {
     return json.value(key);
 }
 
-void DataStore::write(QString key, double value) {
+void DataStore::write(const QString & key, const double & value) {
     json[key] = value;
 }
 
-void DataStore::write(QString key, QJsonArray value) {
+void DataStore::write(const QString & key, const QJsonArray & value) {
     json[key] = value;
 }
-void DataStore::write(QString key, QJsonObject value) {
+void DataStore::write(const QString & key, const QJsonObject & value) {
     json[key] = value;
 }
-void DataStore::write(QString key, QString value) {
+void DataStore::write(const QString & key, const QString & value) {
     json[key] = value;
 }
-void DataStore::write(QString key, int value) {
+void DataStore::write(const QString & key, const int & value) {
     json[key] = value;
 }
-void DataStore::write(QString key, QVariant value) {
+void DataStore::write(const QString & key, const QVariant & value) {
     json.insert(key, QJsonValue::fromVariant(value));
 }
 
-void DataStore::append(QString key, QString subkey, QString value) {
+void DataStore::append(const QString & key, const QString & subkey, const QString & value) {
     QJsonObject subObj;
     subObj[subkey] = value;
     json[key].toArray().append(subObj);

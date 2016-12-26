@@ -40,7 +40,7 @@ public:
     void write(const QString & initiator, const QString & value, const QString & attr, LogLevel level = log_info);
     void write(const QString & initiator, const QString & value, const QStringList & attrs, LogLevel level = log_info);
 
-    void initiate(QString fileName = "", QPlainTextEdit * editor = 0);
+    void initiate(const QString & fileName = "", QPlainTextEdit * editor = 0);
     inline void setShowDateTime(bool show) { m_showDate = show; }
     inline QPlainTextEdit * getEditor() { return m_editor; }
     inline void unregisterEditor() { m_editor = 0; }

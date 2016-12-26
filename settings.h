@@ -15,6 +15,8 @@
 #include "settings/library_settings.h"
 #include "settings/apis_settings.h"
 
+#define APP_PATH(file) qApp -> applicationDirPath() % '/' % file
+
 class Settings : public GlobalSettings, public HotkeySettings,
         public ItemSettings, public SpectrumSettings, public ApisSettings,
         public TabSettings, public LibrarySettings, public Core::Singleton<Settings> {

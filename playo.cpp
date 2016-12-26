@@ -54,7 +54,7 @@ void Playo::activation() {
 void Playo::initialization() {
     Logger::obj().startMark();
 
-    QSettings stateSettings(FRONT_SETTINGS_FILE_NAME, QSettings::IniFormat, this);
+    QSettings stateSettings(APP_PATH(FRONT_SETTINGS_FILE_NAME), QSettings::IniFormat, this);
     settings = new DataStore(BACKEND_SETTINGS_FILE_NAME);
 
     ///////////////////////////////////////////////////////////
@@ -113,7 +113,7 @@ void Playo::closeEvent(QCloseEvent * e) {
     bool is_maximized = isMaximized();
     showNormal();
 
-    QSettings stateSettings(FRONT_SETTINGS_FILE_NAME, QSettings::IniFormat, this);
+    QSettings stateSettings(APP_PATH(FRONT_SETTINGS_FILE_NAME), QSettings::IniFormat, this);
     stateSettings.setValue(SETTINGS_GEOMETRY_SET_KEY, saveGeometry());
     stateSettings.setValue(SETTINGS_WINDOW_STATE_SET_KEY, saveState());
     stateSettings.setValue(SETTINGS_WINDOW_MAXIMIZED_KEY, is_maximized);

@@ -12,7 +12,7 @@
 namespace Core {
     class DataStore {
         public:
-            DataStore(QString name);
+            DataStore(const QString & name);
             ~DataStore();
 
             inline QJsonObject & obj() { return json; }
@@ -21,13 +21,13 @@ namespace Core {
             bool save();
 
             QJsonValue read(QString key);
-            void write(QString key, double value);
-            void write(QString key, QJsonArray value);
-            void write(QString key, QJsonObject value);
-            void write(QString key, QString value);
-            void write(QString key, int value);
-            void write(QString key, QVariant value);
-            void append(QString key, QString subkey, QString value);
+            void write(const QString & key, const double & value);
+            void write(const QString & key, const QJsonArray & value);
+            void write(const QString & key, const QJsonObject & value);
+            void write(const QString & key, const QString & value);
+            void write(const QString & key, const int & value);
+            void write(const QString & key, const QVariant & value);
+            void append(const QString & key, const QString & subkey, const QString & value);
             void clear();
             QStringList keys();
 

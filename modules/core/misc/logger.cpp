@@ -1,4 +1,5 @@
 #include "logger.h"
+#include "settings.h"
 
 Logger::Logger() : QObject(), out(0), file(0), m_showDate(true), fm(0) {}
 
@@ -46,7 +47,7 @@ void Logger::write(const QString & initiator, const QString & value, const QStri
 }
 
 
-void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
+void Logger::initiate(const QString & file_name, QPlainTextEdit * editor) {
     if ((m_editor = editor)) {
         editor -> setReadOnly(true);
 
@@ -57,9 +58,9 @@ void Logger::initiate(QString fileName, QPlainTextEdit * editor) {
 //        doc -> setDefaultFont(font);
     }
 
-    if (!fileName.isEmpty()) {
-        file = new QFile;
-        file -> setFileName(fileName);
+    qDebug() << APP_PATH(file_name);
+    if (!file_name.isEmpty()) {
+        file = new QFile(APP_PATH(file_name));
         file -> open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
 
         out = new QTextStream(file);
