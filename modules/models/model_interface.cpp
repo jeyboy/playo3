@@ -191,7 +191,7 @@ bool IModel::removeColumns(int position, int columns, const QModelIndex &parent)
     return success;
 }
 
-DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
+DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent, const bool & play) {
     if (list.isEmpty()) return 0;
 
     emit moveInProcess();
@@ -211,14 +211,20 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
 
     ///////////// for spoiling /////////////
     Playlist * playlist = item<Playlist>(parent);
-    IItem * it = pos < 0 ? playlist -> lastChild() : playlist -> child(pos);
+    int play_pos = pos < 0 ? playlist -> childCount() : pos + 1;
     ///////////////////////////////////////
 
     dropProcession(parent, pos, list);
 
     ///////////// for spoiling /////////////
-    if (it)
-        emit spoilNeeded(index(it));
+    if (play) {
+        IItem * it = playlist -> child(play_pos);
+        emit playNeeded(index(it));
+    } else {
+        IItem * it = pos < 0 ? playlist -> lastChild() : playlist -> child(pos);
+        if (it)
+            emit spoilNeeded(index(it));
+    }
     ///////////////////////////////////////
 
     Logger::obj().endMark("Drop", "new files");
@@ -226,10 +232,10 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     return res;
 }
 
-bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent) {
+bool IModel::threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent, const bool & play) {
     add_watcher = new QFutureWatcher<DropData *>();
     connect(add_watcher, SIGNAL(finished()), this, SLOT(finishingItemsAdding()));
-    add_watcher -> setFuture(QtConcurrent::run(this, &IModel::threadlyProcessingRowsInsertion, list, pos, parent));
+    add_watcher -> setFuture(QtConcurrent::run(this, &IModel::threadlyProcessingRowsInsertion, list, pos, parent, play));
     return true;
 }
 
@@ -1388,7 +1394,7 @@ void IModel::recalcParentIndex(const QModelIndex & dIndex, int & dRow, QModelInd
     exRow = dRow < 0 ? 0 : dRow;
 }
 
-QModelIndex IModel::fromPath(QString path, Direction direction) {
+QModelIndex IModel::fromPath(const QString & path, Direction direction) {
     QStringList parts = path.split(' ', QString::SkipEmptyParts);
 
     if (parts.isEmpty())

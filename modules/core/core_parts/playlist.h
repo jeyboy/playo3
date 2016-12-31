@@ -29,7 +29,7 @@ namespace Core {
 
         inline QList<IItem *> childrenList() const { return children; }
         inline int childRow(IItem * child) const { return children.indexOf(child); }
-        inline IItem * lastChild() { return children.size() > 0 ? children.value(children.size() - 1) : 0; }
+        inline IItem * lastChild() { return children.size() > 0 ? children.last() : 0; }
         inline IItem * child(int row) { return (row < 0 || row >= children.size()) ? 0 : children.value(row); }
         inline bool moveChild(int row, int newRow) {
             if (row < 0 || row >= children.size()) return false;

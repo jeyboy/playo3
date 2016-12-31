@@ -64,6 +64,7 @@ namespace Views {
 
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
+//        bool execSelectedIndex() { return execIndex(currentIndex()); }
         bool execIndex(const QModelIndex & node, PlayerInitState init_state = played, uint start = 0);
         bool execPath(const QString & path, PlayerInitState init_state = played, uint start = 0);
         bool restoreSelection(const QString & path);
@@ -71,7 +72,7 @@ namespace Views {
 //        inline int itemsCount() const { return mdl -> itemsCount(); }
 
         void setIconSize(const QSize & size);
-        void appendRows(const QList<QUrl> & urls);
+        void appendRows(const QList<QUrl> & urls, const bool & play = false);
         void markSelectedAsLiked(bool liked);
     signals:
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex);
@@ -106,6 +107,7 @@ namespace Views {
         }
         inline void shuffle() { mdl -> shuffle(); }
         void onSpoilNeeded(const QModelIndex &);
+        void onPlayNeeded(const QModelIndex &);
         void onFetchNeeded(const QModelIndex &);
         void updateSelection(QModelIndex &);
 //        void setHeaderText(QString);

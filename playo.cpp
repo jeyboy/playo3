@@ -147,7 +147,9 @@ void Playo::closeEvent(QCloseEvent * e) {
 
 void Playo::putToCommonTab(const QList<QUrl> & urls) {
     DockBar * bar = Dockbars::obj().commonBar();
-    Dockbars::obj().view(bar) -> appendRows(urls);
+    IView * view = Dockbars::obj().view(bar);
+
+    view -> appendRows(urls, true);
     bar -> show();
     Dockbars::obj().activate(bar);
 }

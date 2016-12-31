@@ -144,8 +144,8 @@ namespace Models {
         bool insertColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
         bool removeColumns(int position, int columns, const QModelIndex & parent = QModelIndex());
 
-        DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent);
-        bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex());
+        DropData * threadlyProcessingRowsInsertion(const QList<QUrl> & list, int pos, const QModelIndex & parent, const bool & play);
+        bool threadlyInsertRows(const QList<QUrl> & list, int pos, const QModelIndex & parent = QModelIndex(), const bool & play = false);
 
         QJsonValue proceedLoadable(const QString & cmd) { return Web::Apis::run(cmd); }
 
@@ -192,7 +192,7 @@ namespace Models {
         void shuffle();
         virtual inline QJsonObject toJson() { return root_item -> toJson(); }
 
-        QModelIndex fromPath(QString path, Direction direction = none);
+        QModelIndex fromPath(const QString & path, Direction direction = none);
 
         inline void setDropKeyboardModifiers(Qt::KeyboardModifiers key_modifiers) { drop_key_modifiers = key_modifiers; }
         Qt::DropActions supportedDropActions() const;
@@ -237,6 +237,8 @@ namespace Models {
 
     signals:
         void updateRemovingBlockation(bool isBlocked);
+        void selectionNeeded(const QModelIndex & index) const;
+        void playNeeded(const QModelIndex & index) const;
         void spoilNeeded(const QModelIndex & index) const;
         void expandNeeded(const QModelIndex & index) const;
         void collapseNeeded(const QModelIndex & index) const;

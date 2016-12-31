@@ -77,6 +77,7 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(mdl, SIGNAL(expandNeeded(const QModelIndex &)), this, SLOT(expand(const QModelIndex &)));
     connect(mdl, SIGNAL(collapseNeeded(const QModelIndex &)), this, SLOT(collapse(const QModelIndex &)));
     connect(mdl, SIGNAL(spoilNeeded(const QModelIndex &)), this, SLOT(onSpoilNeeded(const QModelIndex &)));
+    connect(mdl, SIGNAL(playNeeded(const QModelIndex &)), this, SLOT(onPlayNeeded(const QModelIndex &)));
     connect(mdl, SIGNAL(fetchNeeded(const QModelIndex &)), this, SLOT(onFetchNeeded(const QModelIndex &)));
 //    connect(this -> verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
 
@@ -241,6 +242,13 @@ void IView::onSpoilNeeded(const QModelIndex & node) {
 //        clearSelection();
         setCurrentIndex(node);
         scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+    }
+}
+
+void IView::onPlayNeeded(const QModelIndex & node) {
+    if (node.isValid()) {
+        onSpoilNeeded(node);
+        execIndex(node);
     }
 }
 
@@ -771,8 +779,8 @@ void IView::setIconSize(const QSize & size) {
     item_delegate -> recalcAttrs(size.width());
 }
 
-void IView::appendRows(const QList<QUrl> & urls) {
-    mdl -> threadlyInsertRows(urls, -1);
+void IView::appendRows(const QList<QUrl> & urls, const bool & play) {
+    mdl -> threadlyInsertRows(urls, -1, QModelIndex(), play);
 }
 
 void IView::markSelectedAsLiked(bool liked) {
