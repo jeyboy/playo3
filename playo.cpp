@@ -145,11 +145,11 @@ void Playo::closeEvent(QCloseEvent * e) {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-void Playo::putToCommonTab(const QList<QUrl> & urls) {
+void Playo::putToCommonTab(const QList<QUrl> & urls, const bool & play) {
     DockBar * bar = Dockbars::obj().commonBar();
     IView * view = Dockbars::obj().view(bar);
 
-    view -> appendRows(urls, true);
+    view -> appendRows(urls, play);
     bar -> show();
     Dockbars::obj().activate(bar);
 }
@@ -182,7 +182,7 @@ void Playo::receiveMessage(const QString & message) {
     for(QStringList::iterator it = list.begin(); it != list.end(); it++)
         urls.append(QUrl::fromLocalFile((*it)));
 
-    putToCommonTab(urls);
+    putToCommonTab(urls, true);
 }
 
 //void MainWindow::showError(QString message) {

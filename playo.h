@@ -56,7 +56,7 @@ protected:
     void activation();
     void initialization();
 
-    void putToCommonTab(const QList<QUrl> & urls);
+    void putToCommonTab(const QList<QUrl> & urls, const bool & play = false);
     void dragEnterEvent(QDragEnterEvent *);
     void dragMoveEvent(QDragMoveEvent *);
     void dropEvent(QDropEvent *);
