@@ -35,7 +35,7 @@ namespace Core {
             protected:
                 QJsonValue searchInSets(const SearchLimit & limits) {
                     QString predicate = predicate.isEmpty() ? limits.genre : limits.predicate;
-                    return QJsonArray() << playlistsByPredicate(predicate, limits.items_limit, limits.start_offset);
+                    return QJsonArray() << playlistsByPredicate(predicate, limits.items_limit, limits.start_offset.toInt());
                 }
 
                 QJsonValue searchProc(const SearchLimit & limits) { return QJsonArray() << audioSearch(limits); }

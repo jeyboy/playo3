@@ -67,9 +67,15 @@ namespace Core {
                 }
 
                 PolyQueryRules rules(
+                    const QString & offset, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
+                    int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT, ApiCallIterType call_type = call_iter_type_item)
+                {
+                    return rules(offset.toInt(), items_limit, pages_limit, per_request, call_type);
+                }
+
+                PolyQueryRules rules(
                     int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
-                    int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,
-                    ApiCallIterType call_type = call_iter_type_item)
+                    int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT, ApiCallIterType call_type = call_iter_type_item)
                 {
                     return PolyQueryRules(
                         call_type,

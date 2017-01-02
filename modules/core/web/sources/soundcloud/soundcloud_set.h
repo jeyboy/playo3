@@ -107,7 +107,7 @@ namespace Core {
                                 break;}
 
                                 case set_recommended_artists: {
-                                    return streamsRecommendations(limits.start_offset, qMax(50, limits.items_limit));
+                                    return streamsRecommendations(limits.start_offset.toInt(), qMax(50, limits.items_limit));
                                 break;}
                             }
                         break;}

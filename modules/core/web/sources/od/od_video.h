@@ -92,7 +92,7 @@ namespace Core {
                                 //{ LSTR("st.vqt"),       LSTR("on") }
                             }
                         ),
-                        call_type_html, pageRules(LSTR("st.page"), qMax(limits.start_offset, 1), limits.requests_limit), 0, proc_video3, QStringList(),
+                        call_type_html, pageRules(LSTR("st.page"), qMax(limits.start_offset.toInt(), 1), limits.requests_limit), 0, proc_video3, QStringList(),
                         call_method_post, tknHeaders().unite(dntHeader())
                     );
 

@@ -26,8 +26,10 @@ namespace Core {
                 {LSTR("ю"), LSTR("rus-yu")}, {LSTR("я"), LSTR("rus-ya")}
             };
             PolyQueryRules rules(const SearchLimit & limits) {
+                int start_offset = qMax(limits.start_offset.toInt(), 1);
+
                 return PolyQueryRules(call_iter_type_page,
-                    limits.start_offset == 0 ? 1 : limits.start_offset,
+                    start_offset,
                     limits.items_limit,
                     limits.requests_limit
                 );
@@ -248,7 +250,7 @@ namespace Core {
                 );
 
                 PolyQueryRules rules(
-                    call_iter_type_page, limits.start_offset,
+                    call_iter_type_page, limits.start_offset.toInt(),
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.requests_limit, 2)
                 );
                 QueriableResponse response = pRequest(url_str, call_type_html, rules, 0, proc_tracks1);

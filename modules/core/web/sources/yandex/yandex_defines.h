@@ -27,22 +27,12 @@ namespace Core {
         namespace Yandex {
             class Base : public Misc {
             protected:
-                //                PolyQueryRules rules(
-                //                    int offset = 0, int items_limit = SOUNDCLOUD_ITEMS_LIMIT, int pages_limit = SOUNDCLOUD_PAGES_LIMIT,
-                //                    int per_request = SOUNDCLOUD_PER_REQUEST_LIMIT,
-                //                    ApiCallIterType call_type = call_iter_type_page)
-                //                {
-                //                    return PolyQueryRules(
-                //                        call_type,
-                //                        call_iter_method_offset,
-                //                        qMin(items_limit, SOUNDCLOUD_ITEMS_LIMIT),
-                //                        qMin(pages_limit, SOUNDCLOUD_PAGES_LIMIT),
-                //                        tkn_limit,
-                //                        qMin(qMin(per_request, items_limit), SOUNDCLOUD_PER_REQUEST_LIMIT),
-                //                        tkn_offset,
-                //                        offset
-                //                    );
-                //                }
+                PolyQueryRules pageRules(
+                    const QString & offset_token, const QString & offset,
+                    int pages_count = 1, int items_limit = DEFAULT_ITEMS_LIMIT)
+                {
+                    return pageRules(offset_token, offset, pages_count, items_limit);
+                }
 
                 PolyQueryRules pageRules(
                     const QString & offset_token, int offset = 0,

@@ -92,7 +92,7 @@ namespace Core {
                             (alias.isEmpty() ? QString() : LSTR("/")) % alias, encodeStr(limits.predicate), OFFSET_TEMPLATE);
 
                 PolyQueryRules rules(
-                    call_iter_type_page, limits.start_offset,
+                    call_iter_type_page, limits.start_offset.toInt(),
                     qMin(limits.items_limit, DEFAULT_ITEMS_LIMIT), qMin(limits.requests_limit, 10)
                 );
 
