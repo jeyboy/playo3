@@ -54,7 +54,7 @@ namespace Core {
 
     struct SearchLimitBase {
         SearchLimitBase(const DataMediaType & sc_type = dmt_any_item, const SearchPredicateType & predicate_type = sp_popular,
-            int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
+            const int & items_limit = DEFAULT_ITEMS_LIMIT, const QString & start_offset = QStringLiteral("0"), const int & requests_limit = DEFAULT_REQUESTS_LIMIT) :
             sc_type(sc_type), predicate_type(predicate_type), items_limit(items_limit), start_offset(start_offset),
             requests_limit(requests_limit) {}
 
@@ -62,7 +62,7 @@ namespace Core {
         SearchPredicateType predicate_type;
 
         int items_limit;
-        int start_offset;
+        QString start_offset;
         int requests_limit;
 
         inline bool include_audio() const { return sc_type & dmt_audio; }
@@ -90,8 +90,8 @@ namespace Core {
     struct SearchLimit : SearchLimitBase {
         SearchLimit(
             const DataMediaType & sc_type, const SearchPredicateType & predicate_type,
-            const QString & predicate, const QString & genre, int items_limit = DEFAULT_ITEMS_LIMIT,
-            int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
+            const QString & predicate, const QString & genre, const int & items_limit = DEFAULT_ITEMS_LIMIT,
+            const QString & start_offset = 0, const int & requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimitBase(sc_type, predicate_type, items_limit, start_offset, requests_limit),
             predicate(predicate.trimmed()), genre(genre.trimmed()) {}
 
@@ -125,7 +125,7 @@ namespace Core {
                 params.queryItemValue(CMD_PREDICATE),
                 params.queryItemValue(CMD_GENRE),
                 params.queryItemValue(CMD_ITEMS_LIMIT).toInt(),
-                params.queryItemValue(CMD_OFFSET).toInt(),
+                params.queryItemValue(CMD_OFFSET),
                 params.queryItemValue(CMD_REQUESTS_LIMIT).toInt()
             );
         }
@@ -135,7 +135,7 @@ namespace Core {
         SearchLimitLayer(
             const SearchRequestType & rt, const QVariant & context, const DataMediaType & sc_type,
             const SearchPredicateType & predicate_type, const QString & predicate, const QString & genre,
-            int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
+            const int & items_limit = DEFAULT_ITEMS_LIMIT, const QString & start_offset = QStringLiteral("0"), const int & requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimit(sc_type, predicate_type, predicate, genre, items_limit, start_offset, requests_limit),
             context(context), req_type(rt) {}
 
@@ -150,7 +150,7 @@ namespace Core {
 
     struct SearchLimitLayers : public SearchLimitBase {
         SearchLimitLayers(const DataMediaType & sc_type = dmt_any_item, const SearchPredicateType & predicate_type = sp_popular,
-            int items_limit = DEFAULT_ITEMS_LIMIT, int start_offset = 0, int requests_limit = DEFAULT_REQUESTS_LIMIT) :
+            const int & items_limit = DEFAULT_ITEMS_LIMIT, const QString & start_offset = QStringLiteral("0"), const int & requests_limit = DEFAULT_REQUESTS_LIMIT) :
             SearchLimitBase(sc_type, predicate_type, items_limit, start_offset, requests_limit) {}
 
         QStringList tabs;

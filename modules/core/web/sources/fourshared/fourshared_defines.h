@@ -32,6 +32,14 @@ namespace Core {
                 }
 
                 PolyQueryRules rulesApi(
+                    const QString & offset, int items_limit = FOURSHARED_ITEMS_LIMIT,
+                        int pages_limit = FOURSHARED_PAGES_LIMIT, int per_request = FOURSHARED_PER_REQUEST_LIMIT,
+                    ApiCallIterType call_type = call_iter_type_page)
+                {
+                    return rulesApi(offset.toInt(), items_limit, pages_limit, per_request, call_type);
+                }
+
+                PolyQueryRules rulesApi(
                     int offset = 0, int items_limit = FOURSHARED_ITEMS_LIMIT, int pages_limit = FOURSHARED_PAGES_LIMIT,
                     int per_request = FOURSHARED_PER_REQUEST_LIMIT,
                     ApiCallIterType call_type = call_iter_type_page)
@@ -46,6 +54,13 @@ namespace Core {
                         tkn_offset,
                         offset
                     );
+                }
+
+                PolyQueryRules rulesSite(
+                    const QString & offset, int items_limit = FOURSHARED_ITEMS_LIMIT,
+                    int pages_limit = FOURSHARED_PAGES_LIMIT, ApiCallIterType call_type = call_iter_type_item)
+                {
+                    return rulesSite(offset.toInt(), items_limit, pages_limit, call_type);
                 }
 
                 PolyQueryRules rulesSite(

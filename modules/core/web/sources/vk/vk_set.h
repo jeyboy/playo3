@@ -62,7 +62,7 @@ namespace Core {
 
                                     QJsonArray items = JSON_ARR(RESPONSE_TO_JSON_OBJECT(req_response), LSTR("list"));
                                     prepareTracks(items, block_content);
-                                    QueriableResponse response = QueriableResponse(block_content, QString::number(limits.start_offset + block_content.size()), 0, 1, block_content.isEmpty());
+                                    QueriableResponse response = QueriableResponse(block_content, QString::number(limits.start_offset.toInt() + block_content.size()), 0, 1, block_content.isEmpty());
                                     return prepareBlock(dmt_audio, cmd_mtd_set_by_type, response, limits, {}, {{CMD_SET_TYPE, set_type}});
                                 break;}
 

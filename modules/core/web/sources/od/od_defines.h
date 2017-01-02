@@ -14,6 +14,14 @@ namespace Core {
             class Base : public Misc {
             protected:
                 PolyQueryRules rules(
+                    const QString & offset, int items_limit = DEFAULT_ITEMS_LIMIT,
+                    int pages_count = 10, int per_request = OD_LIMIT_PER_REQUEST)
+                {
+                    return rules(offset.toInt(), items_limit, pages_count, per_request);
+                }
+
+
+                PolyQueryRules rules(
                     int offset = 0, int items_limit = DEFAULT_ITEMS_LIMIT,
                     int pages_count = 10, int per_request = OD_LIMIT_PER_REQUEST)
                 {
@@ -27,6 +35,14 @@ namespace Core {
                         tkn_offset,
                         offset
                     );
+                }
+
+
+                PolyQueryRules pageRules(
+                    const QString & offset_token, const QString & offset,
+                    int pages_count = 5, int items_limit = DEFAULT_ITEMS_LIMIT)
+                {
+                    return pageRules(offset_token, offset.toInt(), pages_count, items_limit);
                 }
 
                 PolyQueryRules pageRules(
