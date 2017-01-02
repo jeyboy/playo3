@@ -92,6 +92,8 @@ namespace Core {
                         setApiRefreshToken(refresh_token);
                         setApiExpiration(expiration);
                         setApiUserID(LSTR("-1"));
+
+                        initUserPredefinedPlaylistIds();
                         return true;
                     }
 

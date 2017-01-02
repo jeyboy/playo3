@@ -13,6 +13,12 @@
 #define YOUTUBE_ITEMS_LIMIT 100
 #define YOUTUBE_PAGES_LIMIT 10
 
+#define YOUTUBE_PLAYLIST_FAVORITE_UID LSTR("youtube_fav_pl")
+#define YOUTUBE_PLAYLIST_HISTORY_UID LSTR("youtube_hist_pl")
+#define YOUTUBE_PLAYLIST_LATER_UID LSTR("youtube_ltr_pl")
+#define YOUTUBE_PLAYLIST_LIKED_UID LSTR("youtube_lkd_pl")
+#define YOUTUBE_PLAYLIST_UPLOADS_UID LSTR("youtube_upld_pl")
+
 #define YOUTUBE_ITEMS QStringList() << tkn_items
 
 namespace Core {
@@ -116,7 +122,6 @@ namespace Core {
 //                    setParam(query, tkn_type, LSTR("video")); // channel // playlist // video
 //                }
 
-
                 void proceedDurationResult(const QStringList & ids, QJsonArray & arr) {
                     pRequest(
                         videosUrl(ids),
@@ -145,9 +150,8 @@ namespace Core {
                     arr = res;
                 }
 
-                PolyQueryRules rules(
-                    QString start_token = QString(), int items_limit = YOUTUBE_ITEMS_LIMIT,
-                        int pages_limit = YOUTUBE_PAGES_LIMIT)
+                PolyQueryRules rules(const QString & start_token = QString(),
+                    int items_limit = YOUTUBE_ITEMS_LIMIT, int pages_limit = YOUTUBE_PAGES_LIMIT)
                 {
                     return PolyQueryRules(
                         qMin(pages_limit, YOUTUBE_PAGES_LIMIT),
@@ -155,10 +159,6 @@ namespace Core {
                         qMin(items_limit, YOUTUBE_ITEMS_LIMIT)
                     );
                 }
-
-//                QueryRules queryRules(int count = YOUTUBE_OFFSET_LIMIT, int offset = 0, int per_request = 99999) {
-//                    return QueryRules(tkn_items, qMin(per_request, requestLimit()), qMin(count, YOUTUBE_OFFSET_LIMIT), offset);
-//                }
             };
         }
     }
