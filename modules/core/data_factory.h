@@ -12,7 +12,7 @@
 #include "modules/core/core_parts/item.h"
 
 #define MAX_ATTEMPTS 5
-#define MAX_RESTORE_ATTEMPTS 2
+#define MAX_RESTORE_ATTEMPTS 5
 
 namespace Core {
     class DataFactory : public QObject, public Singleton<DataFactory> {

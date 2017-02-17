@@ -260,7 +260,7 @@ namespace Core {
 
                 QString refresh(const QString & item_uid, const DataMediaType & itemMediaType) {
                     switch(itemMediaType) {
-                        case dmt_audio: return cleanUrl(audioUrl(item_uid));
+                        case dmt_audio: return Audio::decodeUrl(audioUrl(item_uid));//cleanUrl(audioUrl(item_uid));
                         case dmt_video: return videoUrl(item_uid);
                         default:;
                     }
