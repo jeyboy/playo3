@@ -11,27 +11,22 @@ namespace Core {
     namespace Web {
         namespace Js {
             class Document {
-//                duk_context * ctx;
             public:
                 static QString proceedJsCall(const QString & script, const QString & call, const QString & arg) {
                     duk_context * ctx = duk_create_heap_default();
-                    QByteArray ar = (script + "\n" + call + "(\"" + arg + "\");").toLatin1();
+
+                    qDebug() << arg;
+
+                    QByteArray ar = (script + "\n" + call + "(\"" + arg + "\");").toLatin1(); // toUtf8()
+//                    char * script_data = new char[ar.length() + 1]; // + 1 for zero in the end of string
+//                    memcpy(script_data, ar.constData(), ar.length());
+//                    script_data[ar.length()] = '\0';
+
                     duk_eval_string(ctx, ar.constData());
                     QString res(duk_get_string(ctx, -1));
                     duk_destroy_heap(ctx);
                     return res;
                 }
-
-//                Document(const QString & content) {
-//                    ctx = duk_create_heap_default();
-//                    duk_eval_string(ctx, content.toLatin1().const_pointer());
-//                    printf("result is: %s\n", duk_get_string(ctx, -1));
-//                    duk_pop(ctx);
-//                }
-
-//                ~Document() {
-//                    duk_destroy_heap(ctx);
-//                }
             };
         }
     }

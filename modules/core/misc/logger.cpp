@@ -11,6 +11,8 @@ Logger::~Logger() {
 
     delete out;
     delete file;
+
+    fm = 0;
 }
 
 void Logger::write(const QString & initiator, const QString & value, LogLevel level) {
@@ -86,7 +88,7 @@ void Logger::toEditor(const QString & initiator, const QString & value) {
         ///////////// monkey patch for crash on missed symbols (khmer and etc)
         QString cval;
         for(QString::ConstIterator ch = value.constBegin(); ch != value.constEnd(); ch++)
-            if (fm -> inFont(*ch))
+            if (fm && fm -> inFont(*ch))
                 cval.append(*ch);
 
         ///////////////////////////////////////
