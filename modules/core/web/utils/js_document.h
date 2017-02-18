@@ -1,3 +1,4 @@
+//curl 'https://api.sendgrid.com/v3/stats?start_date=2017-02-17' --header 'Authorization: Bearer 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'   --header 'Content-Type: application/json'
 #ifndef JS_PARSER
 #define JS_PARSER
 
@@ -14,7 +15,8 @@ namespace Core {
             public:
                 static QString proceedJsCall(const QString & script, const QString & call, const QString & arg) {
                     duk_context * ctx = duk_create_heap_default();
-                    duk_eval_string(ctx, (script + "\n" + call + "(\"" + arg + "\");").toLatin1().constData());
+                    QByteArray ar = (script + "\n" + call + "(\"" + arg + "\");").toLatin1();
+                    duk_eval_string(ctx, ar.constData());
                     QString res(duk_get_string(ctx, -1));
                     duk_destroy_heap(ctx);
                     return res;
