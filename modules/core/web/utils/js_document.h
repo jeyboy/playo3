@@ -1,4 +1,3 @@
-//curl 'https://api.sendgrid.com/v3/stats?start_date=2017-02-17' --header 'Authorization: Bearer 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'   --header 'Content-Type: application/json'
 #ifndef JS_PARSER
 #define JS_PARSER
 
