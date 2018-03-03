@@ -14,7 +14,7 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
     _open_drop_point_in_tab_type = (Core::DataSubType)settings.value(SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY).toInt(Core::dt_tree);
 
     _is_autorunned = settings.value(SETTINGS_AUTORUNNED_KEY).toBool(false);
-    _color_scheme = settings.value(SETTINGS_COLOR_SCHEME_KEY).toInt(1);
+    _color_scheme = settings.value(SETTINGS_COLOR_SCHEME_KEY).toInt(2);
 
     _tool_icon_size = settings.value(SETTINGS_TOOL_ICON_SIZE_KEY).toInt(28);
     _output_device = settings.value(SETTINGS_OUTPUT_DEVICE_KEY).toString();
