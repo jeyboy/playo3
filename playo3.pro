@@ -8,7 +8,6 @@ VERSION = 0.7.0.0-alpha1
 
 CONFIG += c++11
 DEFINES += APP_VERSION=\\\"$$VERSION\\\"
-#DEFINES *= QT_USE_QSTRINGBUILDER
 
 QT  += core gui network
 QT  += multimedia multimediawidgets opengl # temp
