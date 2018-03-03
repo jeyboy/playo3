@@ -74,8 +74,10 @@ void
         endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
 
 #ifdef Q_OS_WIN
+    #define DEFAULT_BASS_DEVICE BASS_DEVICE_ENABLED
     #define QSTRING_TO_STR(str) str.toStdWString().data()
 #else
+    #define DEFAULT_BASS_DEVICE BASS_DEVICE_DEFAULT
     #define QSTRING_TO_STR(str) str.toStdString().c_str()
 #endif
 
@@ -104,7 +106,7 @@ class BassPlayer : public IPlayer {
     QFutureWatcher<QPair<QString, qint64> > * openChannelWatcher;
     QPair<QString, qint64> proc_channel;
 
-    int defaultOutputDevice();
+    int identifyOutputDevice();
 
     bool proceedErrorState();
     QPair<QString, qint64> openChannel(const QUrl & url,  QPair<QString, qint64> & channel_params);
@@ -166,7 +168,7 @@ public:
 
     QHash<QString, QVariant> outputDeviceList();
     QVariant currOutputDevice();
-    bool setOutputDevice(const QVariant & device);
+    bool setOutputDevice(const QString & device_name);
 
     qint64 position() const;
 

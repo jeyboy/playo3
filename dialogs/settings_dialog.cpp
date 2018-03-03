@@ -263,9 +263,12 @@ void SettingsDialog::initGlobalSettings() {
 
     QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> outputDeviceList();
     QString current_device = Settings::obj().outputDevice();
+
     ui -> outputDeviceSelect -> insertItems(0, devices.keys());
+
     if (!devices.contains(current_device))
-        current_device = devices.key(PlayerFactory::obj().currPlayer() -> currOutputDevice());
+        current_device = PlayerFactory::obj().currPlayer() -> defaultDeviceName();
+
     ui -> outputDeviceSelect -> setCurrentText(current_device);
 
     ui -> autorunned -> blockSignals(true);
@@ -478,11 +481,11 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 
-    qDebug() << "!!!" << ui -> outputDeviceSelect -> currentText() << Settings::obj().outputDevice();
     if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
-        QVariant device = PlayerFactory::obj().currPlayer() -> outputDeviceList().value(ui -> outputDeviceSelect -> currentText());
-        if (PlayerFactory::obj().currPlayer() -> setOutputDevice(device))
-            Settings::obj().setOutputDevice(ui -> outputDeviceSelect -> currentText());
+        QString device_name = ui -> outputDeviceSelect -> currentText();
+
+        if (PlayerFactory::obj().currPlayer() -> setOutputDevice(device_name))
+            Settings::obj().setOutputDevice(device_name);
     }
 }
 void SettingsDialog::saveApisSettings() {

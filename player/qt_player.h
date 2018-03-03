@@ -19,10 +19,18 @@ class QtPlayer : public IPlayer {
     QMediaPlayer * player;
 
     QAudioOutputSelectorControl * outputControl() {
-        QMediaService * svc = player -> service(); \
+        QMediaService * svc = player -> service();
         return svc != nullptr ?
             reinterpret_cast<QAudioOutputSelectorControl *>(svc -> requestControl(QAudioOutputSelectorControl_iid)) :
             nullptr;
+    }
+
+    void outputDeviceList(QAudioOutputSelectorControl * out, QHash<QString, QVariant> & res) {
+        res.insert(defaultDeviceName(), QString());
+
+        QStringList devices = out -> availableOutputs();
+        foreach(QString device, devices)
+            res.insert(device.split('\\').last(), device);
     }
 protected:
     bool proceedErrorState();
@@ -80,12 +88,11 @@ public:
         QAudioOutputSelectorControl * out = outputControl();
 
         if (out) {
-            QStringList devices = out -> availableOutputs();
-            foreach(QString device, devices)
-                res.insert(device.split('\\').last(), device);
-
+            outputDeviceList(out, res);
             player -> service() -> releaseControl(out);
         } else {
+            res.insert(defaultDeviceName(), QString());
+
             QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
             foreach(QAudioDeviceInfo device, devices)
                 res.insert(device.deviceName(), device.deviceName());
@@ -96,13 +103,29 @@ public:
     QVariant currOutputDevice() {
         QAudioOutputSelectorControl * out = outputControl();
         QVariant res = out ? out -> activeOutput() : QVariant();
-        player -> service() -> releaseControl(out);
+
+        if (out)
+            player -> service() -> releaseControl(out);
+
         return res;
     }
-    bool setOutputDevice(const QVariant & device) {
+    bool setOutputDevice(const QString & device_name) {
         QAudioOutputSelectorControl * out = outputControl();
+
         if (out != nullptr) {
-            out -> setActiveOutput(device.toString());
+            QString new_output = device_name;
+            if (new_output == defaultDeviceName())
+                new_output = out -> defaultOutput();
+            else {
+                QHash<QString, QVariant> res;
+                outputDeviceList(out, res);
+
+                new_output = res.value(new_output).toString();
+            }
+
+            if (out -> activeOutput() != new_output)
+                out -> setActiveOutput(new_output);
+
             player -> service() -> releaseControl(out);
             return true;
         }

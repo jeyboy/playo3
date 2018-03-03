@@ -212,6 +212,7 @@ qint64 QtPlayer::calcFileSize() {
 
 
 QtPlayer::QtPlayer(QWidget * parent) : IPlayer(parent), player(new QMediaPlayer(parent)) {
+//    TODO: set default output from settings
     connect(player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), this, SLOT(mediaStatusChanged(QMediaPlayer::MediaStatus)));
 }
 
