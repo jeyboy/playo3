@@ -31,6 +31,8 @@ IItem::~IItem() {
 
     if (is(flag_mark_on_removing))
         removePhysicalObject();
+
+    _parent = 0;
 }
 
 int IItem::row() const {

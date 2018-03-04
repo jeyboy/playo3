@@ -139,6 +139,7 @@ namespace Views {
 //        }
 
     protected:
+        ScrollHint scrollHint() { return Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter; }
         bool setData(QModelIndex ind, const QVariant & value, int role = ISTATE) { return mdl -> setData(ind, value, role); }
         QModelIndex index(IItem * item) const { return mdl -> index(item); }
 

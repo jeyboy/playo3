@@ -172,7 +172,7 @@ bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint
             Presentation::Dockbars::obj().setPlayed((DockBar *)parent());
 
             if (Settings::obj().isSpoilOnActivation())
-                scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+                scrollTo(node, scrollHint());
 
             if (DataFactory::obj().playedItem() == itm) {
                 DataFactory::obj().proceedPauseToggling();
@@ -241,7 +241,7 @@ void IView::onSpoilNeeded(const QModelIndex & node) {
     if (node.isValid()) {
 //        clearSelection();
         setCurrentIndex(node);
-        scrollTo(node, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+        scrollTo(node, scrollHint());
     }
 }
 
@@ -500,7 +500,7 @@ void IView::checkByPredicate(IItem::ItemStateFlag flag) {
 
         if (!ensureVisibility && node -> is(flag)) {
             ensureVisibility = true;
-            scrollTo(curr, (Settings::obj().isHeightUnificate() ? QAbstractItemView::EnsureVisible : QAbstractItemView::PositionAtCenter));
+            scrollTo(curr, scrollHint());
         }
 
         curr = indexBelow(curr);
