@@ -96,6 +96,12 @@ void
 #define LOCAL_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE | BASS_STREAM_PRESCAN //| BASS_SAMPLE_MONO
 #define REMOTE_BPM_ATTRS BASS_SAMPLE_FLOAT | BASS_STREAM_DECODE //| BASS_SAMPLE_MONO
 
+struct OpenCallbackData {
+    QString uid;
+    qint64 channel_handle;
+    int error;
+};
+
 class BassPlayer : public IPlayer {
     Q_OBJECT
 
@@ -103,13 +109,13 @@ class BassPlayer : public IPlayer {
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
     qint64 chan;
-    QFutureWatcher<QPair<QString, qint64> > * openChannelWatcher;
-    QPair<QString, qint64> proc_channel;
+    QFutureWatcher<OpenCallbackData> * openChannelWatcher;
+    OpenCallbackData proc_channel;
 
     int identifyOutputDevice();
 
-    bool proceedErrorState();
-    QPair<QString, qint64> openChannel(const QUrl & url,  QPair<QString, qint64> & channel_params);
+    bool proceedErrorState(int code = BASS_OK);
+    OpenCallbackData openChannel(const QUrl & url,  OpenCallbackData & channel_params);
     void closeChannel();
 
     void playPreproccessing();

@@ -15,12 +15,15 @@ void endTrackDownloading(HSYNC, DWORD, DWORD, void * user) {
     player -> setDownloadingLevel();
 }
 
-bool BassPlayer::proceedErrorState() {
+bool BassPlayer::proceedErrorState(int code) {
     updateState(UnknowState);
 
-    int err_code = BASS_ErrorGetCode();
-    qCritical() << "proceedErrorState" << media_url.toString() << err_code;
-    switch(err_code) {
+    if (code == BASS_OK)
+        code = BASS_ErrorGetCode();
+
+    qCritical() << "proceedErrorState" << media_url.toString() << code;
+
+    switch(code) {
         case BASS_OK: {
             if (chan)
                 return false;
@@ -39,13 +42,13 @@ bool BassPlayer::proceedErrorState() {
     return true;
 }
 
-QPair<QString, qint64> BassPlayer::openChannel(const QUrl & url, QPair<QString, qint64> & channel_params) {
+OpenCallbackData BassPlayer::openChannel(const QUrl & url, OpenCallbackData & channel_params) {
     if (url.isLocalFile()) {
-        channel_params.second = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
+        channel_params.channel_handle = open(url.toLocalFile(), LOCAL_PLAY_ATTRS);
         setDownloadingLevel(1);
     } else {
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
-        channel_params.second = openRemote(
+        channel_params.channel_handle = openRemote(
             url.toString()
                 .replace(QStringLiteral("%0D%0A"), QStringLiteral("\r\n")) %
                     QStringLiteral("\r\n") % USER_AGENT_HEADER_NAME %
@@ -53,6 +56,8 @@ QPair<QString, qint64> BassPlayer::openChannel(const QUrl & url, QPair<QString, 
             REMOTE_PLAY_ATTRS
         );
     }
+
+    channel_params.error = BASS_ErrorGetCode();
 
 //    if (!channel_params.second)
 //        proceedErrorState();
@@ -70,18 +75,18 @@ void BassPlayer::closeChannel() {
 }
 
 void BassPlayer::afterSourceOpening() {
-    QFutureWatcher<QPair<QString, qint64> > * watcher = (QFutureWatcher<QPair<QString, qint64> > *)sender();
-    QPair<QString, qint64> result = watcher -> result();
+    QFutureWatcher<OpenCallbackData> * watcher = (QFutureWatcher<OpenCallbackData> *)sender();
+    OpenCallbackData result = watcher -> result();
 
-    if (proc_channel.first != result.first)
-        BASS_StreamFree(result.second);
+    if (proc_channel.uid != result.uid)
+        BASS_StreamFree(result.channel_handle);
     else {
         closeChannel(); //INFO: close prev channel
 
-        chan = result.second;
+        chan = result.channel_handle;
 
         if (!chan)
-            proceedErrorState();
+            proceedErrorState(result.error);
         else {
             emit statusChanged(media_title, LoadedMedia);
             if (chan) playPreproccessing();
@@ -132,12 +137,13 @@ bool BassPlayer::playProcessing(const bool & paused) {
     is_paused = paused;
 
     if (!media_url.isEmpty()) {
-        proc_channel = QPair<QString, qint64>(
+        proc_channel = OpenCallbackData {
             QString::number(QDateTime::currentMSecsSinceEpoch()) % media_title,
+            0,
             0
-        );
+        };
 
-        openChannelWatcher = new QFutureWatcher<QPair<QString, qint64> >();
+        openChannelWatcher = new QFutureWatcher<OpenCallbackData>();
         connect(openChannelWatcher, SIGNAL(finished()), this, SLOT(afterSourceOpening()));
         openChannelWatcher -> setFuture(QtConcurrent::run(this, &BassPlayer::openChannel, media_url, proc_channel));
     }
