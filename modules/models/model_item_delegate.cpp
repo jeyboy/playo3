@@ -489,7 +489,16 @@ void ModelItemDelegate::paintVar2(QPainter * painter, const QStyleOptionViewItem
             } else {
                 bool is_error = attrs.contains(Keys::error);
 
-                painter -> setPen(is_error ? Qt::red : QColor::fromRgb(0, 71, 207));
+                painter -> setPen(
+                    is_error ?
+                        Qt::red
+                              :
+                        is_selected ?
+                            QColor::fromRgb(0, 170, 255)
+                                :
+                            QColor::fromRgb(0, 71, 207)
+                );
+
                 int right_offset_with_corner = right_offset - (angle / 3);
                 top = bodyRect.bottom() - fmfInfo -> height() - 2;
                 QPoint bottomRight(right_offset_with_corner, bodyRect.bottom());
