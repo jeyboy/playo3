@@ -110,8 +110,7 @@ IView::~IView() {
 
     emit unregisterSync(mdl);
     mdl -> syncMutex() -> unlock();
-
-    delete mdl;
+    mdl -> deleteLater();
     delete tree_style;
 }
 

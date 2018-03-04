@@ -21,7 +21,13 @@ bool BassPlayer::proceedErrorState() {
     int err_code = BASS_ErrorGetCode();
     qCritical() << "proceedErrorState" << media_url.toString() << err_code;
     switch(err_code) {
-        case BASS_OK: return false;
+        case BASS_OK: {
+            if (chan)
+                return false;
+            else { // hotfix for some stalled media
+                emit statusChanged(media_title, StalledMedia);
+            }
+        break;}
         case BASS_ERROR_FILEFORM: { emit statusChanged(media_title, InvalidMedia); break; }
         case BASS_ERROR_FILEOPEN: { emit statusChanged(media_title, NoMedia); break; }
         // BASS_ERROR_TIMEOUT

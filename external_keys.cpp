@@ -17,6 +17,7 @@ namespace Keys {
     const QString played        = QStringLiteral("played");
     const QString not_exist     = QStringLiteral("not_exist");
     const QString unsupported   = QStringLiteral("unsupported");
+    const QString unknow        = QStringLiteral("unknow");
     const QString proccessing   = QStringLiteral("proccess");
     const QString undefined     = QStringLiteral("undefined");
     const QString type          = QStringLiteral("type");

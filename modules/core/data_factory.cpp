@@ -73,7 +73,7 @@ namespace Core {
     }
 
     void DataFactory::proceedStalledState() {
-        setError(current_item -> isRemote() ? ItemErrors::warn_not_accessable : ItemErrors::err_not_existed);
+        setError(current_item -> isRemote() ? ItemErrors::warn_not_accessable : ItemErrors::warn_not_supported);
         playNext(true);
     }
 
@@ -169,6 +169,7 @@ namespace Core {
 
             case UnknownMediaStatus: {
                 qCritical() << "UNKNOOW STATUS MEDIA" << name;
+                setError(ItemErrors::err_unknow);
                 playNext(true);
             break;}
 
@@ -186,8 +187,8 @@ namespace Core {
             break;}
 
             case LoadedMedia: {
-                setState(name, IItem::flag_not_proccessing);
                 qDebug() << "LOADED MEDIA" << name;
+                setState(name, IItem::flag_not_proccessing);
             break;}
 
             case InvalidMedia: {

@@ -207,7 +207,6 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     }
 
     recalcParentIndex(parent, pos, res -> eIndex, res -> eRow, url);
-    res -> limitRow = res -> eRow + (parent == res -> eIndex ? list.length() - 1 : 0);
 
     ///////////// for spoiling /////////////
     Playlist * playlist = item<Playlist>(parent);
@@ -215,6 +214,11 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
     ///////////////////////////////////////
 
     dropProcession(parent, pos, list);
+
+    res -> limitRow =
+        res -> eRow +
+            //TODO: we must take amount of new items from dropProcession // current implementation is incorrect
+            (parent == res -> eIndex ? list.length() - 1 : 1);
 
     ///////////// for spoiling /////////////
     if (play) {

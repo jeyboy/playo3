@@ -4,7 +4,7 @@
 enum ItemErrors {
     err_none = 0,
     err_not_existed,
-    err_not_finded,
+    err_unknow,
 
     warn_not_supported = 1000,
     warn_not_accessable,

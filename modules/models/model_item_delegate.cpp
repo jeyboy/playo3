@@ -49,9 +49,10 @@ void ModelItemDelegate::recalcAttrs(const int & item_icon_size) {
 
     int size = icon_size - (icon_size < 24 ? 0 : state_width * 2);
 
-    icons.insert(-1000,                                                 PIXMAP(QStringLiteral(":/download"), icon_size));
-    icons.insert(-1000 + SELECTION_ITER,                                PIXMAP(QStringLiteral(":/download_on"), icon_size));
+    icons.insert(-900,                                                 PIXMAP(QStringLiteral(":/download"), icon_size));
+    icons.insert(-900 + SELECTION_ITER,                                PIXMAP(QStringLiteral(":/download_on"), icon_size));
 
+    icons.insert(-400,                                                  PIXMAP(QStringLiteral(":/items/unknow"), size));
     icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));
     icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
     icons.insert(-200 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/process_on"), size));
@@ -171,10 +172,12 @@ void ModelItemDelegate::paintOldVar1(QPainter * painter, const QStyleOptionViewI
                     bodyRect.height()
                 );
 
-        if (attrs[Keys::undefined].toBool())
-            painter -> drawPixmap(rect, icons[-300]);
-        else if (attrs[Keys::proccessing].toBool())
+        if (attrs[Keys::proccessing].toBool())
             painter -> drawPixmap(rect, icons[-200 + (is_selected ? SELECTION_ITER : 0)]);
+        else if (attrs[Keys::undefined].toBool())
+            painter -> drawPixmap(rect, icons[-300]);
+        else if (attrs[Keys::unknow].toBool())
+            painter -> drawPixmap(rect, icons[-400]);
         else {
             if (attrs[Keys::not_exist].toBool())
                 painter -> drawPixmap(rect, icons[-100]);

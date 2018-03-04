@@ -56,18 +56,16 @@ namespace Core {
         void playedItemChanged(QString, QString);
 
     public slots:
-        void changeLikeStatus(bool is_liked) { setState(currPlayer() -> title(), is_liked ? IItem::flag_liked : IItem::flag_not_liked); }
+        void changeLikeStatus(const bool & is_liked) { setState(currPlayer() -> title(), is_liked ? IItem::flag_liked : IItem::flag_not_liked); }
 
         void playerStatusChanged(const QString & name, const PlayerStatus & status);
 
         void registerSync(QAbstractItemModel * mdl, QMutex * mutex) {
             Library::obj().registerListSync(mdl, mutex);
         }
-
         void unregisterSync(QAbstractItemModel * mdl) {
             Library::obj().unregisterListSync(mdl);
         }
-
         void discardSync(QAbstractItemModel * mdl) {
             Library::obj().declineStateRestoring(mdl);
         }
@@ -76,11 +74,9 @@ namespace Core {
         void changeCadrSize(QAbstractItemModel * mdl, int newCadrSize) {
             Library::obj().setWaitListLimit(mdl, newCadrSize);
         }
-
         void proceedInfo(const QModelIndex & ind) {
             Library::obj().restoreItemState(ind);
         }
-
         void proceedInfoAsync(const QModelIndex & ind, const bool & isRemote) {
             Library::obj().restoreItemStateAsync(ind, isRemote);
         }

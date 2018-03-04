@@ -20,6 +20,7 @@ namespace Keys {
     extern const QString not_exist;
     extern const QString unsupported;
     extern const QString undefined;
+    extern const QString unknow;
     extern const QString proccessing;
     extern const QString type;
     extern const QString asterix;

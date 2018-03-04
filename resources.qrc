@@ -66,6 +66,7 @@
         <file alias="yandex_item_on">images/items/yandex_on.png</file>
         <file alias="youtube_item">images/items/youtube.png</file>
         <file alias="youtube_item_on">images/items/youtube_on.png</file>
+        <file alias="unknow">images/items/unknow.png</file>
     </qresource>
     <qresource prefix="/controls">
         <file alias="close_button_hover">images/controls/close_temp.png</file>

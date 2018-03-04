@@ -220,13 +220,12 @@ QString IItem::errorStr(QString & key_name) const {
     switch(error().toInt()) {
         case err_not_existed: {
             key_name = Keys::error;
-            return QStringLiteral("Not supported or not exists");
+            return QStringLiteral("Not exists");
         break;}
-        case err_not_finded: {
-            key_name = Keys::error;
-            return QStringLiteral("Nothing found");
+        case err_unknow: {
+            key_name = Keys::unknow;
+            return QStringLiteral("Unknown error");
         break;}
-
         case warn_not_supported: {
             key_name = Keys::warning;
             return QStringLiteral("Not supported");

@@ -14,9 +14,10 @@ ITrackable::ITrackable(QWidget * parent) {
 
 void ITrackable::updateState(const bool & played, const bool & paused, const bool & stopped, const bool & visible) {
     #ifdef Q_OS_WIN
+        Q_UNUSED(stopped);
         stateProgress -> setVisible(visible);
 
-        if (stopped)
+        if (!played && !paused)
             stateButton -> setOverlayIcon(QIcon());
         else
             stateButton -> setOverlayIcon(QIcon(
