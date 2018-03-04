@@ -1,4 +1,5 @@
 #include "qt_player.h"
+#include "settings.h"
 
 bool QtPlayer::proceedErrorState() {
     updateState(UnknowState);
@@ -212,7 +213,9 @@ qint64 QtPlayer::calcFileSize() {
 
 
 QtPlayer::QtPlayer(QWidget * parent) : IPlayer(parent), player(new QMediaPlayer(parent)) {
-//    TODO: set default output from settings
+    QString device_name = Settings::obj().outputDevice();
+    setOutputDevice(device_name);
+
     connect(player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)), this, SLOT(mediaStatusChanged(QMediaPlayer::MediaStatus)));
 }
 

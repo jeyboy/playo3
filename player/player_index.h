@@ -57,7 +57,6 @@ public:
             (*cl).use(player);
 
         player -> setVideoOutput(video_output);
-        player -> setSpectrumFreq(Settings::obj().spectrumFreqRate());
 
         //TODO: connect other settings
 

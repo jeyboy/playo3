@@ -90,13 +90,13 @@ public:
         if (out) {
             outputDeviceList(out, res);
             player -> service() -> releaseControl(out);
-        } else {
+        } /*else {
             res.insert(defaultDeviceName(), QString());
 
             QList<QAudioDeviceInfo> devices = QAudioDeviceInfo::availableDevices(QAudio::AudioOutput);
             foreach(QAudioDeviceInfo device, devices)
                 res.insert(device.deviceName(), device.deviceName());
-        }
+        }*/
 
         return res;
     }
@@ -120,7 +120,10 @@ public:
                 QHash<QString, QVariant> res;
                 outputDeviceList(out, res);
 
-                new_output = res.value(new_output).toString();
+                if (res.contains(new_output))
+                    new_output = res.value(new_output).toString();
+                else
+                    new_output = out -> defaultOutput();
             }
 
             if (out -> activeOutput() != new_output)

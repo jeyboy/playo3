@@ -366,9 +366,7 @@ BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannel
     if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS_FX.DLL was loaded";
 
-    int curr_device = identifyOutputDevice();
-
-    initOutputDevice(curr_device);
+    initOutputDevice(identifyOutputDevice());
     loadPlugins();
     setUserAgent(DEFAULT_AGENT);
 }
@@ -403,8 +401,11 @@ QHash<QString, QVariant> BassPlayer::outputDeviceList() {
 int BassPlayer::identifyOutputDevice() {
     QString device_name = Settings::obj().outputDevice();
 
-    int device_id = device_name == defaultDeviceName() ? -1 : outputDeviceList().value(device_name, -1).toInt();
-    return device_id < 0 ? DEFAULT_BASS_DEVICE : device_id;
+    return
+        device_name == defaultDeviceName() ?
+            DEFAULT_BASS_DEVICE
+              :
+            outputDeviceList().value(device_name, DEFAULT_BASS_DEVICE).toInt();
 }
 QVariant BassPlayer::currOutputDevice() { return QVariant::fromValue(BASS_GetDevice()); }
 bool BassPlayer::setOutputDevice(const QString & device_name) {

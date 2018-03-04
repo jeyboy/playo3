@@ -1,4 +1,5 @@
 #include "iplayer.h"
+#include "settings.h"
 
 IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
     play_pos(0), start_pos(0), size(0), volume_val(volumeDefault()), pan_val(panDefault()),
@@ -11,6 +12,8 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent), ITrackable(parent),
     connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
     connect(this, SIGNAL(playbackEnding()), this, SLOT(endOfPlayback()));
     itimer -> setInterval(300);
+
+    setSpectrumFreq(Settings::obj().spectrumFreqRate());
 }
 
 void IPlayer::updateState(const PlayerState & new_state) {
