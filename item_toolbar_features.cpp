@@ -5,7 +5,7 @@ using namespace Presentation;
 ItemToolbarFeatures::ItemToolbarFeatures(QToolBar * toolbar) : toolbar(toolbar) {}
 
 void ItemToolbarFeatures::prepareToolbar(const QString & postfix) {
-    refresh_tab_btn = toolbar -> addAction(QIcon(ICO_PREFIX % LSTR("tab_refresh") % postfix), LSTR("Refresh tab for ") % sentence(), this, SLOT(refreshTab()));
+    refresh_tab_btn = toolbar -> addAction(QIcon(ICO_PREFIX % LSTR("tab_refresh") % postfix), LSTR("Refresh tab with ") % sentence(), this, SLOT(refreshTab()));
     more_items_btn = toolbar -> addAction(QIcon(ICO_PREFIX % LSTR("more") % postfix), LSTR("Load more"), this, SLOT(loadMoreItem()));
 
     toolbar -> addSeparator();
