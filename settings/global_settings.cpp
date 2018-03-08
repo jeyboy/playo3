@@ -22,6 +22,8 @@ void GlobalSettings::fromJson(const QJsonObject & settings) {
 
     _tray_show_played = settings.value(SETTINGS_TRAY_SHOW_PLAYED_KEY).toInt(tsi_inform);
     _tray_show_period = settings.value(SETTINGS_TRAY_SHOW_PERIOD_KEY).toInt(10000);
+
+    _player_driver = settings.value(SETTINGS_PLAYER_DRIVER_KEY).toInt(0);
 }
 
 void GlobalSettings::toJson(QJsonObject & settings) {   
@@ -47,4 +49,6 @@ void GlobalSettings::toJson(QJsonObject & settings) {
 
     settings.insert(SETTINGS_TRAY_SHOW_PLAYED_KEY, QJsonValue::fromVariant(_tray_show_played));
     settings.insert(SETTINGS_TRAY_SHOW_PERIOD_KEY, QJsonValue::fromVariant(_tray_show_period));
+
+    settings.insert(SETTINGS_PLAYER_DRIVER_KEY, QJsonValue::fromVariant(_player_driver));
 }

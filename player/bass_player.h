@@ -74,7 +74,7 @@ void
         endTrackDownloading(HSYNC, DWORD, DWORD, void * user);
 
 #ifdef Q_OS_WIN
-    #define DEFAULT_BASS_DEVICE BASS_DEVICE_ENABLED
+    #define DEFAULT_BASS_DEVICE -1
     #define QSTRING_TO_STR(str) str.toStdWString().data()
 #else
     #define DEFAULT_BASS_DEVICE BASS_DEVICE_DEFAULT

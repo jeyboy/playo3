@@ -486,4 +486,5 @@ SOURCES += \
     player/qt_player.cpp \
     modules/controls/video_widget.cpp \
     modules/controls/video_view.cpp \
-    modules/controls/control_panel.cpp
+    modules/controls/control_panel.cpp \
+    player/player_index.cpp

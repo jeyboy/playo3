@@ -3,16 +3,14 @@
 
 #include <qlist.h>
 
+#include "modules/core/media/interfaces/iplayer.h"
 #include "player_callback.h"
-#include "bass_player.h"
-#include "qt_player.h"
 
 #include "settings.h"
 
-enum PlayerType {
-    none = 0,
-    bass_player = 1,
-    qt_player
+enum PlayerDriver {
+    driver_bass = 0,
+    driver_qt
 };
 
 enum PlayerInitState {
@@ -30,8 +28,18 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
 
     IPlayer * player;
     QObject * video_output;
+    QWidget * anchor_obj;
 public:
     inline IPlayer * currPlayer() { return player; }
+
+    QHash<QString, int> availableDrivers() {
+        QHash<QString, int> res;
+
+        res.insert(QStringLiteral("Bass"), driver_bass);
+        res.insert(QStringLiteral("Qt"), driver_qt);
+
+        return res;
+    }
 
     void registerVideoOutput(QObject * new_video_output) {
         video_output = new_video_output;
@@ -45,33 +53,7 @@ public:
         if (player) pl.use(player);
     }
 
-    IPlayer * build(QWidget * anchor, const PlayerType & newPlayerType) {
-        IPlayer * old_player = player;
-
-        switch(newPlayerType) {
-            case qt_player: player = new QtPlayer(anchor); break;
-            default: player = new BassPlayer(anchor);
-        }
-
-        for(QList<PlayerCallback>::Iterator cl = callbacks.begin(); cl != callbacks.end(); cl++)
-            (*cl).use(player);
-
-        player -> setVideoOutput(video_output);
-
-        //TODO: connect other settings
-
-        if (old_player) {
-            player -> setVolume(old_player -> volume());
-            player -> setPan(old_player -> pan());
-            player -> activateEQ(old_player -> eqInUse());
-            player -> eqGains(old_player -> eqGains(), true);
-            player -> setMedia(old_player -> mediaUrl(), old_player -> title(), old_player -> startPosition(), old_player -> duration(), old_player -> position());
-
-            delete old_player;
-        }
-
-        return player;
-    }
+    IPlayer * build(const PlayerDriver & new_driver, QWidget * anchor = 0);
 };
 
 #endif // PLAYER_INDEX

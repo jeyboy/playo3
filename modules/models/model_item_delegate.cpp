@@ -49,8 +49,8 @@ void ModelItemDelegate::recalcAttrs(const int & item_icon_size) {
 
     int size = icon_size - (icon_size < 24 ? 0 : state_width * 2);
 
-    icons.insert(-900,                                                 PIXMAP(QStringLiteral(":/download"), icon_size));
-    icons.insert(-900 + SELECTION_ITER,                                PIXMAP(QStringLiteral(":/download_on"), icon_size));
+    icons.insert(-900,                                                  PIXMAP(QStringLiteral(":/download"), icon_size));
+    icons.insert(-900 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/download_on"), icon_size));
 
     icons.insert(-400,                                                  PIXMAP(QStringLiteral(":/items/unknow"), size));
     icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));

@@ -378,6 +378,7 @@ BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannel
     if (HIWORD(BASS_FX_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS_FX.DLL was loaded";
 
+//    BASS_SetVolume(1);
     initOutputDevice(identifyOutputDevice());
     loadPlugins();
     setUserAgent(DEFAULT_AGENT);
@@ -439,8 +440,18 @@ bool BassPlayer::setOutputDevice(const QString & device_name) {
 
     if ((res = initOutputDevice(new_device))) {
         res = BASS_SetDevice(new_device);
-        if (res && (isPlayed() || isPaused()))
-            res &= BASS_ChannelSetDevice(chan, new_device);
+        bool is_played = isPlayed();
+
+        if (res && (is_played || isPaused())) {
+            if (is_played)
+                pause();
+
+            int status = BASS_ChannelSetDevice(chan, new_device);
+            res &= status;
+
+            if (res && is_played)
+                play();
+        }
     }
 
     if (res)

@@ -7,6 +7,7 @@
 
 #include "modules/core/data_sub_types.h"
 
+#define SETTINGS_PLAYER_DRIVER_KEY QStringLiteral("player_driver")
 #define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
 #define SETTINGS_SHOW_METRICS_NUMERO_KEY QStringLiteral("show_metric_numero")
 #define SETTINGS_DOWNLOAD_PATH_KEY QStringLiteral("download_path")
@@ -80,6 +81,9 @@ public:
 
     inline int showTrayMessageTime() { return _tray_show_period; }
     inline void setShowTrayMessageTime(const int & new_period) { _tray_show_period = new_period; }
+
+    inline int playerDriver() { return _player_driver; }
+    inline void setPlayerDriver(const int & new_player_driver) { _player_driver = new_player_driver; }
 protected:
     QString _output_device;
     QString _default_download_path;
@@ -98,6 +102,8 @@ protected:
 
     int _tray_show_played;
     int _tray_show_period;
+
+    int _player_driver;
 };
 
 #endif // GLOBAL_SETTINGS

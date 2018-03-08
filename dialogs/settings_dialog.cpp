@@ -258,6 +258,19 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 
 
 void SettingsDialog::initGlobalSettings() {
+    ui -> playerDriverSelect -> setDisabled(true);
+
+    QHash<QString, int> drivers = PlayerFactory::obj().availableDrivers();
+    int current_driver = Settings::obj().playerDriver();
+
+    for(QHash<QString, int>::iterator i = drivers.begin(); i != drivers.end(); ++i) {
+        ui -> playerDriverSelect -> insertItem(i.value(), i.key(), i.value());
+
+        if (current_driver == i.value())
+            ui -> playerDriverSelect -> setCurrentText(i.key());
+    }
+
+
     ui -> tray_notify_played -> setCheckState((Qt::CheckState)Settings::obj().showPlayedInTrayMessage());
     ui -> tray_notify_period -> setValue(Settings::obj().showTrayMessageTime() / 1000);
 
@@ -480,6 +493,14 @@ void SettingsDialog::saveGlobalSettings() {
 
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
+
+    if (ui -> playerDriverSelect -> currentData() != Settings::obj().playerDriver()) {
+        int new_driver = ui -> playerDriverSelect -> currentData().toInt();
+
+        PlayerFactory::obj().build((PlayerDriver)new_driver);
+
+        Settings::obj().setPlayerDriver(new_driver);
+    }
 
     if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
         QString device_name = ui -> outputDeviceSelect -> currentText();
