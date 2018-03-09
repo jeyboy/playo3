@@ -82,8 +82,8 @@ public:
     inline int showTrayMessageTime() { return _tray_show_period; }
     inline void setShowTrayMessageTime(const int & new_period) { _tray_show_period = new_period; }
 
-    inline int playerDriver() { return _player_driver; }
-    inline void setPlayerDriver(const int & new_player_driver) { _player_driver = new_player_driver; }
+    inline quint8 playerDriver() { return _player_driver; }
+    inline void setPlayerDriver(const quint8 & new_player_driver) { _player_driver = new_player_driver; }
 protected:
     QString _output_device;
     QString _default_download_path;
@@ -103,7 +103,7 @@ protected:
     int _tray_show_played;
     int _tray_show_period;
 
-    int _player_driver;
+    quint8 _player_driver;
 };
 
 #endif // GLOBAL_SETTINGS

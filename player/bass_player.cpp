@@ -371,7 +371,7 @@ void BassPlayer::loadPlugins() {
     ///////////////////////////////////////////////
 }
 
-BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannelWatcher(0) {
+BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), default_device_index(DEFAULT_BASS_DEVICE), openChannelWatcher(0) {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 
@@ -391,7 +391,8 @@ BassPlayer::~BassPlayer() {
     stop();
     BASS_Stop();
     BASS_PluginFree(0);
-    BASS_Free();
+    if (!closeAllDevices())
+        qDebug() << "Some device is not closed";
 }
 
 QHash<QString, QVariant> BassPlayer::outputDeviceList() {
@@ -401,8 +402,12 @@ QHash<QString, QVariant> BassPlayer::outputDeviceList() {
 
     BASS_DEVICEINFO info;
     for (int a = 1; BASS_GetDeviceInfo(a, &info); a++) // 0 - no sound
-        if (info.flags & BASS_DEVICE_ENABLED)
+        if (info.flags & BASS_DEVICE_ENABLED) {
             res.insert(QString(info.name), a);
+
+            if (info.flags & BASS_DEVICE_DEFAULT)
+                default_device_index = a;
+        }
 
     #ifdef Q_OS_MAC
         for (int a = 0; BASS_GetDeviceInfo(a | BASS_DEVICES_AIRPLAY, &info); a++)
@@ -426,7 +431,7 @@ bool BassPlayer::setOutputDevice(const QString & device_name) {
 
     auto new_device_functor = [this](const QString & device_name) {
         if (device_name == defaultDeviceName())
-            return DEFAULT_BASS_DEVICE;
+            return default_device_index;
         else
             return outputDeviceList().value(device_name).toInt();
     };
@@ -439,33 +444,28 @@ bool BassPlayer::setOutputDevice(const QString & device_name) {
     bool res = false;
 
     if ((res = initOutputDevice(new_device))) {
+        //INFO: we cant close here old device // we must close it later
         res = BASS_SetDevice(new_device);
-        bool is_played = isPlayed();
-
-        if (res && (is_played || isPaused())) {
-            if (is_played)
-                pause();
-
-            int status = BASS_ChannelSetDevice(chan, new_device);
-            res &= status;
-
-            if (res && is_played)
-                play();
-        }
+        res &= BASS_ChannelSetDevice(chan, new_device);
     }
-
-    if (res)
-        closeOutputDevice(curr_device);
 
     return res;
 }
 bool BassPlayer::initOutputDevice(const int & new_device, const int & frequency) {
     bool res = BASS_Init(new_device, frequency, 0, NULL, NULL);
 
-    if (!res)
-        qDebug() << "Init error: " << BASS_ErrorGetCode();
-//        throw "Cannot initialize device";
-    else {
+    if (!res) {
+        if (BASS_ErrorGetCode() == BASS_ERROR_ALREADY) {
+            res = true;
+        } else {
+            qDebug() << "Init error: " << BASS_ErrorGetCode();
+            // throw "Cannot initialize device";
+        }
+    }
+
+    if (res) {
+        opened_devices.insert(new_device, true);
+
         BASS_SetConfig(BASS_CONFIG_FLOATDSP, TRUE);
     //    BASS_SetConfig(BASS_CONFIG_NET_PREBUF, 15); // 15 percents prebuf
 
@@ -474,6 +474,15 @@ bool BassPlayer::initOutputDevice(const int & new_device, const int & frequency)
 
     return res;
 }
-bool BassPlayer::closeOutputDevice(const int & device) {
-    return BASS_SetDevice(device) && BASS_Free();
+
+bool BassPlayer::closeAllDevices() {
+    bool ret = true;
+
+    for(QHash<int, bool>::Iterator it = opened_devices.begin(); it != opened_devices.end(); it++) {
+        ret &= BASS_SetDevice(it.key()) && BASS_Free();
+    }
+
+    opened_devices.clear();
+
+    return ret;
 }

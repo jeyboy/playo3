@@ -15,13 +15,32 @@
 class IPlayer : public IEqualizable, public ITrackable, public IDeviceable {
     Q_OBJECT
 
+public:
+    enum DriverId : quint8 {
+        driver_id_default = 0,
+        driver_id_qt,
+
+        driver_id_bass = driver_id_default,
+
+        driver_id_unknown = 254
+    };
+
+    enum InitializationState : qint8 {
+        init_actiated = 0,
+        init_played,
+        init_paused
+    };
+
+private:
     PlayerState pstate;
     QTimer * itimer;
-    qint64 play_pos, start_pos, size;
+    qint64 start_pos, size;
     int volume_val, pan_val, tempo_val;
     float downloading_level;
     bool muted, looped;   
 protected:
+    qint64 play_pos;
+
     void updateState(const PlayerState & new_state);
     void updatePosition(const qint64 & newPos);
 
@@ -59,6 +78,8 @@ protected:
 public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
+
+    virtual DriverId uid() const { return driver_id_unknown; }
 
     //INFO: position calcs in millis by default
 

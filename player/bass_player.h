@@ -105,10 +105,13 @@ struct OpenCallbackData {
 class BassPlayer : public IPlayer {
     Q_OBJECT
 
+    QHash<int, bool> opened_devices;
+
     HFX _fxEQ;
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
     qint64 chan;
+    int default_device_index;
     QFutureWatcher<OpenCallbackData> * openChannelWatcher;
     OpenCallbackData proc_channel;
 
@@ -133,7 +136,7 @@ protected:
     }
 
     bool initOutputDevice(const int & newDevice, const int & frequency = 44100);
-    bool closeOutputDevice(const int & device);
+    bool closeAllDevices();
     void loadPlugins();
 
     inline qint64 open(const QString & path, const DWORD & flags) {
@@ -171,6 +174,8 @@ protected:
 public:
     explicit BassPlayer(QWidget * parent);
     ~BassPlayer();
+
+    inline DriverId uid() const { return driver_id_bass; }
 
     QHash<QString, QVariant> outputDeviceList();
     QVariant currOutputDevice();

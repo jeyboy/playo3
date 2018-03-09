@@ -65,8 +65,8 @@ namespace Views {
         void execNextIndex(bool deleteCurrent = false);
         void execPrevIndex(bool deleteCurrent = false);
 //        bool execSelectedIndex() { return execIndex(currentIndex()); }
-        bool execIndex(const QModelIndex & node, PlayerInitState init_state = played, uint start = 0);
-        bool execPath(const QString & path, PlayerInitState init_state = played, uint start = 0);
+        bool execIndex(const QModelIndex & node, IPlayer::InitializationState init_state = IPlayer::init_played, uint start = 0);
+        bool execPath(const QString & path, IPlayer::InitializationState init_state = IPlayer::init_played, uint start = 0);
         bool restoreSelection(const QString & path);
 
 //        inline int itemsCount() const { return mdl -> itemsCount(); }

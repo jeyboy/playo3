@@ -86,6 +86,7 @@ namespace Dialogs {
 
         void tabClicked(int);
         void on_initiateOnPlaying_clicked(bool checked);
+        void on_playerDriverSelect_currentIndexChanged(int index);
     };
 }
 

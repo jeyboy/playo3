@@ -42,12 +42,12 @@ Playo::~Playo() {
 }
 
 void Playo::activation() {
-    Settings::obj().anchorWidget(this);
+    Settings::obj().setAnchorWidget(this);
     tray = new Tray(this);
     UserDialogBox::obj(); // link dialog with current thread
     ToolBars::obj().setContainer(this);
     Dockbars::obj().setContainer(this);
-    PlayerFactory::obj().build(driver_bass, this); // initiate default player for correct settings initialization
+    PlayerFactory::obj().setCurrentPlayer((IPlayer::DriverId)(Settings::obj().playerDriver())); // initiate default player for correct settings initialization
     connect(&DataFactory::obj(), SIGNAL(playedItemChanged(QString,QString)), this, SLOT(playedItemChanged(QString,QString)));
 }
 

@@ -23,7 +23,7 @@ class Settings : public GlobalSettings, public HotkeySettings,
 
     Settings(); friend class Core::Singleton<Settings>;
     ~Settings() { delete currentStyle; }
-    QWidget * anchor;
+    QWidget * anchor = 0;
 
 //    static void setTransparency(QWidget * widget, bool activate = true) {
 //        widget -> setAttribute(Qt::WA_NoSystemBackground, activate);
@@ -41,7 +41,7 @@ public:
     inline int iconHeight() { return totalItemHeight() - 1; }
 
     inline QWidget * anchorWidget() { return anchor; }
-    inline void anchorWidget(QWidget * newAnchor) { anchor = newAnchor; }
+    inline void setAnchorWidget(QWidget * new_anchor) { anchor = new_anchor; }
 
     void resetGlobalSettings();
     void resetApisSettings();

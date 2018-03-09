@@ -40,7 +40,7 @@ void Dockbars::load(const QJsonArray & bars) {
                     if (JSON_BOOL(obj, LSTR("played"))) {
                         QString path = JSON_STR(obj, LSTR("played_item"));
                         if (!path.isEmpty())
-                            v -> execPath(path, PlayerInitState::initiated, JSON_INT(obj, LSTR("played_time")));
+                            v -> execPath(path, IPlayer::init_actiated, JSON_INT(obj, LSTR("played_time")));
                     }
                 }
             }

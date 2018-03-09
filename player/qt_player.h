@@ -82,6 +82,8 @@ public:
     explicit QtPlayer(QWidget * parent);
     ~QtPlayer();
 
+    inline DriverId uid() const { return driver_id_qt; }
+
     QHash<QString, QVariant> outputDeviceList() {
         QHash<QString, QVariant> res;
 

@@ -21,7 +21,7 @@ namespace Core {
         IPlaylistable * current_playlist;
         IItem * current_item;
 
-        PlayerInitState init_state_flag;
+        IPlayer::InitializationState init_state_flag;
         int attempts, restore_attempts;
     protected:
         void spoil();
@@ -43,7 +43,7 @@ namespace Core {
 
         void resetPlaying() { proceedPlaying(0, 0); }
 
-        void proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili = 0, const PlayerInitState & state = played);
+        void proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili = 0, const IPlayer::InitializationState & state = IPlayer::init_played);
 
         void proceedStoping() { currPlayer() -> stop(); }
         void proceedPausing() { currPlayer() -> pause(); }

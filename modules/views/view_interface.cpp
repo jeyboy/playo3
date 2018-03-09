@@ -152,7 +152,7 @@ bool IView::restoreSelection(const QString & path) {
     else return false;
 }
 
-bool IView::execPath(const QString & path, PlayerInitState init_state, uint start) {
+bool IView::execPath(const QString & path, IPlayer::InitializationState init_state, uint start) {
     QModelIndex ind = mdl -> fromPath(path);
     if (ind.isValid()) {
         setFocus();
@@ -162,7 +162,7 @@ bool IView::execPath(const QString & path, PlayerInitState init_state, uint star
         return false;
 }
 
-bool IView::execIndex(const QModelIndex & node, PlayerInitState init_state, uint start) {
+bool IView::execIndex(const QModelIndex & node, IPlayer::InitializationState init_state, uint start) {
     if (node.isValid()) { // INFO: play playable and choosed by user
         IItem * itm = mdl -> item(node);
 

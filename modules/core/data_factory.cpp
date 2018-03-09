@@ -68,7 +68,7 @@ namespace Core {
             qDebug() << "RESTORE: SUCCESS";
             IPlayer * player = currPlayer();
             player -> updateMedia(current_item -> toUrl(), current_item -> title().toString());
-            player -> play(init_state_flag == paused);
+            player -> play(init_state_flag == IPlayer::init_paused);
         }
     }
 
@@ -77,7 +77,7 @@ namespace Core {
         playNext(true);
     }
 
-    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili, const PlayerInitState & state) {
+    void DataFactory::proceedPlaying(IPlaylistable * playlist, IItem * item, const uint & startMili, const IPlayer::InitializationState & state) {
 //        if (item == current_item && playlist == currentPlaylist()) return;
 
         if (item)
@@ -125,8 +125,8 @@ namespace Core {
                     );
                 }
 
-                if ((init_state_flag = state) != initiated)
-                    player -> play(init_state_flag == paused);
+                if ((init_state_flag = state) != IPlayer::init_actiated)
+                    player -> play(init_state_flag == IPlayer::init_paused);
 
                 emit likeChanged(current_item -> is(IItem::flag_liked));
             } else playNext(false);

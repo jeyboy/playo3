@@ -6,21 +6,10 @@
 #include "modules/core/media/interfaces/iplayer.h"
 #include "player_callback.h"
 
-#include "settings.h"
-
-enum PlayerDriver {
-    driver_bass = 0,
-    driver_qt
-};
-
-enum PlayerInitState {
-    played,
-    paused,
-    initiated
-};
-
 class PlayerFactory : public Core::Singleton<PlayerFactory> {
     QList<PlayerCallback> callbacks;
+
+    QHash<IPlayer::DriverId, IPlayer *> players;
 
     friend class Core::Singleton<PlayerFactory>;
     inline PlayerFactory() : player(0), video_output(0) {}
@@ -28,15 +17,24 @@ class PlayerFactory : public Core::Singleton<PlayerFactory> {
 
     IPlayer * player;
     QObject * video_output;
-    QWidget * anchor_obj;
+
+    IPlayer * build(const IPlayer::DriverId & new_driver_id);
 public:
     inline IPlayer * currPlayer() { return player; }
 
     QHash<QString, int> availableDrivers() {
         QHash<QString, int> res;
 
-        res.insert(QStringLiteral("Bass"), driver_bass);
-        res.insert(QStringLiteral("Qt"), driver_qt);
+        res.insert(QStringLiteral("Bass"), IPlayer::driver_id_bass);
+        res.insert(QStringLiteral("Qt"), IPlayer::driver_id_qt);
+
+        return res;
+    }
+
+    QHash<QString, QVariant> availableOutputs(const IPlayer::DriverId & driver_id) {
+        QHash<QString, QVariant> res;
+
+        // TODO:
 
         return res;
     }
@@ -53,7 +51,7 @@ public:
         if (player) pl.use(player);
     }
 
-    IPlayer * build(const PlayerDriver & new_driver, QWidget * anchor = 0);
+    IPlayer * setCurrentPlayer(const IPlayer::DriverId & new_driver_id);
 };
 
 #endif // PLAYER_INDEX

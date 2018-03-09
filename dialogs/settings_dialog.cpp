@@ -497,7 +497,7 @@ void SettingsDialog::saveGlobalSettings() {
     if (ui -> playerDriverSelect -> currentData() != Settings::obj().playerDriver()) {
         int new_driver = ui -> playerDriverSelect -> currentData().toInt();
 
-        PlayerFactory::obj().build((PlayerDriver)new_driver);
+        PlayerFactory::obj().setCurrentPlayer((IPlayer::DriverId)new_driver);
 
         Settings::obj().setPlayerDriver(new_driver);
     }
@@ -638,4 +638,8 @@ void Dialogs::SettingsDialog::tabClicked(int obj_id) {
 void Dialogs::SettingsDialog::on_initiateOnPlaying_clicked(bool checked) {
     ui -> remoteItemProcDelay -> setEnabled(!checked);
     ui -> label_remoteItemDelay -> setEnabled(!checked);
+}
+
+void Dialogs::SettingsDialog::on_playerDriverSelect_currentIndexChanged(int index) {
+    //TODO: write me
 }
