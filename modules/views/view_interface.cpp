@@ -540,8 +540,8 @@ void IView::findAndExecIndex(bool deleteCurrent) {
     }
 }
 
-bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selectionUpdate, int flags) {
-    bool isFolder = false;
+bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int selection_update, int flags) {
+    bool is_folder = false;
 
     // did not allow manuall removing of dummies
     if (node.data(ITYPE) == dt_dummy)
@@ -549,13 +549,14 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
 
     if (Settings::obj().isAlertOnFolderDeletion()) {
         QVariant folder_items_amount = node.data(IEXECCOUNTS);
+        is_folder = (folder_items_amount.isValid() && folder_items_amount.toInt() > 0);
 
-        if ((isFolder = (folder_items_amount.isValid() && folder_items_amount.toInt() > 0))) {
-            bool usePrevAction = flags & use_prev_action;
-            if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
+        if (is_folder) {
+            bool mimic_prev_action = flags & use_prev_action;
+            if (mimic_prev_action && _delete_folder_answer == QMessageBox::NoToAll)
                 return false;
 
-            if (!usePrevAction || (usePrevAction && _deleteFolderAnswer != QMessageBox::YesToAll)) {
+            if (!mimic_prev_action || (mimic_prev_action && _delete_folder_answer != QMessageBox::YesToAll)) {
                 UserDialogBox::obj().alert(
                     this,
                     LSTR("Folder deletion"),
@@ -563,8 +564,8 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
                     QMessageBox::Yes | QMessageBox::YesToAll | QMessageBox::No | QMessageBox::NoToAll
                 );
 
-                _deleteFolderAnswer = UserDialogBox::obj().lastAnswer();
-                if (_deleteFolderAnswer == QMessageBox::No || _deleteFolderAnswer == QMessageBox::NoToAll)
+                _delete_folder_answer = UserDialogBox::obj().lastAnswer();
+                if (_delete_folder_answer == QMessageBox::No || _delete_folder_answer == QMessageBox::NoToAll)
                     return false;
             }
         }
@@ -583,14 +584,14 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
             mdl -> setData(node, IItem::flag_mark_on_removing, ISTATERESTORE);
     }
 
-    if (selectionUpdate != IModel::none) {
+    if (selection_update != IModel::none) {
         QModelIndex newSel = QModelIndex();
 
-        if (selectionUpdate & IModel::backward)
+        if (selection_update & IModel::backward)
             newSel = candidateOnSelection(node, true);
 
-        if (selectionUpdate & IModel::forward && !newSel.isValid()) { // this not worked for threaded deletion, because tree is not updated in process and contain a broken keys as result
-            if (isFolder) {
+        if (selection_update & IModel::forward && !newSel.isValid()) { // this not worked for threaded deletion, because tree is not updated in process and contain a broken keys as result
+            if (is_folder) {
                 collapse(newSel);
                 newSel = indexBelow(newSel);
             }
@@ -611,7 +612,7 @@ void IView::removeProccessing(QModelIndexList & index_list, bool remove, int fla
     if (inProcess)
         emit mdl -> moveInProcess();
 
-    _deleteFolderAnswer = QMessageBox::No;
+    _delete_folder_answer = QMessageBox::No;
 
 //    if (mdl -> playlistType() == level) {
 //        qSort(index_list.begin(), index_list.end());

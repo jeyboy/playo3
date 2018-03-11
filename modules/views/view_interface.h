@@ -172,7 +172,7 @@ namespace Views {
         IModel * mdl;
         QPoint dragPoint;
         IModel::Direction direction;
-        int _deleteFolderAnswer;
+        int _delete_folder_answer;
     };
 }
 
