@@ -33,6 +33,9 @@ IPlayer * PlayerFactory::setCurrentPlayer(const IPlayer::DriverId & new_driver_i
 }
 
 IPlayer * PlayerFactory::build(const IPlayer::DriverId & driver_id) {
+    if (driver_id == IPlayer::driver_id_active)
+        return player;
+
     if (players.contains(driver_id))
         return players.value(driver_id);
 

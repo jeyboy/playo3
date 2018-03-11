@@ -264,25 +264,43 @@ void SettingsDialog::initGlobalSettings() {
     int current_driver = Settings::obj().playerDriver();
 
     for(QHash<QString, int>::iterator i = drivers.begin(); i != drivers.end(); ++i) {
-        ui -> playerDriverSelect -> insertItem(i.value(), i.key(), i.value());
-
-        if (current_driver == i.value())
+        if (current_driver == i.value()) {
+            ui -> playerDriverSelect -> insertItem(0, i.key(), i.value());
             ui -> playerDriverSelect -> setCurrentText(i.key());
+        }
+        else
+            ui -> playerDriverSelect -> addItem(i.key(), i.value());
     }
 
 
     ui -> tray_notify_played -> setCheckState((Qt::CheckState)Settings::obj().showPlayedInTrayMessage());
     ui -> tray_notify_period -> setValue(Settings::obj().showTrayMessageTime() / 1000);
 
-    QHash<QString, QVariant> devices = PlayerFactory::obj().currPlayer() -> outputDeviceList();
+
+    ////////////////////////////////////////
+    QHash<QString, QVariant> devices = PlayerFactory::obj().availableOutputDevices();
     QString current_device = Settings::obj().outputDevice();
 
-    ui -> outputDeviceSelect -> insertItems(0, devices.keys());
+    QString def_name;
+    bool find_selection = false;
 
-    if (!devices.contains(current_device))
-        current_device = PlayerFactory::obj().currPlayer() -> defaultDeviceName();
+    for(QHash<QString, QVariant>::iterator i = devices.begin(); i != devices.end(); ++i) {
+        if (i.key()[0] == '*') {
+            def_name = i.key();
+            ui -> outputDeviceSelect -> insertItem(0, i.key(), i.key().mid(1));
+        }
+        else
+            ui -> outputDeviceSelect -> addItem(i.key(), i.key());
 
-    ui -> outputDeviceSelect -> setCurrentText(current_device);
+        if (current_device == i.key()) {
+            ui -> outputDeviceSelect -> setCurrentText(i.key());
+            find_selection = true;
+        }
+    }
+
+    if (!find_selection)
+        ui -> outputDeviceSelect -> setCurrentText(def_name);
+    ///////////////////////////////////////////
 
     ui -> autorunned -> blockSignals(true);
     ui -> autorunned -> setChecked(Settings::obj().isAutorunned());
@@ -494,19 +512,19 @@ void SettingsDialog::saveGlobalSettings() {
     Settings::obj().setToolIconSize(ui -> toolIconSize -> value());
     Settings::obj().setColorScheme(ui -> colorScheme -> currentIndex() + 1);
 
-    if (ui -> playerDriverSelect -> currentData() != Settings::obj().playerDriver()) {
-        int new_driver = ui -> playerDriverSelect -> currentData().toInt();
 
-        PlayerFactory::obj().setCurrentPlayer((IPlayer::DriverId)new_driver);
+    int selected_driver = ui -> playerDriverSelect -> currentData().toInt();
+    if (selected_driver != Settings::obj().playerDriver()) {
+        IPlayer * new_player =
+            PlayerFactory::obj().setCurrentPlayer((IPlayer::DriverId)selected_driver);
 
-        Settings::obj().setPlayerDriver(new_driver);
+        Settings::obj().setPlayerDriver(new_player -> uid());
     }
 
-    if (ui -> outputDeviceSelect -> currentText() != Settings::obj().outputDevice()) {
-        QString device_name = ui -> outputDeviceSelect -> currentText();
-
-        if (PlayerFactory::obj().currPlayer() -> setOutputDevice(device_name))
-            Settings::obj().setOutputDevice(device_name);
+    QString selected_device = ui -> outputDeviceSelect -> currentData().toString();
+    if (selected_device != Settings::obj().outputDevice()) {
+        if (PlayerFactory::obj().currPlayer() -> setOutputDevice(selected_device))
+            Settings::obj().setOutputDevice(selected_device);
     }
 }
 void SettingsDialog::saveApisSettings() {

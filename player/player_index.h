@@ -31,12 +31,10 @@ public:
         return res;
     }
 
-    QHash<QString, QVariant> availableOutputs(const IPlayer::DriverId & driver_id) {
-        QHash<QString, QVariant> res;
-
-        // TODO:
-
-        return res;
+    QHash<QString, QVariant> availableOutputDevices(const IPlayer::DriverId & driver_id = IPlayer::driver_id_active) {
+        IPlayer * target_player = build(driver_id);
+        Q_ASSERT(target_player);
+        return target_player -> outputDeviceList();
     }
 
     void registerVideoOutput(QObject * new_video_output) {

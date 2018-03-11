@@ -111,7 +111,6 @@ class BassPlayer : public IPlayer {
     HSYNC syncHandle, syncDownloadHandle;
     bool is_paused;
     qint64 chan;
-    int default_device_index;
     QFutureWatcher<OpenCallbackData> * openChannelWatcher;
     OpenCallbackData proc_channel;
 

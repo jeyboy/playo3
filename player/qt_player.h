@@ -26,11 +26,15 @@ class QtPlayer : public IPlayer {
     }
 
     void outputDeviceList(QAudioOutputSelectorControl * out, QHash<QString, QVariant> & res) {
-        res.insert(defaultDeviceName(), QString());
-
         QStringList devices = out -> availableOutputs();
-        foreach(QString device, devices)
-            res.insert(device.split('\\').last(), device);
+        foreach(QString device, devices) {
+            QString name = device.split('\\').last();
+
+            if (device == out -> defaultOutput())
+                name.prepend('*');
+
+            res.insert(name, device);
+        }
     }
 protected:
     bool proceedErrorState();
@@ -116,17 +120,14 @@ public:
 
         if (out != nullptr) {
             QString new_output = device_name;
-            if (new_output == defaultDeviceName())
-                new_output = out -> defaultOutput();
-            else {
-                QHash<QString, QVariant> res;
-                outputDeviceList(out, res);
 
-                if (res.contains(new_output))
-                    new_output = res.value(new_output).toString();
-                else
-                    new_output = out -> defaultOutput();
-            }
+            QHash<QString, QVariant> res;
+            outputDeviceList(out, res);
+
+            if (res.contains(new_output))
+                new_output = res.value(new_output).toString();
+            else
+                new_output = out -> defaultOutput();
 
             if (out -> activeOutput() != new_output)
                 out -> setActiveOutput(new_output);

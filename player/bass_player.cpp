@@ -371,7 +371,7 @@ void BassPlayer::loadPlugins() {
     ///////////////////////////////////////////////
 }
 
-BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), default_device_index(DEFAULT_BASS_DEVICE), openChannelWatcher(0) {
+BassPlayer::BassPlayer(QWidget * parent) : IPlayer(parent), chan(0), openChannelWatcher(0) {
     if (HIWORD(BASS_GetVersion()) != BASSVERSION)
         throw "An incorrect version of BASS.DLL was loaded";
 
@@ -398,15 +398,17 @@ BassPlayer::~BassPlayer() {
 QHash<QString, QVariant> BassPlayer::outputDeviceList() {
     QHash<QString, QVariant> res;
 
-    res.insert(defaultDeviceName(), DEFAULT_BASS_DEVICE);
-
     BASS_DEVICEINFO info;
     for (int a = 1; BASS_GetDeviceInfo(a, &info); a++) // 0 - no sound
-        if (info.flags & BASS_DEVICE_ENABLED) {
-            res.insert(QString(info.name), a);
+        if ((info.flags & BASS_DEVICE_ENABLED)) {
+            QString name = QString(info.name);
 
-            if (info.flags & BASS_DEVICE_DEFAULT)
-                default_device_index = a;
+            if (info.flags & BASS_DEVICE_DEFAULT) {
+                default_device = a;
+                name.prepend('*');
+            }
+
+            res.insert(name, a);
         }
 
     #ifdef Q_OS_MAC
@@ -418,25 +420,13 @@ QHash<QString, QVariant> BassPlayer::outputDeviceList() {
 }
 int BassPlayer::identifyOutputDevice() {
     QString device_name = Settings::obj().outputDevice();
-
-    return
-        device_name == defaultDeviceName() ?
-            DEFAULT_BASS_DEVICE
-              :
-            outputDeviceList().value(device_name, DEFAULT_BASS_DEVICE).toInt();
+    return outputDeviceList().value(device_name, default_device/*DEFAULT_BASS_DEVICE*/).toInt();
 }
 QVariant BassPlayer::currOutputDevice() { return QVariant::fromValue(BASS_GetDevice()); }
 bool BassPlayer::setOutputDevice(const QString & device_name) {
     int curr_device = BASS_GetDevice();
 
-    auto new_device_functor = [this](const QString & device_name) {
-        if (device_name == defaultDeviceName())
-            return default_device_index;
-        else
-            return outputDeviceList().value(device_name).toInt();
-    };
-
-    int new_device = new_device_functor(device_name);
+    int new_device = outputDeviceList().value(device_name, default_device).toInt();
 
     if (curr_device == new_device)
         return true;
@@ -446,7 +436,8 @@ bool BassPlayer::setOutputDevice(const QString & device_name) {
     if ((res = initOutputDevice(new_device))) {
         //INFO: we cant close here old device // we must close it later
         res = BASS_SetDevice(new_device);
-        res &= BASS_ChannelSetDevice(chan, new_device);
+        if (isPlayed() || isPaused())
+            res &= BASS_ChannelSetDevice(chan, new_device);
     }
 
     return res;
@@ -479,7 +470,12 @@ bool BassPlayer::closeAllDevices() {
     bool ret = true;
 
     for(QHash<int, bool>::Iterator it = opened_devices.begin(); it != opened_devices.end(); it++) {
-        ret &= BASS_SetDevice(it.key()) && BASS_Free();
+        bool op_res = BASS_SetDevice(it.key()) && BASS_Free();
+
+        if (!op_res)
+            qCritical() << "DEVICE CLOSE ERROR" << BASS_ErrorGetCode();
+
+        ret &= op_res;
     }
 
     opened_devices.clear();

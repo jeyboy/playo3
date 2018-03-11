@@ -22,7 +22,8 @@ public:
 
         driver_id_bass = driver_id_default,
 
-        driver_id_unknown = 254
+        driver_id_unknown = 253,
+        driver_id_active
     };
 
     enum InitializationState : qint8 {
@@ -39,8 +40,6 @@ private:
     float downloading_level;
     bool muted, looped;   
 protected:
-    qint64 play_pos;
-
     void updateState(const PlayerState & new_state);
     void updatePosition(const qint64 & newPos);
 
@@ -73,13 +72,14 @@ protected:
 
     QUrl media_url;
     QString media_title;
-    qint64 max_pos, max_duration;
+    qint64 play_pos, max_pos, max_duration;
+    QVariant default_device;
 
 public:
     explicit IPlayer(QWidget * parent);
     virtual ~IPlayer() {}
 
-    virtual DriverId uid() const { return driver_id_unknown; }
+    virtual DriverId uid() const { return driver_id_default; }
 
     //INFO: position calcs in millis by default
 
