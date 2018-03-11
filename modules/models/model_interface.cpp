@@ -1039,11 +1039,11 @@ int IModel::proceedGrabberList(const QJsonObject & block, Playlist * parent, int
 }
 
 int IModel::proceedCue(const QString & path, const QString & name, Playlist * newParent, int insertPos, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items) {
-    Playlist * cuePlaylist = new Playlist(LOCAL_CONTAINER_ATTRS(dt_playlist_cue, path, name), newParent, insertPos);
+    Playlist * cue_playlist = new Playlist(LOCAL_CONTAINER_ATTRS(dt_playlist_cue, path, name), newParent, insertPos);
 
     Media::Cue * cue = Media::Cue::fromPath(path);
-    int amount = cue -> buildItems(cuePlaylist, unproc_files, items);
-    cuePlaylist -> updateItemsCountInBranch(amount);
+    int amount = cue -> buildItems(cue_playlist, unproc_files, items);
+    cue_playlist -> updateItemsCountInBranch(amount);
     delete cue;
     return amount;
 }
