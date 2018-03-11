@@ -548,7 +548,9 @@ bool IView::removeRow(const QModelIndex & node, bool remove_file_with_item, int 
         return false;
 
     if (Settings::obj().isAlertOnFolderDeletion()) {
-        if ((isFolder = node.data(IEXECCOUNTS) > 0)) {
+        QVariant folder_items_amount = node.data(IEXECCOUNTS);
+
+        if ((isFolder = (folder_items_amount.isValid() && folder_items_amount.toInt() > 0))) {
             bool usePrevAction = flags & use_prev_action;
             if (usePrevAction && _deleteFolderAnswer == QMessageBox::NoToAll)
                 return false;
