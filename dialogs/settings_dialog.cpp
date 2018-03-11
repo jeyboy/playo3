@@ -257,28 +257,10 @@ void SettingsDialog::on_spectrumColor3_clicked() {
 }
 
 
-void SettingsDialog::initGlobalSettings() {
-    ui -> playerDriverSelect -> setDisabled(true);
+void SettingsDialog::initDevicesList(const quint8 & driver_id) {
+    ui -> outputDeviceSelect -> clear();
 
-    QHash<QString, int> drivers = PlayerFactory::obj().availableDrivers();
-    int current_driver = Settings::obj().playerDriver();
-
-    for(QHash<QString, int>::iterator i = drivers.begin(); i != drivers.end(); ++i) {
-        if (current_driver == i.value()) {
-            ui -> playerDriverSelect -> insertItem(0, i.key(), i.value());
-            ui -> playerDriverSelect -> setCurrentText(i.key());
-        }
-        else
-            ui -> playerDriverSelect -> addItem(i.key(), i.value());
-    }
-
-
-    ui -> tray_notify_played -> setCheckState((Qt::CheckState)Settings::obj().showPlayedInTrayMessage());
-    ui -> tray_notify_period -> setValue(Settings::obj().showTrayMessageTime() / 1000);
-
-
-    ////////////////////////////////////////
-    QHash<QString, QVariant> devices = PlayerFactory::obj().availableOutputDevices();
+    QHash<QString, QVariant> devices = PlayerFactory::obj().availableOutputDevices((IPlayer::DriverId)driver_id);
     QString current_device = Settings::obj().outputDevice();
 
     QString def_name;
@@ -300,7 +282,32 @@ void SettingsDialog::initGlobalSettings() {
 
     if (!find_selection)
         ui -> outputDeviceSelect -> setCurrentText(def_name);
+}
+
+void SettingsDialog::initGlobalSettings() {
+    ui -> playerDriverSelect -> setDisabled(true);
+
+    QHash<QString, int> drivers = PlayerFactory::obj().availableDrivers();
+    int current_driver = Settings::obj().playerDriver();
+
+    for(QHash<QString, int>::iterator i = drivers.begin(); i != drivers.end(); ++i) {
+        if (current_driver == i.value()) {
+            ui -> playerDriverSelect -> insertItem(0, i.key(), i.value());
+            ui -> playerDriverSelect -> setCurrentText(i.key());
+        }
+        else
+            ui -> playerDriverSelect -> addItem(i.key(), i.value());
+    }
+
+
+    ui -> tray_notify_played -> setCheckState((Qt::CheckState)Settings::obj().showPlayedInTrayMessage());
+    ui -> tray_notify_period -> setValue(Settings::obj().showTrayMessageTime() / 1000);
+
+
+    ////////////////////////////////////////
+    initDevicesList(IPlayer::driver_id_active);
     ///////////////////////////////////////////
+
 
     ui -> autorunned -> blockSignals(true);
     ui -> autorunned -> setChecked(Settings::obj().isAutorunned());
@@ -659,5 +666,6 @@ void Dialogs::SettingsDialog::on_initiateOnPlaying_clicked(bool checked) {
 }
 
 void Dialogs::SettingsDialog::on_playerDriverSelect_currentIndexChanged(int index) {
-    //TODO: write me
+    quint8 uid = ui -> playerDriverSelect -> itemData(index).toInt();
+    initDevicesList(uid);
 }

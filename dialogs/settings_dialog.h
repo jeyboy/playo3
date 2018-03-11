@@ -37,6 +37,8 @@ namespace Dialogs {
             widget -> setStyleSheet(QStringLiteral("background-color: ") % color.name() % QStringLiteral(";"));
         }
 
+        void initDevicesList(const quint8 & driver_id);
+
         void initGlobalSettings();
         void initApisSettings();
         void initItemsSettings();

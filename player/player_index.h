@@ -33,6 +33,7 @@ public:
 
     QHash<QString, QVariant> availableOutputDevices(const IPlayer::DriverId & driver_id = IPlayer::driver_id_active) {
         IPlayer * target_player = build(driver_id);
+        // error on change player while item played: qt to bass
         Q_ASSERT(target_player);
         return target_player -> outputDeviceList();
     }
