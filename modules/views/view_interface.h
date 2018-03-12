@@ -88,11 +88,8 @@ namespace Views {
 
     public slots:
         inline void clear() {
-//            QItemSelectionModel * m = selectionModel();
+            selectionModel() -> clear();
             mdl -> clear();
-            setModel(mdl);
-//            m -> deleteLater();
-////            reset();
         }
         inline void refresh() { mdl -> refresh(); }
         bool startInnerSearch(const QString & predicate, const QModelIndex & it = QModelIndex());

@@ -109,6 +109,7 @@ IView::~IView() {
         QApplication::processEvents();
 
     emit unregisterSync(mdl);
+    selectionModel() -> deleteLater();
     mdl -> syncMutex() -> unlock();
     mdl -> deleteLater();
     delete tree_style;

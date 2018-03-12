@@ -184,9 +184,11 @@ namespace Models {
 
         void blockFetching(bool blocked = true) { block_fetching = blocked; }
 
-        void clear() {
+        void clear() {           
+            beginResetModel();
             delete root_item;
             root_item = new Playlist();
+            endResetModel();
         }
 
         void shuffle();

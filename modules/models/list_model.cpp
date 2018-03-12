@@ -21,7 +21,7 @@ void ListModel::dropProcession(const QModelIndex & ind, int row, const QList<QUr
     if (count > 0) emit itemsCountChanged(count);
 }
 
-int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items, int pos) {
+int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QString, bool> & unproc_files, QHash<QString, IItem *> & items, int & pos) {
     int res = 0;
 
     QDirIterator dir_it(filePath, Extensions::obj().activeFilterList(), (QDir::Filter)(FILE_FILTERS), QDirIterator::Subdirectories);
@@ -36,6 +36,9 @@ int ListModel::filesRoutine(const QString & filePath, Playlist * node, QHash<QSt
                 res++;
                 items.insert(path, new IItem(node, LOCAL_ITEM_ATTRS(path, name), pos));
             }
+
+            if (pos >= 0) // do not increment if we append items to the end of the list = -1
+                pos++;
         }
     }
 
@@ -56,6 +59,7 @@ int ListModel::filesRoutine(const QList<QUrl> & list, Playlist * node, int pos) 
             res += filesRoutine(path, node, unproc_files, items, pos);
         else {
             if (unproc_files.contains(path)) continue;
+
             if (Extensions::obj().respondToExtension(file.suffix())) {
                 if (file.suffix().endsWith(Extensions::cue_ext, Qt::CaseInsensitive))
                     res += proceedCue(path, name, node, pos, unproc_files, items);
