@@ -17,6 +17,7 @@ struct InnerData {
 
 struct DropData {
     QModelIndex eIndex;
+    QModelIndex spoil_index;
     int eRow, limitRow;
 };
 

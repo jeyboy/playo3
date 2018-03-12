@@ -238,7 +238,6 @@ void IView::collapseAll() {
 
 void IView::onSpoilNeeded(const QModelIndex & node) {
     if (node.isValid()) {
-//        clearSelection();
         setCurrentIndex(node);
         scrollTo(node, scrollHint());
     }

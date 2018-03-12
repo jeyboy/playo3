@@ -221,13 +221,12 @@ DropData * IModel::threadlyProcessingRowsInsertion(const QList<QUrl> & list, int
             (parent == res -> eIndex ? list.length() - 1 : 1);
 
     ///////////// for spoiling /////////////
-    if (play) {
-        IItem * it = playlist -> child(play_pos);
-        emit playNeeded(index(it));
-    } else {
-        IItem * it = pos < 0 ? playlist -> lastChild() : playlist -> child(pos);
-        if (it)
-            emit spoilNeeded(index(it));
+    IItem * it = playlist -> child(qMax(0, play_pos));
+    if (it) {
+        if (play)
+            emit playNeeded(index(it));
+        else
+            res -> spoil_index = index(it); // used for spoiling after proc
     }
     ///////////////////////////////////////
 
@@ -1335,8 +1334,9 @@ void IModel::collapsed(const QModelIndex & index) {
 
 void IModel::finishingItemsAdding() {
     DropData * res = add_watcher -> result();
-    delete add_watcher;
+    add_watcher -> deleteLater();
     add_watcher = 0;
+
     if (!res) return;
 
 
@@ -1344,7 +1344,10 @@ void IModel::finishingItemsAdding() {
     endInsertRows();
 
     emit moveOutProcess();
-    emit spoilNeeded(res -> eIndex);
+
+    if (res -> spoil_index.isValid())
+        emit spoilNeeded(res -> spoil_index);
+
     delete res;
 }
 
@@ -1603,16 +1606,16 @@ QMimeData * IModel::mimeData(const QModelIndexList & indexes) const {
 //Если выше ноды - index - родитель ноды а row = нода.row.
 //Если ниже ноды - index - родитель ноды а row = нода.row + 1.
 //Ежели бросили мимо - index = root.
-bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parentIndex) {
+bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row, int column, const QModelIndex & parent_index) {
     if (!data || !(action == Qt::CopyAction || action == Qt::MoveAction))
         return false;
 
-    if (row == -1/* && !parentIndex.data(IFOLDER).toBool()*/) {
-        row = parentIndex.row();
-        (const_cast<QModelIndex &>(parentIndex)) = parentIndex.parent();
+    if (row == -1/* && !parent_index.data(IFOLDER).toBool()*/) {
+        row = parent_index.row();
+        (const_cast<QModelIndex &>(parent_index)) = parent_index.parent();
     }
 
-    int row_count = rowCount(parentIndex);
+    int row_count = rowCount(parent_index);
     if (row > row_count) row = -1;
 
     if (drop_key_modifiers & Qt::ControlModifier)
@@ -1620,14 +1623,14 @@ bool IModel::dropMimeData(const QMimeData * data, Qt::DropAction action, int row
 
     if (data -> hasFormat(DROP_INNER_FORMAT)) {
         if (!dnd_list.isEmpty()) {
-            return proceedSelfDnd(row, column, parentIndex);
+            return proceedSelfDnd(row, column, parent_index);
         } else {
             QByteArray encoded = data -> data(DROP_INNER_FORMAT);
             QDataStream stream(&encoded, QIODevice::ReadOnly);
-            return decodeInnerData(row, column, parentIndex, stream);
+            return decodeInnerData(row, column, parent_index, stream);
         }
     } else if (data -> hasUrls())
-        return /*insertRows*/threadlyInsertRows(data -> urls(), row, parentIndex);
+        return /*insertRows*/threadlyInsertRows(data -> urls(), row, parent_index);
 
     return false;
 }
