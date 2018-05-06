@@ -285,7 +285,7 @@ void SettingsDialog::initDevicesList(const quint8 & driver_id) {
 }
 
 void SettingsDialog::initGlobalSettings() {
-    ui -> playerDriverSelect -> setDisabled(true);
+//    ui -> playerDriverSelect -> setDisabled(true);
 
     QHash<QString, int> drivers = PlayerFactory::obj().availableDrivers();
     int current_driver = Settings::obj().playerDriver();

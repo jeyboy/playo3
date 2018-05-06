@@ -298,6 +298,13 @@ QString IStylesheets::checkboxStyles() {
         "   height: 14px;"
         "}"
 
+        "QCheckBox::disabled {"
+        "   background-color: #FFF;"
+        "   border-radius: 6px;"
+        "   padding: 2px;"
+        "   color: #000;"
+        "}"
+
         "QCheckBox::indicator:unchecked {"
         "   image: url(:/controls/check_blank);"
         "}"

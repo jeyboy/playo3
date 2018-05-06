@@ -41,6 +41,7 @@ namespace Views {
     public:
         inline void registerActions() { emit registerSync(mdl, mdl -> syncMutex()); }
         void registerParent(QWidget * newParent);
+
         IView(IModel * model, QWidget * parent);
         virtual ~IView();
 

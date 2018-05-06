@@ -81,6 +81,8 @@ IView::IView(IModel * newModel, QWidget * parent)
     connect(mdl, SIGNAL(fetchNeeded(const QModelIndex &)), this, SLOT(onFetchNeeded(const QModelIndex &)));
 //    connect(this -> verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(scrollValueChanged(int)));
 
+    setMinimumSize(100, 60);
+
     setModel(mdl);
     emit registerSync(mdl, mdl -> syncMutex());
 
