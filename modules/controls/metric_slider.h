@@ -44,6 +44,7 @@ namespace Controls {
         void resizeEvent(QResizeEvent *);
         void paintEvent(QPaintEvent *);
         void mouseMoveEvent(QMouseEvent *);
+//        void keyPressEvent(QKeyEvent *);
 
         void calcGrid();
     private:

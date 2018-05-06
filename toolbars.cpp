@@ -369,7 +369,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     Settings::currentStyle -> applyProperty(slider, "position", true);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
-    slider -> setSingleStep(50000);
+    slider -> setSingleStep(5000);
     slider -> setMinimumSize(30, 30);
 
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));
@@ -396,8 +396,8 @@ QToolBar * ToolBars::createPanMediaBar() {
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
     pslider -> setTickPosition(QSlider::TicksBothSides);
     pslider -> setTickInterval(IPlayer::panMax());
-    slider -> setSingleStep(250);
-    slider -> setMinimumSize(30, 30);
+    pslider -> setSingleStep(250);
+    pslider -> setMinimumSize(30, 30);
 
     PlayerFactory::obj().registerCallback(call_to_player, pslider, SIGNAL(valueChanged(int)), SLOT(setPan(int)));
     PlayerFactory::obj().registerCallback(answer_from_player, pslider, SIGNAL(panChanged(int)), SLOT(setValueSilently(int)));
