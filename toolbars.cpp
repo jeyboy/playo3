@@ -369,7 +369,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
     Settings::currentStyle -> applyProperty(slider, "position", true);
     slider -> setMinimum(0);
     slider -> setMaximum(0);
-    slider -> setSingleStep(5000);
+    slider -> setSingleStep(50000);
     slider -> setMinimumSize(30, 30);
 
     PlayerFactory::obj().registerCallback(answer_from_player, slider, SIGNAL(positionChanged(int)), SLOT(setValueSilently(int)));

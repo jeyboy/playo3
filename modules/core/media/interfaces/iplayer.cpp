@@ -94,25 +94,29 @@ void IPlayer::stop() {
         updateState(StoppedState);
 }
 
+qreal IPlayer::slidePercentage() const { return Settings::obj().slidePercent(); }
+
 void IPlayer::slidePosForward() {
     if (isSeekable())
-        setPosition(qMin(max_duration, position() + max_duration / slidePercentage()));
+        setPosition(qMin(max_duration, (qint64)(position() + max_duration * slidePercentage())));
 }
 void IPlayer::slidePosBackward() {
     if (isSeekable())
-        setPosition(qMax(qint64(0), position() - max_duration / slidePercentage()));
+        setPosition(qMax(qint64(0), (qint64)(position() - max_duration * slidePercentage())));
 }
 
 void IPlayer::slideVolForward() {
-    setVolume(qMin(volumeMax(), volume() + volumeMax() / slidePercentage()));
+    setVolume(qMin(volumeMax(), (int)(volume() + volumeMax() * slidePercentage())));
 }
 void IPlayer::slideVolBackward() {
-    setVolume(qMax(volumeMin(), volume() - volumeMax() / slidePercentage()));
+    setVolume(qMax(volumeMin(), (int)(volume() - volumeMax() * slidePercentage())));
 }
 
-void IPlayer::setPosition(const qint64 & newPos) {
-    newPosProcessing(newPos);
-    updatePosition(newPos);
+void IPlayer::setPosition(const qint64 & new_pos) {
+    qDebug() << "SET POS"  << position() << new_pos;
+
+    newPosProcessing(new_pos);
+    updatePosition(new_pos);
 }
 
 void IPlayer::mute(const bool & enable) {

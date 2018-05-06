@@ -66,7 +66,7 @@ protected:
         ITrackable::setMaxProgress(new_duration);
         emit durationChanged((max_duration = new_duration));
     }
-    inline virtual int slidePercentage() const { return 10.0; }
+    qreal slidePercentage() const;
 
     virtual inline bool seekingBlocked() { return false; }
 

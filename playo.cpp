@@ -126,6 +126,16 @@ void Playo::closeEvent(QCloseEvent * e) {
     DataFactory::obj().currPlayer() -> pause();
     Library::obj().declineStateRestoring();
 
+    saveData();
+
+    HotkeyManager::obj().clear();
+    FileSystemWatcher::obj().clear();
+
+    Logger::obj().endMark(LSTR("Main"), LSTR("Saving"));
+    MainWindow::closeEvent(e);
+}
+
+void Playo::saveData() {
     settings -> clear();
 
     settings -> write(SETTINGS_EQUALIZER_SET_KEY, ToolBars::obj().getEqualizerSettings());
@@ -135,12 +145,6 @@ void Playo::closeEvent(QCloseEvent * e) {
     settings -> write(SETTINGS_SET_KEY, Settings::obj().toJson());
     Web::Apis::close(settings -> obj());
     settings -> save();
-
-    HotkeyManager::obj().clear();
-    FileSystemWatcher::obj().clear();
-
-    Logger::obj().endMark(LSTR("Main"), LSTR("Saving"));
-    MainWindow::closeEvent(e);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

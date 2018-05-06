@@ -41,7 +41,8 @@ public slots:
     void receiveMessage(const QString &);
 
 private slots:
-     void playedItemChanged(const QString &, const QString &);
+    void saveData();
+    void playedItemChanged(const QString &, const QString &);
 
     void messa(const QString & str) {
         qDebug() << "MESSA" << str;

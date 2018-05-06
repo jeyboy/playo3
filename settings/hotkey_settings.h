@@ -9,6 +9,7 @@
 
 #define SETTINGS_DISABLE_HOTKEYS_KEY QStringLiteral("disable_hotkeys")
 #define SETTINGS_HOTKEYS_KEY QStringLiteral("hotkeys")
+#define SETTINGS_HOTKEY_SLIDE_PERCENT_KEY QStringLiteral("slide_percent")
 
 class HotkeySettings {
 public:
@@ -24,7 +25,10 @@ public:
     void disableHotkeys(const bool & disable) { _disabled = disable; }
     bool isHotkeysDisabled() { return _disabled; }
 
+    inline qreal slidePercent() { return _slide_percent; }
+
 protected:
+    qreal _slide_percent;
     bool _disabled;
     QJsonObject _hotkeys;
     QHash<int, QString> _humanize_hotkey_text;
