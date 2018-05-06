@@ -129,9 +129,8 @@ QDockWidget * Dockbars::linkNameToDockbar(const BarCreationNames & names, Models
 
         VideoWidget * video_output = new VideoWidget(container);
         video_output -> show();
-        PlayerFactory::obj().registerVideoOutput(video_output);
-
         screen = createDocBar(names, false, video_output);
+        PlayerFactory::obj().registerVideoOutput(video_output);
 
         return screen;
     } else if (names.is(COMMON_TAB)) {

@@ -17,7 +17,7 @@ Playo::Playo(QWidget * parent) : MainWindow(parent), ui(new Ui::Playo) {
     setTabShape(QTabWidget::Rounded);
 
     //    setAttribute(Qt::WA_DeleteOnClose);
-    initialization();
+    init();
 
 //    FileSystemWatcher::obj().registerPath(QStringLiteral("/home/jb/Desktop"), true);
 //    connect(&FileSystemWatcher::obj(), SIGNAL(fileCreated(QString)), this, SLOT(messa(QString)));
@@ -51,7 +51,7 @@ void Playo::activation() {
     connect(&DataFactory::obj(), SIGNAL(playedItemChanged(QString,QString)), this, SLOT(playedItemChanged(QString,QString)));
 }
 
-void Playo::initialization() {
+void Playo::init() {
     Logger::obj().startMark();
 
     QSettings stateSettings(APP_PATH(FRONT_SETTINGS_FILE_NAME), QSettings::IniFormat, this);

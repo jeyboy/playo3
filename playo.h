@@ -54,7 +54,7 @@ private slots:
     void openFolderTriggered();
 protected:
     void activation();
-    void initialization();
+    void init();
 
     void putToCommonTab(const QList<QUrl> & urls, const bool & play = false);
     void dragEnterEvent(QDragEnterEvent *);

@@ -17,6 +17,13 @@ IPlayer * PlayerFactory::setCurrentPlayer(const IPlayer::DriverId & new_driver_i
 
     player -> setVideoOutput(video_output);
 
+    if (video_output) {
+        if (!player -> isSupportVideo())
+            emit player -> videoOutputRequired(false);
+        else if(player -> hasVideo())
+            emit player -> videoOutputRequired(true);
+    }
+
     //TODO: connect other settings
 
     if (old_player) {
@@ -26,7 +33,7 @@ IPlayer * PlayerFactory::setCurrentPlayer(const IPlayer::DriverId & new_driver_i
         player -> eqGains(old_player -> eqGains(), true);
         player -> setMedia(old_player -> mediaUrl(), old_player -> title(), old_player -> startPosition(), old_player -> duration(), old_player -> position());
 
-        delete old_player;
+        delete players.take(old_player -> uid());
     }
 
     return player;

@@ -40,8 +40,9 @@ public:
 
     void registerVideoOutput(QObject * new_video_output) {
         video_output = new_video_output;
-        if (player && player -> isSupportVideo())
-            player -> setVideoOutput(video_output);
+        if (player && player -> isSupportVideo()) {
+             player -> setVideoOutput(video_output);
+        }
     }
 
     void registerCallback(const CallbackTurn & turn, QObject * obj, const char * signal, const char * slot) {
