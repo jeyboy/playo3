@@ -1,6 +1,6 @@
 #include "iequalizable.h"
 
-IEqualizable::IEqualizable(QObject * parent) : ISpectrumable(parent), eq_in_use(false) {
+IEqualizable::IEqualizable(QWidget * parent) : ISpectrumable(parent), eq_in_use(false) {
 
 //    Октава →
 //    Нота ↓ 	Суб-контр 	Контр 	Большая 	Малая 	1 	2 	3 	4 	5 	6

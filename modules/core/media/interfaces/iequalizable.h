@@ -37,7 +37,7 @@ public:
 class IEqualizable : public ISpectrumable {
     Q_OBJECT
 protected:
-    IEqualizable(QObject * parent = 0);
+    IEqualizable(QWidget * parent = 0);
 
     virtual bool processEqSetGain(const int & /*band*/, const float & /*gain*/) { return false; }
     virtual bool registerEQ() { return false; }

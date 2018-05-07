@@ -1,12 +1,12 @@
 #ifndef PLAYER_STATES
 #define PLAYER_STATES
 
-enum PlayerState {
+enum PlayerState : unsigned char {
+    UnknowState = 0,
     InitState,
     StoppedState,
     PlayingState,
-    PausedState,
-    UnknowState
+    PausedState
 };
 
 #endif // PLAYER_STATES

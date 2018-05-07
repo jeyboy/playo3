@@ -27,8 +27,6 @@ void ITrackable::updateState(const PlayerState & state) {
     bool paused = state == PausedState;
     bool visible = state != UnknowState;
 
-    qDebug() << "BTN" << played << paused << visible;
-
     #ifdef Q_OS_WIN
         state_progress -> setVisible(visible);
 
@@ -39,17 +37,9 @@ void ITrackable::updateState(const PlayerState & state) {
             }
         } else {
             if (played) {
-                state_progress -> resume();
-
-//                QMetaObject::invokeMethod(
-//                    state_button,
-//                    "setOverlayIcon",
-//                    (Qt::ConnectionType)(Qt::BlockingQueuedConnection),
-//                    Q_ARG(const QIcon &, *ico_played),
-//                );
-
-                state_button -> setOverlayAccessibleDescription(title());
                 state_button -> setOverlayIcon(*ico_played);
+                state_button -> setOverlayAccessibleDescription(title());
+                state_progress -> resume();
             }
             else if (paused) {
                 state_button -> setOverlayIcon(*ico_paused);

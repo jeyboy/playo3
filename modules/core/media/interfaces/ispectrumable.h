@@ -1,20 +1,20 @@
 #ifndef ISPECTRUMABLE
 #define ISPECTRUMABLE
 
-#include <qobject.h>
 #include <qvector.h>
 #include <qtimer.h>
 
-#include "player_states.h"
+#include "itrackable.h"
+//#include "player_states.h"
 
-class ISpectrumable : public QObject {
+class ISpectrumable : public ITrackable {
     Q_OBJECT
 
     QTimer * itimer;
     QList<QVector<float> > sdefault;
     bool block_multichannel;
 protected:
-    inline ISpectrumable(QObject * parent) : QObject(parent), block_multichannel(false), channels_count(2) {
+    inline ISpectrumable(QWidget * parent) : ITrackable(parent), block_multichannel(false), channels_count(2) {
         qRegisterMetaType<QList<QVector<float> > >("QList<QVector<float> >");
         itimer = new QTimer(parent);
         spectrumBandsCount(12, false);

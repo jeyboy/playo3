@@ -10,16 +10,20 @@
     #include <qwintaskbarprogress.h>
 #endif
 
-class ITrackable {
+class ITrackable : public QObject {
+    Q_OBJECT
 public:
     virtual ~ITrackable();
 
     virtual QUrl mediaUrl() const = 0;
     virtual QString title() const = 0;
+
+public slots:
+    void updateState(const PlayerState & state);
+
 protected:
     ITrackable(QWidget * parent);
 
-    void updateState(const PlayerState & state);
     void setProgress(const int & pos);
     void setMaxProgress(const int & max_pos);
 private:

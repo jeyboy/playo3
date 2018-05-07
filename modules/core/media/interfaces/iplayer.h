@@ -2,9 +2,7 @@
 #define IPLAYER
 
 #include <qurl.h>
-#include <qdebug.h>
 
-#include "itrackable.h"
 #include "iequalizable.h"
 #include "ideviceable.h"
 
@@ -12,7 +10,7 @@
 #include "modules/core/media/interfaces/imediainfo.h"
 #include "modules/core/web/utils/web_manager.h"
 
-class IPlayer : public IEqualizable, public ITrackable, public IDeviceable {
+class IPlayer : public IEqualizable, public IDeviceable {
     Q_OBJECT
 
 public:
