@@ -103,7 +103,7 @@ namespace Core {
                 QJsonValue streamConfiguration(const QString & genre) {
                     QJsonObject response = sRequest(
                         baseUrlStr(
-                            qst_site_alt2, LSTR("radio/genre/%1/settings").arg(genre), {}
+                            qst_site_alt2, QStringLiteral("radio/genre/%1/settings").arg(genre), {}
                         ),
                         call_type_json, 0, proc_none, QStringList(), call_method_get, headers()
                     );
@@ -164,7 +164,7 @@ namespace Core {
                         const QString & energy = LSTR("2"), const QString & diversity = LSTR("default")) {
                     QJsonObject response = sRequest(
                         baseUrlStr(
-                            qst_site_alt2, LSTR("radio/genre/%1/settings").arg(genre),
+                            qst_site_alt2, QStringLiteral("radio/genre/%1/settings").arg(genre),
                             {
                                 {LSTR("language"), lang},
                                 {LSTR("mood"), mood},
@@ -193,7 +193,7 @@ namespace Core {
 
                     QJsonArray content = saRequest(
                         baseUrlStr(
-                            qst_site_alt2, LSTR("radio/genre/%1/tracks").arg(genre),
+                            qst_site_alt2, QStringLiteral("radio/genre/%1/tracks").arg(genre),
                             {{LSTR("queue"), queue}}
                         ),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_tracks << tkn_track, call_method_get, headers()
@@ -209,7 +209,7 @@ namespace Core {
 
                             QJsonObject js = Manager::prepare() -> jsonPost(
                                 baseUrlStr(
-                                    qst_site_alt2, LSTR("radio/genre/%1/feedback/trackFinished/%2/web/%3/%4")
+                                    qst_site_alt2, QStringLiteral("radio/genre/%1/feedback/trackFinished/%2/web/%3/%4")
                                         .arg(genre, YANDEX_ITEM_UID(it), siteLocale(const_default_locale), _id),
                                     {
                                         {LSTR("timestamp"), QString::number(QDateTime::currentMSecsSinceEpoch())},
@@ -256,7 +256,7 @@ namespace Core {
                 QJsonValue streamsByArtist(const QString & artist_id, const QString & queue = QString("")) { // TODO: test me
                     QJsonArray content = saRequest(
                         baseUrlStr(
-                            qst_site_alt2, LSTR("radio/artist/%1/tracks").arg(artist_id),
+                            qst_site_alt2, QStringLiteral("radio/artist/%1/tracks").arg(artist_id),
                             {{LSTR("queue"), queue}}
                         ),
                         call_type_json, 0, proc_json_extract, QStringList() << tkn_tracks << tkn_track, call_method_get, headers()

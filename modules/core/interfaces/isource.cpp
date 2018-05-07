@@ -133,7 +133,7 @@ void ISource::openAudioRecs() {
     QString user_id = userID(sf_audio_recs_by_me);
 
     Presentation::Dockbars::obj().createDocBar(
-        LSTR("Audio Rec for YOU"),
+        QStringLiteral("Audio Rec for YOU"),
         Models::Params(sourceType(), (Models::ParamFlags)(Models::mpf_auto_play_next | (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none) | Models::mpf_source_configurable), user_id, rec_user_audio), 0, true, true
     );
 }
@@ -142,7 +142,7 @@ void ISource::openVideoRecs() {
     QString user_id = userID(sf_video_recs_by_me);
 
     Presentation::Dockbars::obj().createDocBar(
-        LSTR("Video Rec for YOU"),
+        QStringLiteral("Video Rec for YOU"),
         Models::Params(sourceType(), (Models::ParamFlags)(Models::mpf_auto_play_next | (Settings::obj().isUseIgnoreList() ? Models::mpf_use_ignore_list : Models::mpf_none) | Models::mpf_source_configurable), user_id, rec_user_video), 0, true, true
     );
 }

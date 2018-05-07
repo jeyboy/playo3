@@ -51,7 +51,7 @@ namespace Core {
                             response = pRequest(
                                 baseUrlStr(
                                     qst_site_search,
-                                    LSTR("q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
+                                    QStringLiteral("q/CCQD/%1/music/%2").arg(OFFSET_TEMPLATE, limits.predicate), {}
                                 ),
                                 call_type_html,
                                 rulesSite(limits.start_offset, limits.items_limit, limits.requests_limit),

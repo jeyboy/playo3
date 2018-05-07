@@ -37,5 +37,5 @@ void SearchDialog::on_acceptButton_clicked() {
     if (err.isEmpty())
         accept();
     else
-        QMessageBox::warning(this, QStringLiteral("Warning"), err);
+        QMessageBox::warning(this, QLatin1String("Warning"), err);
 }

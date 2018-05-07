@@ -11,7 +11,7 @@ namespace Core {
                 QString audioUrl(const QString & track_id) {
                     // codec, bitrate, src, gain
                     QJsonObject obj = Manager::prepare() -> jsonGet(
-                        baseUrlStr(qst_site_alt2, LSTR("track/%1/%2/download").arg(track_id, LSTR("top-track-main")), {}),
+                        baseUrlStr(qst_site_alt2, QStringLiteral("track/%1/%2/download").arg(track_id, LSTR("top-track-main")), {}),
                         headers()
                     );
 
@@ -21,7 +21,7 @@ namespace Core {
 
                     QString path = JSON_STR(obj, LSTR("path"));
 
-                    return LSTR("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
+                    return QStringLiteral("https://%1/get-mp3/%2/%3%4?track-id=%5&play=false&").arg(
                         JSON_STR(obj, LSTR("host")), calcKey(path, JSON_CSTR(obj, LSTR("s"))),
                         JSON_CSTR(obj, LSTR("ts")), path, track_id.split(':').first()
                     );

@@ -86,7 +86,7 @@ namespace Core {
                     switch(perm) {
                         case sf_api:
                         case sf_site: {
-                            response = pRequest(baseUrlStr(qst_site_alt1, LSTR("tracks/%1/groups").arg(track_id), {}),
+                            response = pRequest(baseUrlStr(qst_site_alt1, QStringLiteral("tracks/%1/groups").arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 COLLECTION_FIELDS, call_method_get, headers()
                             );

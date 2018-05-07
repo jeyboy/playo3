@@ -103,7 +103,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, LSTR("tracks/%1/likers").arg(track_id), {}),
+                                    qst_site_alt1, QStringLiteral("tracks/%1/likers").arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -130,7 +130,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, LSTR("e1/tracks/%1/reposters").arg(track_id), {}),
+                                    qst_site, QStringLiteral("e1/tracks/%1/reposters").arg(track_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -164,7 +164,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, LSTR("users/%1/followings").arg(user_id), {}),
+                                    qst_site, QStringLiteral("users/%1/followings").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS << LSTR("collection"), call_method_get, headers()
                             );
@@ -197,7 +197,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site, LSTR("users/%1/followers").arg(user_id), {}),
+                                    qst_site, QStringLiteral("users/%1/followers").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0, proc_json_patch,
                                 IQUERY_DEF_FIELDS << LSTR("collection"), call_method_get, headers()
                             );
@@ -231,14 +231,14 @@ namespace Core {
                                 QString uid = has_station_head ? user_id : QString(val_station_head_tkn % user_id);
 
                                 response = pRequest(
-                                    baseUrlStr(qst_site_alt1, LSTR("stations/%1/tracks").arg(uid), {}),
+                                    baseUrlStr(qst_site_alt1, QStringLiteral("stations/%1/tracks").arg(uid), {}),
                                     call_type_json, rules(offset, count), 0,
                                     proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                                 );
                                 return prepareBlock(dmt_user, cmd_mtd_user_audio_recommendations, response, {}, {{CMD_ID, user_id}});
                             } else {
                                 response = pRequest(
-                                    baseUrlStr(qst_site_alt1, LSTR("me/personalized-tracks"), {}),
+                                    baseUrlStr(qst_site_alt1, QStringLiteral("me/personalized-tracks"), {}),
                                     call_type_json, rules(offset, count), 0,
                                     proc_json_patch, COLLECTION_FIELDS, call_method_get, headers()
                                 );

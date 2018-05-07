@@ -7,7 +7,7 @@
 // QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtInfoMsg, QtSystemMsg = QtCriticalMsg
 void myMessageOutput(QtMsgType msgType, const QMessageLogContext & context, const QString & message) {
     #ifdef Q_OS_WIN
-        OutputDebugString(reinterpret_cast<const wchar_t *>(QString(message % QStringLiteral("\n")).utf16()) );
+        OutputDebugString(reinterpret_cast<const wchar_t *>(QString(message % QLatin1String("\n")).utf16()) );
     #else
         const char symbols[] = { 'I', 'E', '!', 'X' };
         QString output = QString("[%1] %2").arg(symbols[msgType]).arg(message);
@@ -40,13 +40,13 @@ int main(int argc, char * argv[]) {
     //    QCoreApplication::setOrganizationDomain("bigbug.sos");
     //    QCoreApplication::setApplicationName("Playo3");
 
-        SingleApplication a(argc, argv, QStringLiteral("bigbugplayo"));
+        SingleApplication a(argc, argv, QLatin1String("bigbugplayo"));
         a.setApplicationVersion(APP_VERSION);
 
         QFont font;
         font.setFamily(font.defaultFamily());
         #ifdef HAVE_X11
-            font.setFamily(QStringLiteral("Ubuntu"));
+            font.setFamily(QLatin1String("Ubuntu"));
             font.setPointSize(8);
         #endif
         a.setFont(font);
@@ -66,7 +66,7 @@ int main(int argc, char * argv[]) {
     //        return 0; // uncomment later
         }
 
-        Logger::obj().initiate(QStringLiteral("log.txt"), new QPlainTextEdit());
+        Logger::obj().initiate(QLatin1String("log.txt"), new QPlainTextEdit());
         qInstallMessageHandler(myMessageOutput);
 
         Playo w;

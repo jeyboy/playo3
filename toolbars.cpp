@@ -391,7 +391,7 @@ QToolBar * ToolBars::createPositionMediaBar() {
 QToolBar * ToolBars::createPanMediaBar() {
     QToolBar * ptb = precreateToolBar(TOOLBAR_MEDIA_PAN_KEY, true);
 
-    ClickableSlider * pslider = new ClickableSlider(0, ptb, LSTR("pan|%1|%2").arg(IPlayer::panDefault(), IPlayer::panDefault()));
+    ClickableSlider * pslider = new ClickableSlider(0, ptb, QStringLiteral("pan|%1|%2").arg(IPlayer::panDefault(), IPlayer::panDefault()));
     pslider -> setOrientation(Qt::Horizontal);
     Settings::currentStyle -> applyProperty(pslider, "pan", true);
     pslider -> setTickPosition(QSlider::TicksBothSides);
@@ -478,7 +478,7 @@ QToolBar * ToolBars::createVolumeMediaBar() {
 
 
     int vol_max = IPlayer::volumeMax();
-    ClickableSlider * slider = new ClickableSlider(vol_max + 1, ptb, LSTR("volume|%1|%2").arg(QString::number(vol_max * 0.4), QString::number(vol_max * 0.75)));
+    ClickableSlider * slider = new ClickableSlider(vol_max + 1, ptb, QStringLiteral("volume|%1|%2").arg(QString::number(vol_max * 0.4), QString::number(vol_max * 0.75)));
 
     slider -> setOrientation(Qt::Horizontal);
     slider -> setMinimum(IPlayer::volumeMin());

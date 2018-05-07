@@ -14,7 +14,7 @@
 
 //};
 
-#define LSTR(str) QStringLiteral(str)
+#define LSTR(str) QLatin1String(str)
 
 #define JSON_HAS_KEY(json, key) json.contains(key)
 

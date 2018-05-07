@@ -12,7 +12,7 @@ TabDialog::TabDialog(QWidget * parent) :
 
     connect(this, SIGNAL(accepted()), this, SLOT(accepted()));
 
-    setWindowTitle(QStringLiteral("View settings"));
+    setWindowTitle(LSTR("View settings"));
     ui -> interactive -> setEnabled(false);
     ui -> deleteFile -> setProperty("danger", true);
 

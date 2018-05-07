@@ -70,7 +70,7 @@ void ExtensionDialog::on_newPreset_clicked() {
 }
 
 void ExtensionDialog::on_removePreset_clicked() {
-    if (ui -> presets -> count() > 0 && ui -> presets -> currentText() != QStringLiteral("all")) {
+    if (ui -> presets -> count() > 0 && ui -> presets -> currentText() != QLatin1String("all")) {
         Extensions::obj().removePreset(ui -> presets -> currentText());
         updatePresets();
     }

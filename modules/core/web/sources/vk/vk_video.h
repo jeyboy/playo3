@@ -14,7 +14,7 @@ namespace Core {
 
                 QString videoUrl(const QString & video_id) { // video id should by in format %owner_id_%video_id
                     Response * response = Manager::prepare() -> postFollowed(
-                        LSTR("https://vk.com/al_video.php?act=show&al=1&autoplay=1&force_no_repeat=1&preload=1&video=%1").arg(video_id),
+                        QStringLiteral("https://vk.com/al_video.php?act=show&al=1&autoplay=1&force_no_repeat=1&preload=1&video=%1").arg(video_id),
                         dntHeader()
                     );
 
@@ -29,7 +29,7 @@ namespace Core {
                         QString cache_key = LSTR("cache");
                         QString url_key = LSTR("url");
 
-                        QRegularExpression cache_reg(LSTR("(%1|%2)(\\d+)").arg(cache_key, url_key));
+                        QRegularExpression cache_reg(QStringLiteral("(%1|%2)(\\d+)").arg(cache_key, url_key));
 
                         for(QStringList::Iterator key = available_keys.begin(); key != available_keys.end(); key++) {
                             QRegularExpressionMatch res = cache_reg.match(*key);

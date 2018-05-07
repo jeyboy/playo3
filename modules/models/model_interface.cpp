@@ -1382,7 +1382,7 @@ void IModel::finishSetLoading(const QJsonValue & json, void * params) {
                 emit expandNeeded(pind);
         } else {
             if (temp_item -> dataType() == dt_dummy) {
-                temp_item -> setTitle(LSTR("Error: %1").arg(err_str));
+                temp_item -> setTitle(QStringLiteral("Error: %1").arg(err_str));
                 emit dataChanged(pind, pind);
             }
         }

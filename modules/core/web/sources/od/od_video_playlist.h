@@ -75,7 +75,7 @@ namespace Core {
                     QString vpl = vplToParam(pl_type);
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_video, LSTR("video/%1").arg(vpl),
+                            qst_site_video, QStringLiteral("video/%1").arg(vpl),
                             {
                                 { LSTR("cmd"),          LSTR("VideoVitrinaMain") },
                                 { LSTR("st.cmd"),       LSTR("userMain") },
@@ -105,7 +105,7 @@ namespace Core {
                 QJsonValue videoByPlaylist(const QString & album_id, int pages_limit = 1, const QString & offset_token = QString(), const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                         baseUrlStr(
-                            qst_site_video, LSTR("video/%1").arg(album_id),
+                            qst_site_video, QStringLiteral("video/%1").arg(album_id),
                             {
                                 { LSTR("cmd"),              LSTR("VideoVitrinaMain") },
                                 { LSTR("st.cmd"),           LSTR("userMain") },

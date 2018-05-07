@@ -29,7 +29,7 @@ namespace Core {
 
                         case sf_site: {
                             QJsonObject obj = sRequest(
-                                baseUrlStr(qst_site, LSTR("i1/tracks/%1/streams").arg(track_id), {}),
+                                baseUrlStr(qst_site, QStringLiteral("i1/tracks/%1/streams").arg(track_id), {}),
                                 call_type_json, 0, proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
 
@@ -264,7 +264,7 @@ namespace Core {
 
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site, LSTR("groups/%1/tracks").arg(group_id), {}),
+                                baseUrlStr(qst_site, QStringLiteral("groups/%1/tracks").arg(group_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS, call_method_get, headers()
                             );
@@ -299,7 +299,7 @@ namespace Core {
                         case sf_site: {
                             response = pRequest(
                                 baseUrlStr(
-                                    qst_site_alt1, LSTR("users/%1/tracks").arg(user_id),
+                                    qst_site_alt1, QStringLiteral("users/%1/tracks").arg(user_id),
                                     {{ LSTR("representation"), QString() }}
                                 ),
                                 call_type_json, rules(offset, count), 0,
@@ -334,7 +334,7 @@ namespace Core {
 
                         case sf_site: {
                             response = pRequest(
-                                baseUrlStr(qst_site_alt1, LSTR("users/%1/likes").arg(user_id), {}),
+                                baseUrlStr(qst_site_alt1, QStringLiteral("users/%1/likes").arg(user_id), {}),
                                 call_type_json, rules(offset, count), 0,
                                 proc_json_patch, IQUERY_DEF_FIELDS << LSTR("collection") <<
                                 LSTR("track"), call_method_get, headers()

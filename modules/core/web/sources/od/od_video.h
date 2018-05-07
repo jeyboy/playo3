@@ -16,7 +16,7 @@ namespace Core {
 
                     QJsonArray videos = saRequest(
                         baseUrlStr(
-                            qst_site_video, LSTR("video/%1").arg(uid),
+                            qst_site_video, QStringLiteral("video/%1").arg(uid),
                             {
                                 { LSTR("cmd"),          LSTR("PopLayerVideo") },
                                 { LSTR("st.cmd"),       LSTR("userMain") },
@@ -51,7 +51,7 @@ namespace Core {
                 QJsonValue videoInfo(const QString & id) {
                     QJsonArray videos = saRequest(
                         baseUrlStr(
-                            qst_site_video, LSTR("video/%1").arg(id),
+                            qst_site_video, QStringLiteral("video/%1").arg(id),
                             {
                                 { LSTR("cmd"),          LSTR("PopLayerVideo") },
                                 { LSTR("st.cmd"),       LSTR("userMain") },

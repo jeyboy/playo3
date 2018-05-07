@@ -72,7 +72,7 @@ void RelationsDialog::on_friendsList_itemActivated(QListWidgetItem * item) {
 }
 
 void RelationsDialog::on_groupsList_itemActivated(QListWidgetItem * item) {
-    emit relationTabCreationRequired(item -> text(), QStringLiteral("-") % item -> data(Qt::UserRole).toString());
+    emit relationTabCreationRequired(item -> text(), QLatin1String("-") % item -> data(Qt::UserRole).toString());
 }
 
 void RelationsDialog::on_friendById_clicked() {

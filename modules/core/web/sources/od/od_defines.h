@@ -148,7 +148,7 @@ namespace Core {
                             artists_str = artists_str % ',' % ' ' %  artist_obj.value(tkn_name).toString();
                         }
 
-                        name = LSTR("%1 (%2)").arg(name, artists_str.mid(2));
+                        name = QStringLiteral("%1 (%2)").arg(name, artists_str.mid(2));
                         int source_id = sourceType();
                         QString uid = JSON_STR(tuner_obj, LSTR("data"));
 

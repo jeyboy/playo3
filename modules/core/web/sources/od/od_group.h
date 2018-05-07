@@ -18,7 +18,7 @@ namespace Core {
                 QJsonValue groupsByUser(const QString & user_id, int offset = 1, int pages_limit = 5, const std::initializer_list<std::pair<QString, QString> > & block_params = {}) {
                     QueriableResponse response = pRequest(
                                 baseUrlStr(
-                                    qst_site_group, LSTR("profile/%1/groups/mine").arg(user_id),
+                                    qst_site_group, QStringLiteral("profile/%1/groups/mine").arg(user_id),
                                     {
                                         { LSTR("st.cmd"), LSTR("userGroups") },
                                         { LSTR("st.vpl.mini"), const_false },

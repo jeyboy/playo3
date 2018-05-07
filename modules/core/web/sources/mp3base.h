@@ -180,7 +180,7 @@ namespace Core {
 
             QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(qst_site,
-                    LSTR("/search?q=%1&page=%2")
+                    QStringLiteral("/search?q=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );
 

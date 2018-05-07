@@ -14,7 +14,7 @@ UserActionDialog::~UserActionDialog() {
 void UserActionDialog::buildLoginWithCaptchaForm(const QPixmap & captcha_img, const QString & err, const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Auth form"));
+    buildTitle(QLatin1String("Auth form"));
 
     if (!err.isEmpty()) buildErrFields(err);
 
@@ -26,7 +26,7 @@ void UserActionDialog::buildLoginWithCaptchaForm(const QPixmap & captcha_img, co
 void UserActionDialog::buildLoginForm(const QString & err, const QString & login_val, const QString & password_val, const QString & login_label, const QString & password_label) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Auth form"));
+    buildTitle(QLatin1String("Auth form"));
 
     if (!err.isEmpty()) buildErrFields(err);
 
@@ -37,7 +37,7 @@ void UserActionDialog::buildLoginForm(const QString & err, const QString & login
 void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Captcha form"));
+    buildTitle(QLatin1String("Captcha form"));
 
     buildCaptchaFields(captcha_img);
     proceedForm(inputs);
@@ -46,46 +46,46 @@ void UserActionDialog::buildCaptchaForm(const QPixmap & captcha_img) {
 void UserActionDialog::buildToolbarButtonForm(const QString & name, const QString & path) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Toolbar Button form"));
+    buildTitle(QLatin1String("Toolbar Button form"));
 
-    inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
-    inputs << FormInput::createUrl(path_key, QStringLiteral("Path"), path);
+    inputs << FormInput::createStr(name_key, QLatin1String("Name"), name);
+    inputs << FormInput::createUrl(path_key, QLatin1String("Path"), path);
     proceedForm(inputs);
 }
 
 void UserActionDialog::buildGenreForm(const QString & genre) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Genre form"));
+    buildTitle(QLatin1String("Genre form"));
 
-    inputs << FormInput::createStr(name_key, QStringLiteral("Genre"), genre);
+    inputs << FormInput::createStr(name_key, QLatin1String("Genre"), genre);
     proceedForm(inputs);
 }
 
 void UserActionDialog::buildToolbarForm(const QString & name) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Toolbar form"));
+    buildTitle(QLatin1String("Toolbar form"));
 
-    inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
+    inputs << FormInput::createStr(name_key, QLatin1String("Name"), name);
     proceedForm(inputs);
 }
 
 void UserActionDialog::buildPresetForm(const QString & name) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("New preset form"));
+    buildTitle(QLatin1String("New preset form"));
 
-    inputs << FormInput::createStr(name_key, QStringLiteral("Name"), name);
+    inputs << FormInput::createStr(name_key, QLatin1String("Name"), name);
     proceedForm(inputs);
 }
 
 void UserActionDialog::buildImportForm(const QString & text) {
     inputs.clear();
 
-    buildTitle(QStringLiteral("Import od IDs"));
+    buildTitle(QLatin1String("Import od IDs"));
 
-    inputs << FormInput::createTxt(text_key, QStringLiteral("Ids"), text);
+    inputs << FormInput::createTxt(text_key, QLatin1String("Ids"), text);
     proceedForm(inputs);
 }
 
@@ -107,7 +107,7 @@ QString UserActionDialog::getValue(const QString & name) {
         case string: return ((QLineEdit *)elem.second) -> text();
         case text: return ((QPlainTextEdit *)elem.second) -> toPlainText();
         case list: return ((QComboBox *)elem.second) -> currentText();
-        case checkbox: return ((QCheckBox *) elem.second) -> isChecked() ? QStringLiteral("1") : QString();
+        case checkbox: return ((QCheckBox *) elem.second) -> isChecked() ? QLatin1String("1") : QString();
         default: return QString();
     }
 }
@@ -147,7 +147,7 @@ void UserActionDialog::createElement(FormInput input, QGridLayout * l) {
 }
 
 void UserActionDialog::createUrl(FormInput input, QGridLayout * l) {
-    QPushButton * button = new QPushButton(QStringLiteral("Browse"), layer);
+    QPushButton * button = new QPushButton(QLatin1String("Browse"), layer);
     button -> setProperty("owner_key", input.name);
     connect(button, SIGNAL(clicked(bool)), this, SLOT(browseClicked()));
 
@@ -177,13 +177,13 @@ void UserActionDialog::createImage(FormInput input, QGridLayout * l) {
 
 void UserActionDialog::createTitle(FormInput input, QGridLayout * l) {
     window_title = new QLabel(input.label, layer);
-    window_title -> setStyleSheet(QStringLiteral("font-weight: bold;"));
+    window_title -> setStyleSheet(QLatin1String("font-weight: bold;"));
     insertElem(l, window_title);
 }
 
 void UserActionDialog::createMessage(FormInput input, QGridLayout * l) {
     QLabel * msg = new QLabel(input.label, layer);
-    msg -> setStyleSheet(QStringLiteral("color: red; font-weight: bold;"));
+    msg -> setStyleSheet(QLatin1String("color: red; font-weight: bold;"));
     msg -> setProperty("danger", true);
     insertElem(l, msg);
 }
@@ -213,10 +213,10 @@ void UserActionDialog::proceedInputs(const QList<FormInput> & inputs) {
 void UserActionDialog::insertButtons() {
     QGridLayout * l = (QGridLayout *)layer -> layout();
 
-    QPushButton * cancelButton = new QPushButton(QStringLiteral("Cancel"), layer);
+    QPushButton * cancelButton = new QPushButton(QLatin1String("Cancel"), layer);
     connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
-    QPushButton * acceptButton = new QPushButton(QStringLiteral("Proceed"), layer);
+    QPushButton * acceptButton = new QPushButton(QLatin1String("Proceed"), layer);
     connect(acceptButton, SIGNAL(clicked()), this, SLOT(accept()));
     acceptButton -> setDefault(true);
 

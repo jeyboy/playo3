@@ -65,7 +65,7 @@ namespace Core {
             inline bool isRefreshable() { return false; }
 
             QJsonValue searchProc(const SearchLimit & limits) {
-                QString url_str = baseUrlStr(qst_site, LSTR("/mp3-%1/%2").arg(
+                QString url_str = baseUrlStr(qst_site, QStringLiteral("/mp3-%1/%2").arg(
                     encodeStr(limits.predicate.toLower().replace(QRegularExpression("[\\W_]+"), LSTR("-"))),
                     OFFSET_TEMPLATE
                 ));

@@ -34,7 +34,7 @@ enum FormInputType { title, image, string, text, action, url, list, checkbox, me
 
 //        QTextCharFormat socialId;
 //        socialId.setForeground(Qt::darkBlue);
-//        QString pattern = QStringLiteral("\\b(vk|sc)[\\d\\-_]+\\b");
+//        QString pattern = QLatin1String("\\b(vk|sc)[\\d\\-_]+\\b");
 
 //        QRegExp expression2(pattern);
 //        int index = text.indexOf(expression2);
@@ -47,7 +47,7 @@ enum FormInputType { title, image, string, text, action, url, list, checkbox, me
 //};
 
 // highlighter = new IdHighlighter(ui -> uids -> document());
-//return ui -> uids -> toPlainText().split(QRegularExpression(QStringLiteral("\\W")), QString::SkipEmptyParts);
+//return ui -> uids -> toPlainText().split(QRegularExpression(QLatin1String("\\W")), QString::SkipEmptyParts);
 
 
 struct FormInput {
@@ -113,15 +113,15 @@ struct FormInput {
 class UserActionDialog : public BaseDialog {
     Q_OBJECT
 public:
-    const QString name_key = QStringLiteral("name");
-    const QString path_key = QStringLiteral("path");
+    const QString name_key = QLatin1String("name");
+    const QString path_key = QLatin1String("path");
 
-    const QString text_key = QStringLiteral("text");
+    const QString text_key = QLatin1String("text");
 
-    const QString captcha_key = QStringLiteral("captcha");
+    const QString captcha_key = QLatin1String("captcha");
 
-    const QString login_key = QStringLiteral("login");
-    const QString pass_key = QStringLiteral("password");
+    const QString login_key = QLatin1String("login");
+    const QString pass_key = QLatin1String("password");
 
     explicit UserActionDialog(QWidget * parent = 0);
     ~UserActionDialog();
@@ -142,11 +142,11 @@ public:
 
     void buildCaptchaFields(const QPixmap & captcha_img) {
         inputs << FormInput(captcha_img);
-        inputs << FormInput::createStr(captcha_key, QStringLiteral("Captcha value"));
+        inputs << FormInput::createStr(captcha_key, QLatin1String("Captcha value"));
     }
 
-    void buildLoginWithCaptchaForm(const QPixmap & captcha_img, const QString & err, const QString & login_val, const QString & password_val, const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
-    void buildLoginForm(const QString & err = QString(), const QString & login_val = QString(), const QString & password_val = QString(), const QString & login_label = QStringLiteral("Login"), const QString & password_label = QStringLiteral("Password"));
+    void buildLoginWithCaptchaForm(const QPixmap & captcha_img, const QString & err, const QString & login_val, const QString & password_val, const QString & login_label = QLatin1String("Login"), const QString & password_label = QLatin1String("Password"));
+    void buildLoginForm(const QString & err = QString(), const QString & login_val = QString(), const QString & password_val = QString(), const QString & login_label = QLatin1String("Login"), const QString & password_label = QLatin1String("Password"));
     void buildCaptchaForm(const QPixmap & captcha_img);
     void buildToolbarButtonForm(const QString & name = QString(), const QString & path = QString());
     void buildGenreForm(const QString & genre = QString());

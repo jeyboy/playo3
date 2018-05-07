@@ -40,7 +40,7 @@ namespace Core {
 
             QJsonValue searchByGenre(const SearchLimit & limits) { // default is popular // INFO: not finished
                 QueriableResponse response = pRequest(
-                    LSTR("http://zaycev.net/genres/%1/%2_%3.html")
+                    QStringLiteral("http://zaycev.net/genres/%1/%2_%3.html")
                         .arg(limits.genre, // need to convert genre !!!
                              limits.by_newest() ? LSTR("new") : LSTR("index"),
                              OFFSET_TEMPLATE),
@@ -53,7 +53,7 @@ namespace Core {
             // http://zaycev.net/artist/letter-rus-zh-more.html?page=1
             QJsonValue searchByChar(const SearchLimit & limits) { // by default - sort by popularity
                 QueriableResponse response = pRequest(
-                    LSTR("http://zaycev.net/artist/letter-%1-more.html?page=%2")
+                    QStringLiteral("http://zaycev.net/artist/letter-%1-more.html?page=%2")
                         .arg(prepareLetter(limits), OFFSET_TEMPLATE),
                     call_type_html, rules(limits), 0, proc_char1
                 );
@@ -63,7 +63,7 @@ namespace Core {
 
             QJsonValue searchInSets(const SearchLimit & limits) { // required on loadable containers // not finished
                 QueriableResponse response = pRequest(
-                    LSTR("http://zaycev.net/musicset%1/more.html?page=%2")
+                    QStringLiteral("http://zaycev.net/musicset%1/more.html?page=%2")
                         .arg("", OFFSET_TEMPLATE), // "/news", "/epochs", "/zhanry", "/soundtrack", "/national", "/holiday", "/mood", "/top100", "/other"
                     call_type_html, rules(limits), 0, proc_set1
                 );
@@ -245,7 +245,7 @@ namespace Core {
 
             QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(qst_site,
-                    LSTR("/search.html?query_search=%1&page=%2")
+                    QStringLiteral("/search.html?query_search=%1&page=%2")
                         .arg(encodeStr(limits.predicate), OFFSET_TEMPLATE)
                 );
 

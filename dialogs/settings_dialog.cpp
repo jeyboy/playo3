@@ -9,7 +9,7 @@ SettingsDialog::SettingsDialog(QWidget * parent) :
   BaseDialog(parent), ui(new Ui::SettingsDialog), lastTab(0), iconSizeChanged(false) {
     ui -> setupUi(this);
 
-    setWindowTitle(QStringLiteral("Playo settings"));
+    setWindowTitle(QLatin1String("Playo settings"));
     IStylesheets::applyProperty(this, "transparent", true); // this str is not do anything :(
 
     instantiation();
@@ -179,10 +179,10 @@ void SettingsDialog::on_acceptButton_clicked() {
 }
 
 void SettingsDialog::on_browseButton_clicked() {
-    QString path = QFileDialog::getExistingDirectory(this, QStringLiteral("Please choose new default download path"));
+    QString path = QFileDialog::getExistingDirectory(this, QLatin1String("Please choose new default download path"));
     if (!path.isEmpty()) {
         if (!path.endsWith('/'))
-            path += QStringLiteral("/");
+            path += QLatin1String("/");
         ui -> downloadPath -> setText(path);
     }
 }
@@ -322,13 +322,13 @@ void SettingsDialog::initGlobalSettings() {
     ui -> downloadPath -> setText(download_path);
 
     if (download_path != SETTINGS_DEFAULT_DOWNLOAD_PATH && !QDir().mkdir(download_path))
-        ui -> downloadPath -> setStyleSheet(QStringLiteral("background-color: red; color: white;"));
+        ui -> downloadPath -> setStyleSheet(QLatin1String("background-color: red; color: white;"));
 
     QStringList positions;
-    positions.append(QStringLiteral("Above"));
-    positions.append(QStringLiteral("Below"));
-    positions.append(QStringLiteral("Left"));
-    positions.append(QStringLiteral("Right"));
+    positions.append(QLatin1String("Above"));
+    positions.append(QLatin1String("Below"));
+    positions.append(QLatin1String("Left"));
+    positions.append(QLatin1String("Right"));
 
     ui -> tabPositionSelect -> insertItems(0, positions);
     ui -> tabPositionSelect -> setCurrentIndex(Settings::obj().tabPosition());
@@ -342,9 +342,9 @@ void SettingsDialog::initGlobalSettings() {
         on_openDropPointInTab_toggled(false);
 
     QStringList tab_types;
-    tab_types.append(QStringLiteral("List"));
-    tab_types.append(QStringLiteral("Level Tree"));
-    tab_types.append(QStringLiteral("Tree"));
+    tab_types.append(QLatin1String("List"));
+    tab_types.append(QLatin1String("Level Tree"));
+    tab_types.append(QLatin1String("Tree"));
 
     int ind;
     switch(Settings::obj().openDropPointInTabType()) {
@@ -359,9 +359,9 @@ void SettingsDialog::initGlobalSettings() {
     ui -> toolIconSize -> setValue(Settings::obj().toolIconSize());
 
     QStringList schemas;
-//    schemas.append(QStringLiteral("Normal"));
-    schemas.append(QStringLiteral("Light"));
-    schemas.append(QStringLiteral("Dark"));
+//    schemas.append(QLatin1String("Normal"));
+    schemas.append(QLatin1String("Light"));
+    schemas.append(QLatin1String("Dark"));
 
     ui -> colorScheme -> insertItems(0, schemas);
     ui -> colorScheme -> setCurrentIndex(Settings::obj().colorScheme() - 1);
@@ -471,8 +471,8 @@ void SettingsDialog::initSpectrumSettings() {
     ui -> spectrumMultiplier -> setValue(Settings::obj().spectrumMultiplier());
 
     QStringList spectrumTypes;
-    spectrumTypes.append(QStringLiteral("Combined"));
-    spectrumTypes.append(QStringLiteral("By Channels"));
+    spectrumTypes.append(QLatin1String("Combined"));
+    spectrumTypes.append(QLatin1String("By Channels"));
 
     ui -> spectrumTypeSelect -> insertItems(0, spectrumTypes);
     ui -> spectrumTypeSelect -> setCurrentIndex((int)Settings::obj().spectrumType());
@@ -487,7 +487,7 @@ void SettingsDialog::initLibrarySettings() {
 void SettingsDialog::initExtensions() {
     extDialog = new ExtensionDialog(this);
     extDialog -> convertToWidget();
-    extDialog -> findChild<QWidget *>(QStringLiteral("submitButtons")) -> setVisible(false);
+    extDialog -> findChild<QWidget *>(QLatin1String("submitButtons")) -> setVisible(false);
     ui -> extensionsArea -> setWidget(extDialog);
 }
 

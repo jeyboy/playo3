@@ -115,7 +115,7 @@ namespace Core {
 
                         user_obj.insert(
                             tkn_coverUri,
-                            LSTR("https://yapic.yandex.ru/get/%1/islands-retina-middle").arg(JSON_CSTR(user_obj, tkn_uid))
+                            QStringLiteral("https://yapic.yandex.ru/get/%1/islands-retina-middle").arg(JSON_CSTR(user_obj, tkn_uid))
                         );
 
                         res << user_obj;
@@ -250,7 +250,7 @@ namespace Core {
                     return (artists = res);
                 }
                 QJsonArray & prepareVideos(QJsonArray & videos) {//TODO: write me
-                    int i = 0;
+//                    int i = 0;
 //                    QJsonArray res;
 
 //                    for(QJsonArray::Iterator video = videos.begin(); video != videos.end(); video++) {
@@ -279,7 +279,7 @@ namespace Core {
                     return videos;
                 }
                 QJsonArray & prepareStreams(QJsonArray & streams) {//TODO: write me
-                    int i = 0;
+//                    int i = 0;
 //                    QJsonArray res;
 
 //                    for(QJsonArray::Iterator video = videos.begin(); video != videos.end(); video++) {

@@ -44,7 +44,7 @@ namespace Core {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
-                                            LSTR("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
+                                            QStringLiteral("q/lastmonth/CAQD/%1/music").arg(OFFSET_TEMPLATE),
                                             {}
                                         ),
                                         call_type_html,
@@ -77,7 +77,7 @@ namespace Core {
                                     response = pRequest(
                                         baseUrlStr(
                                             qst_site_search,
-                                            LSTR("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
+                                            QStringLiteral("q/lastmonth/CAQD/%1/video").arg(OFFSET_TEMPLATE),
                                             {}
                                         ),
                                         call_type_html,

@@ -34,7 +34,7 @@ namespace Dialogs {
         QColor itemTextColor, selectedItemTextColor, itemInfoTextColor, selectedItemInfoTextColor;
     protected:
         void setBackgroundColor(QWidget * widget, const QColor & color) {
-            widget -> setStyleSheet(QStringLiteral("background-color: ") % color.name() % QStringLiteral(";"));
+            widget -> setStyleSheet(QLatin1String("background-color: ") % color.name() % QLatin1String(";"));
         }
 
         void initDevicesList(const quint8 & driver_id);

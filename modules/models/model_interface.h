@@ -49,7 +49,7 @@ namespace Models {
 
         inline QString name() {
             QString subject = objectName();
-            return subject.mid(0, subject.length() - MODEL_POSTFIX.length());
+            return subject.mid(0, subject.length() - MODEL_POSTFIX.size());
         }
 
         inline Params settings() const { return sttngs; }

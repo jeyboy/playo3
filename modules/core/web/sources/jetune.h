@@ -79,7 +79,7 @@ namespace Core {
 
             QJsonValue searchProc(const SearchLimit & limits) {
                 QString url_str = baseUrlStr(qst_site,
-                    LSTR("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
+                    QStringLiteral("/widesearch?ms_search_text=%1&ms_search_type=%2&ms_page=%3").arg(
                         encodeStr(limits.predicate),
                         limits.by_artists() ? LSTR("artist") : LSTR("track"),
                         OFFSET_TEMPLATE

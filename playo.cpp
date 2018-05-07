@@ -207,7 +207,7 @@ void Playo::showSearchDialog() {
     if (dialog.exec() == QDialog::Accepted) {
         Models::Params settings(dt_search, mpf_auto_play_next);
         SearchLimitLayers prms = dialog.params();
-        Dockbars::obj().createDocBar(LSTR("Search"), settings, 0, true, true, &prms);
+        Dockbars::obj().createDocBar(QStringLiteral("Search"), settings, 0, true, true, &prms);
     }
 }
 
