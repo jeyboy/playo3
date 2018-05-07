@@ -27,13 +27,24 @@ IPlayer * PlayerFactory::setCurrentPlayer(const IPlayer::DriverId & new_driver_i
     //TODO: connect other settings
 
     if (old_player) {
+        bool is_paused = old_player -> isPaused();
+        bool is_played = old_player -> isPlayed();
+
+        if (is_played) {
+            old_player -> pause();
+        }
+
         player -> setVolume(old_player -> volume());
         player -> setPan(old_player -> pan());
         player -> activateEQ(old_player -> eqInUse());
         player -> eqGains(old_player -> eqGains(), true);
         player -> setMedia(old_player -> mediaUrl(), old_player -> title(), old_player -> startPosition(), old_player -> duration(), old_player -> position());
 
-        delete players.take(old_player -> uid());
+        delete players.take(old_player -> uid()); // remove old player this time for decreasing of memory usage
+
+        if (is_played || is_paused) {
+            player -> play(is_paused);
+        }
     }
 
     return player;

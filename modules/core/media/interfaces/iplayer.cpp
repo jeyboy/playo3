@@ -32,7 +32,7 @@ void IPlayer::updateState(const PlayerState & new_state) {
         break;}
         default: channelsCount(2); //INFO: update spectrum if item opening is failed
     }
-    ITrackable::updateState(isPlayed(), isPaused(), isStopped(), pstate != UnknowState);
+    ITrackable::updateState(pstate);
     emit stateChanged(pstate);
 }
 
@@ -113,8 +113,6 @@ void IPlayer::slideVolBackward() {
 }
 
 void IPlayer::setPosition(const qint64 & new_pos) {
-    qDebug() << "SET POS"  << position() << new_pos;
-
     newPosProcessing(new_pos);
     updatePosition(new_pos);
 }

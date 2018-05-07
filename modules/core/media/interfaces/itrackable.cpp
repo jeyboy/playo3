@@ -1,47 +1,69 @@
 #include "itrackable.h"
 
-ITrackable::ITrackable(QWidget * parent) {
+#include <qdebug.h>
+
+ITrackable::ITrackable(QWidget * parent) : ico_played(0), ico_paused(0) {
+    ico_played = new QIcon(QLatin1String(":task_play"));
+    ico_paused = new QIcon(QLatin1String(":task_pause"));
+
     #ifdef Q_OS_WIN
-        stateButton = new QWinTaskbarButton(parent);
+        state_button = new QWinTaskbarButton(parent);
         parent -> winId(); // generate native object for windowHandle()
-        stateButton -> setWindow(parent -> windowHandle());
-        stateProgress = stateButton -> progress();
-        stateProgress -> setMinimum(0);
+        state_button -> setWindow(parent -> windowHandle());
+        state_progress = state_button -> progress();
+        state_progress -> setMinimum(0);
     #else
         Q_UNUSED(parent);
     #endif
 }
 
-void ITrackable::updateState(const bool & played, const bool & paused, const bool & stopped, const bool & visible) {
+ITrackable::~ITrackable() {
+    delete ico_played;
+    delete ico_paused;
+}
+
+void ITrackable::updateState(const PlayerState & state) {
+    bool played = state == PlayingState;
+    bool paused = state == PausedState;
+    bool visible = state != UnknowState;
+
+    qDebug() << "BTN" << played << paused << visible;
+
     #ifdef Q_OS_WIN
-        Q_UNUSED(stopped);
-        stateProgress -> setVisible(visible);
+        state_progress -> setVisible(visible);
 
-        if (!played && !paused)
-            stateButton -> setOverlayIcon(QIcon());
-        else
-            stateButton -> setOverlayIcon(QIcon(
-                played ? QStringLiteral(":task_play") : QStringLiteral(":task_pause")
-            ));
+        if (!played && !paused) {
+            if (state == StoppedState) {
+                state_button -> setOverlayAccessibleDescription(QLatin1String());
+                state_button -> clearOverlayIcon();
+            }
+        } else {
+            if (played) {
+                state_progress -> resume();
 
-        if (played) {
-            stateProgress -> resume();
-            stateButton -> setOverlayAccessibleDescription(title());
+//                QMetaObject::invokeMethod(
+//                    state_button,
+//                    "setOverlayIcon",
+//                    (Qt::ConnectionType)(Qt::BlockingQueuedConnection),
+//                    Q_ARG(const QIcon &, *ico_played),
+//                );
+
+                state_button -> setOverlayAccessibleDescription(title());
+                state_button -> setOverlayIcon(*ico_played);
+            }
+            else if (paused) {
+                state_button -> setOverlayIcon(*ico_paused);
+                state_progress -> pause();
+            }
         }
-
-        if (paused)
-            stateProgress -> pause();
     #else
-        Q_UNUSED(played);
-        Q_UNUSED(paused);
-        Q_UNUSED(stopped);
-        Q_UNUSED(visible);
+        Q_UNUSED(state);
     #endif
 }
 
 void ITrackable::setProgress(const int & pos) {
     #ifdef Q_OS_WIN
-        stateProgress -> setValue(pos);
+        state_progress -> setValue(pos);
     #else
         Q_UNUSED(pos);
     #endif
@@ -49,8 +71,8 @@ void ITrackable::setProgress(const int & pos) {
 
 void ITrackable::setMaxProgress(const int & max_pos) {
     #ifdef Q_OS_WIN
-        stateProgress -> setVisible(true);
-        stateProgress -> setMaximum(max_pos);
+        state_progress -> setVisible(true);
+        state_progress -> setMaximum(max_pos);
     #else
         Q_UNUSED(maxPos);
     #endif

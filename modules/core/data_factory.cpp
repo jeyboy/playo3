@@ -86,9 +86,9 @@ namespace Core {
         IPlayer * player = currPlayer();
 
         QUrl curr_url = player -> mediaUrl();
-        bool continuePlaying = item && !curr_url.isEmpty() && item -> toUrl() == curr_url;
+        bool continue_playing = item && !curr_url.isEmpty() && item -> toUrl() == curr_url;
 
-        if (!continuePlaying)
+        if (!continue_playing)
             player -> closeMedia();
         else {
             player -> pause();
@@ -108,7 +108,7 @@ namespace Core {
             if (item -> error().toInt() != ItemErrors::warn_not_permitted) {
                 emit playedItemChanged(prev_item_title, item -> title().toString());
 
-                if (continuePlaying) {
+                if (continue_playing) {
                     player -> updateMedia(
                         item -> startPosMillis(),
                         item -> durationMillis()
