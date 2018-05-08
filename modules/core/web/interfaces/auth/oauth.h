@@ -4,7 +4,7 @@
 #include "modules/core/web/utils/web_manager.h"
 #include <QMessageAuthenticationCode>
 
-#define NOUNCE_SET QStringLiteral("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+#define NOUNCE_SET QLatin1String("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
 
 namespace Core {
     namespace Web {
@@ -38,8 +38,8 @@ namespace Core {
                 if (port != -1) {
                     QString scheme = uri.scheme().toLower();
 
-                    if ((scheme == QStringLiteral("http") && port == 80) ||
-                        (scheme == QStringLiteral("https") && port == 443))
+                    if ((scheme == QLatin1String("http") && port == 80) ||
+                        (scheme == QLatin1String("https") && port == 443))
                         opts |= QUrl::RemovePort;
                 }
 
@@ -71,24 +71,24 @@ namespace Core {
 
         public:
             OAuth(const QString & consumer_key, const QString & consumer_secret,
-                  const QString & redirect_url = QString()/*QStringLiteral("http://localhost/")*/) :
+                  const QString & redirect_url = QString()/*QLatin1String("http://localhost/")*/) :
                 consumer_key(consumer_key), consumer_secret(consumer_secret), redirect_url(redirect_url) {}
 
-            bool initiate(const QString & url, const QString & http_method = QStringLiteral("POST")) { // tested
+            bool initiate(const QString & url, const QString & http_method = QLatin1String("POST")) { // tested
                 QUrl uri(url);
 
                 quint64 timestamp = QDateTime::currentMSecsSinceEpoch() / 1000;
 
                 QMap<QString, QString> attrs = {
-                    {QStringLiteral("oauth_version"), QStringLiteral("1.0")},
-                    {QStringLiteral("oauth_consumer_key"), consumer_key},
-                    {QStringLiteral("oauth_signature_method"), QStringLiteral("HMAC-SHA1")},
-                    {QStringLiteral("oauth_timestamp"), QString::number(timestamp)},
-                    {QStringLiteral("oauth_nonce"), nonce(8, timestamp)},
+                    {QLatin1String("oauth_version"), QLatin1String("1.0")},
+                    {QLatin1String("oauth_consumer_key"), consumer_key},
+                    {QLatin1String("oauth_signature_method"), QLatin1String("HMAC-SHA1")},
+                    {QLatin1String("oauth_timestamp"), QString::number(timestamp)},
+                    {QLatin1String("oauth_nonce"), nonce(8, timestamp)},
                 };
 
                 if (!redirect_url.isEmpty())
-                    attrs.insert(QStringLiteral("oauth_callback"), QUrl::toPercentEncoding(redirect_url));
+                    attrs.insert(QLatin1String("oauth_callback"), QUrl::toPercentEncoding(redirect_url));
 
                 QUrlQuery query(uri.query());
 
@@ -96,7 +96,7 @@ namespace Core {
                 for(QList<QPair<QString, QString> >::Iterator it = items.begin(); it != items.end(); it++)
                     attrs.insert(QUrl::toPercentEncoding((*it).first), QUrl::toPercentEncoding((*it).second));
 
-                attrs.insert(QStringLiteral("oauth_signature"), signature(http_method, uri, attrs));
+                attrs.insert(QLatin1String("oauth_signature"), signature(http_method, uri, attrs));
 
                 QUrlQuery new_query;
                 QString oauth_header("OAuth ");
@@ -104,17 +104,17 @@ namespace Core {
                 for(QMap<QString, QString>::ConstIterator it = attrs.cbegin(); it != attrs.cend(); it++) {
                     new_query.addQueryItem(it.key(), it.value());
 
-                    if (it.key().startsWith(QStringLiteral("oauth_")))
+                    if (it.key().startsWith(QLatin1String("oauth_")))
                         oauth_header = oauth_header % QStringLiteral("%1=\"%2\",").arg(it.key(), it.value());
                 }
 
                 oauth_header.chop(1);
 
                 Response * resp;
-                Headers headers = {{QStringLiteral("Authorization"), oauth_header}};
+                Headers headers = {{QLatin1String("Authorization"), oauth_header}};
                 uri.setQuery(new_query);
 
-                if (http_method == QStringLiteral("GET")) {
+                if (http_method == QLatin1String("GET")) {
                     resp = Manager::prepare() -> getFollowed(uri, headers);
                 } else {
                     resp = Manager::prepare() -> formFollowed(uri, new_query.toString().toUtf8(), headers);
@@ -123,9 +123,9 @@ namespace Core {
                 QUrlQuery result_params = resp -> toQuery();
                 qDebug() << "SOSO" << result_params.toString();
 
-                if (result_params.hasQueryItem(QStringLiteral("oauth_token"))) {
-                    oauth_token = result_params.queryItemValue(QStringLiteral("oauth_token"));
-                    oauth_token_secret = result_params.queryItemValue(QStringLiteral("oauth_token_secret"));
+                if (result_params.hasQueryItem(QLatin1String("oauth_token"))) {
+                    oauth_token = result_params.queryItemValue(QLatin1String("oauth_token"));
+                    oauth_token_secret = result_params.queryItemValue(QLatin1String("oauth_token_secret"));
 //                    oauth_callback_confirmed=true
 
                     return true;
@@ -139,7 +139,7 @@ namespace Core {
 
                 QUrl uri(url);
                 QUrlQuery query(uri.query());
-                query.addQueryItem(QStringLiteral("oauth_token"), oauth_token);
+                query.addQueryItem(QLatin1String("oauth_token"), oauth_token);
                 uri.setQuery(query);
                 qDebug() << "ACCESS URI" << uri;
 

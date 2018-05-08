@@ -20,11 +20,11 @@
 #define EQ_MIN_INTERVAL -150
 #define EQ_MAX_INTERVAL 150
 #define EQ_BASE 10.0
-#define DB_STR QStringLiteral(" dB")
+#define DB_STR QLatin1String(" dB")
 
 namespace Controls {
-    #define DEFAULT_PRESET QStringLiteral("Manual")
-    #define EQUALIZER_JSON_KEY QStringLiteral("presets")
+    #define DEFAULT_PRESET QLatin1String("Manual")
+    #define EQUALIZER_JSON_KEY QLatin1String("presets")
 
     class EqualizerView : public QWidget {
         Q_OBJECT

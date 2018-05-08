@@ -6,10 +6,10 @@
 #include <qstandardpaths.h>
 #include <qfile.h>
 
-#define AUTORUN_NAME QStringLiteral("Playo3")
+#define AUTORUN_NAME QLatin1String("Playo3")
 
 class Autorun {
-    inline static QString startup_path() { return QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation) % "/Startup/"; }
+    inline static QString startup_path() { return QStandardPaths::writableLocation(QStandardPaths::ApplicationsLocation) % QLatin1String("/Startup/"); }
 public:
     static void registerApp() {
         #ifdef Q_OS_WIN
@@ -25,7 +25,7 @@ public:
 
     static void unregisterApp() {
         #ifdef Q_OS_WIN
-            QSettings settings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
+            QSettings settings(QLatin1String("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
             settings.remove(AUTORUN_NAME);
 
             QFile::remove(startup_path() % AUTORUN_NAME % ".lnk");
@@ -37,12 +37,12 @@ public:
 //    static void registerApp() {
 //        #ifdef Q_OS_WIN
 //    //        HKMU/Software/Microsoft/Windows/CurrentVersion/Run
-//            QSettings settings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
+//            QSettings settings(QLatin1String("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
 
 //            QString value = QCoreApplication::applicationFilePath();
-//            value = value.replace(QStringLiteral("/"), QStringLiteral("\\"));
+//            value = value.replace(QLatin1String("/"), QLatin1String("\\"));
 
-//            settings.setValue(AUTORUN_NAME, QStringLiteral("\"") + value + QStringLiteral("\""));
+//            settings.setValue(AUTORUN_NAME, QLatin1String("\"") + value + QLatin1String("\""));
 //        #else
 ////        mkdir -p ~/.config/autostart/
 ////        .. and add a <Desktop entry> ( AppName.desktop ),
@@ -54,7 +54,7 @@ public:
 
 //    static void unregisterApp() {
 //        #ifdef Q_OS_WIN
-//            QSettings settings(QStringLiteral("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
+//            QSettings settings(QLatin1String("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"), QSettings::NativeFormat);
 //            settings.remove(AUTORUN_NAME);
 //        #else
 

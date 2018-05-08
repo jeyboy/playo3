@@ -3,15 +3,15 @@
 
 #include <qjsonobject.h>
 
-#define SETTINGS_SHOW_CHECKBOX_KEY QStringLiteral("show_checkboxes")
-#define SETTINGS_SPOIL_ON_ACTIVATION_KEY QStringLiteral("spoil_on_activation")
-#define SETTINGS_ALERT_ON_FOLDER_DELETION_KEY QStringLiteral("alert_on_folder_deletion")
-#define SETTINGS_SHOW_SYSTEM_ICON_KEY QStringLiteral("show_system_icons")
-#define SETTINGS_HEIGHT_UNIFICATION_KEY QStringLiteral("height_unification")
-#define SETTINGS_TREE_IDENTATION_KEY QStringLiteral("tree_indentation")
-#define SETTINGS_ITEM_PRESENTATION_TYPE_KEY QStringLiteral("item_present_type")
-#define SETTINGS_FIND_VALID_KEY QStringLiteral("find_valid")
-#define SETTINGS_SHOW_NUMBER_KEY QStringLiteral("show_number")
+#define SETTINGS_SHOW_CHECKBOX_KEY QLatin1String("show_checkboxes")
+#define SETTINGS_SPOIL_ON_ACTIVATION_KEY QLatin1String("spoil_on_activation")
+#define SETTINGS_ALERT_ON_FOLDER_DELETION_KEY QLatin1String("alert_on_folder_deletion")
+#define SETTINGS_SHOW_SYSTEM_ICON_KEY QLatin1String("show_system_icons")
+#define SETTINGS_HEIGHT_UNIFICATION_KEY QLatin1String("height_unification")
+#define SETTINGS_TREE_IDENTATION_KEY QLatin1String("tree_indentation")
+#define SETTINGS_ITEM_PRESENTATION_TYPE_KEY QLatin1String("item_present_type")
+#define SETTINGS_FIND_VALID_KEY QLatin1String("find_valid")
+#define SETTINGS_SHOW_NUMBER_KEY QLatin1String("show_number")
 
 class TabSettings {
 public:

@@ -9,7 +9,7 @@ using namespace Controls;
 
 ToolBar::ToolBar(const QString & title, QWidget * parent) : QToolBar(title, parent), m_action_expand(0) {
     setAcceptDrops(true);
-    setObjectName(QStringLiteral("tool_") % title);
+    setObjectName(QLatin1String("tool_") % title);
     setToolButtonStyle(Qt::ToolButtonFollowStyle);
 
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -29,7 +29,7 @@ void ToolBar::addTitleLabel(const QString & title) {
     QString row = titleLabel -> fontMetrics().elidedText(title, Qt::ElideRight, 30, Qt::TextWrapAnywhere);
     if (row.size() < title.size()) {
         row.chop(1);
-        row = row + title.at(row.size()) % QStringLiteral("\n") % title.mid(row.length() + 1, row.length()) + ((title.size() > (row.length() * 2) + 1) ? QStringLiteral("..") : QStringLiteral(""));
+        row = row + title.at(row.size()) % QLatin1String("\n") % title.mid(row.length() + 1, row.length()) + ((title.size() > (row.length() * 2) + 1) ? QLatin1String("..") : QLatin1String(""));
     }
 
     titleLabel -> setText(row);
@@ -37,7 +37,7 @@ void ToolBar::addTitleLabel(const QString & title) {
     titleLabel -> setMaximumSize(30, 30);
     titleLabel -> setAlignment(Qt::AlignCenter);
     titleLabel -> setContentsMargins(0,0,0,0);
-    addWidget(titleLabel) -> setObjectName(QStringLiteral("*Title"));
+    addWidget(titleLabel) -> setObjectName(QLatin1String("*Title"));
 }
 
 void ToolBar::findExtension() {
@@ -57,7 +57,7 @@ void ToolBar::forceExtensionClick(bool open) {
 }
 
 void ToolBar::dragEnterEvent(QDragEnterEvent * event) {
-    if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list"))) {
+    if (event -> mimeData() -> hasFormat(QLatin1String("text/uri-list"))) {
         event -> accept();
         forceExtensionClick();
     } else

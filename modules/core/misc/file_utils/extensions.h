@@ -8,10 +8,10 @@
 
 #include "modules/core/interfaces/singleton.h"
 
-#define JSON_KEY QStringLiteral("filters")
-#define JSON_ACTIVE_KEY QStringLiteral("active")
-#define DEFAULT_ACTIVE QStringLiteral("all")
-#define MUSIC_PRESET QStringLiteral("music")
+#define JSON_KEY QLatin1String("filters")
+#define JSON_ACTIVE_KEY QLatin1String("active")
+#define DEFAULT_ACTIVE QLatin1String("all")
+#define MUSIC_PRESET QLatin1String("music")
 
 namespace Core {
     class Extensions : public Singleton<Extensions> {

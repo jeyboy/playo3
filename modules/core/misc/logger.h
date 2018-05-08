@@ -14,7 +14,7 @@
 #include "modules/core/misc/format.h"
 #include "modules/core/interfaces/singleton.h"
 
-#define TIME_MARK QDateTime::currentDateTime().toString(QStringLiteral("dd.MM.yyyy hh:mm:ss "))
+#define TIME_MARK QDateTime::currentDateTime().toString(QLatin1String("dd.MM.yyyy hh:mm:ss "))
 
 class Logger : public QObject, public Core::Singleton<Logger> {
     Q_OBJECT
@@ -28,7 +28,7 @@ public:
     ~Logger();
 
     static void dump(const QByteArray & content) {
-        QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QStringLiteral(".html");
+        QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QLatin1String(".html");
         QFile f(p);
         if (f.open(QFile::WriteOnly)) {
             f.write(content);
@@ -47,7 +47,7 @@ public:
 
     inline void startMark() { timer.start(); }
     inline void endMark(QString initiator, QString value) {
-        write(initiator, value, QString::number(timer.elapsed()) % QStringLiteral(" ms (") % Info::paddedNumber(timer.nsecsElapsed()) % QStringLiteral(" ns)"));
+        write(initiator, value, QString::number(timer.elapsed()) % QLatin1String(" ms (") % Info::paddedNumber(timer.nsecsElapsed()) % QLatin1String(" ns)"));
     }
 
 private:

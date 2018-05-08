@@ -40,26 +40,26 @@ QToolButton * ISource::initButton(QWidget * parent) {
         if (is_connected) {
             button -> setIcon(QIcon(QStringLiteral(":/sources/add_%1_on").arg(name().toLower())));
 
-            menu -> addAction(QStringLiteral("Disconnect"), this, SLOT(disconnectUser()));
+            menu -> addAction(QLatin1String("Disconnect"), this, SLOT(disconnectUser()));
             menu -> addSeparator();
-            menu -> addAction(QStringLiteral("Open your tab"), this, SLOT(openTab()));
+            menu -> addAction(QLatin1String("Open your tab"), this, SLOT(openTab()));
 
             if (hasSimillarAudioByUser())
-                menu -> addAction(QStringLiteral("Open audio recommendations"), this, SLOT(openAudioRecs()));
+                menu -> addAction(QLatin1String("Open audio recommendations"), this, SLOT(openAudioRecs()));
 
             if (hasSimillarVideoByUser())
-                menu -> addAction(QStringLiteral("Open video recommendations"), this, SLOT(openVideoRecs()));
+                menu -> addAction(QLatin1String("Open video recommendations"), this, SLOT(openVideoRecs()));
         }
         else if (is_connectable) {
-            menu -> addAction(QStringLiteral("Connect"), this, SLOT(openTab()));
+            menu -> addAction(QLatin1String("Connect"), this, SLOT(openTab()));
             menu -> addSeparator();
         }
 
         if (is_sociable)
-            menu -> addAction(QStringLiteral("Open friend/group tab"), this, SLOT(openRelationTab()));
+            menu -> addAction(QLatin1String("Open friend/group tab"), this, SLOT(openRelationTab()));
 
         if (is_packable)
-            menu -> addAction(QStringLiteral("Open package tab"), this, SLOT(openPackageTab()));
+            menu -> addAction(QLatin1String("Open package tab"), this, SLOT(openPackageTab()));
 
         button -> setToolTip(name());
         button -> setPopupMode(QToolButton::InstantPopup);
@@ -79,17 +79,17 @@ QWidget * ISource::settingsBlock(int block_type, const QVariantMap & configs) {
     switch(block_type) {
         case Models::mpf_stream_configurable: {
             block = streamSettingsBlock(configs[QString::number(block_type)]);
-            block_title = QStringLiteral("Stream Config");
+            block_title = QLatin1String("Stream Config");
         break;}
 
         case Models::mpf_feeds_configurable: {
             block = feedsSettingsBlock(configs[QString::number(block_type)]);
-            block_title = QStringLiteral("Feeds Config");
+            block_title = QLatin1String("Feeds Config");
         break;}
 
         case Models::mpf_source_configurable: {
             block = sourceSettingsBlock(configs[QString::number(block_type)]);
-            block_title = QStringLiteral("Source Config");
+            block_title = QLatin1String("Source Config");
         break;}
 
         default: block = 0;

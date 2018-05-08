@@ -75,7 +75,7 @@ namespace Core {
 
                 curr -> setStates(IItem::flag_not_expanded);
                 IItem * dummy = new IItem(dt_dummy, curr, DEFAULT_ITEM_STATE | IItem::flag_proceeded);
-                dummy -> setTitle(QStringLiteral("Loading..."));
+                dummy -> setTitle(QLatin1String("Loading..."));
                 curr -> updateItemsCountInBranch(1);
                 return true;
             }
@@ -106,7 +106,7 @@ namespace Core {
         }
     protected:
         inline QString playlistUid() const { return playlistUid(title().toString(), id().toString()); }
-        inline QString playlistUid(const QString & name, const QString & uid) const { return name + (uid.isEmpty() ? QString() : (QStringLiteral("*") % uid)); }
+        inline QString playlistUid(const QString & name, const QString & uid) const { return name + (uid.isEmpty() ? QString() : (QLatin1String("*") % uid)); }
 
         QHash<QString, Playlist *> playlists;
         QList<IItem *> children;

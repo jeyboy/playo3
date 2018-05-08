@@ -32,7 +32,7 @@ class ImageBank : public QObject, public Core::Singleton<ImageBank> {
 
     QHash<QString, QString> locale_pathes;
 
-    ImageBank() : bank_temp_dir(QCoreApplication::applicationDirPath() % QStringLiteral("/temp_picts/")), in_proc(0) {
+    ImageBank() : bank_temp_dir(QCoreApplication::applicationDirPath() % QLatin1String("/temp_picts/")), in_proc(0) {
         checkFolderExistance();
     }
 
@@ -95,8 +95,8 @@ public:
 
         QUrl u = QUrl(url);
         if (!u.isValid()) {
-            locale_pathes.insert(url, QStringLiteral(":main"));
-            obj -> setPixmap(pixmap(QStringLiteral(":main")));
+            locale_pathes.insert(url, QLatin1String(":main"));
+            obj -> setPixmap(pixmap(QLatin1String(":main")));
             return;
         }
 
@@ -117,7 +117,7 @@ public:
             QUrl u = QUrl(*url);
 
             if (!u.isValid()) {
-                locale_pathes.insert(*url, QStringLiteral(":main"));
+                locale_pathes.insert(*url, QLatin1String(":main"));
                 continue;
             }
 

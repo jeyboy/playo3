@@ -10,40 +10,40 @@ using namespace Controls;
 
 QWidget * SearchConfigurator::initLocations() {
     QWidget * locationsAreaBody = new QWidget();
-    locationsAreaBody -> setObjectName(QStringLiteral("locationsAreaBody"));
+    locationsAreaBody -> setObjectName(QLatin1String("locationsAreaBody"));
 
     QGridLayout * l = new QGridLayout(locationsAreaBody);
 
     inSites = new QCheckBox(locationsAreaBody);
-    inSites -> setObjectName(QStringLiteral("inSites"));
+    inSites -> setObjectName(QLatin1String("inSites"));
     inSites -> setText(QApplication::translate("SearchDialog", "Search in Sites", 0));
     inSites -> setStyleSheet("font-weight: bold;");
     l -> addWidget(inSites, 0, 0);
 
     sitesList = new QListWidget(locationsAreaBody);
-    sitesList -> setObjectName(QStringLiteral("sitesList"));
+    sitesList -> setObjectName(QLatin1String("sitesList"));
     l -> addWidget(sitesList, 1, 0, 3, 1);
 
 
     inComputer = new QCheckBox(locationsAreaBody);
-    inComputer -> setObjectName(QStringLiteral("inComputer"));
+    inComputer -> setObjectName(QLatin1String("inComputer"));
     inComputer -> setText(QApplication::translate("SearchDialog", "Search in Computer", 0));
     inComputer -> setStyleSheet("font-weight: bold;");
     l -> addWidget(inComputer, 0, 1);
 
     driveList = new QListWidget(locationsAreaBody);
-    driveList -> setObjectName(QStringLiteral("driveList"));
+    driveList -> setObjectName(QLatin1String("driveList"));
     l -> addWidget(driveList, 1, 1);
 
 
     inTabs = new QCheckBox(locationsAreaBody);
-    inTabs -> setObjectName(QStringLiteral("inTabs"));
+    inTabs -> setObjectName(QLatin1String("inTabs"));
     inTabs -> setText(QApplication::translate("SearchDialog", "Search in Tabs", 0));
     inTabs -> setStyleSheet("font-weight: bold;");
     l -> addWidget(inTabs, 2, 1);
 
     tabsList = new QListWidget(locationsAreaBody);
-    tabsList -> setObjectName(QStringLiteral("tabsList"));
+    tabsList -> setObjectName(QLatin1String("tabsList"));
     l -> addWidget(tabsList, 3, 1);
 
     return locationsAreaBody;
@@ -51,50 +51,50 @@ QWidget * SearchConfigurator::initLocations() {
 
 QWidget * SearchConfigurator::initPredicates() {
     predicatesAreaBody = new QWidget();
-    predicatesAreaBody -> setObjectName(QStringLiteral("predicatesAreaBody"));
+    predicatesAreaBody -> setObjectName(QLatin1String("predicatesAreaBody"));
 
     QGridLayout * l = new QGridLayout(predicatesAreaBody);
 
     QLabel * sentencesLabel = new QLabel(predicatesAreaBody);
-    sentencesLabel -> setObjectName(QStringLiteral("sentencesLabel"));
+    sentencesLabel -> setObjectName(QLatin1String("sentencesLabel"));
     sentencesLabel -> setText(QApplication::translate("SearchDialog", "Sentences", 0));
     l -> addWidget(sentencesLabel, 0, 0, 1, 2, Qt::AlignCenter);
 
 
     QLabel * genresLabel = new QLabel(predicatesAreaBody);
-    genresLabel -> setObjectName(QStringLiteral("genresLabel"));
+    genresLabel -> setObjectName(QLatin1String("genresLabel"));
     genresLabel -> setText(QApplication::translate("SearchDialog", "Genres", 0));
     l -> addWidget(genresLabel, 0, 2, 1, 2, Qt::AlignCenter);
 
 
     textPredicate = new QLineEdit(predicatesAreaBody);
-    textPredicate -> setObjectName(QStringLiteral("textPredicate"));
+    textPredicate -> setObjectName(QLatin1String("textPredicate"));
     l -> addWidget(textPredicate, 1, 0);
 
     addPredicate = new QPushButton(predicatesAreaBody);
-    addPredicate -> setObjectName(QStringLiteral("addPredicate"));
+    addPredicate -> setObjectName(QLatin1String("addPredicate"));
     addPredicate -> setText(QApplication::translate("SearchDialog", "+", 0));
     addPredicate -> setMaximumSize(24, 32);
     l -> addWidget(addPredicate, 1, 1);
 
     textPredicates = new QListWidget(predicatesAreaBody);
-    textPredicates -> setObjectName(QStringLiteral("textPredicates"));
+    textPredicates -> setObjectName(QLatin1String("textPredicates"));
     textPredicates -> setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
     l -> addWidget(textPredicates, 2, 0, 1, 2);
 
 
     stylePredicate = new QComboBox(predicatesAreaBody);
-    stylePredicate -> setObjectName(QStringLiteral("stylePredicate"));
+    stylePredicate -> setObjectName(QLatin1String("stylePredicate"));
     l -> addWidget(stylePredicate, 1, 2);
 
     addStylePredicate = new QPushButton(predicatesAreaBody);
-    addStylePredicate -> setObjectName(QStringLiteral("addStylePredicate"));
+    addStylePredicate -> setObjectName(QLatin1String("addStylePredicate"));
     addStylePredicate -> setText(QApplication::translate("SearchDialog", "+", 0));
     addStylePredicate -> setMaximumSize(24, 32);
     l -> addWidget(addStylePredicate, 1, 3);
 
     stylePredicates = new QListWidget(predicatesAreaBody);
-    stylePredicates -> setObjectName(QStringLiteral("stylePredicates"));
+    stylePredicates -> setObjectName(QLatin1String("stylePredicates"));
     stylePredicates -> setToolTip(QApplication::translate("SearchDialog", "Double click is removing item", 0));
     l -> addWidget(stylePredicates, 2, 2, 1, 2);
 
@@ -103,12 +103,12 @@ QWidget * SearchConfigurator::initPredicates() {
 
 QWidget * SearchConfigurator::initLimitations() {
     QWidget * limitationsAreaBody = new QWidget();
-    limitationsAreaBody -> setObjectName(QStringLiteral("limitationsAreaBody"));
+    limitationsAreaBody -> setObjectName(QLatin1String("limitationsAreaBody"));
 
     QVBoxLayout * l = new QVBoxLayout(limitationsAreaBody);
 
     QGroupBox * searchByTypesGroup = new QGroupBox(limitationsAreaBody);
-    searchByTypesGroup -> setObjectName(QStringLiteral("searchByTypesGroup"));
+    searchByTypesGroup -> setObjectName(QLatin1String("searchByTypesGroup"));
     searchByTypesGroup -> setTitle(QApplication::translate("SearchDialog", "Search By Types", 0));
 
     l -> addWidget(searchByTypesGroup, 1);
@@ -116,74 +116,74 @@ QWidget * SearchConfigurator::initLimitations() {
     QHBoxLayout * hl = new QHBoxLayout(searchByTypesGroup);
 
     byAllTypes = new QRadioButton(searchByTypesGroup);
-    byAllTypes -> setObjectName(QStringLiteral("byAllTypes"));
+    byAllTypes -> setObjectName(QLatin1String("byAllTypes"));
     byAllTypes -> setChecked(true);
     byAllTypes -> setText(QApplication::translate("SearchDialog", "by all types", 0));
     hl -> addWidget(byAllTypes, 1);
 
     byAudioTypes = new QRadioButton(searchByTypesGroup);
-    byAudioTypes -> setObjectName(QStringLiteral("byAudioTypes"));
+    byAudioTypes -> setObjectName(QLatin1String("byAudioTypes"));
     byAudioTypes -> setChecked(false);
     byAudioTypes -> setText(QApplication::translate("SearchDialog", "by audio", 0));
     hl -> addWidget(byAudioTypes, 1);
 
     byVideoTypes = new QRadioButton(searchByTypesGroup);
-    byVideoTypes -> setObjectName(QStringLiteral("byVideoTypes"));
+    byVideoTypes -> setObjectName(QLatin1String("byVideoTypes"));
     byVideoTypes -> setChecked(false);
     byVideoTypes -> setText(QApplication::translate("SearchDialog", "by video", 0));
     hl -> addWidget(byVideoTypes, 1);
 
 
     QGroupBox * searchByGroup = new QGroupBox(limitationsAreaBody);
-    searchByGroup -> setObjectName(QStringLiteral("searchByGroup"));
+    searchByGroup -> setObjectName(QLatin1String("searchByGroup"));
     searchByGroup -> setTitle(QApplication::translate("SearchDialog", "Search By", 0));
 
     l -> addWidget(searchByGroup, 1);
     QGridLayout * gl1 = new QGridLayout(searchByGroup);
 
     byTitle = new QRadioButton(searchByGroup);
-    byTitle -> setObjectName(QStringLiteral("byTitle"));
+    byTitle -> setObjectName(QLatin1String("byTitle"));
     byTitle -> setChecked(true);
     byTitle -> setText(QApplication::translate("SearchDialog", "Title", 0));
     gl1 -> addWidget(byTitle, 0, 0);
 
     byArtist = new QRadioButton(searchByGroup);
-    byArtist -> setObjectName(QStringLiteral("byArtist"));
+    byArtist -> setObjectName(QLatin1String("byArtist"));
     byArtist -> setChecked(false);
     byArtist -> setText(QApplication::translate("SearchDialog", "by artist if possible", 0));
     gl1 -> addWidget(byArtist, 1, 0);
 
     bySongName = new QRadioButton(searchByGroup);
-    bySongName -> setObjectName(QStringLiteral("bySong"));
+    bySongName -> setObjectName(QLatin1String("bySong"));
     bySongName -> setChecked(false);
     bySongName -> setText(QApplication::translate("SearchDialog", "by song title if possible", 0));
     gl1 -> addWidget(bySongName, 2, 0);
 
     byTag = new QRadioButton(searchByGroup);
-    byTag -> setObjectName(QStringLiteral("byTag"));
+    byTag -> setObjectName(QLatin1String("byTag"));
     byTag -> setText(QApplication::translate("SearchDialog", "Tag", 0));
     gl1 -> addWidget(byTag, 0, 1);
 
     bySet = new QRadioButton(searchByGroup);
-    bySet -> setObjectName(QStringLiteral("bySet"));
+    bySet -> setObjectName(QLatin1String("bySet"));
     bySet -> setText(QApplication::translate("SearchDialog", "Set", 0));
     gl1 -> addWidget(bySet, 1, 1);
 
 
     byLyric = new QRadioButton(searchByGroup);
-    byLyric -> setObjectName(QStringLiteral("byLyric"));
+    byLyric -> setObjectName(QLatin1String("byLyric"));
     byLyric -> setText(QApplication::translate("SearchDialog", "Lyric", 0));
     gl1 -> addWidget(byLyric, 0, 2);
 
     byAbc = new QRadioButton(searchByGroup);
-    byAbc -> setObjectName(QStringLiteral("byAbc"));
+    byAbc -> setObjectName(QLatin1String("byAbc"));
     byAbc -> setText(QApplication::translate("SearchDialog", "Abc", 0));
     gl1 -> addWidget(byAbc, 1, 2);
 
 
 
     QGroupBox * searchInGroup = new QGroupBox(limitationsAreaBody);
-    searchInGroup -> setObjectName(QStringLiteral("searchInGroup"));
+    searchInGroup -> setObjectName(QLatin1String("searchInGroup"));
     searchInGroup -> setTitle(QApplication::translate("SearchDialog", "Search In", 0));
 
     l -> addWidget(searchInGroup, 1);
@@ -192,44 +192,44 @@ QWidget * SearchConfigurator::initLimitations() {
 
 
     byNew = new QCheckBox(searchInGroup);
-    byNew -> setObjectName(QStringLiteral("byNew"));
+    byNew -> setObjectName(QLatin1String("byNew"));
     byNew -> setText(QApplication::translate("SearchDialog", "New", 0));
     gl2 -> addWidget(byNew, 0, 0);
 
     byPopular = new QCheckBox(searchInGroup);
-    byPopular -> setObjectName(QStringLiteral("byPopular"));
+    byPopular -> setObjectName(QLatin1String("byPopular"));
     byPopular -> setText(QApplication::translate("SearchDialog", "Popular", 0));
     gl2 -> addWidget(byPopular, 1, 0);
 
     byRelativity = new QCheckBox(searchInGroup);
-    byRelativity -> setObjectName(QStringLiteral("byRelativity"));
+    byRelativity -> setObjectName(QLatin1String("byRelativity"));
     byRelativity -> setText(QApplication::translate("SearchDialog", "In related", 0));
     gl2 -> addWidget(byRelativity, 0, 1);
 
     byOrigins = new QCheckBox(searchInGroup);
-    byOrigins -> setObjectName(QStringLiteral("byOrigins"));
+    byOrigins -> setObjectName(QLatin1String("byOrigins"));
     byOrigins -> setText(QApplication::translate("SearchDialog", "In originals only", 0));
     gl2 -> addWidget(byOrigins, 1, 1);
 
     byMixes = new QCheckBox(searchInGroup);
-    byMixes -> setObjectName(QStringLiteral("byMixes"));
+    byMixes -> setObjectName(QLatin1String("byMixes"));
     byMixes -> setText(QApplication::translate("SearchDialog", "In mixes only", 0));
     gl2 -> addWidget(byMixes, 2, 1);
 
 
     byForeign = new QCheckBox(searchInGroup);
-    byForeign -> setObjectName(QStringLiteral("byForeign"));
+    byForeign -> setObjectName(QLatin1String("byForeign"));
     byForeign -> setText(QApplication::translate("SearchDialog", "In foreign", 0));
     gl2 -> addWidget(byForeign, 0, 2);
 
     byCyrillic = new QCheckBox(searchInGroup);
-    byCyrillic -> setObjectName(QStringLiteral("byCyrillic"));
+    byCyrillic -> setObjectName(QLatin1String("byCyrillic"));
     byCyrillic -> setText(QApplication::translate("SearchDialog", "In cyrillic", 0));
     gl2 -> addWidget(byCyrillic, 1, 2);
 
 
     byOwns = new QCheckBox(searchInGroup);
-    byOwns -> setObjectName(QStringLiteral("byOwns"));
+    byOwns -> setObjectName(QLatin1String("byOwns"));
     byOwns -> setText(QApplication::translate("SearchDialog", "In owns", 0));
     gl2 -> addWidget(byOwns, 0, 3);
 
@@ -274,7 +274,7 @@ void SearchConfigurator::initiateSources() {
     }
 
     if (has_not_connected && errors_output)
-        errors_output -> setText(QStringLiteral("Some services is not acceptable at this time."));
+        errors_output -> setText(QLatin1String("Some services is not acceptable at this time."));
 
     QStringList genres = MusicGenres::obj().genresList();   genres.sort();
     stylePredicate -> addItems(genres);
@@ -325,12 +325,12 @@ Core::SearchLimitLayers SearchConfigurator::buildParams(
 }
 
 SearchConfigurator::SearchConfigurator(QWidget * parent, QPushButton * activationBtn, QLabel * errors_output) : Accordion(parent), activationBtn(activationBtn), has_not_connected(false), errors_output(errors_output) {
-    setObjectName(QStringLiteral("searchConfigurator"));
+    setObjectName(QLatin1String("searchConfigurator"));
     setExclusive(true);
     setToggleable(false);
-    addItem(QStringLiteral("In locations"), initLocations(), true);
-    addItem(QStringLiteral("By predicates"), initPredicates());
-    addItem(QStringLiteral("With limitations"), initLimitations());
+    addItem(QLatin1String("In locations"), initLocations(), true);
+    addItem(QLatin1String("By predicates"), initPredicates());
+    addItem(QLatin1String("With limitations"), initLimitations());
 
     initiateSources();
 

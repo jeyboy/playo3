@@ -65,20 +65,20 @@ void SearchLimitLayers::prepareLayers(QList<SearchLimitLayer> & requests) {
 }
 
 QString SearchLimitLayer::tokenPrefix() {
-    QString prefix = QStringLiteral("By titles: ");
+    QString prefix = QLatin1String("By titles: ");
 
     if (by_artists())
-        prefix = QStringLiteral("By artists: ");
+        prefix = QLatin1String("By artists: ");
     else if (by_songs_name())
-        prefix = QStringLiteral("By songs: ");
+        prefix = QLatin1String("By songs: ");
     else if (by_sets())
-        prefix = QStringLiteral("By sets: ");
+        prefix = QLatin1String("By sets: ");
     else if (by_abc())
-        prefix = QStringLiteral("By abc: ");
+        prefix = QLatin1String("By abc: ");
     else if (by_lyrics())
-        prefix = QStringLiteral("By lyrics: ");
+        prefix = QLatin1String("By lyrics: ");
     else if (by_tags())
-        prefix = QStringLiteral("By tags: ");
+        prefix = QLatin1String("By tags: ");
 
     return QString();
 }
@@ -89,13 +89,13 @@ QString SearchLimitLayer::token() {
 
     if (has_predicate) {
         if (has_genre)
-            return tokenPrefix() % predicate % QStringLiteral(" (") % genre % QStringLiteral(") ");
+            return tokenPrefix() % predicate % QLatin1String(" (") % genre % QLatin1String(") ");
         else
             return tokenPrefix() % predicate;
     }
     else if (has_genre) return genre;
-    else if (by_popularity() && req_type == sr_remote) return QStringLiteral("By popularity");
-    else return QStringLiteral("All");
+    else if (by_popularity() && req_type == sr_remote) return QLatin1String("By popularity");
+    else return QLatin1String("All");
 }
 
 void SearchLimitLayer::fromJson(const QJsonArray & objs, QList<SearchLimitLayer> & list) {

@@ -4,11 +4,11 @@
 using namespace Controls;
 
 void EqualizerView::initTopLayout(QHBoxLayout * layout) {
-    enabled = new QCheckBox(QStringLiteral("On"), this);  
+    enabled = new QCheckBox(QLatin1String("On"), this);
     PlayerFactory::obj().registerCallback(call_to_player, enabled, SIGNAL(toggled(bool)), SLOT(activateEQ(bool)));
     layout -> addWidget(enabled, 0, Qt::AlignCenter);
 
-    QPushButton * reset = new QPushButton(QStringLiteral("reset"), this);
+    QPushButton * reset = new QPushButton(QLatin1String("reset"), this);
     connect(reset, SIGNAL(clicked()), this, SLOT(reset()));
     layout -> addWidget(reset, 1, Qt::AlignCenter);
 
@@ -25,11 +25,11 @@ void EqualizerView::initTopLayout(QHBoxLayout * layout) {
     connect(presetsList, SIGNAL(currentTextChanged(QString)), this, SLOT(presetChanged(QString)));
     layout -> addWidget(presetsList, 3, Qt::AlignCenter);
 
-    QPushButton * save = new QPushButton(QStringLiteral("save"), this);
+    QPushButton * save = new QPushButton(QLatin1String("save"), this);
     connect(save, SIGNAL(clicked()), this, SLOT(createPreset()));
     layout -> addWidget(save, 1, Qt::AlignCenter);
 
-    QPushButton * remove = new QPushButton(QStringLiteral("remove"), this);
+    QPushButton * remove = new QPushButton(QLatin1String("remove"), this);
     connect(remove, SIGNAL(clicked()), this, SLOT(removePreset()));
     layout -> addWidget(remove, 1, Qt::AlignCenter);
 }
@@ -39,7 +39,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
 
     QMap<float, QString>::Iterator band = bands.begin();
     for(int num = 0; band != bands.end(); band++, num++) {
-        QLabel * dbLabel = new QLabel(QStringLiteral("0") % DB_STR);
+        QLabel * dbLabel = new QLabel(QLatin1String("0") % DB_STR);
         dbLabel -> setProperty("darkest", true);
         dbLabel -> setAlignment(Qt::AlignCenter);
         layout -> addWidget(dbLabel, 0, num, Qt::AlignCenter);
@@ -64,7 +64,7 @@ void EqualizerView::initBottomLayout(QGridLayout * layout) {
 }
 
 EqualizerView::EqualizerView(QWidget * parent) : QWidget(parent), presetChanging(false) {
-    setObjectName(QStringLiteral("tool_equalizer"));
+    setObjectName(QLatin1String("tool_equalizer"));
 
     setAttribute(Qt::WA_NoSystemBackground, true);
     setAttribute(Qt::WA_TranslucentBackground, true);
@@ -105,9 +105,9 @@ QJsonObject EqualizerView::settings() {
     }
 
     res.insert(EQUALIZER_JSON_KEY, presetsNode);
-    res.insert(QStringLiteral("active"), presetsList -> currentText());
-    res.insert(QStringLiteral("enabled"), enabled -> isChecked());
-    res.insert(QStringLiteral("active_preset"), presetTypesList -> currentText());
+    res.insert(QLatin1String("active"), presetsList -> currentText());
+    res.insert(QLatin1String("enabled"), enabled -> isChecked());
+    res.insert(QLatin1String("active_preset"), presetTypesList -> currentText());
 
     return res;
 }

@@ -7,8 +7,8 @@
 #include <qthread.h>
 #include <qstringbuilder.h>
 
-#define DRIVES_PATH QStringLiteral("/mnt")
-#define MEDIA_PATH QStringLiteral("/media")
+#define DRIVES_PATH QLatin1String("/mnt")
+#define MEDIA_PATH QLatin1String("/media")
 
 namespace {
     #define BUFFERSIZE 512

@@ -5,8 +5,8 @@
 
 #include "modules/core/feeder/feed_item.h"
 
-#define FEED_ATTR_TYPE QStringLiteral("ftype")
-#define FEED_ATTR_GENRE QStringLiteral("fgenre")
+#define FEED_ATTR_TYPE QLatin1String("ftype")
+#define FEED_ATTR_GENRE QLatin1String("fgenre")
 
 namespace Core {
     class ISourceFeeds {

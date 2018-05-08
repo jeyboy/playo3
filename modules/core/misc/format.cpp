@@ -2,7 +2,7 @@
 #include <qdebug.h>
 #include <qregularexpression.h>
 
-QString Info::unitList[] = {QStringLiteral("B"), QStringLiteral("Kb"), QStringLiteral("Mb"), QStringLiteral("Gb"), QStringLiteral("Tb"), QStringLiteral("Pb")};
+QString Info::unitList[] = {QLatin1String("B"), QLatin1String("Kb"), QLatin1String("Mb"), QLatin1String("Gb"), QLatin1String("Tb"), QLatin1String("Pb")};
 
 bool Info::isNumber(const QString & str) {
     QRegularExpression r("\\D+");
@@ -66,7 +66,7 @@ QString Info::str(const QString & size, const QString & ext, int bitrate, int fr
 }
 
 QString Info::toUnits(long long val) {
-    if (val == 0) return QStringLiteral("*");
+    if (val == 0) return QLatin1String("*");
 
     int size = sizeof(unitList) / sizeof(unitList[0]);
 

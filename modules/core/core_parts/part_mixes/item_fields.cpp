@@ -28,7 +28,7 @@ QVariant ItemFields::path() const {
 
 //            switch(dataType()) {
 //                case dt_site_vk: {
-//                    if (map.size() == 1 && map.contains(QStringLiteral("external"))) {
+//                    if (map.size() == 1 && map.contains(QLatin1String("external"))) {
 //                        // do some actions with embeded link
 //                    } else { // get best quality
 //                        return map.values().last();
@@ -46,7 +46,7 @@ QStringList ItemFields::info() const {
     QVariant i = _info();
 
     if (!i.isValid())
-        list.append(QStringLiteral("Wait on proc..."));
+        list.append(QLatin1String("Wait on proc..."));
     else
         list.append(i.toString());
     list.append(duration().toString());

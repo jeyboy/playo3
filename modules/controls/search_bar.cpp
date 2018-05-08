@@ -20,7 +20,7 @@ SearchBar::SearchBar(const QObject * receiver, const char * search_start_slot, c
 //    connect(this, SIGNAL(searchCalled(QString)), receiver, search_start_slot);
 //    l -> addWidget(searchButton, 1);
 
-    ClickableLabel * closeButton = new ClickableLabel(QStringLiteral("Close search"), QPixmap(QStringLiteral(":remove")).scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, 0, this, SLOT(onHide()));
+    ClickableLabel * closeButton = new ClickableLabel(QLatin1String("Close search"), QPixmap(QLatin1String(":remove")).scaled(20, 20, Qt::KeepAspectRatio, Qt::SmoothTransformation), this, 0, this, SLOT(onHide()));
     connect(closeButton, SIGNAL(clicked()), closeReceiver, close_slot);
     connect(closeButton, SIGNAL(clicked()), receiver, search_end_slot);
     l -> addWidget(closeButton, 1);

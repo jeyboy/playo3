@@ -9,7 +9,7 @@ ToolbarDropButton::ToolbarDropButton(const QString & text, QWidget * parent) : Q
 }
 
 void ToolbarDropButton::dragEnterEvent(QDragEnterEvent * event) {
-    if (event -> mimeData() -> hasFormat(QStringLiteral("text/uri-list")))
+    if (event -> mimeData() -> hasFormat(QLatin1String("text/uri-list")))
         event -> accept();
     else event -> ignore();
 }

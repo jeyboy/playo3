@@ -116,10 +116,10 @@ void Logger::writeToStream(const QString & initiator, const QString & value, con
 }
 
 void Logger::writeToStream(const QString & initiator, const QString & value, const QString & attr, int level) {
-    toFile(initiator, QString("%1   :::   %2").arg(value, attr));
+    toFile(initiator, QStringLiteral("%1   :::   %2").arg(value, attr));
     toEditor(initiator,
         QString("<span style='color: " %
-            QString(level == log_error ? QStringLiteral("red") : level == log_info ? QStringLiteral("green") : QStringLiteral("blue")) %
+            QString(level == log_error ? QLatin1String("red") : level == log_info ? QLatin1String("green") : QLatin1String("blue")) %
                 "'>%1</span> ::: <span style='color: darkblue'>%2</span>").arg(value, attr)
     );
 }

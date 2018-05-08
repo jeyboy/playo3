@@ -207,25 +207,25 @@ QList<int> VkGenres::toStandartIds(int vkGenreId) {
 }
 
 void VkGenres::initDefault() {
-    genres.insert(QStringLiteral("rock"), 1);
-    genres.insert(QStringLiteral("pop"), 2);
-    genres.insert(QStringLiteral("rap & hip hop"), 3);
-    genres.insert(QStringLiteral("easy listening"), 4);
-    genres.insert(QStringLiteral("dance & house"), 5);
-    genres.insert(QStringLiteral("instrumental"), 6);
-    genres.insert(QStringLiteral("metal"), 7);
-    genres.insert(QStringLiteral("dubstep"), 8);
-    genres.insert(QStringLiteral("jazz & blues"), 9);
-    genres.insert(QStringLiteral("drum & bass"), 10);
-    genres.insert(QStringLiteral("trance"), 11);
-    genres.insert(QStringLiteral("chanson"), 12);
-    genres.insert(QStringLiteral("ethnic"), 13);
-    genres.insert(QStringLiteral("acoustic & vocal"), 14);
-    genres.insert(QStringLiteral("reggae"), 15);
-    genres.insert(QStringLiteral("classical"), 16);
-    genres.insert(QStringLiteral("indie pop"), 17);
-    genres.insert(QStringLiteral("other"), 18);
-    genres.insert(QStringLiteral("speech"), 19);
-    genres.insert(QStringLiteral("alternative"), 21);
-    genres.insert(QStringLiteral("electropop & disco"), 22);
+    genres.insert(QLatin1String("rock"), 1);
+    genres.insert(QLatin1String("pop"), 2);
+    genres.insert(QLatin1String("rap & hip hop"), 3);
+    genres.insert(QLatin1String("easy listening"), 4);
+    genres.insert(QLatin1String("dance & house"), 5);
+    genres.insert(QLatin1String("instrumental"), 6);
+    genres.insert(QLatin1String("metal"), 7);
+    genres.insert(QLatin1String("dubstep"), 8);
+    genres.insert(QLatin1String("jazz & blues"), 9);
+    genres.insert(QLatin1String("drum & bass"), 10);
+    genres.insert(QLatin1String("trance"), 11);
+    genres.insert(QLatin1String("chanson"), 12);
+    genres.insert(QLatin1String("ethnic"), 13);
+    genres.insert(QLatin1String("acoustic & vocal"), 14);
+    genres.insert(QLatin1String("reggae"), 15);
+    genres.insert(QLatin1String("classical"), 16);
+    genres.insert(QLatin1String("indie pop"), 17);
+    genres.insert(QLatin1String("other"), 18);
+    genres.insert(QLatin1String("speech"), 19);
+    genres.insert(QLatin1String("alternative"), 21);
+    genres.insert(QLatin1String("electropop & disco"), 22);
 }

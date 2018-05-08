@@ -25,7 +25,7 @@ void Library::restoreItemState(const QModelIndex & ind) {
 }
 
 void Library::restoreItemStateAsync(const QModelIndex & ind, bool is_remote) {
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RestoreItem"), ind.data().toString());
+    Logger::obj().write(QLatin1String("Library"), QLatin1String("RestoreItem"), ind.data().toString());
 
     ModelCell & cell = waitOnProc[ind.model()];
     cell.append(ind, is_remote, waitListLimit.value(ind.model(), WAIT_LIMIT));
@@ -50,7 +50,7 @@ void Library::declineStateRestoring(const QModelIndex & ind) {
 }
 
 void Library::declineStateRestoring(const QAbstractItemModel * model) {
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("DeclineItemRestoration"));
+    Logger::obj().write(QLatin1String("Library"), QLatin1String("DeclineItemRestoration"));
     waitOnProc.take(model).clear();
 //    QList<QModelIndex> items = waitOnProc.take(model).order;
 
@@ -67,7 +67,7 @@ void Library::declineStateRestoring() {
 }
 
 void Library::cancelActiveRestorations() {
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelActiveRestorations"));
+    Logger::obj().write(QLatin1String("Library"), QLatin1String("CancelActiveRestorations"));
     {
         QList<QFutureWatcher<void> *> inProcList = inProc.values();
         for(QList<QFutureWatcher<void> *>::Iterator it = inProcList.begin(); it != inProcList.end(); it++)
@@ -112,7 +112,7 @@ bool Library::nextProcItem(const ItemsListType & iType, QModelIndex & ind) { // 
 void Library::initStateRestoring() {
     QModelIndex ind;
     if (nextProcItem(local_items, ind)) {
-        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitInfo"), ind.data().toString());
+        Logger::obj().write(QLatin1String("Library"), QLatin1String("InitInfo"), ind.data().toString());
         QFutureWatcher<void> * initiator = new QFutureWatcher<void>();
         inProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishStateRestoring()));
@@ -122,7 +122,7 @@ void Library::initStateRestoring() {
 
 void Library::stateRestoring(const QModelIndex & ind, QFutureWatcher<void> * watcher) {
     IItem * itm = indToItm(ind);
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("StateRestoring"), itm -> title().toString());
+    Logger::obj().write(QLatin1String("Library"), QLatin1String("StateRestoring"), itm -> title().toString());
     initItemData(itm);
 
     QHash<QString, int> * cat;
@@ -199,7 +199,7 @@ void Library::emitItemAttrChanging(const QModelIndex & ind, int state) {
 void Library::remoteItemInfo() {
     QModelIndex ind;
     if (nextProcItem(remote_items, ind)) {
-        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("InitRemoteInfo"), ind.data().toString());
+        Logger::obj().write(QLatin1String("Library"), QLatin1String("InitRemoteInfo"), ind.data().toString());
         QFutureWatcher<bool> * initiator = new QFutureWatcher<bool>();
         inRemoteProc.insert(ind, initiator);
         connect(initiator, SIGNAL(finished()), this, SLOT(finishRemoteItemInfo()));
@@ -222,7 +222,7 @@ void Library::finishRemoteItemInfo() {
 
 bool Library::remoteInfoRestoring(const QModelIndex & ind, QFutureWatcher<bool> * watcher) {
     IItem * itm = indToItm(ind);
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("RemoteInfoRestoring"), itm -> title().toString());
+    Logger::obj().write(QLatin1String("Library"), QLatin1String("RemoteInfoRestoring"), itm -> title().toString());
     bool has_info = itm -> hasInfo();
 
     if (has_info) {

@@ -7,26 +7,26 @@
 using namespace Core::Media;
 
 QHash<QString, Cue::CueTokens> Cue::tokens{
-    {QStringLiteral("REM"), Cue::rem},
-    {QStringLiteral("TITLE"), Cue::title},
-    {QStringLiteral("SONGWRITER"), Cue::songwriter},
-    {QStringLiteral("CATALOG"), Cue::catalog},
-    {QStringLiteral("CDTEXTFILE"), Cue::cdtextfile},
-    {QStringLiteral("FILE"), Cue::file},
-    {QStringLiteral("PERFORMER"), Cue::performer},
+    {QLatin1String("REM"), Cue::rem},
+    {QLatin1String("TITLE"), Cue::title},
+    {QLatin1String("SONGWRITER"), Cue::songwriter},
+    {QLatin1String("CATALOG"), Cue::catalog},
+    {QLatin1String("CDTEXTFILE"), Cue::cdtextfile},
+    {QLatin1String("FILE"), Cue::file},
+    {QLatin1String("PERFORMER"), Cue::performer},
 
-    {QStringLiteral("TRACK"), Cue::track},
-    {QStringLiteral("INDEX"), Cue::index},
+    {QLatin1String("TRACK"), Cue::track},
+    {QLatin1String("INDEX"), Cue::index},
 
-    {QStringLiteral("ISRC"), Cue::isrc},
-    {QStringLiteral("FLAGS"), Cue::flags},
-    {QStringLiteral("PREGAP"), Cue::pregap},
-    {QStringLiteral("POSTGAP"), Cue::postgap}
+    {QLatin1String("ISRC"), Cue::isrc},
+    {QLatin1String("FLAGS"), Cue::flags},
+    {QLatin1String("PREGAP"), Cue::pregap},
+    {QLatin1String("POSTGAP"), Cue::postgap}
 };
 
 
 Cue::Cue(const QString & filePath, QIODevice & obj) : level(0), path(filePath) {
-    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("INIT"), QStringList() << filePath);
+    Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("INIT"), QStringList() << filePath);
     QString ext;
     FilenameConversions::splitPath(path, filename);
     Extensions::obj().extractExtension(filename, ext);
@@ -63,7 +63,7 @@ bool Cue::identifyFile(QString & file_path, QString & file_extension, bool isSha
 
             QStringList music_filters = Extensions::obj().filterList(MUSIC_PRESET);
             // try to find media file with name of cue or with name from cue file
-            QDirIterator dir_it(tPath, QStringList() << PREPARE_SEARCH_PREDICATE(tName, QStringLiteral("*")) << PREPARE_SEARCH_PREDICATE(filename, QStringLiteral("*")),
+            QDirIterator dir_it(tPath, QStringList() << PREPARE_SEARCH_PREDICATE(tName, QLatin1String("*")) << PREPARE_SEARCH_PREDICATE(filename, QLatin1String("*")),
                 QDir::NoDotAndDotDot | QDir::Files, QDirIterator::Subdirectories
             );
 
@@ -149,8 +149,8 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                 QString error;
                 qint64 time_mark = (*index) -> toMillis();
                 if (time_marks.contains(time_mark)) {
-                    error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
-                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, Logger::log_error);
+                    error = QLatin1String("Wrong time mark ") % QString::number(time_mark);
+                    Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("PARSING"), QStringList() << error, Logger::log_error);
                     time_mark = 0;
                 }
 
@@ -197,8 +197,8 @@ int Cue::buildItems(Playlist * cuePlaylist, QHash<QString, bool> & unproc_files,
                 QString error;
                 qint64 time_mark = (*index) -> toMillis();
                 if (time_marks.contains(time_mark)) {
-                    error = QStringLiteral("Wrong time mark %1").arg(QString::number(time_mark));
-                    Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("PARSING"), QStringList() << error, Logger::log_error);
+                    error = QLatin1String("Wrong time mark ") % QString::number(time_mark);
+                    Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("PARSING"), QStringList() << error, Logger::log_error);
                     time_mark = 0;
                 }
 
@@ -255,7 +255,7 @@ void Cue::splitLine(QString & line, QList<QString> & res) {
 
 void Cue::proceedLine(QString & line) {
     if (line.startsWith(';')) {
-        Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("COMMENT"), QStringList() << line);
+        Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("COMMENT"), QStringList() << line);
         return;
     }
 
@@ -265,7 +265,7 @@ void Cue::proceedLine(QString & line) {
         Cue::CueTokens token = Cue::tokens.value(parts.takeFirst().toUpper(), Cue::unknow);
 
         if (token == -1 || parts.isEmpty()) {
-            Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"), QStringList() << line, Logger::log_error);
+            Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("WRONG TAG"), QStringList() << line, Logger::log_error);
             return;
         }
 
@@ -278,14 +278,14 @@ void Cue::proceedLine(QString & line) {
                     switch(token) {
                         case Cue::rem: {
                             if (parts.length() < 2)
-                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("WRONG TAG"),
                                     QStringList() << line, Logger::log_error);
                             else _infos.insert(parts.takeFirst(), parts.join(' '));
                         return;}
 
                         case Cue::file: {
                             if (parts.length() != 2)
-                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("WRONG TAG"),
                                     QStringList() << line, Logger::log_error);
                             else {
                                 level++;
@@ -307,7 +307,7 @@ void Cue::proceedLine(QString & line) {
                     switch(token) {
                         case Cue::track: {
                             if (parts.length() != 2)
-                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("WRONG TAG"),
                                     QStringList() << line, Logger::log_error);
                             else {
                                 level++;
@@ -317,7 +317,7 @@ void Cue::proceedLine(QString & line) {
 
                         case Cue::index: {
                             if (parts.length() < 2)
-                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("WRONG TAG"),
                                     QStringList() << line, Logger::log_error);
                             else activeFile -> addIndex(parts[0], parts[1]); return;
                         return;}
@@ -329,7 +329,7 @@ void Cue::proceedLine(QString & line) {
                     switch(token) {
                         case Cue::index: {
                             if (parts.length() < 2)
-                                Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("WRONG TAG"),
+                                Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("WRONG TAG"),
                                     QStringList() << line, Logger::log_error);
                             else activeFile -> activeTrack -> addIndex(parts[0], parts[1]); return;
                         return;}
@@ -349,7 +349,7 @@ void Cue::proceedLine(QString & line) {
                     }
                 break;}
 
-                default: Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("UNSUPPORTED PREDICATE"),
+                default: Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("UNSUPPORTED PREDICATE"),
                             QStringList() << line, Logger::log_error);
             }
 
@@ -358,7 +358,7 @@ void Cue::proceedLine(QString & line) {
     }
 
     if (level == -1) {
-        Logger::obj().write(QStringLiteral("CUE PARSER"), QStringLiteral("ERROR LEVEL"), QStringList() << line, Logger::log_error);
+        Logger::obj().write(QLatin1String("CUE PARSER"), QLatin1String("ERROR LEVEL"), QStringList() << line, Logger::log_error);
         level = 0;
     }
 }

@@ -11,7 +11,7 @@ DockBar::DockBar(const QString & title, QWidget * parent, bool closable, Qt::Win
     setObjectName(objName.isEmpty() ? title + QString::number(QDateTime::currentMSecsSinceEpoch()) : objName);
     setTitleBarWidget((titleWidget = new WindowTitle(true, this, 26, QMargins(10, 0, 10, 0), QMargins(0, 8, 0, 0), 5, 0, false, false, false)));
 //  INFO: rotate is a little buggy
-//    titleWidget -> addCustomButton(QStringLiteral("Rotate"), QPixmap(QStringLiteral(":/controls/rotate_off")), QPixmap(QStringLiteral(":/controls/rotate_on")), this, SLOT(rotate()));
+//    titleWidget -> addCustomButton(QLatin1String("Rotate"), QPixmap(QLatin1String(":/controls/rotate_off")), QPixmap(QLatin1String(":/controls/rotate_on")), this, SLOT(rotate()));
     titleWidget -> addMaxiButton(this, SLOT(toggleFloating()));
     titleWidget -> addCloseButton(this, SLOT(close()));
     setWindowTitle(title);
@@ -61,7 +61,7 @@ void DockBar::useVerticalTitles(bool vertical) {
 void DockBar::onMoveInProcess() {
     inProcess = true;
     if (!spinner)
-        spinner = new Spinner(QStringLiteral("In process"), 80, 80, this);
+        spinner = new Spinner(QLatin1String("In process"), 80, 80, this);
     else
         spinner -> setValue(SPINNER_IS_CONTINIOUS);
 

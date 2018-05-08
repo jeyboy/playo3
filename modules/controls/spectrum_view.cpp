@@ -6,7 +6,7 @@
 using namespace Controls;
 
 SpectrumView::SpectrumView(const QString & objName, QWidget * parent) : QToolBar(objName, parent), last_pairs_count(0), type(split_bars) {
-    setObjectName(QStringLiteral("tool_Spectrum"));
+    setObjectName(QLatin1String("tool_Spectrum"));
     setAllowedAreas(Qt::TopToolBarArea | Qt::BottomToolBarArea);
 
     setAttribute(Qt::WA_NoSystemBackground, true);
@@ -28,15 +28,15 @@ SpectrumView::~SpectrumView() {}
 
 void SpectrumView::generateContextMenu(QMenu * parent) {
     QAction * act;
-    QMenu * spectrMenu = parent -> addMenu(QStringLiteral("Spectrum"));
+    QMenu * spectrMenu = parent -> addMenu(QLatin1String("Spectrum"));
     spectrMenu -> addAction(toggleViewAction());
     spectrMenu -> addSeparator();
 
-    act = spectrMenu -> addAction(QStringLiteral("Bars view"), this, SLOT(setBarsView()));
+    act = spectrMenu -> addAction(QLatin1String("Bars view"), this, SLOT(setBarsView()));
     act -> setCheckable(true);
     act -> setChecked(type == bars);
 
-    act = spectrMenu -> addAction(QStringLiteral("Split channel bars view"), this, SLOT(setSplitBarsView()));
+    act = spectrMenu -> addAction(QLatin1String("Split channel bars view"), this, SLOT(setSplitBarsView()));
     act -> setCheckable(true);
     act -> setChecked(type == split_bars);
 }

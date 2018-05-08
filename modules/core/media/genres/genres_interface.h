@@ -18,7 +18,7 @@ namespace Core {
 
             virtual int defaultInt() const { return -1; }
         protected:
-            inline QString & prepare(QString & name) { return (name = name.replace(QRegularExpression(QStringLiteral("(\\W|[_])")), QStringLiteral(" ")).toLower()); } // check & on replace
+            inline QString & prepare(QString & name) { return (name = name.replace(QRegularExpression("(\\W|[_])"), QLatin1String(" ")).toLower()); } // check & on replace
 
             QHash<QString, int> genres;
         };

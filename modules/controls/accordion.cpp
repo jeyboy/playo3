@@ -3,7 +3,7 @@
 using namespace Controls;
 
 Accordion::Accordion(QWidget * parent) : QScrollArea(parent), exclusive(false), toggleable(true), currentCell(0), tabs(new QButtonGroup(this)) {
-    topButton = new QPushButton(QStringLiteral("*"), this);
+    topButton = new QPushButton(QLatin1String("*"), this);
     topButton -> setFixedSize(16, 16);
     topButton -> hide();
     connect(topButton, SIGNAL(clicked()), this, SLOT(collapseRequired()));

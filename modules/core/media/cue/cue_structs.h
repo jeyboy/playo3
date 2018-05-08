@@ -70,15 +70,15 @@ namespace Core {
                 postgap_minutes(0), postgap_seconds(0), postgap_millis(0),
                 flags(FLAG_NONE)
             {
-                if (dType == QStringLiteral("AUDIO")) data_type = AUDIO;
-                if (dType == QStringLiteral("CDG")) data_type = CDG;
+                if (dType == QLatin1String("AUDIO")) data_type = AUDIO;
+                if (dType == QLatin1String("CDG")) data_type = CDG;
 
-                if (dType == QStringLiteral("MODE1/2048")) data_type = MODE1_2048;
-                if (dType == QStringLiteral("MODE1/2352")) data_type = MODE1_2352;
-                if (dType == QStringLiteral("MODE2/2336")) data_type = MODE2_2336;
-                if (dType == QStringLiteral("MODE2/2352")) data_type = MODE2_2352;
-                if (dType == QStringLiteral("CDI/2336")) data_type = CDI_2336;
-                if (dType == QStringLiteral("CDI/2352")) data_type = CDI_2352;
+                if (dType == QLatin1String("MODE1/2048")) data_type = MODE1_2048;
+                if (dType == QLatin1String("MODE1/2352")) data_type = MODE1_2352;
+                if (dType == QLatin1String("MODE2/2336")) data_type = MODE2_2336;
+                if (dType == QLatin1String("MODE2/2352")) data_type = MODE2_2352;
+                if (dType == QLatin1String("CDI/2336")) data_type = CDI_2336;
+                if (dType == QLatin1String("CDI/2352")) data_type = CDI_2352;
             }
 
             ~CueTrack() {
@@ -87,10 +87,10 @@ namespace Core {
 
             void parseFlags(const QList<QString> & flgs) {
                 for(QList<QString>::ConstIterator flag = flgs.cbegin(); flag != flgs.cend(); flag++) {
-                    if ((*flag) == QStringLiteral("DCP")) flags = (AudioFlag)(flags|FLAG_DCP);
-                    if ((*flag) == QStringLiteral("4CH")) flags = (AudioFlag)(flags|FLAG_4CH);
-                    if ((*flag) == QStringLiteral("PRE")) flags = (AudioFlag)(flags|FLAG_PRE);
-                    if ((*flag) == QStringLiteral("SCMS")) flags = (AudioFlag)(flags|FLAG_SCMS);
+                    if ((*flag) == QLatin1String("DCP")) flags = (AudioFlag)(flags|FLAG_DCP);
+                    if ((*flag) == QLatin1String("4CH")) flags = (AudioFlag)(flags|FLAG_4CH);
+                    if ((*flag) == QLatin1String("PRE")) flags = (AudioFlag)(flags|FLAG_PRE);
+                    if ((*flag) == QLatin1String("SCMS")) flags = (AudioFlag)(flags|FLAG_SCMS);
                 }
             }
 
@@ -100,7 +100,7 @@ namespace Core {
 
             QString toStr() {
                 if (!performer.isEmpty())
-                    return performer % QStringLiteral(" - ") % title;
+                    return performer % QLatin1String(" - ") % title;
                 else return title;
             }
 
@@ -120,15 +120,15 @@ namespace Core {
 
         struct CueFile : IndexContainer {
             CueFile(const QString & fpath, const QString & fType) : path(fpath) {
-                if (fType == QStringLiteral("BINARY")) format = BINARY;
-                if (fType == QStringLiteral("MOTOROLA")) format = MOTOROLA;
-                if (fType == QStringLiteral("AIFF")) format = AIFF;
-                if (fType == QStringLiteral("WAVE")) {
-                    extension = QStringLiteral("wav");
+                if (fType == QLatin1String("BINARY")) format = BINARY;
+                if (fType == QLatin1String("MOTOROLA")) format = MOTOROLA;
+                if (fType == QLatin1String("AIFF")) format = AIFF;
+                if (fType == QLatin1String("WAVE")) {
+                    extension = QLatin1String("wav");
                     format = WAVE;
                 }
-                if (fType == QStringLiteral("MP3")) {
-                    extension = QStringLiteral("mp3");
+                if (fType == QLatin1String("MP3")) {
+                    extension = QLatin1String("mp3");
                     format = MP3;
                 }
 

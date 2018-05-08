@@ -10,20 +10,20 @@
 
 #define UNIX_TIME QDateTime::currentMSecsSinceEpoch() / 1000
 
-#define SOURCE_API_AUTH_JSON QStringLiteral("api_auth")
-#define SOURCE_SITE_AUTH_JSON QStringLiteral("site_auth")
+#define SOURCE_API_AUTH_JSON QLatin1String("api_auth")
+#define SOURCE_SITE_AUTH_JSON QLatin1String("site_auth")
 
-#define SOURCE_API_EXPIRED_AT_JSON QStringLiteral("_aa")
-#define SOURCE_API_TOKEN_JSON QStringLiteral("_at")
-#define SOURCE_API_REFRESH_TOKEN_JSON QStringLiteral("_rt")
-#define SOURCE_API_USER_ID_JSON QStringLiteral("_au")
+#define SOURCE_API_EXPIRED_AT_JSON QLatin1String("_aa")
+#define SOURCE_API_TOKEN_JSON QLatin1String("_at")
+#define SOURCE_API_REFRESH_TOKEN_JSON QLatin1String("_rt")
+#define SOURCE_API_USER_ID_JSON QLatin1String("_au")
 
-#define SOURCE_SITE_USER_ID_JSON QStringLiteral("_su")
-#define SOURCE_SITE_HASH_JSON QStringLiteral("_sh")
-#define SOURCE_SITE_TOKEN_JSON QStringLiteral("_st")
-#define SOURCE_SITE_ADDITIONAL_TOKEN_JSON QStringLiteral("_sat")
-#define SOURCE_SITE_EXPIRED_AT_JSON QStringLiteral("_sa")
-#define SOURCE_SITE_LOCALE QStringLiteral("_sl")
+#define SOURCE_SITE_USER_ID_JSON QLatin1String("_su")
+#define SOURCE_SITE_HASH_JSON QLatin1String("_sh")
+#define SOURCE_SITE_TOKEN_JSON QLatin1String("_st")
+#define SOURCE_SITE_ADDITIONAL_TOKEN_JSON QLatin1String("_sat")
+#define SOURCE_SITE_EXPIRED_AT_JSON QLatin1String("_sa")
+#define SOURCE_SITE_LOCALE QLatin1String("_sl")
 
 namespace Core {
     class ISourceAuthPerm : public QObject {

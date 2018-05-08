@@ -94,7 +94,7 @@ void ClickableSlider::paintEvent(QPaintEvent * ev) {
 void ClickableSlider::contextMenuEvent(QContextMenuEvent * event) {
     QMenu menu(this);
 
-    menu.addAction(QStringLiteral("Set to default"), this, SLOT(toDefault()));
+    menu.addAction(QLatin1String("Set to default"), this, SLOT(toDefault()));
     menu.addSeparator();
 
     Presentation::ToolBars::obj().createPopupMenu(&menu);

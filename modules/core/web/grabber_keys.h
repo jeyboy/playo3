@@ -5,8 +5,8 @@
 
 #include "modules/core/data_sub_types.h"
 
-#define PACKAGE_REPLACE_FRAGMENT_TITLE QStringLiteral("Custom filter...")
-#define PACKAGE_REPLACE_FRAGMENT QStringLiteral("%")
+#define PACKAGE_REPLACE_FRAGMENT_TITLE QLatin1String("Custom filter...")
+#define PACKAGE_REPLACE_FRAGMENT QLatin1String("%")
 
 #define EXTRACT_ITEMS(json) json.value(tkn_content).toArray()
 //#define EXTRACT_DIR(json) json.value(tkn_content).toObject()

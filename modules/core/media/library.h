@@ -44,14 +44,14 @@ namespace Core {
                         waitLists[remote_items].removeAll(rm_ind);
                         IItem * itm = Library::indToItm(rm_ind);
                         itm -> unset(IItem::flag_proceeded);
-                        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), Logger::log_error);
+                        Logger::obj().write(QLatin1String("Library"), QLatin1String("CancelRestoreItem"), itm -> title().toString(), Logger::log_error);
                     }
 
                     if (waitLists[remote_items].size() > window_limit) {
                         QModelIndex rm_ind = waitLists[remote_items].takeFirst();
                         IItem * itm = Library::indToItm(rm_ind);
                         itm -> unset(IItem::flag_proceeded);
-                        Logger::obj().write(QStringLiteral("Library"), QStringLiteral("CancelRestoreItem"), itm -> title().toString(), Logger::log_error);
+                        Logger::obj().write(QLatin1String("Library"), QLatin1String("CancelRestoreItem"), itm -> title().toString(), Logger::log_error);
                     }
                 }
 

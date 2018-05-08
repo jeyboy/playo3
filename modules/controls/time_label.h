@@ -33,10 +33,10 @@ namespace Controls {
 
             if (forward_turn) {
                 val = Duration::fromMillis(pos, extended);
-                setText(val % QStringLiteral("\n") % totalStr);
+                setText(val % QLatin1String("\n") % totalStr);
             } else {
                 val = Duration::fromMillis(total - pos, extended);
-                setText(totalStr % QStringLiteral("\n") % val);
+                setText(totalStr % QLatin1String("\n") % val);
             }
         }
     };

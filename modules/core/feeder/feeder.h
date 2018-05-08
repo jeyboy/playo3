@@ -8,21 +8,21 @@
 #include "feed_item.h"
 #include "modules/core/media/image_bank.h"
 
-#define FEED_SETTINGS_URL_PAGINATION_TEMPLATE QStringLiteral("^1")
+#define FEED_SETTINGS_URL_PAGINATION_TEMPLATE QLatin1String("^1")
 
-#define FEED_SETTINGS_FROM QStringLiteral("from")
-#define FEED_SETTINGS_TO QStringLiteral("to")
-#define FEED_SETTINGS_STEP QStringLiteral("step")
+#define FEED_SETTINGS_FROM QLatin1String("from")
+#define FEED_SETTINGS_TO QLatin1String("to")
+#define FEED_SETTINGS_STEP QLatin1String("step")
 
-#define FEED_SETTINGS_ITEM_SELECTOR QStringLiteral("item_selector")
-#define FEED_SETTINGS_TITLE_SELECTOR QStringLiteral("title_selector")
-#define FEED_SETTINGS_LINK_SELECTOR QStringLiteral("link_selector")
-#define FEED_SETTINGS_IMAGE_SELECTOR QStringLiteral("image_selector")
-#define FEED_SETTINGS_DESC_SELECTOR QStringLiteral("desc_selector")
+#define FEED_SETTINGS_ITEM_SELECTOR QLatin1String("item_selector")
+#define FEED_SETTINGS_TITLE_SELECTOR QLatin1String("title_selector")
+#define FEED_SETTINGS_LINK_SELECTOR QLatin1String("link_selector")
+#define FEED_SETTINGS_IMAGE_SELECTOR QLatin1String("image_selector")
+#define FEED_SETTINGS_DESC_SELECTOR QLatin1String("desc_selector")
 
-#define FEED_SETTINGS_IMAGE_GALLERY_TEMPLATE QStringLiteral("image_gallery_template")
-#define FEED_SETTINGS_IMAGE_GALLERY_FROM QStringLiteral("image_gallery_from")
-#define FEED_SETTINGS_IMAGE_GALLERY_TO QStringLiteral("image_gallery_to")
+#define FEED_SETTINGS_IMAGE_GALLERY_TEMPLATE QLatin1String("image_gallery_template")
+#define FEED_SETTINGS_IMAGE_GALLERY_FROM QLatin1String("image_gallery_from")
+#define FEED_SETTINGS_IMAGE_GALLERY_TO QLatin1String("image_gallery_to")
 
 #define FEED_STEP 2
 

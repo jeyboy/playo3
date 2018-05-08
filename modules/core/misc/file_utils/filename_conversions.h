@@ -28,16 +28,16 @@ namespace Core {
 
         //[\\s\\n\\r\\t]+
         //[^\\S\\w-]+
-        static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QStringLiteral("[\\s]+")), QStringLiteral(" ")); }
+        static inline QString extraSymbolsFilter(QString title)   		{ return title.replace(QRegExp(QLatin1String("[\\s]+")), QLatin1String(" ")); }
 
-        static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp(QStringLiteral("(\\W|[_])"))).toLower(); }
-        static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QStringLiteral("^[\\[\\(]+\\d{1,}[\\]\\)]+"))); }
+        static inline QString cacheTitleFilter(QString title)   		{ return title.remove(QRegExp(QLatin1String("(\\W|[_])"))).toLower(); }
+        static inline QString forwardNumberFilter(QString title)		{ return title.remove(QRegExp(QLatin1String("^[\\[\\(]+\\d{1,}[\\]\\)]+"))); }
         static QString downloadTitle(QString title, QString extension) {
-            QString ret = title.replace(QRegExp(QStringLiteral("[^()\\w\\-&.]|_")), QStringLiteral(" "));
-            ret = ret.replace(QRegExp(QStringLiteral("\\s+")), QStringLiteral(" ")).trimmed().mid(0, FILENAME_MAX_LEN);
+            QString ret = title.replace(QRegExp(QLatin1String("[^()\\w\\-&.]|_")), QLatin1String(" "));
+            ret = ret.replace(QRegExp(QLatin1String("\\s+")), QLatin1String(" ")).trimmed().mid(0, FILENAME_MAX_LEN);
 
             if (!extension.isEmpty())
-                ret = ret % QStringLiteral(".") % extension;
+                ret = ret % QLatin1String(".") % extension;
 
             return ret;
         }

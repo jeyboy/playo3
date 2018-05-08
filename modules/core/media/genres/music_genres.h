@@ -5,10 +5,10 @@
 #include "modules/core/misc/file_utils/data_store.h"
 #include "modules/core/interfaces/singleton.h"
 
-#define GENRES_PATH QStringLiteral("genres_list.json")
-#define ROOT_VAL_NAME QStringLiteral("genres")
-#define GENRE_VAL_NAME QStringLiteral("name")
-#define GENRE_NUM_NAME QStringLiteral("num")
+#define GENRES_PATH QLatin1String("genres_list.json")
+#define ROOT_VAL_NAME QLatin1String("genres")
+#define GENRE_VAL_NAME QLatin1String("name")
+#define GENRE_NUM_NAME QLatin1String("num")
 
 namespace Core {
     namespace Media {

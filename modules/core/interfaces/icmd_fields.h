@@ -4,25 +4,25 @@
 #include <qurlquery.h>
 #include "modules/core/data_sub_types.h"
 
-#define CMD_OFFSET QStringLiteral("offset")
-#define CMD_ITEMS_LIMIT QStringLiteral("items_limit")
-#define CMD_REQUESTS_LIMIT QStringLiteral("requests_limit")
+#define CMD_OFFSET QLatin1String("offset")
+#define CMD_ITEMS_LIMIT QLatin1String("items_limit")
+#define CMD_REQUESTS_LIMIT QLatin1String("requests_limit")
 
-#define CMD_MEDIA_TYPE QStringLiteral("media_type")
+#define CMD_MEDIA_TYPE QLatin1String("media_type")
 
-#define CMD_OWNER QStringLiteral("owner")
-#define CMD_ID QStringLiteral("id")
-#define CMD_SET_TYPE QStringLiteral("set_type")
+#define CMD_OWNER QLatin1String("owner")
+#define CMD_ID QLatin1String("id")
+#define CMD_SET_TYPE QLatin1String("set_type")
 
-#define CMD_PARSER QStringLiteral("parser")
+#define CMD_PARSER QLatin1String("parser")
 
-#define CMD_GENRE QStringLiteral("genre")
+#define CMD_GENRE QLatin1String("genre")
 
-#define CMD_SOURCE_CONFIGURABLE QStringLiteral("source_config")
-#define CMD_STREAM_CONFIGURABLE QStringLiteral("stream_config")
-#define CMD_FEEDS_CONFIGURABLE QStringLiteral("feed_config")
+#define CMD_SOURCE_CONFIGURABLE QLatin1String("source_config")
+#define CMD_STREAM_CONFIGURABLE QLatin1String("stream_config")
+#define CMD_FEEDS_CONFIGURABLE QLatin1String("feed_config")
 
-#define CMD_PREDICATE QStringLiteral("predicate")
-#define CMD_PREDICATE_TYPE QStringLiteral("predicate_type")
+#define CMD_PREDICATE QLatin1String("predicate")
+#define CMD_PREDICATE_TYPE QLatin1String("predicate_type")
 
 #endif // ICMD_FIELDS

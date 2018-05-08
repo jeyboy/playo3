@@ -32,7 +32,7 @@ namespace Core {
     #define IERROR IREMOTE - 1
 
     #define REMOTE_DND_URL QUrl::fromLocalFile("REMOTE:/")
-    #define SHARE_DELIMITER QStringLiteral("^")
+    #define SHARE_DELIMITER QLatin1String("^")
 
     #define CONTAINER_ATTRS(ctype, name) \
         {\

@@ -69,12 +69,12 @@ int IItem::row() const {
 //}
 
 QString IItem::buildTreePath() const {
-    return _parent ? _parent -> buildTreePath() % QStringLiteral(" ") % QString::number(row()) : QString();
+    return _parent ? _parent -> buildTreePath() % QLatin1String(" ") % QString::number(row()) : QString();
 }
 
 QString IItem::buildTreeStr() const {
     int rNum = row();
-    return _parent ? _parent -> buildTreeStr() + (rNum / 255) + (rNum % 255) : QString();
+    return _parent ? _parent -> buildTreeStr() + (rNum / 255) + (rNum % 255) : QLatin1String();
 }
 
 QVariant IItem::data(int column) const {
@@ -200,18 +200,18 @@ QString IItem::relationStr() const {
     DataSubType dst = dataType();
 
     switch(dst) {
-        case dt_local:              return QStringLiteral("(Local) ");
-        case dt_playlist_local:     return QStringLiteral("(Folder) ");
-        case dt_playlist_cue:       return QStringLiteral("(Folder Cueta) ");
-        case dt_local_cue:          return QStringLiteral("(Cueta) ");
+        case dt_local:              return QLatin1String("(Local) ");
+        case dt_playlist_local:     return QLatin1String("(Folder) ");
+        case dt_playlist_cue:       return QLatin1String("(Folder Cueta) ");
+        case dt_local_cue:          return QLatin1String("(Cueta) ");
 
         default: {
             if (dst & dt_web) {
                 return QStringLiteral("(%1%2) ").arg(
                     Web::Apis::source_name(dst),
-                    DST_IS_PLAYLIST(dst) ? ' ' % QStringLiteral("Folder") : QString()
+                    DST_IS_PLAYLIST(dst) ? ' ' % QLatin1String("Folder") : QString()
                 );
-            } else return QStringLiteral("(Unknow) ");
+            } else return QLatin1String("(Unknow) ");
         }
     }
 }
@@ -220,25 +220,25 @@ QString IItem::errorStr(QString & key_name) const {
     switch(error().toInt()) {
         case err_not_existed: {
             key_name = Keys::error;
-            return QStringLiteral("Not exists");
+            return QLatin1String("Not exists");
         break;}
         case err_unknow: {
             key_name = Keys::unknow;
-            return QStringLiteral("Unknown error");
+            return QLatin1String("Unknown error");
         break;}
         case warn_not_supported: {
             key_name = Keys::warning;
-            return QStringLiteral("Not supported");
+            return QLatin1String("Not supported");
         break;}
         case warn_not_accessable: {
             key_name = Keys::warning;
-            return QStringLiteral("Not accessable at this time");
+            return QLatin1String("Not accessable at this time");
         break;}
         case warn_not_permitted: {
             key_name = Keys::warning;
-            return QStringLiteral("Playing of this item is not permitted at this moment");
+            return QLatin1String("Playing of this item is not permitted at this moment");
         break;}
 
-        default: return QString();
+        default: return QLatin1String();
     }
 }

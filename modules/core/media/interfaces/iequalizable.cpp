@@ -25,30 +25,30 @@ IEqualizable::IEqualizable(QWidget * parent) : ISpectrumable(parent), eq_in_use(
     // best fBandwidth is eq to 1/3 ~ 1.26
     // if begin from 100 * 1.26 = 126 * 1.26 = 159 * 1.26 = 200 and etc
 
-//    eqBands.insert(20, QStringLiteral("20"));
-//    eqBands.insert(32, QStringLiteral("32"));
-//    eqBands.insert(64, QStringLiteral("64"));
-//    eqBands.insert(90, QStringLiteral("90"));
-//    eqBands.insert(125, QStringLiteral("125"));
-//    eqBands.insert(160, QStringLiteral("160"));
-//    eqBands.insert(200, QStringLiteral("200"));
+//    eqBands.insert(20, QLatin1String("20"));
+//    eqBands.insert(32, QLatin1String("32"));
+//    eqBands.insert(64, QLatin1String("64"));
+//    eqBands.insert(90, QLatin1String("90"));
+//    eqBands.insert(125, QLatin1String("125"));
+//    eqBands.insert(160, QLatin1String("160"));
+//    eqBands.insert(200, QLatin1String("200"));
 
-//    eqBands.insert(250, QStringLiteral("250"));
-//    eqBands.insert(375, QStringLiteral("375"));
-//    eqBands.insert(500, QStringLiteral("500"));
-//    eqBands.insert(750, QStringLiteral("750"));
-//    eqBands.insert(1000, QStringLiteral("1k"));
-//    eqBands.insert(1500, QStringLiteral("1.5k"));
+//    eqBands.insert(250, QLatin1String("250"));
+//    eqBands.insert(375, QLatin1String("375"));
+//    eqBands.insert(500, QLatin1String("500"));
+//    eqBands.insert(750, QLatin1String("750"));
+//    eqBands.insert(1000, QLatin1String("1k"));
+//    eqBands.insert(1500, QLatin1String("1.5k"));
 
-//    eqBands.insert(2000, QStringLiteral("2k"));
-//    eqBands.insert(3000, QStringLiteral("3k"));
-//    eqBands.insert(4000, QStringLiteral("4k"));
-//    eqBands.insert(8000, QStringLiteral("8k"));
-//    eqBands.insert(12000, QStringLiteral("12k"));
-//    eqBands.insert(16000, QStringLiteral("16k"));
+//    eqBands.insert(2000, QLatin1String("2k"));
+//    eqBands.insert(3000, QLatin1String("3k"));
+//    eqBands.insert(4000, QLatin1String("4k"));
+//    eqBands.insert(8000, QLatin1String("8k"));
+//    eqBands.insert(12000, QLatin1String("12k"));
+//    eqBands.insert(16000, QLatin1String("16k"));
 
-    presets.insert(QStringLiteral("4 octaves"), EqualizablePreset(4));
-    presets.insert(QStringLiteral("3 octaves"), EqualizablePreset(3));
-    presets.insert((current_preset_type = QStringLiteral("2 octaves")), EqualizablePreset(2));
-    presets.insert(QStringLiteral("1/3 octave"), EqualizablePreset(1.33));
+    presets.insert(QLatin1String("4 octaves"), EqualizablePreset(4));
+    presets.insert(QLatin1String("3 octaves"), EqualizablePreset(3));
+    presets.insert((current_preset_type = QLatin1String("2 octaves")), EqualizablePreset(2));
+    presets.insert(QLatin1String("1/3 octave"), EqualizablePreset(1.33));
 }

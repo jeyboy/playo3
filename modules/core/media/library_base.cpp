@@ -4,7 +4,7 @@
 using namespace Core;
 using namespace Media;
 
-LibraryBase::LibraryBase() : QObject(), timeAmount(0), libraryPath(QCoreApplication::applicationDirPath() % QStringLiteral("/library/")) {
+LibraryBase::LibraryBase() : QObject(), timeAmount(0), libraryPath(QCoreApplication::applicationDirPath() % QLatin1String("/library/")) {
     saveTimer = new QTimer();
     QObject::connect(saveTimer, SIGNAL(timeout()), this, SLOT(saveCatalogs()));
     saveTimer -> start(Settings::obj().saveLibDelay());
@@ -23,7 +23,7 @@ LibraryBase::~LibraryBase() {
 }
 
 void LibraryBase::saveCatalogs() {
-    Logger::obj().write(QStringLiteral("Library"), QStringLiteral("Trying to save new data"));
+    Logger::obj().write(QLatin1String("Library"), QLatin1String("Trying to save new data"));
     QtConcurrent::run(this, &LibraryBase::save);
     saveTimer -> setInterval(Settings::obj().saveLibDelay());
 }
@@ -51,7 +51,7 @@ QHash<QString, int> * LibraryBase::getCatalog(const QString & name) {
 QHash<QString, int> * LibraryBase::load(const QChar & letter) {
     QHash<QString, int> * res = new QHash<QString, int>();
 
-    QFile f(libraryPath % QStringLiteral("cat_") % letter);
+    QFile f(libraryPath % QLatin1String("cat_") % letter);
     if (f.open(QIODevice::ReadOnly)) {
         QByteArray ar;
         QString name;

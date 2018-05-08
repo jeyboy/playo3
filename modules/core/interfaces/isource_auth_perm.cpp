@@ -34,7 +34,7 @@ SourceFlags ISourceAuthPerm::permissions(const SourceFlags & req_perm, const boo
 bool ISourceAuthPerm::connectUser() {
     bool res = true;
 
-    button -> setIcon(QIcon(QStringLiteral(":/items/process")));
+    button -> setIcon(QIcon(QLatin1String(":/items/process")));
     button -> setEnabled(false);
 
     if (!isApiConnected() && hasApiConnection()) {

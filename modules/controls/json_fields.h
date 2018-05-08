@@ -3,10 +3,10 @@
 
 #include <qstringbuilder.h>
 
-#define JSON_TYPE_TAB_ITEM_COUNT QStringLiteral("l")
-#define JSON_TYPE_TAB_NAME QStringLiteral("n")
-#define JSON_TYPE_TAB_SETTINGS QStringLiteral("set")
-#define JSON_TYPE_VK_TAB_SETTINGS QStringLiteral("vk")
+#define JSON_TYPE_TAB_ITEM_COUNT QLatin1String("l")
+#define JSON_TYPE_TAB_NAME QLatin1String("n")
+#define JSON_TYPE_TAB_SETTINGS QLatin1String("set")
+#define JSON_TYPE_VK_TAB_SETTINGS QLatin1String("vk")
 
 /// a - item info
 /// b - item bytes size

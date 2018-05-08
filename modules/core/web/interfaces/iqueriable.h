@@ -54,9 +54,9 @@ namespace Core {
 
                         if (!status) {
                             QString err = arg -> error;
-                            if( err.isEmpty()) err = QStringLiteral("Some shit happened");
+                            if( err.isEmpty()) err = QLatin1String("Some shit happened");
 
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, Logger::log_error);
+                            Logger::obj().write(QLatin1String("sQuery"), arg -> request_url, err, Logger::log_error);
                             sendError(arg -> error_receiver, err, code);
                             arg -> append(QJsonObject {{tkn_error, err}}, false);
                         } else {
@@ -71,7 +71,7 @@ namespace Core {
                                 arg -> append(val.toObject());
 
                             arg -> forse_completing = endReached(json, arg);
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, json.keys());
+                            Logger::obj().write(QLatin1String("sQuery"), arg -> request_url, json.keys());
                         }
                     break;}
 
@@ -85,9 +85,9 @@ namespace Core {
 
                         if (!status) {
                             QString err = arg -> error;
-                            if( err.isEmpty()) err = QStringLiteral("Some shit happened");
+                            if( err.isEmpty()) err = QLatin1String("Some shit happened");
 
-                            Logger::obj().write(QStringLiteral("sQuery"), arg -> request_url, err, Logger::log_error);
+                            Logger::obj().write(QLatin1String("sQuery"), arg -> request_url, err, Logger::log_error);
                             arg -> append(QJsonObject {{tkn_error, err}}, false);
                             sendError(arg -> error_receiver, err, code);
                         }
@@ -96,7 +96,7 @@ namespace Core {
                     default: return false;
                 }
 
-                Logger::obj().endMark(QStringLiteral("sQuery") % (status ? const_true : "false"), arg -> request_url);
+                Logger::obj().endMark(QLatin1String("sQuery") % (status ? const_true : const_false), arg -> request_url);
                 return status;
             }
 
@@ -322,7 +322,7 @@ namespace Core {
                         query.addQueryItem(name, *val);
             }
         public:
-            Headers dntHeader() { return {{ QStringLiteral("DNT"), QStringLiteral("1")}}; }
+            Headers dntHeader() { return {{ QLatin1String("DNT"), QLatin1String("1")}}; }
         };
     }
 }
