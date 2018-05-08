@@ -17,7 +17,7 @@ public:
 
     StyleType styleType() const { return light; }
 
-    QImage loadableTabIcon() { return QImage(QStringLiteral(":/download")); }
+    QImage loadableTabIcon() { return QImage(QLatin1String(":/download")); }
 
     // background colors
     inline QColor colorResize() { return QColor::fromRgb(0, 255, 255, 64); }

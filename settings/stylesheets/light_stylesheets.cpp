@@ -7,7 +7,7 @@ QString LightStylesheets::appStyles() {
 }
 
 QString LightStylesheets::scrollStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
         "    border: 1px solid grey;"
         "    background: #333;"
@@ -97,12 +97,12 @@ QString LightStylesheets::treeViewStyles() {
     return QString(
         "QTreeView::branch::selected {"
             #ifdef HAVE_X11
-                "   background-color: " + color2().name(QColor::HexRgb) + ";"
+                "   background-color: " % color2().name(QColor::HexRgb) % ";"
             #endif
         "}"
 
         "QTreeView {"
-        "   background-color: " + color2().name(QColor::HexArgb) + ";"
+        "   background-color: " % color2().name(QColor::HexArgb) % ";"
         "   border-radius: 8px;"
         "}"
     );
@@ -111,14 +111,14 @@ QString LightStylesheets::treeViewStyles() {
 QString LightStylesheets::listViewStyles() {
     return QString(
         "QListView {"
-        "   background-color: " + color2().name(QColor::HexArgb) + ";"
+        "   background-color: " % color2().name(QColor::HexArgb) % ";"
         "   border-radius: 8px;"
         "}"
     );
 }
 
 QString LightStylesheets::toolbarStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QToolBar[state=\"fixed\"] { border: none; }"
 
         "QToolBar[state=\"float\"] {"
