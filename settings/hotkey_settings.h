@@ -7,9 +7,9 @@
 #include "modules/models/service/hotkey_model_item.h"
 #include "modules/models/service/hotkey_types.h"
 
-#define SETTINGS_DISABLE_HOTKEYS_KEY QStringLiteral("disable_hotkeys")
-#define SETTINGS_HOTKEYS_KEY QStringLiteral("hotkeys")
-#define SETTINGS_HOTKEY_SLIDE_PERCENT_KEY QStringLiteral("slide_percent")
+#define SETTINGS_DISABLE_HOTKEYS_KEY QLatin1String("disable_hotkeys")
+#define SETTINGS_HOTKEYS_KEY QLatin1String("hotkeys")
+#define SETTINGS_HOTKEY_SLIDE_PERCENT_KEY QLatin1String("slide_percent")
 
 class HotkeySettings {
 public:

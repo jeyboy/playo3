@@ -10,12 +10,12 @@
 #include "web_headers.h"
 
 #define REQUEST_DELAY 260 // ms
-#define COOKIES_KEY QStringLiteral("cookies")
+#define COOKIES_KEY QLatin1String("cookies")
 
-#define JSON_ERR_FIELD QStringLiteral("json_err")
-#define DEF_JSON_FIELD QStringLiteral("response")
+#define JSON_ERR_FIELD QLatin1String("json_err")
+#define DEF_JSON_FIELD QLatin1String("response")
 #define USER_AGENT_HEADER_NAME QStringLiteral("User-Agent")
-#define FORM_URLENCODE QStringLiteral("application/x-www-form-urlencoded")
+#define FORM_URLENCODE QLatin1String("application/x-www-form-urlencoded")
 
 #define SERIALIZE_JSON(json) (json.isArray() ? QJsonDocument(json.toArray()) : QJsonDocument(json.toObject())).toJson(QJsonDocument::Compact)
 
@@ -56,7 +56,7 @@ namespace Core { // requests and response has memory leaks
 
             inline QByteArray encoding() {
                 QString content_type = header(QNetworkRequest::ContentTypeHeader).toString();
-                QStringList parts = content_type.split(QStringLiteral("charset="));
+                QStringList parts = content_type.split(QLatin1String("charset="));
 
                 if (parts.length() == 1)
                     return QStringLiteral("utf-8").toUtf8();
@@ -184,7 +184,7 @@ namespace Core { // requests and response has memory leaks
 
                 for(QList<QByteArray>::ConstIterator h = heads.cbegin(); h != heads.cend(); h++) {
                     QString val = QString(request.rawHeader(*h));
-                    res = res % (*h) % ' ' % ':' % val % QStringLiteral("; ");
+                    res = res % (*h) % ' ' % ':' % val % QLatin1String("; ");
                 }
 
                 return res;
@@ -197,10 +197,10 @@ namespace Core { // requests and response has memory leaks
                 for(QList<QNetworkCookie>::ConstIterator cookie = items.cbegin(); cookie != items.cend(); cookie++) {
                     QString name = QString((*cookie).name());
                     if (ignore_filter || acceptable.contains(name))
-                        res = res % name % '=' % (*cookie).value() % QStringLiteral("; ");
+                        res = res % name % '=' % (*cookie).value() % QLatin1String("; ");
                 }
 
-                return QStringLiteral("Cookie: ") % res;
+                return QLatin1String("Cookie: ") % res;
             }
             static inline QString cookie(const QString & name, QUrl url = QUrl()) {
                 const QList<QNetworkCookie> items = url.isEmpty() ? cookies -> allCookies() : cookies -> cookiesForUrl(url);
@@ -253,7 +253,7 @@ namespace Core { // requests and response has memory leaks
                     -> toJson(wrap ? DEF_JSON_FIELD : QString());
             }
             inline QJsonObject jsonPost(const QUrl & url, const Headers & headers, const QJsonValue & payload, bool wrap = false) {
-                return postFollowed(url, headers, QStringLiteral("application/json"), SERIALIZE_JSON(payload))
+                return postFollowed(url, headers, QLatin1String("application/json"), SERIALIZE_JSON(payload))
                     -> toJson(wrap ? DEF_JSON_FIELD : QString());
             }
 

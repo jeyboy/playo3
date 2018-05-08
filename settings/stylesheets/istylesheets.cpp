@@ -20,7 +20,7 @@ void IStylesheets::applyProperty(QWidget * widget, const char * propertyName, co
 }
 
 QString IStylesheets::appStyles() {   
-    return QStringLiteral(
+    return QLatin1String(
         "QLabel[timer=\"true\"] {"
         "   font-weight: bold;"
         "   font-size: 12px;"
@@ -39,7 +39,7 @@ QString IStylesheets::appStyles() {
 }
 
 QString IStylesheets::_sliderStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QSlider:horizontal { margin: 0 4px; }"
 
         "QSlider:vertical { margin: 4px 0; }"
@@ -152,7 +152,7 @@ QString IStylesheets::_sliderStyles() {
 }
 
 QString IStylesheets::_treeViewStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QTreeView::item:hover, QListView::item:hover {"
         "   color: black;"
         "}"
@@ -191,13 +191,13 @@ QString IStylesheets::_treeViewStyles() {
 }
 
 QString IStylesheets::_toolbarStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QToolBar[state=\"lighted\"] { border: 2px dotted #00FFFF; }"
     );
 }
 
 QString IStylesheets::_toolbarButtonStyles() {
-    return QStringLiteral(
+    return QLatin1String(
                 "QToolButton[custom=\"true\"] {"
                     "border: 1px solid #444;"
                     "background: qradialgradient(cx:0, cy:0, radius: 1, fx:0.6, fy:0.6, stop:0 #FFF, stop:0.8 #E7DA1E, stop:1 #F7E488);"
@@ -230,7 +230,7 @@ QString IStylesheets::_mainWindowTabsStyles() {
 //                "}"
 
                 "QToolBar:open {"
-                "   background-color: " + color.name(QColor::HexArgb) + ";"
+                "   background-color: " % color.name(QColor::HexArgb) % ";"
                 "}"
 
                 "QMainWindow::separator:hover {"
@@ -269,7 +269,7 @@ QString IStylesheets::_mainWindowTabsStyles() {
 }
 
 QString IStylesheets::downloadProgressStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QProgressBar[download] {"
         "   border: 2px solid grey;"
         "   border-radius: 4px;"
@@ -292,7 +292,7 @@ QString IStylesheets::downloadProgressStyles() {
 }
 
 QString IStylesheets::checkboxStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QCheckBox::indicator {"
         "   width: 14px;"
         "   height: 14px;"

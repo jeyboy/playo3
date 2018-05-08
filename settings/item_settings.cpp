@@ -24,14 +24,14 @@ void ItemSettings::fromJson(const QJsonObject & json) {
     color_var = json.value(SETTINGS_ITEM_COLOR_KEY).toVariant();
     _item_color = color_var.isValid() ? color_var.value<QColor>() : QColor(220, 220, 220);
 
-    __title.fontName = json.value(SETTINGS_ITEM_FONT_NAME_KEY).toString(QStringLiteral("Arial Black"));
+    __title.fontName = json.value(SETTINGS_ITEM_FONT_NAME_KEY).toString(QLatin1String("Arial Black"));
     __title.fontSize = json.value(SETTINGS_ITEM_FONT_SIZE_KEY).toInt(8);
     color_var = json.value(SETTINGS_ITEM_TEXT_COLOR_KEY).toVariant();
     __title.textColor = color_var.isValid() ? color_var.value<QColor>() : QColor(0, 0, 0);
     color_var = json.value(SETTINGS_SELECTED_ITEM_TEXT_COLOR).toVariant();
     __title.selectedTextColor = color_var.isValid() ? color_var.value<QColor>() : QColor(255, 255, 255);
 
-    __info.fontName = json.value(SETTINGS_ITEM_INFO_FONT_NAME_KEY).toString(QStringLiteral("Arial Black"));
+    __info.fontName = json.value(SETTINGS_ITEM_INFO_FONT_NAME_KEY).toString(QLatin1String("Arial Black"));
     __info.fontSize = json.value(SETTINGS_ITEM_INFO_FONT_SIZE_KEY).toInt(7);
     color_var = json.value(SETTINGS_ITEM_INFO_TEXT_COLOR_KEY).toVariant();
     __info.textColor = color_var.isValid() ? color_var.value<QColor>() : QColor(0, 0, 0);

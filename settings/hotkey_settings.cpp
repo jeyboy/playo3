@@ -6,12 +6,12 @@ void HotkeySettings::fromJson(const QJsonObject & settings) {
     _disabled = settings.value(SETTINGS_DISABLE_HOTKEYS_KEY).toBool();
     _slide_percent = settings.value(SETTINGS_HOTKEY_SLIDE_PERCENT_KEY).toDouble(0.05);
 
-    _humanize_hotkey_text.insert(HOTKEY_NEXT, QStringLiteral("Activate next item"));
-    _humanize_hotkey_text.insert(HOTKEY_NEXT_AND_DELETE, QStringLiteral("Remove current and activate next"));
-    _humanize_hotkey_text.insert(HOTKEY_PREV, QStringLiteral("Activate prev item"));
-    _humanize_hotkey_text.insert(HOTKEY_PLAY, QStringLiteral("Play/pause"));
-    _humanize_hotkey_text.insert(HOTKEY_STOP, QStringLiteral("Stop"));
-    _humanize_hotkey_text.insert(HOTKEY_OPEN_SETTINGS, QStringLiteral("Active tab settings"));
+    _humanize_hotkey_text.insert(HOTKEY_NEXT, QLatin1String("Activate next item"));
+    _humanize_hotkey_text.insert(HOTKEY_NEXT_AND_DELETE, QLatin1String("Remove current and activate next"));
+    _humanize_hotkey_text.insert(HOTKEY_PREV, QLatin1String("Activate prev item"));
+    _humanize_hotkey_text.insert(HOTKEY_PLAY, QLatin1String("Play/pause"));
+    _humanize_hotkey_text.insert(HOTKEY_STOP, QLatin1String("Stop"));
+    _humanize_hotkey_text.insert(HOTKEY_OPEN_SETTINGS, QLatin1String("Active tab settings"));
     _humanize_hotkey_text.insert(HOTKEY_POS_SLIDE_FORWARD, "Move position slider at " + QString::number(_slide_percent * 100) + "% forward");
     _humanize_hotkey_text.insert(HOTKEY_POS_SLIDE_BACKWARD, "Move position slider at " + QString::number(_slide_percent * 100) + "% backward");
     _humanize_hotkey_text.insert(HOTKEY_VOL_SLIDE_FORWARD, "Move volume slider at " + QString::number(_slide_percent * 100) + "% forward");

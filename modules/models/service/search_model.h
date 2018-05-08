@@ -3,8 +3,8 @@
 
 #include "modules/models/level_tree_model.h"
 
-#define SEARCH_REQUESTS_JSON_KEY QStringLiteral("search_requests")
-#define SEARCH_REGLAMENT_JSON_KEY QStringLiteral("search_reglament")
+#define SEARCH_REQUESTS_JSON_KEY QLatin1String("search_requests")
+#define SEARCH_REGLAMENT_JSON_KEY QLatin1String("search_reglament")
 
 #define STOP_SEARCH() \
     initiator -> cancel(); \

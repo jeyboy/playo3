@@ -76,7 +76,7 @@ void DownloadView::proceedDrop(QDropEvent * event, const QString & path) {
             addRow(
                 data.url,
                 path,
-                FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs.value(JSON_TYPE_EXTENSION, QStringLiteral("mp3")).toString()),
+                FilenameConversions::downloadTitle(data.attrs[JSON_TYPE_TITLE].toString(), data.attrs.value(JSON_TYPE_EXTENSION, QLatin1String("mp3")).toString()),
                 data.attrs[JSON_TYPE_ITEM_TYPE].toInt(),
                 data.attrs[JSON_TYPE_REFRESH_PATH].toString(),
                 data.attrs[JSON_TYPE_MEDIA_TYPE].toInt()
@@ -385,7 +385,7 @@ DownloadModelItem * DownloadView::saving(DownloadModelItem * itm, QIODevice * so
 void DownloadView::contextMenuEvent(QContextMenuEvent * event) {
     QMenu menu(this);
 
-    menu.addAction(QStringLiteral("Restart all unsuccessfull"), this, SLOT(reproceedDownload()));
+    menu.addAction(QLatin1String("Restart all unsuccessfull"), this, SLOT(reproceedDownload()));
 
     menu.exec(event -> globalPos());
     event -> accept();
@@ -441,7 +441,7 @@ void DownloadView::mouseMoveEvent(QMouseEvent * event) {
         if (selectedIndexes().length() > 0) {
             QDrag * drag = new QDrag(this);
             QMimeData * mimeData = model() -> mimeData(selectedIndexes());
-            drag -> setPixmap(QPixmap(QStringLiteral(":drag")));
+            drag -> setPixmap(QPixmap(QLatin1String(":drag")));
             drag -> setMimeData(mimeData);
             drag -> exec(Qt::CopyAction, Qt::CopyAction);
         }

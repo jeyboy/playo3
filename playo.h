@@ -18,14 +18,14 @@
 
 namespace Ui { class Playo; }
 
-#define FRONT_SETTINGS_FILE_NAME QStringLiteral("settings.ini")
-#define BACKEND_SETTINGS_FILE_NAME QStringLiteral("settings.json")
+#define FRONT_SETTINGS_FILE_NAME QLatin1String("settings.ini")
+#define BACKEND_SETTINGS_FILE_NAME QLatin1String("settings.json")
 
-#define SETTINGS_SET_KEY QStringLiteral("settings")
-#define SETTINGS_GEOMETRY_SET_KEY QStringLiteral("geometry")
-#define SETTINGS_EQUALIZER_SET_KEY QStringLiteral("equalizer")
-#define SETTINGS_WINDOW_STATE_SET_KEY QStringLiteral("windowState")
-#define SETTINGS_WINDOW_MAXIMIZED_KEY QStringLiteral("maximized")
+#define SETTINGS_SET_KEY QLatin1String("settings")
+#define SETTINGS_GEOMETRY_SET_KEY QLatin1String("geometry")
+#define SETTINGS_EQUALIZER_SET_KEY QLatin1String("equalizer")
+#define SETTINGS_WINDOW_STATE_SET_KEY QLatin1String("windowState")
+#define SETTINGS_WINDOW_MAXIMIZED_KEY QLatin1String("maximized")
 
 using namespace Controls;
 

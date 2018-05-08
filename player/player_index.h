@@ -25,8 +25,8 @@ public:
     QHash<QString, int> availableDrivers() {
         QHash<QString, int> res;
 
-        res.insert(QStringLiteral("Bass"), IPlayer::driver_id_bass);
-        res.insert(QStringLiteral("Qt"), IPlayer::driver_id_qt);
+        res.insert(QLatin1String("Bass"), IPlayer::driver_id_bass);
+        res.insert(QLatin1String("Qt"), IPlayer::driver_id_qt);
 
         return res;
     }

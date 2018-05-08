@@ -5,17 +5,17 @@
 #include <qcolor.h>
 #include <qjsonobject.h>
 
-#define SETTINGS_CUSTOM_COLOR_SPECTRUM_KEY QStringLiteral("customcolor_spectrum")
-#define SETTINGS_AUTO_BARS_AMOUNT_KEY QStringLiteral("auto_bars_amount")
-#define SETTINGS_AUTO_BARS_WIDTH_KEY QStringLiteral("auto_bar_width")
-#define SETTINGS_SPECTRUM_COLOR1_KEY QStringLiteral("spectrum_color")
-#define SETTINGS_SPECTRUM_COLOR2_KEY QStringLiteral("spectrum_color2")
-#define SETTINGS_SPECTRUM_COLOR3_KEY QStringLiteral("spectrum_color3")
-#define SETTINGS_SPECTRUM_RATE_KEY QStringLiteral("spectrum_rate")
-#define SETTINGS_SPECTRUM_BARS_COUNT_KEY QStringLiteral("spectrum_bars_count")
-#define SETTINGS_SPECTRUM_HEIGHT_KEY QStringLiteral("spectrum_height")
-#define SETTINGS_SPECTRUM_TYPE_KEY QStringLiteral("spectrum_type")
-#define SETTINGS_SPECTRUM_MULTIPLIER_KEY QStringLiteral("spectrum_multiplier")
+#define SETTINGS_CUSTOM_COLOR_SPECTRUM_KEY QLatin1String("customcolor_spectrum")
+#define SETTINGS_AUTO_BARS_AMOUNT_KEY QLatin1String("auto_bars_amount")
+#define SETTINGS_AUTO_BARS_WIDTH_KEY QLatin1String("auto_bar_width")
+#define SETTINGS_SPECTRUM_COLOR1_KEY QLatin1String("spectrum_color")
+#define SETTINGS_SPECTRUM_COLOR2_KEY QLatin1String("spectrum_color2")
+#define SETTINGS_SPECTRUM_COLOR3_KEY QLatin1String("spectrum_color3")
+#define SETTINGS_SPECTRUM_RATE_KEY QLatin1String("spectrum_rate")
+#define SETTINGS_SPECTRUM_BARS_COUNT_KEY QLatin1String("spectrum_bars_count")
+#define SETTINGS_SPECTRUM_HEIGHT_KEY QLatin1String("spectrum_height")
+#define SETTINGS_SPECTRUM_TYPE_KEY QLatin1String("spectrum_type")
+#define SETTINGS_SPECTRUM_MULTIPLIER_KEY QLatin1String("spectrum_multiplier")
 
 enum SpectrumType {
     bars,

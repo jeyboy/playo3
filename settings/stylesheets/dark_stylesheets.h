@@ -17,7 +17,7 @@ public:
 
     StyleType styleType() const { return dark; }
 
-    QImage loadableTabIcon() { return QImage(QStringLiteral(":/download_on")); }
+    QImage loadableTabIcon() { return QImage(QLatin1String(":/download_on")); }
     virtual QImage background() {
         QImage img = IStylesheets::background();
         img.invertPixels();

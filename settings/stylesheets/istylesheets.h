@@ -7,7 +7,7 @@
 #include <qwidget.h>
 #include <qstyle.h>
 
-#define BACKGROUN_IMG QStringLiteral(":main")
+#define BACKGROUN_IMG QLatin1String(":main")
 
 class IStylesheets {
 protected:

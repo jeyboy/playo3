@@ -1,7 +1,7 @@
 #include "dark_stylesheets.h"
 
 QString DarkStylesheets::appStyles() {  
-    return IStylesheets::appStyles() % QStringLiteral(
+    return IStylesheets::appStyles() % QLatin1String(
         "QLabel, QCheckBox, QGroupBox, QRadioButton { color: #EEEEEE; }"
         "QTabWidget QLabel, QTabWidget QCheckBox, QTabWidget QGroupBox, QTabWidget QRadioButton { color: #000000; }"
         "QToolBox QLabel, QToolBox QCheckBox, QToolBox QGroupBox, QToolBox QRadioButton { color: #000000; }"
@@ -13,7 +13,7 @@ QString DarkStylesheets::appStyles() {
 }
 
 QString DarkStylesheets::scrollStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QScrollBar, QScrollBar::add-line, QScrollBar::sub-line  {"
         "    border: 1px solid grey;"
         "    background: #333;"
@@ -112,7 +112,7 @@ QString DarkStylesheets::treeViewStyles() {
 
         "QTreeView::branch::selected {"
             #ifdef HAVE_X11
-                "   background-color: " + color3().name(QColor::HexArgb) + ";"
+                "   background-color: " % color3().name(QColor::HexArgb) % ";"
             #endif
         "}"
 
@@ -123,7 +123,7 @@ QString DarkStylesheets::treeViewStyles() {
 }
 
 QString DarkStylesheets::listViewStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QListView {"
         "   background-color: transparent;"
         "   border-radius: 8px;"
@@ -132,7 +132,7 @@ QString DarkStylesheets::listViewStyles() {
 }
 
 QString DarkStylesheets::toolbarStyles() {
-    return QStringLiteral(
+    return QLatin1String(
         "QToolBar[state=\"fixed\"] { border: none; }"
 
         "QToolBar[state=\"float\"] {"

@@ -30,25 +30,25 @@ namespace Models {
                 data_type(dataType), flags(flags), uid(uniq_id), rec_type(rec), configs(configs) { }
 
         Params(const QJsonObject & obj) {
-            flags = (ParamFlags)obj[QStringLiteral("flags")].toInt();
-            data_type = (Core::DataSubType)obj[QStringLiteral("type")].toInt();
-            uid = obj[QStringLiteral("uid")].toString();
-            rec_type = (Core::RecType)obj[QStringLiteral("rec_type")].toInt();
-            configs = obj[QStringLiteral("data")].toObject().toVariantMap();
+            flags = (ParamFlags)obj[QLatin1String("flags")].toInt();
+            data_type = (Core::DataSubType)obj[QLatin1String("type")].toInt();
+            uid = obj[QLatin1String("uid")].toString();
+            rec_type = (Core::RecType)obj[QLatin1String("rec_type")].toInt();
+            configs = obj[QLatin1String("data")].toObject().toVariantMap();
         }
 
         QJsonObject toJson() {
             QJsonObject obj;
 
-            obj[QStringLiteral("flags")] = flags;
-            obj[QStringLiteral("type")] = data_type;
+            obj[QLatin1String("flags")] = flags;
+            obj[QLatin1String("type")] = data_type;
             if (!uid.isEmpty())
-                obj[QStringLiteral("uid")] = uid;
+                obj[QLatin1String("uid")] = uid;
 
-            obj[QStringLiteral("rec_type")] = rec_type;
+            obj[QLatin1String("rec_type")] = rec_type;
 
             if (!configs.isEmpty())
-                obj[QStringLiteral("data")] = QJsonObject::fromVariantMap(configs);
+                obj[QLatin1String("data")] = QJsonObject::fromVariantMap(configs);
 
             return obj;
         }

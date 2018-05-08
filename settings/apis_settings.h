@@ -4,8 +4,8 @@
 #include <qvariant.h>
 #include <qjsonobject.h>
 
-#define SETTINGS_IGNORE_CAPTCHA_KEY QStringLiteral("ignore_captcha")
-#define SETTINGS_USE_IGNORE_LIST_KEY QStringLiteral("use_ignore_list")
+#define SETTINGS_IGNORE_CAPTCHA_KEY QLatin1String("ignore_captcha")
+#define SETTINGS_USE_IGNORE_LIST_KEY QLatin1String("use_ignore_list")
 
 class ApisSettings {
 public:

@@ -6,12 +6,12 @@ using namespace Core;
 
 ModelItemDelegate::ModelItemDelegate(QObject * parent)
     : QStyledItemDelegate(parent),
-    ico_mini(30), state_width(6), titleTemplate(QStringLiteral("(%1) %2")) {
+    ico_mini(30), state_width(6), titleTemplate(QLatin1String("(%1) %2")) {
 
     hoverColor = QColor(Qt::white);
     hoverColor.setAlpha(80);
 
-    extra_font_name = QStringLiteral("Arial Black");
+    extra_font_name = QLatin1String("Arial Black");
     extra_font_size = 16;
 }
 
@@ -49,40 +49,40 @@ void ModelItemDelegate::recalcAttrs(const int & item_icon_size) {
 
     int size = icon_size - (icon_size < 24 ? 0 : state_width * 2);
 
-    icons.insert(-900,                                                  PIXMAP(QStringLiteral(":/download"), icon_size));
-    icons.insert(-900 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/download_on"), icon_size));
+    icons.insert(-900,                                                  PIXMAP(QLatin1String(":/download"), icon_size));
+    icons.insert(-900 + SELECTION_ITER,                                 PIXMAP(QLatin1String(":/download_on"), icon_size));
 
-    icons.insert(-400,                                                  PIXMAP(QStringLiteral(":/items/unknow"), size));
-    icons.insert(-300,                                                  PIXMAP(QStringLiteral(":/items/warn"), size));
-    icons.insert(-200,                                                  PIXMAP(QStringLiteral(":/items/process"), size));
-    icons.insert(-200 + SELECTION_ITER,                                 PIXMAP(QStringLiteral(":/items/process_on"), size));
-    icons.insert(-100,                                                  PIXMAP(QStringLiteral(":/items/err"), size));
-    icons.insert(Core::dt_web_vk,                                       PIXMAP(QStringLiteral(":/items/vk_item"), size));
-    icons.insert(Core::dt_web_vk + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/vk_item_on"), size));
-    icons.insert(Core::dt_web_sc,                                       PIXMAP(QStringLiteral(":/items/sc_item"), size));
-    icons.insert(Core::dt_web_sc + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/sc_item_on"), size));
-    icons.insert(Core::dt_web_od,                                       PIXMAP(QStringLiteral(":/items/od_item"), size));
-    icons.insert(Core::dt_web_od + SELECTION_ITER,                      PIXMAP(QStringLiteral(":/items/od_item_on"), size));
-    icons.insert(Core::dt_web,                                          PIXMAP(QStringLiteral(":/items/web_item"), size));
-    icons.insert(Core::dt_web + SELECTION_ITER,                         PIXMAP(QStringLiteral(":/items/web_item_on"), size));
-    icons.insert(Core::dt_local,                                        PIXMAP(QStringLiteral(":/items/local_item"), size));
-    icons.insert(Core::dt_local + SELECTION_ITER,                       PIXMAP(QStringLiteral(":/items/local_item_on"), size));
+    icons.insert(-400,                                                  PIXMAP(QLatin1String(":/items/unknow"), size));
+    icons.insert(-300,                                                  PIXMAP(QLatin1String(":/items/warn"), size));
+    icons.insert(-200,                                                  PIXMAP(QLatin1String(":/items/process"), size));
+    icons.insert(-200 + SELECTION_ITER,                                 PIXMAP(QLatin1String(":/items/process_on"), size));
+    icons.insert(-100,                                                  PIXMAP(QLatin1String(":/items/err"), size));
+    icons.insert(Core::dt_web_vk,                                       PIXMAP(QLatin1String(":/items/vk_item"), size));
+    icons.insert(Core::dt_web_vk + SELECTION_ITER,                      PIXMAP(QLatin1String(":/items/vk_item_on"), size));
+    icons.insert(Core::dt_web_sc,                                       PIXMAP(QLatin1String(":/items/sc_item"), size));
+    icons.insert(Core::dt_web_sc + SELECTION_ITER,                      PIXMAP(QLatin1String(":/items/sc_item_on"), size));
+    icons.insert(Core::dt_web_od,                                       PIXMAP(QLatin1String(":/items/od_item"), size));
+    icons.insert(Core::dt_web_od + SELECTION_ITER,                      PIXMAP(QLatin1String(":/items/od_item_on"), size));
+    icons.insert(Core::dt_web,                                          PIXMAP(QLatin1String(":/items/web_item"), size));
+    icons.insert(Core::dt_web + SELECTION_ITER,                         PIXMAP(QLatin1String(":/items/web_item_on"), size));
+    icons.insert(Core::dt_local,                                        PIXMAP(QLatin1String(":/items/local_item"), size));
+    icons.insert(Core::dt_local + SELECTION_ITER,                       PIXMAP(QLatin1String(":/items/local_item_on"), size));
     icons.insert(Core::dt_local_cue, icons[Core::dt_local]);
     icons.insert(Core::dt_local_cue + SELECTION_ITER, icons[Core::dt_local + SELECTION_ITER]);
-    icons.insert(Core::dt_web_fourshared,                               PIXMAP(QStringLiteral(":/items/fourshared_item"), size));
-    icons.insert(Core::dt_web_fourshared + SELECTION_ITER,              PIXMAP(QStringLiteral(":/items/fourshared_item_on"), size));
-    icons.insert(Core::dt_web_zaycev,                                   PIXMAP(QStringLiteral(":/items/zaycev_item"), size));
-    icons.insert(Core::dt_web_zaycev + SELECTION_ITER,                  PIXMAP(QStringLiteral(":/items/zaycev_item_on"), size));
-    icons.insert(Core::dt_web_promodj,                                  PIXMAP(QStringLiteral(":/items/promodj_item"), size));
-    icons.insert(Core::dt_web_promodj + SELECTION_ITER,                 PIXMAP(QStringLiteral(":/items/promodj_item_on"), size));
-    icons.insert(Core::dt_web_jetune,                                   PIXMAP(QStringLiteral(":/items/jetune_item"), size));
-    icons.insert(Core::dt_web_jetune + SELECTION_ITER,                  PIXMAP(QStringLiteral(":/items/jetune_item_on"), size));
-    icons.insert(Core::dt_web_redmp3,                                   PIXMAP(QStringLiteral(":/items/redmp3_item"), size));
-    icons.insert(Core::dt_web_redmp3 + SELECTION_ITER,                  PIXMAP(QStringLiteral(":/items/redmp3_item_on"), size));
-    icons.insert(Core::dt_web_yandex,                                   PIXMAP(QStringLiteral(":/items/yandex_item"), size));
-    icons.insert(Core::dt_web_yandex + SELECTION_ITER,                  PIXMAP(QStringLiteral(":/items/yandex_item_on"), size));
-    icons.insert(Core::dt_web_youtube,                                  PIXMAP(QStringLiteral(":/items/youtube_item"), size));
-    icons.insert(Core::dt_web_youtube + SELECTION_ITER,                 PIXMAP(QStringLiteral(":/items/youtube_item_on"), size));
+    icons.insert(Core::dt_web_fourshared,                               PIXMAP(QLatin1String(":/items/fourshared_item"), size));
+    icons.insert(Core::dt_web_fourshared + SELECTION_ITER,              PIXMAP(QLatin1String(":/items/fourshared_item_on"), size));
+    icons.insert(Core::dt_web_zaycev,                                   PIXMAP(QLatin1String(":/items/zaycev_item"), size));
+    icons.insert(Core::dt_web_zaycev + SELECTION_ITER,                  PIXMAP(QLatin1String(":/items/zaycev_item_on"), size));
+    icons.insert(Core::dt_web_promodj,                                  PIXMAP(QLatin1String(":/items/promodj_item"), size));
+    icons.insert(Core::dt_web_promodj + SELECTION_ITER,                 PIXMAP(QLatin1String(":/items/promodj_item_on"), size));
+    icons.insert(Core::dt_web_jetune,                                   PIXMAP(QLatin1String(":/items/jetune_item"), size));
+    icons.insert(Core::dt_web_jetune + SELECTION_ITER,                  PIXMAP(QLatin1String(":/items/jetune_item_on"), size));
+    icons.insert(Core::dt_web_redmp3,                                   PIXMAP(QLatin1String(":/items/redmp3_item"), size));
+    icons.insert(Core::dt_web_redmp3 + SELECTION_ITER,                  PIXMAP(QLatin1String(":/items/redmp3_item_on"), size));
+    icons.insert(Core::dt_web_yandex,                                   PIXMAP(QLatin1String(":/items/yandex_item"), size));
+    icons.insert(Core::dt_web_yandex + SELECTION_ITER,                  PIXMAP(QLatin1String(":/items/yandex_item_on"), size));
+    icons.insert(Core::dt_web_youtube,                                  PIXMAP(QLatin1String(":/items/youtube_item"), size));
+    icons.insert(Core::dt_web_youtube + SELECTION_ITER,                 PIXMAP(QLatin1String(":/items/youtube_item_on"), size));
 }
 
 void ModelItemDelegate::drawCheckbox(bool is_container, QVariant & checkable, QPainter * painter, const QStyleOptionViewItem& option) const {

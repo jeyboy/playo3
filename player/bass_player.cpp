@@ -50,9 +50,9 @@ OpenCallbackData BassPlayer::openChannel(const QUrl & url, OpenCallbackData & ch
         //    "http://www.asite.com/afile.mp3\r\nCookie: mycookie=blah\r\n"
         channel_params.channel_handle = openRemote(
             url.toString()
-                .replace(QStringLiteral("%0D%0A"), QStringLiteral("\r\n")) %
-                    QStringLiteral("\r\n") % USER_AGENT_HEADER_NAME %
-                    QStringLiteral(": ") % DEFAULT_AGENT % QStringLiteral("\r\n"),
+                .replace(QLatin1String("%0D%0A"), QLatin1String("\r\n")) %
+                    QLatin1String("\r\n") % USER_AGENT_HEADER_NAME %
+                    QLatin1String(": ") % DEFAULT_AGENT % QLatin1String("\r\n"),
             REMOTE_PLAY_ATTRS
         );
     }
@@ -357,7 +357,7 @@ float BassPlayer::bpmCalc(const QUrl & uri) {
 }
 
 void BassPlayer::loadPlugins() {
-    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() % QStringLiteral("/bass_plugins")).entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
+    QFileInfoList list = QDir(QCoreApplication::applicationDirPath() % QLatin1String("/bass_plugins")).entryInfoList(QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
     QFileInfoList::Iterator it = list.begin();
 
     for(; it != list.end(); it++) {

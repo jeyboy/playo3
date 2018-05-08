@@ -7,7 +7,7 @@
 namespace Models {
     class IgnoreList : public QVariantHash {
         QVariantHash list;
-        inline QString jsonName() const { return QStringLiteral("deleted"); }
+        inline QString jsonName() const { return QLatin1String("deleted"); }
     public:
         IgnoreList(QJsonObject * obj = 0);
         inline virtual ~IgnoreList() {}

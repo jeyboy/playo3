@@ -7,24 +7,24 @@
 
 #include "modules/core/data_sub_types.h"
 
-#define SETTINGS_PLAYER_DRIVER_KEY QStringLiteral("player_driver")
-#define SETTINGS_SHOW_METRICS_KEY QStringLiteral("show_metric")
-#define SETTINGS_SHOW_METRICS_NUMERO_KEY QStringLiteral("show_metric_numero")
-#define SETTINGS_DOWNLOAD_PATH_KEY QStringLiteral("download_path")
-#define SETTINGS_AUTORUNNED_KEY QStringLiteral("autorunned")
-#define SETTINGS_TAB_POSITION_KEY QStringLiteral("tab_position")
-#define SETTINGS_SAVE_COMMON_TAB_KEY QStringLiteral("save_common_tab")
-#define SETTINGS_CLEAR_COMMON_TAB_KEY QStringLiteral("clear_common_tab")
-#define SETTINGS_OPEN_DROP_IN_TAB_KEY QStringLiteral("open_drop_point_in_tab")
-#define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QStringLiteral("open_drop_point_in_tab_type")
-#define SETTINGS_COLOR_SCHEME_KEY QStringLiteral("color_scheme")
-#define SETTINGS_TOOL_ICON_SIZE_KEY QStringLiteral("tool_icon_size")
-#define SETTINGS_OUTPUT_DEVICE_KEY QStringLiteral("output_device")
-#define SETTINGS_SHOW_DOWNLOAD_KEY QStringLiteral("show_download")
-#define SETTINGS_TRAY_SHOW_PLAYED_KEY QStringLiteral("tray_show_played")
-#define SETTINGS_TRAY_SHOW_PERIOD_KEY QStringLiteral("tray_show_period")
+#define SETTINGS_PLAYER_DRIVER_KEY QLatin1String("player_driver")
+#define SETTINGS_SHOW_METRICS_KEY QLatin1String("show_metric")
+#define SETTINGS_SHOW_METRICS_NUMERO_KEY QLatin1String("show_metric_numero")
+#define SETTINGS_DOWNLOAD_PATH_KEY QLatin1String("download_path")
+#define SETTINGS_AUTORUNNED_KEY QLatin1String("autorunned")
+#define SETTINGS_TAB_POSITION_KEY QLatin1String("tab_position")
+#define SETTINGS_SAVE_COMMON_TAB_KEY QLatin1String("save_common_tab")
+#define SETTINGS_CLEAR_COMMON_TAB_KEY QLatin1String("clear_common_tab")
+#define SETTINGS_OPEN_DROP_IN_TAB_KEY QLatin1String("open_drop_point_in_tab")
+#define SETTINGS_OPEN_DROP_IN_TAB_TYPE_KEY QLatin1String("open_drop_point_in_tab_type")
+#define SETTINGS_COLOR_SCHEME_KEY QLatin1String("color_scheme")
+#define SETTINGS_TOOL_ICON_SIZE_KEY QLatin1String("tool_icon_size")
+#define SETTINGS_OUTPUT_DEVICE_KEY QLatin1String("output_device")
+#define SETTINGS_SHOW_DOWNLOAD_KEY QLatin1String("show_download")
+#define SETTINGS_TRAY_SHOW_PLAYED_KEY QLatin1String("tray_show_played")
+#define SETTINGS_TRAY_SHOW_PERIOD_KEY QLatin1String("tray_show_period")
 
-#define SETTINGS_DEFAULT_DOWNLOAD_PATH QCoreApplication::applicationDirPath() % QStringLiteral("/downloads/")
+#define SETTINGS_DEFAULT_DOWNLOAD_PATH QCoreApplication::applicationDirPath() % QLatin1String("/downloads/")
 
 class GlobalSettings {
 public:

@@ -58,7 +58,7 @@ namespace Views {
 
     protected:
         void initiateItem(DownloadModelItem * itm);
-        void setItemError(DownloadModelItem * itm, const QString & err = QStringLiteral("unprocessable"));
+        void setItemError(DownloadModelItem * itm, const QString & err = QLatin1String("unprocessable"));
         QUrl restoreUrl(DownloadModelItem * itm);
         DownloadModelItem * saving(DownloadModelItem * itm, QIODevice * source, QFutureWatcher<DownloadModelItem *> * watcher);
 

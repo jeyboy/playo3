@@ -69,11 +69,11 @@ void DownloadDelegate::paint(QPainter * painter, const QStyleOptionViewItem & op
             renderer.setAttribute(Qt::WA_TranslucentBackground, true);
 
             Settings::currentStyle -> applyProperty(&renderer, "download",
-                option.state & QStyle::State_Selected ? QStringLiteral("selected") : QStringLiteral("usual")
+                option.state & QStyle::State_Selected ? QLatin1String("selected") : QLatin1String("usual")
             );
 
             renderer.setTextVisible(true);
-            QString str = (isDownloading ? QStringLiteral("(Downloading) ") : QStringLiteral("(Dump to disk) ")) % index.model() -> data(index, Qt::DisplayRole).toString();
+            QString str = (isDownloading ? QLatin1String("(Downloading) ") : QLatin1String("(Dump to disk) ")) % index.model() -> data(index, Qt::DisplayRole).toString();
             renderer.setFormat(option.fontMetrics.elidedText(str, Qt::ElideRight, rect.width() - 8));
             renderer.resize(rect.size());
             renderer.setMinimum(0);

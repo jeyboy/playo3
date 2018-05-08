@@ -3,10 +3,10 @@
 
 #include <qjsonobject.h>
 
-#define SETTINGS_REMOTE_LIB_PROC_DELAY_KEY QStringLiteral("remote_lib_proc_delay")
-#define SETTINGS_SAVE_LIB_DELAY_KEY QStringLiteral("save_lib_delay")
-#define SETTINGS_INITIATE_ON_PLAYING_KEY QStringLiteral("initiate_on_playing")
-#define SETTINGS_SHOW_INFO_KEY QStringLiteral("show_info")
+#define SETTINGS_REMOTE_LIB_PROC_DELAY_KEY QLatin1String("remote_lib_proc_delay")
+#define SETTINGS_SAVE_LIB_DELAY_KEY QLatin1String("save_lib_delay")
+#define SETTINGS_INITIATE_ON_PLAYING_KEY QLatin1String("initiate_on_playing")
+#define SETTINGS_SHOW_INFO_KEY QLatin1String("show_info")
 
 class LibrarySettings {
 public:
