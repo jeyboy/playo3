@@ -230,14 +230,14 @@ namespace Core {
                         QString result = QString(_level * 2, ' ') % '<' % _name;
 
                         for(QHash<QString, QString>::ConstIterator attr = attrs.constBegin(); attr != attrs.constEnd(); attr++)
-                            result = result % ' ' % attr.key() % QStringLiteral("=\"") % attr.value() % '"';
+                            result = result % ' ' % attr.key() % QLatin1String("=\"") % attr.value() % '"';
 
                         result = result % '>';
 
                         for(Set::ConstIterator tag = tags.cbegin(); tag != tags.cend(); tag++)
                             result += (*tag) -> toHtml();
 
-                        return Document::solo.contains(_name) && tags.isEmpty() ? result : QString(result % QStringLiteral("</") % _name % '>');
+                        return Document::solo.contains(_name) && tags.isEmpty() ? result : QString(result % QLatin1String("</") % _name % '>');
                     }
                 }
 
@@ -247,7 +247,7 @@ namespace Core {
                             case Selector::tag: { if (!(it.value() == tkn_any_elem || _name == it.value())) return false; break; }
                             case Selector::attr: {
                                 for(QHash<QString, QPair<char, QString> >::ConstIterator it = selector -> _attrs.cbegin(); it != selector -> _attrs.cend(); it++) {
-                                    QString tag_value = it.key() == QStringLiteral("text") ? text() : attrs.value(it.key());
+                                    QString tag_value = it.key() == QLatin1String("text") ? text() : attrs.value(it.key());
                                     QString selector_value = it.value().second;
 
                                     switch(it.value().first) {

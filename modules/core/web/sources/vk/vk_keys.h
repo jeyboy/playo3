@@ -5,7 +5,7 @@
 
 #include "modules/core/web/grabber_keys.h"
 
-#define VK_DEFAULT_OFFSET_TEMPLATE QStringLiteral("ZZZZ")
+#define VK_DEFAULT_OFFSET_TEMPLATE QLatin1String("ZZZZ")
 
 namespace Core {
     namespace Web {

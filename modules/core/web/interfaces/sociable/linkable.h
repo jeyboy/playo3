@@ -5,10 +5,10 @@
 #include <qjsonobject.h>
 #include <qjsonarray.h>
 
-#define LINKBLE_UID_KEY QStringLiteral("u")
-#define LINKBLE_NAME_KEY QStringLiteral("n")
-#define LINKBLE_PERMALINK_KEY QStringLiteral("p")
-#define LINKBLE_IMAGE_KEY QStringLiteral("i")
+#define LINKBLE_UID_KEY QLatin1String("u")
+#define LINKBLE_NAME_KEY QLatin1String("n")
+#define LINKBLE_PERMALINK_KEY QLatin1String("p")
+#define LINKBLE_IMAGE_KEY QLatin1String("i")
 
 namespace Core {
     namespace Web {
@@ -26,7 +26,7 @@ namespace Core {
             QString permalink() const { return _permalink; }
             QString imageUrl() const { return _image_url; }
 
-            QString permaTitle() const { return QStringLiteral(" aka %1").arg(_permalink.isEmpty() ? QStringLiteral("?") : _permalink); }
+            QString permaTitle() const { return QStringLiteral(" aka %1").arg(_permalink.isEmpty() ? QLatin1String("?") : _permalink); }
 
             QJsonObject toJson() {
                 QJsonObject root;

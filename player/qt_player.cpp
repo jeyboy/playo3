@@ -187,7 +187,7 @@ bool QtPlayer::fileInfo(const QUrl & uri, IMediaInfo * /*info*/) {
 
             for(QStringList::Iterator key = keys.begin(); key != keys.end(); key++) {
                 QVariant val = player -> metaData(*key);
-                int y = 0;
+//                int y = 0;
             }
 
             return true;

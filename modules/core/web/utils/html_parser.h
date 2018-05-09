@@ -114,7 +114,7 @@ namespace Core {
                 inline int level() const { return _level; }
                 inline QHash<QString, QString> attributes() const { return attrs; }
                 inline Set children() const { return tags; }
-                inline QString data(const QString & name) const { return value(QStringLiteral("data-") % name); }
+                inline QString data(const QString & name) const { return value(QLatin1String("data-") % name); }
                 inline QString value(const QString & name = attr_default) const {
                     if (name != attr_default || (name == attr_default && _name != tag_select))
                         return attrs.value(name);
@@ -352,7 +352,7 @@ namespace Core {
                 }
 
 //                inline void dump() {
-//                    QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QStringLiteral(".html");
+//                    QString p = QCoreApplication::applicationDirPath() % '/' % QDateTime::currentDateTime().toString("yyyy.MM.dd_hh.mm.ss.zzz") % QLatin1String(".html");
 //                    QFile f(p);
 //                    if (f.open(QFile::WriteOnly)) {
 //                        QString;

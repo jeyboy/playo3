@@ -60,12 +60,12 @@ namespace Core {
                     if (!ids.isEmpty())
                         setParam(query, LSTR("id"), ids.join(','));
                     else
-                        setParam(query, QStringLiteral("chart"), QStringLiteral("mostPopular"));
+                        setParam(query, "chart", "mostPopular");
 
-                    setParam(query, tkn_part, QStringLiteral("snippet,contentDetails"));
-                    setParam(query, QStringLiteral("fields"), QStringLiteral("items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo"));
-                    setParam(query, QStringLiteral("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT);
-                    setParam(query, QStringLiteral("regionCode"), siteLocale(const_default_locale));
+                    setParam(query, tkn_part, "snippet,contentDetails");
+                    setParam(query, "fields", "items(contentDetails,fileDetails,id,localizations,player,snippet),nextPageToken,pageInfo");
+                    setParam(query, QLatin1String("maxResults"), YOUTUBE_INFO_ITEMS_LIMIT);
+                    setParam(query, QLatin1String("regionCode"), siteLocale(const_default_locale));
 //                    setMusicVideoCategory(query);
 
                     return baseUrlStr(qst_api, LSTR("videos"), query);

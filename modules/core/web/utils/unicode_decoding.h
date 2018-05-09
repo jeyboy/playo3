@@ -136,9 +136,9 @@ namespace Core {
                 static inline CharsetType toCharsetType(const QString & ch_name) {
                     QString l_name = ch_name.toLower();
 
-                    if (l_name == QStringLiteral("utf-8"))
+                    if (l_name == QLatin1String("utf-8"))
                         return charset_utf8;
-                    else if (l_name == QStringLiteral("windows-1251"))
+                    else if (l_name == QLatin1String("windows-1251"))
                         return charset_cp1251;
 
                     return charset_unknown;

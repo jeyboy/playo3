@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         class Friendable : public LinkableList {
-            QString jsonToken() const { return QStringLiteral("friends"); }
+            QString jsonToken() const { return QLatin1String("friends"); }
         protected:
             bool search_by_friend_id, search_by_friend_name;
         public:

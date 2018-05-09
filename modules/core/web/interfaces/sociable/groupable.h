@@ -6,7 +6,7 @@
 namespace Core {
     namespace Web {
         class Groupable : public LinkableList {
-            QString jsonToken() const { return QStringLiteral("groups"); }
+            QString jsonToken() const { return QLatin1String("groups"); }
         protected:
             bool search_by_group_id, search_by_group_name;
         public:
