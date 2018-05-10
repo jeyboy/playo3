@@ -12,6 +12,7 @@ IPlayer::IPlayer(QWidget * parent) : IEqualizable(parent),
     itimer = new QTimer(parent);
     connect(itimer, SIGNAL(timeout()), this, SLOT(recalcPosition()));
     connect(this, SIGNAL(playbackEnding()), this, SLOT(endOfPlayback()));
+    connect(this, SIGNAL(stateChanged(PlayerState)), this, SLOT(updateStatus(PlayerState)));
     itimer -> setInterval(300);
 
     setSpectrumFreq(Settings::obj().spectrumFreqRate());
@@ -32,7 +33,7 @@ void IPlayer::updateState(const PlayerState & new_state) {
         break;}
         default: channelsCount(2); //INFO: update spectrum if item opening is failed
     }
-    ITrackable::updateState(pstate);
+
     emit stateChanged(pstate);
 }
 

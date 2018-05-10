@@ -22,7 +22,7 @@ ITrackable::~ITrackable() {
     delete ico_paused;
 }
 
-void ITrackable::updateState(const PlayerState & state) {
+void ITrackable::updateStatus(const PlayerState & state) {
     bool played = state == PlayingState;
     bool paused = state == PausedState;
     bool visible = state != UnknowState;

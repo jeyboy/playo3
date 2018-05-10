@@ -19,7 +19,7 @@ public:
     virtual QString title() const = 0;
 
 public slots:
-    void updateState(const PlayerState & state);
+    void updateStatus(const PlayerState & state);
 
 protected:
     ITrackable(QWidget * parent);
