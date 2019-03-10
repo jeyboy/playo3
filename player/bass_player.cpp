@@ -100,15 +100,6 @@ void BassPlayer::afterSourceOpening() {
 
 void BassPlayer::playPreproccessing() {
     emit statusChanged(media_title, LoadedMedia);
-    newVolumeProcessing(volume());
-    newPanProcessing(pan());
-
-    #ifdef BASS_USE_TEMPO
-        applyTempoToChannel();
-        newTempoProcessing(tempo());
-    #endif
-
-    setSampleRateQuality();
 
     BASS_CHANNELINFO info;
     if (BASS_ChannelGetInfo(chan, &info))
@@ -117,6 +108,15 @@ void BassPlayer::playPreproccessing() {
         channelsCount(2);
 
     if (eq_in_use) registerEQ();
+
+    #ifdef BASS_USE_TEMPO
+        applyTempoToChannel();
+        newTempoProcessing(tempo());
+    #endif
+
+    setSampleRateQuality();
+    newVolumeProcessing(volume());
+    newPanProcessing(pan());
 
     if (BASS_ChannelPlay(chan, true)) { // stalled with big sized video files
         playPostprocessing(is_paused);
